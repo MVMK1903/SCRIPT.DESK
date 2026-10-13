@@ -18,7 +18,7 @@ AI film script breakdown for film and web-series production teams. Import a scre
 
 ## One-time GitHub setup
 
-1. **Settings → Pages → Build and deployment → Source: GitHub Actions.** The web app is then published at `https://mvmk1903.github.io/script.desk/` on every push.
+1. **Settings → Pages → Build and deployment → Source: GitHub Actions.** The web app is then published at `https://mvmk1903.github.io/SCRIPT.DESK/` on every push.
 2. Push to `main`. The **Build ScriptDesk apps** workflow (Actions tab) builds the web app, Windows installer, Mac app and Android APK. Download them from the run's **Artifacts**.
 3. To publish a release with the installers attached: `git tag v1.0.0 && git push origin v1.0.0`.
 

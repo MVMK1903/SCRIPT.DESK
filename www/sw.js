@@ -23,7 +23,9 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.hostname === 'api.anthropic.com') return; // AI calls always go to the network
+  // Only the app's own files, its libraries and fonts are cached. AI services (cloud or Ollama on this computer) always go straight to the network.
+  const CACHEABLE = url.origin === self.location.origin || /^(cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)$/.test(url.hostname);
+  if (!CACHEABLE) return;
   if (req.mode === 'navigate') {
     // App page: try the network for the newest version, fall back to the saved copy offline.
     e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put('./index.html', copy)); return r; })

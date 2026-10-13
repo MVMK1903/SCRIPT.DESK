@@ -1,7 +1,7 @@
 {
   "name": "scriptdesk-mobile",
-  "version": "1.0.0",
-  "description": "ScriptDesk – AI film script breakdown (iOS and Android app)",
+  "version": "1.1.0",
+  "description": "ScriptDesk \u2013 AI film script breakdown (iOS and Android app)",
   "private": true,
   "scripts": {
     "prepare-web": "node -e \"const fs=require('fs');fs.rmSync('www',{recursive:true,force:true});fs.cpSync('../www','www',{recursive:true})\"",

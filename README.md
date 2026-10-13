@@ -14,7 +14,34 @@ AI film script breakdown for film and web-series production teams. Import a scre
 | **Android** | `ScriptDesk-android.apk` from Actions / Releases | Yes |
 | **iPhone / iPad** | Web app (above), or build the iOS app in Xcode (below) | Yes |
 
-**AI features** (finding scenes, breakdown, character profiles, story structure, reading scanned pages) use your own Claude API key: open **Settings** in the app and paste a key from [console.anthropic.com](https://console.anthropic.com/settings/keys). The key stays on your device. AI needs internet; everything else works offline. Projects are saved on the device; use **Projects → Backup** to move a project to another device (open it with **Import script**).
+## AI: free options
+
+Only the AI steps (finding scenes, breakdown, character profiles, story structure, reading scanned pages) use an AI service. Choose one in **Settings → AI service**:
+
+| Service | Cost | Internet | Best for |
+|---|---|---|---|
+| **Ollama** (on your computer) | Free | Not needed | Confidential scripts; fully private and offline. Needs a decent laptop (16 GB RAM recommended). |
+| **Google Gemini** | Free tier (daily limits) | Needed | Best free quality, good with Telugu and Tinglish. Free-tier data may be used by Google, so avoid for confidential scripts. |
+| **Groq** | Free tier | Needed | Very fast; small per-minute limits, so long scripts take longer. |
+| **OpenRouter** (`:free` models) | Free models (~50 requests/day) | Needed | Trying different open models. |
+| **Claude** (Anthropic) | Paid per use | Needed | Highest quality. |
+| **Other** (LM Studio, vLLM…) | Free if self-hosted | Depends | Any OpenAI-compatible server. |
+
+**Quick start (free):**
+- **Gemini:** get a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → Settings → Google Gemini → paste key → **Load models** → pick a Flash model → **Save** → **Test**.
+- **Ollama:** install from [ollama.com](https://ollama.com/download), run `ollama pull qwen3:8b` (or another model your computer can handle) → Settings → Ollama → **Load models** → pick it → **Save** → **Test**. Works in the desktop app directly; for the web app set `OLLAMA_ORIGINS=*` once and restart Ollama.
+
+ScriptDesk sends smaller pieces and waits automatically when a free tier's limit is reached. Keys are stored only on your device. Projects are saved on the device; use **Projects → Backup** to move a project to another device (open it with **Import script**).
+
+## What it costs (everything else is free and open source)
+
+| Part | Cost |
+|---|---|
+| App, Excel/PDF/Word/PDF-import libraries (SheetJS, jsPDF, pdf.js, Mammoth), Electron, Capacitor | Free, open source |
+| GitHub repo, Actions builds, Pages hosting (public repo) | Free |
+| Windows .exe, Mac .dmg, Android APK from Releases | Free (unsigned: install warnings, see below) |
+| iPhone / iPad | Free via the web app (Add to Home Screen). A native App Store app needs an Apple Developer account ($99/yr). |
+| Optional: Play Store listing $25 once · Windows code-signing certificate · Apple notarization | Paid, only if you want store listings or no warnings |
 
 ## One-time GitHub setup
 

@@ -1,8 +1,8 @@
 {
   "name": "scriptdesk-desktop",
   "productName": "ScriptDesk",
-  "version": "1.0.0",
-  "description": "ScriptDesk – AI film script breakdown (desktop app for Windows and Mac)",
+  "version": "1.1.0",
+  "description": "ScriptDesk \u2013 AI film script breakdown (desktop app for Windows and Mac)",
   "author": "Bhargav Madasu",
   "main": "main.js",
   "private": true,
@@ -20,10 +20,43 @@
   "build": {
     "appId": "com.scriptdesk.app",
     "productName": "ScriptDesk",
-    "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["main.js", "www/**/*"],
-    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "build/icon.png" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "artifactName": "ScriptDesk-Setup-${version}.exe" },
-    "mac": { "target": [{ "target": "dmg", "arch": ["universal"] }], "icon": "build/icon.png", "category": "public.app-category.productivity", "artifactName": "ScriptDesk-${version}-mac.dmg" }
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "www/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "ScriptDesk-Setup-${version}.exe"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity",
+      "artifactName": "ScriptDesk-${version}-mac.dmg"
+    }
   }
 }

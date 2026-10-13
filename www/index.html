@@ -493,7 +493,7 @@ async function pdfToText(buf,onStatus){await ensurePdfjs();const doc=await windo
     const txt=lines.filter(l=>!/^\d+\.?$/.test(l)&&!/^\(?(MORE|CONTINUED)\)?:?$/i.test(l)).join('\n');chars+=txt.replace(/\s/g,'').length;pages.push(txt)}
   if(chars<doc.numPages*40)return {scanned:doc};
   return pages.join('\n\n')}
-async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Add your Claude API key in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
+async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Choose an AI service in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
   const lim=AI.limits&&AI.limits.images;if(!lim)throw new Error('This view cannot send page images to Claude. Use a text PDF or Word file.');
   const per=Math.max(1,Math.min(lim.maxCount||1,4));const out=[];
   for(let p=1;p<=doc.numPages;p+=per){const blobs=[];for(let q=p;q<p+per&&q<=doc.numPages;q++){const pg=await doc.getPage(q);const vp=pg.getViewport({scale:1.6});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.85)))}
@@ -502,8 +502,8 @@ async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Re
   return out.join('\n\n')}
 
 /* ================= AI ================= */
-const ERRS={no_key:'Add your Claude API key in Settings to use AI. Everything else works without it.',bad_key:'Your Claude API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'The AI model name was not found. Check Settings → Advanced.',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'You have reached your Claude usage limit for now. Try again later.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
-const FATAL=['no_key','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
+const ERRS={no_key:'Choose an AI service in Settings to use AI (free options available). Everything else works without it.',no_model:'Choose an AI model in Settings first (use "Load models").',ollama_down:'ScriptDesk cannot reach Ollama on this computer. Open the Ollama app (install it free from ollama.com), then try again.',ollama_origin:'Ollama blocked ScriptDesk. See Settings → Ollama for the one-line fix, then restart Ollama.',bad_key:'Your API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'That AI model was not found. Pick another in Settings (use "Load models").',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'You have reached your Claude usage limit for now. Try again later.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
+const FATAL=['no_key','no_model','ollama_down','ollama_origin','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
 function errMsg(e){return (e&&ERRS[e.code])||(e&&e.message&&!e.code?e.message:'Something went wrong with the AI step. Retry failed scenes.')}
 function startJob(label,total){JOB={label,done:0,total,ctl:new AbortController(),fatal:null};renderJob();return JOB}
 function endJob(){JOB=null;renderJob()}
@@ -515,7 +515,7 @@ async function ask(prompt,opts){if(!AI.sample)throw {code:'not_granted'};return 
 function rosterText(){return P.artists.map(a=>a.name+(a.aliases&&a.aliases.length?' (also: '+a.aliases.join(', ')+')':'')).join('; ')||'none yet'}
 async function aiCast(){const cnt={};P.scenes.forEach(s=>(s.cues||[]).forEach(c=>cnt[c]=(cnt[c]||0)+1));
   const cands=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,150).map(([n,c])=>n+' ('+c+' scenes)').join('\n')||'(no character cues detected — find the characters from the text)';
-  const sample=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),70000);
+  const sample=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(70000,aiBudget()*0.8));
   const r=await ask(`You are a production coordinator on an Indian film. Build the CHARACTER LIST for this screenplay. The script may be in English, Telugu, Tinglish (Telugu in Roman letters), Hindi or another language, in any format.
 Candidate character cues found automatically (name and number of scenes with dialogue):
 ${cands}
@@ -563,8 +563,8 @@ Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"",
 
 SCENES:
 ${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}
-${cutBytes(s.text,24000)}`).join('\n\n')}`}
-function makeBatches(list){const out=[];let b=[],n=0;list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>14000||b.length>=4)){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
+${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`).join('\n\n')}`}
+function makeBatches(list){const out=[];let b=[],n=0;list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=(aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
 function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
   const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
   setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
@@ -580,7 +580,7 @@ function assignUnits(){let f=0,g=0,pf=false,pg=false;P.scenes.forEach(s=>{
   if(s.fight){if(!pf)f++;if(!s.locked.unit)s.fight.unit='THRILL-'+f;pf=true}else pf=false;
   if(s.song){if(!pg)g++;if(!s.locked.sunit)s.song.unit='SONG-'+g;pg=true}else pg=false})}
 async function aiSegment(text,onStatus){const L=text.replace(/\r\n?/g,'\n').split('\n');const rows=[];L.forEach((l,i)=>{const t=l.trim();if(t)rows.push(i+'|'+t.slice(0,90))});
-  const wins=[];let w=[],n=0;rows.forEach(r=>{const b=byteLen(r)+1;if(n+b>60000){wins.push(w);w=[];n=0}w.push(r);n+=b});if(w.length)wins.push(w);
+  const wins=[];let w=[],n=0;rows.forEach(r=>{const b=byteLen(r)+1;if(n+b>Math.min(60000,aiBudget()*0.6)){wins.push(w);w=[];n=0}w.push(r);n+=b});if(w.length)wins.push(w);
   const starts=[];for(let k=0;k<wins.length;k++){onStatus&&onStatus('Claude is finding scenes ('+(k+1)+'/'+wins.length+')');
     const r=await ask(`Below are numbered lines ("lineNumber|text") from a film screenplay in any language or format (English, Telugu, Tinglish, Hindi, scene tables, two-column, prose). Identify every line where a NEW SCENE starts. Return the scene number as written (or empty), INT/EXT, the time/effect as written (DAY, NIGHT, MRNG, ...), and the location in UPPERCASE English letters.
 Reply with only JSON: {"scenes":[{"line":0,"no":"","ie":"","time":"","loc":""}]}
@@ -593,7 +593,7 @@ ${wins[k].join('\n')}`,{modelTier:'default'});
   return {front:L.slice(0,ded[0].ln).join('\n').trim(),scenes}}
 function outline(){return P.scenes.map(s=>`Sc ${s.no} | ${eff(s)} | ${s.loc}${s.timeline?' | '+s.timeline:''} | ${s.artists.map(aName).join(', ')} | ${s.desc}`).join('\n')}
 async function aiProfiles(onlyId){const prim=P.artists.filter(a=>a.tier==='Primary'&&(!onlyId||a.id===onlyId));if(!prim.length)throw new Error('Mark at least one artist as Primary in No. of artists first.');
-  const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),150000);
+  const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(150000,aiBudget()*0.6));
   const r=await ask(`You are a script consultant. Read this whole screenplay (it may be in Telugu, Tinglish, English or another language) and write CHARACTER PROFILES in clear English for these primary characters: ${prim.map(a=>a.name+(a.designation?' ('+a.designation+')':'')).join(', ')}.
 For each character:
 - description: 3-5 sentences — age, look, background, personality, as the script shows them.
@@ -603,14 +603,14 @@ For each character:
 Reply with only JSON: {"profiles":[{"name":"","description":"","arc_start":"","arc_turns":[],"arc_end":"","relationships":[],"key_scenes":[]}]}
 
 SCENE OUTLINE:
-${cutBytes(outline(),40000)}
+${cutBytes(outline(),Math.min(40000,aiBudget()*0.25))}
 
 SCRIPT:
 ${scr}`,{modelTier:'complex'});
   (r&&r.profiles||[]).forEach(x=>{const a=findArtist(x.name);if(!a)return;const j=v=>Array.isArray(v)?v.map(s=>String(s).trim()).filter(Boolean).join('\n'):String(v||'').trim();
     P.profiles[a.id]={description:j(x.description),start:j(x.arc_start),turns:j(x.arc_turns),end:j(x.arc_end),relationships:j(x.relationships),key:j(x.key_scenes),at:Date.now()}});
   dirty.meta=true}
-async function aiStructure(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),120000);
+async function aiStructure(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(120000,aiBudget()*0.6));
   const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several.
 Return in clear English:
 - main: the main structure. also: other structures it uses (may be empty). why: 2-4 sentences explaining the choice in simple words.
@@ -620,7 +620,7 @@ Return in clear English:
 Reply with only JSON: {"main":"","also":[],"why":"","parts":[{"name":"","summary":"","scenes":""}],"timeline":{"type":"","notes":""},"incomplete":false}
 
 SCENE OUTLINE:
-${cutBytes(outline(),40000)}
+${cutBytes(outline(),Math.min(40000,aiBudget()*0.25))}
 
 SCRIPT:
 ${scr}`,{modelTier:'complex'});
@@ -629,7 +629,7 @@ ${scr}`,{modelTier:'complex'});
 
 async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
   if(!AI.sample){noAI('AI needs ScriptDesk to be opened inside Claude. You can still edit every report by hand.');return}
-  if(STANDALONE&&!navigator.onLine){toast(ERRS.offline,5000);return}
+  if(STANDALONE&&!navigator.onLine&&aiCfg().provider!=='ollama'){toast(ERRS.offline,5000);return}
   if(P.sample){P.sample=false}
   const pending=P.scenes.filter(s=>opts.only?opts.only.includes(s.id):s.status!=='done');
   const needCast=!P.artists.length;const needProf=!opts.only&&!Object.keys(P.profiles).length;const needStr=!opts.only&&!P.structure;
@@ -645,7 +645,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
         b.forEach((s,i)=>{const r=arr.find(x=>x&&x.id===s.id)||(arr.length===b.length?arr[i]:null);if(r)applyBreakdown(s,r);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}})}
       catch(e){b.forEach(s=>{s.status='err'});if(e&&e.code==='cancelled'){}else if(FATAL.includes(e&&e.code))JOB.fatal=e;else soft=errMsg(e)}
       JOB.done+=b.length;renderJob();touch(b.map(s=>s.id));if(['script','breakdown','slo'].includes(page))render()}};
-    await Promise.all([worker(),worker()]);
+    await Promise.all(Array.from({length:aiWorkers()},worker));
     P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});
     if(JOB.fatal)throw JOB.fatal;if(JOB.ctl.signal.aborted)throw {code:'cancelled'};
     assignUnits();touch(P.scenes.map(s=>s.id));
@@ -922,7 +922,7 @@ function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^e
 function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
   $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
-  if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?'Add your Claude API key in Settings to use AI':'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
+  if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?'Choose an AI service in Settings (free options available)':'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
 function applySearch(){const q=(VIEW.q||'').toLowerCase().trim();document.querySelectorAll('#content [data-q]').forEach(el=>{el.hidden=!!q&&!el.dataset.q.includes(q)})}
 function go(id){page=id;lsSet('page',id);VIEW.q='';VIEW.editScene=null;$('#msheet').classList.remove('open');render()}
 async function fillProjects(){const box=$('#plist');if(!box)return;const list=await listProjects();
@@ -1176,47 +1176,107 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
   async get(k){try{const d=await this.open();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result??null);q.onerror=()=>rej(q.error)})}catch(e){return null}},
   async set(k,v){try{const d=await this.open();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});return true}catch(e){return false}},
   async del(k){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}};
-const MODELS={quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'};
-const apiKey=()=>lsGet('apikey')||'';
-function noAI(msg){if(STANDALONE)openSettings('Add your Claude API key to use the AI features. Everything else works without it, even offline.');else toast(msg)}
+/* ---- AI services: Claude (paid) or free options (Gemini, Groq, OpenRouter free models, Ollama on this computer, any OpenAI-compatible server) ---- */
+const PROVIDERS={
+  ollama:{name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
+    help:'Runs open-source AI models on your own computer: free, works without internet, and your script never leaves the computer. 1) Install Ollama free from ollama.com and open it. 2) Download a model once, e.g. in a terminal: <code>ollama pull qwen3:8b</code> (8–16 GB RAM) or a larger one if your computer allows. 3) Press "Load models" and pick it. In the ScriptDesk desktop app this just works. For the web app version only, allow it once with <code>OLLAMA_ORIGINS=*</code> (Mac: <code>launchctl setenv OLLAMA_ORIGINS "*"</code>; Windows: add an environment variable OLLAMA_ORIGINS = *), then restart Ollama. Smaller models are slower and less accurate with Telugu than Claude or Gemini.'},
+  gemini:{name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
+    help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. Good with Telugu and Tinglish. Free use has daily limits. Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
+  groq:{name:'Groq',tag:'Free tier',key:true,keyHint:'gsk_…',base:'https://api.groq.com/openai/v1',budget:20000,workers:1,models:{default:'openai/gpt-oss-120b'},keyUrl:'https://console.groq.com/keys',
+    help:'Free key: console.groq.com/keys → Create API Key. Very fast, but small per-minute limits, so ScriptDesk sends smaller pieces and waits when needed. Character profiles and story structure see less of the script than with Gemini or Claude.'},
+  openrouter:{name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://openrouter.ai/settings/keys',
+    help:'Free key: openrouter.ai/settings/keys. Press "Load models" and pick one ending in ":free" (no cost). Free models allow about 50 requests a day, enough for roughly one feature script. Free models may log what you send.'},
+  claude:{name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
+    help:'Best quality for Telugu and Tinglish scripts. Billed per use to your Anthropic account (console.anthropic.com).'},
+  custom:{name:'Other · OpenAI-compatible',tag:'Your server',key:true,keyHint:'optional',base:'http://localhost:1234/v1',budget:30000,workers:1,models:{default:''},keyUrl:'',
+    help:'LM Studio, vLLM, LocalAI, or any service with an OpenAI-compatible /chat/completions endpoint. Enter its address, a key if it needs one, and a model name.'}};
+function aiCfg(){let c=lsGet('ai');if(!c){c={provider:'claude',keys:{},base:{},model:{}};const old=lsGet('apikey');if(old){c.keys.claude=old;const m=lsGet('models')||{};c.model.claude={default:m.default||'',complex:m.complex||''}}else c.provider='ollama'}
+  c.keys=c.keys||{};c.base=c.base||{};c.model=c.model||{};return c}
+const apiKey=()=>{const c=aiCfg();return c.keys[c.provider]||''};
+function aiReady(){const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)return false;if(c.provider==='ollama')return !!((c.model.ollama||{}).default);if(c.provider==='custom')return !!((c.model.custom||{}).default);return !!c.keys[c.provider]}
+function aiBudget(){if(!STANDALONE)return 150000;const p=PROVIDERS[aiCfg().provider];return p?p.budget:30000}
+function aiWorkers(){if(!STANDALONE)return 2;const p=PROVIDERS[aiCfg().provider];return p?p.workers:1}
+function noAI(msg){if(STANDALONE)openSettings('Choose an AI service to use the AI features. Free options are available, and everything else works without AI, even offline.');else toast(msg)}
 function blobB64(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(r.error);r.readAsDataURL(b)})}
-async function anthropicCall(prompt,opts){opts=opts||{};const key=apiKey();if(!key)throw {code:'no_key'};if(navigator.onLine===false)throw {code:'offline'};
-  const tier=opts.modelTier||'default';const model=(lsGet('models')||{})[tier]||MODELS[tier];const content=[];
-  if(opts.images){for(const b of Array.from(opts.images.length!=null?opts.images:[opts.images])){content.push({type:'image',source:{type:'base64',media_type:/png/.test(b.type)?'image/png':'image/jpeg',data:await blobB64(b)}})}}
-  content.push({type:'text',text:prompt});let r;
-  try{r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:tier==='quick'?4000:16000,messages:[{role:'user',content}]})})}
-  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};throw {code:navigator.onLine===false?'offline':'upstream_error'}}
-  if(!r.ok){let m='';try{m=((await r.json()).error||{}).message||''}catch(e){}
-    if(r.status===401||r.status===403)throw {code:'bad_key',message:m};if(r.status===429)throw {code:'rate_limited',message:m};if(r.status===413)throw {code:'prompt_too_large'};
-    if(/credit|balance|billing/i.test(m))throw {code:'no_credit',message:m};if(r.status===404||/model/i.test(m)&&r.status===400)throw {code:'bad_model',message:m};throw {code:'upstream_error',message:m}}
-  const j=await r.json();const text=(j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');if(!text.trim())throw {code:'empty_completion'};
-  return {text,truncated:j.stop_reason==='max_tokens',modelTierApplied:tier}}
+const sleepAbort=(ms,signal)=>new Promise((res,rej)=>{const t=setTimeout(res,ms);if(signal)signal.addEventListener('abort',()=>{clearTimeout(t);rej({code:'cancelled'})},{once:true})});
+async function httpErr(r,provider){let m='';try{const j=await r.json();m=(j.error&&(j.error.message||j.error))||j.message||''}catch(e){}m=String(m);const st=r.status;
+  const ra=parseFloat(r.headers.get('retry-after')||'')||0;
+  if(provider==='ollama'){if(st===403)return {code:'ollama_origin',message:m};if(st===404||/not found|pull/i.test(m))return {code:'bad_model',message:m}}
+  if(st===401||(st===403&&provider!=='ollama')||/API_KEY_INVALID|invalid api key|invalid x-api-key/i.test(m))return {code:'bad_key',message:m};
+  if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===413)return {code:'prompt_too_large',message:m};
+  if(st===402||/credit|balance|billing|quota exceeded for metric.*free/i.test(m))return {code:st===402?'no_credit':'rate_limited',message:m,wait:ra};
+  if(st===404||(st===400&&/model/i.test(m)))return {code:'bad_model',message:m};return {code:'upstream_error',message:m}}
+async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[prov]||'';const base=(c.base[prov]||p.base).replace(/\/+$/,'');const tier=opts.modelTier||'default';
+  const mc=c.model[prov]||{};const model=(tier==='complex'?(mc.complex||mc.default):tier==='quick'?(mc.quick||mc.default):mc.default)||p.models[tier]||p.models.default;
+  if(!model)throw {code:'no_model'};
+  const imgs=[];if(opts.images){for(const b of Array.from(opts.images.length!=null?opts.images:[opts.images]))imgs.push({mime:/png/.test(b.type)?'image/png':'image/jpeg',data:await blobB64(b)})}
+  const maxOut=prov==='groq'?4096:tier==='quick'?4000:16000;let r;
+  try{
+    if(prov==='claude'){r=await fetch(base+'/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model,max_tokens:maxOut,messages:[{role:'user',content:[...imgs.map(i=>({type:'image',source:{type:'base64',media_type:i.mime,data:i.data}})),{type:'text',text:prompt}]}]})})}
+    else if(prov==='gemini'){r=await fetch(`${base}/v1beta/models/${encodeURIComponent(model.replace(/^models\//,''))}:generateContent`,{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-goog-api-key':key},
+      body:JSON.stringify({contents:[{role:'user',parts:[...imgs.map(i=>({inline_data:{mime_type:i.mime,data:i.data}})),{text:prompt}]}],generationConfig:Object.assign({maxOutputTokens:maxOut,temperature:0.2},opts.json?{responseMimeType:'application/json'}:{})})})}
+    else if(prov==='ollama'){r=await fetch(base+'/api/chat',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json'},
+      body:JSON.stringify(Object.assign({model,stream:false,messages:[Object.assign({role:'user',content:prompt},imgs.length?{images:imgs.map(i=>i.data)}:{})],options:{num_ctx:16384,temperature:0.2}},opts.json?{format:'json'}:{}))})}
+    else{const h={'content-type':'application/json'};if(key)h.authorization='Bearer '+key;if(prov==='openrouter'){h['HTTP-Referer']='https://github.com/MVMK1903/SCRIPT.DESK';h['X-Title']='ScriptDesk'}
+      r=await fetch(base+'/chat/completions',{method:'POST',signal:opts.signal,headers:h,body:JSON.stringify(Object.assign({model,max_tokens:maxOut,temperature:0.2,
+        messages:[{role:'user',content:imgs.length?[{type:'text',text:prompt},...imgs.map(i=>({type:'image_url',image_url:{url:`data:${i.mime};base64,${i.data}`}}))]:prompt}]},opts.json&&prov==='groq'?{response_format:{type:'json_object'}}:{}))})}}
+  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};if(prov==='ollama'||prov==='custom'&&/localhost|127\.0\.0\.1/.test(base))throw {code:prov==='ollama'?'ollama_down':'upstream_error'};throw {code:navigator.onLine===false?'offline':'upstream_error'}}
+  if(!r.ok)throw await httpErr(r,prov);
+  const j=await r.json();let text='',trunc=false;
+  if(prov==='claude'){text=(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('');trunc=j.stop_reason==='max_tokens'}
+  else if(prov==='gemini'){if(j.promptFeedback&&j.promptFeedback.blockReason)throw {code:'refused'};const cd=(j.candidates||[])[0]||{};text=((cd.content||{}).parts||[]).map(x=>x.text||'').join('');trunc=cd.finishReason==='MAX_TOKENS';if(cd.finishReason==='SAFETY')throw {code:'refused'}}
+  else if(prov==='ollama'){text=(j.message||{}).content||'';trunc=j.done_reason==='length'}
+  else{const ch=(j.choices||[])[0]||{};text=(ch.message||{}).content||'';trunc=ch.finish_reason==='length';if(j.error)throw {code:'upstream_error',message:String(j.error.message||j.error)}}
+  text=text.replace(/<think>[\s\S]*?<\/think>/g,'');if(!text.trim())throw {code:'empty_completion'};return {text,truncated:trunc,modelTierApplied:tier}}
+async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)throw {code:'no_key'};
+  if(p.key&&c.provider!=='custom'&&!c.keys[c.provider])throw {code:'no_key'};
+  if(c.provider!=='ollama'&&!/localhost|127\.0\.0\.1/.test(c.base[c.provider]||p.base)&&navigator.onLine===false)throw {code:'offline'};
+  for(let attempt=0;;attempt++){try{return await callOnce(prompt,opts,c,p)}catch(e){
+    if(e&&(e.code==='rate_limited'||e.code==='upstream_error')&&attempt<4&&!(opts.signal&&opts.signal.aborted)){
+      const wait=Math.min(90,Math.max(e.wait||0,e.code==='rate_limited'?20*(attempt+1):5*(attempt+1)));
+      if(JOB){const old=JOB.label;JOB.label=e.code==='rate_limited'?`Free-tier limit reached, waiting ${wait}s`:'Connection hiccup, retrying';renderJob();await sleepAbort(wait*1000,opts.signal);JOB.label=old;renderJob()}else await sleepAbort(wait*1000,opts.signal);continue}
+    throw e}}}
+const anthropicCall=aiCall;
 function parseLooseJSON(t){try{return JSON.parse(t)}catch(e){}const f=t.match(/```(?:json)?\s*([\s\S]*?)```/);if(f){try{return JSON.parse(f[1])}catch(e){}}
   const a=[t.indexOf('{'),t.indexOf('[')].filter(i=>i>=0);const b=Math.max(t.lastIndexOf('}'),t.lastIndexOf(']'));if(a.length&&Math.min(...a)<b){try{return JSON.parse(t.slice(Math.min(...a),b+1))}catch(e){}}throw {code:'invalid_json',text:t}}
-function standaloneSampler(){const f=(p,o)=>anthropicCall(typeof p==='string'?p:p.map(m=>m.content).join('\n\n'),o);
-  f.json=async(p,o)=>{const r=await f(p+'\n\nYour reply will be machine-parsed: reply with the JSON only.',o);if(r.truncated)throw {code:'invalid_json',text:r.text};return parseLooseJSON(r.text)};
+function standaloneSampler(){const f=(p,o)=>aiCall(typeof p==='string'?p:p.map(m=>m.content).join('\n\n'),o);
+  f.json=async(p,o)=>{const r=await aiCall((typeof p==='string'?p:p.map(m=>m.content).join('\n\n'))+'\n\nYour reply will be machine-parsed: reply with the JSON only, in valid json.',Object.assign({},o,{json:true}));if(r.truncated)throw {code:'invalid_json',text:r.text};return parseLooseJSON(r.text)};
   f.limits=async()=>({maxPromptBytes:262144,images:{maxCount:4,maxInputBytes:20000000,mediaTypes:['image/jpeg','image/png']}});return f}
-function mimeOf(n){return ({xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',pdf:'application/pdf',json:'application/json'})[n.split('.').pop()]||'application/octet-stream'}
-async function standaloneSave(filename,data){const blob=data instanceof Blob?data:new Blob([data],{type:mimeOf(filename)});
-  if(NATIVE){const pl=window.Capacitor.Plugins;const w=await pl.Filesystem.writeFile({path:filename,data:await blobB64(blob),directory:'CACHE'});await pl.Share.share({title:filename,url:w.uri,dialogTitle:'Save or share '+filename});return}
-  const file=new File([blob],filename,{type:blob.type});
-  if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==='AbortError')return}}
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Saved '+filename)}
-function openSettings(note){const m=lsGet('models')||{};const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);const installed=matchMedia('(display-mode: standalone)').matches||NATIVE;
+function refreshAI(){if(aiReady()){AI.sample=standaloneSampler();AI.limits={images:{maxCount:4}}}else{AI.sample=null;AI.limits=null}syncTop()}
+async function listModels(c){const prov=c.provider,p=PROVIDERS[prov],key=c.keys[prov]||'',base=(c.base[prov]||p.base).replace(/\/+$/,'');let r;
+  try{if(prov==='claude')r=await fetch(base+'/v1/models?limit=100',{headers:{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}});
+    else if(prov==='gemini')r=await fetch(base+'/v1beta/models?pageSize=200',{headers:{'x-goog-api-key':key}});
+    else if(prov==='ollama')r=await fetch(base+'/api/tags');
+    else r=await fetch(base+'/models',{headers:key?{authorization:'Bearer '+key}:{}})}
+  catch(e){throw {code:prov==='ollama'?'ollama_down':navigator.onLine===false?'offline':'upstream_error'}}
+  if(!r.ok)throw await httpErr(r,prov);const j=await r.json();
+  if(prov==='gemini')return (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace(/^models\//,'')).filter(n=>!/embed|aqa|imagen|tts|image/i.test(n));
+  if(prov==='ollama')return (j.models||[]).map(m=>m.name);
+  let ids=(j.data||[]).map(m=>m.id);if(prov==='openrouter'){const free=ids.filter(i=>/:free$/.test(i));if(free.length)ids=free}return ids}
+function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);const installed=matchMedia('(display-mode: standalone)').matches||NATIVE;let cur=c.provider;
   openModal(`<div class="modal-h"><h2>Settings</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${note?`<div class="banner">${esc(note)}</div>`:''}
-  <div class="fieldbox"><label for="sKey">Claude API key</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" value="${esc(apiKey())}"></div>
-  <p class="small muted">Used only for the AI steps (finding scenes, breakdown, character profiles, story structure, reading scanned pages). It is stored only on this device and sent only to Anthropic. Create a key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Usage is billed to that account. AI needs internet; everything else works offline.</p>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save key</button><button class="btn" id="sTest">Test key</button><button class="btn ghost danger" id="sClear">Remove key</button><span class="small" id="sMsg"></span></div>
-  <details style="margin-top:6px"><summary class="small muted" style="cursor:pointer">Advanced: AI models</summary><div class="two" style="margin-top:10px">${['quick','default','complex'].map(t=>`<div class="fieldbox"><label for="sM-${t}">${t==='quick'?'Fast':t==='default'?'Standard (breakdown)':'Best (profiles, structure)'}</label><input type="text" id="sM-${t}" value="${esc(m[t]||MODELS[t])}"></div>`).join('')}</div></details>
+  <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PROVIDERS).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</select></div>
+  <div id="sBody"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
+  <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
   ${installed?'':`<div class="banner info" style="margin-top:6px">${isIOS?'To install on iPhone or iPad: tap Share, then "Add to Home Screen".':'To install: use "Install app" at the top, or your browser menu → Install ScriptDesk / Add to Home screen.'}</div>`}
   </div>`);
   const msg=t=>{$('#sMsg').textContent=t};
-  const saveModels=()=>{const o={};['quick','default','complex'].forEach(t=>{const v=$('#sM-'+t).value.trim();if(v&&v!==MODELS[t])o[t]=v});lsSet('models',o)};
-  $('#sSave').onclick=()=>{const k=$('#sKey').value.trim();lsSet('apikey',k);saveModels();AI.sample=k?standaloneSampler():null;AI.limits=k?{images:{maxCount:4}}:null;syncTop();msg(k?'Saved.':'Removed.')};
-  $('#sClear').onclick=()=>{lsDel('apikey');$('#sKey').value='';AI.sample=null;syncTop();msg('Removed.')};
-  $('#sTest').onclick=async()=>{const k=$('#sKey').value.trim();if(!k){msg('Paste a key first.');return}lsSet('apikey',k);saveModels();AI.sample=standaloneSampler();msg('Testing…');
-    try{await anthropicCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Key works.')}catch(e){msg(errMsg(e))}}}
+  const body=()=>{const p=PROVIDERS[cur];const mc=c.model[cur]||{};
+    $('#sBody').innerHTML=`<div class="banner info small" style="display:block;line-height:1.55">${p.help}${p.keyUrl?` <a href="${p.keyUrl}" target="_blank" rel="noopener">${cur==='ollama'?'Download Ollama':'Get a key'}</a>`:''}</div>
+    ${p.key?`<div class="fieldbox"><label for="sKey">API key${cur==='custom'?' (if needed)':''}</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="${esc(p.keyHint||'')}" value="${esc(c.keys[cur]||'')}"></div>`:''}
+    ${cur==='ollama'||cur==='custom'?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
+    <div class="two"><div class="fieldbox"><label for="sModel">Model</label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
+    <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
+    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>`;
+    $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found. Click the Model box to pick one.`:'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0]}catch(e){$('#sLoadMsg').textContent=errMsg(e)}}};
+  const collect=()=>{c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
+  body();
+  $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
+  $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Pick a model to use AI.'))};
+  $('#sTest').onclick=async()=>{collect();lsSet('ai',c);refreshAI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.')}catch(e){msg(errMsg(e))}}}
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});
 window.addEventListener('appinstalled',()=>{installEvt=null;$('#bInstall').hidden=true;toast('ScriptDesk installed. It works offline.')});
@@ -1232,7 +1292,7 @@ if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:
   if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}
   if(!P){const idx=lsGet('index')||[];if(idx.length){const p=await loadProject(idx[0].id);if(p){P=p;render()}}}
   if(!P){P=sampleProject();saveLocal();render()}
-  if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;if(apiKey()){AI.sample=standaloneSampler();AI.limits={images:{maxCount:4}}}setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();return}
+  if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;refreshAI();setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();return}
   const [smp,db,usr]=await Promise.all([window.claude.use('sample').catch(()=>null),window.claude.use('db').catch(()=>null),window.claude.use('user').catch(()=>null)]);
   AI.sample=smp;AI.checked=true;if(smp){try{AI.limits=await smp.limits()}catch(e){AI.limits=null}}
   if(db&&usr){try{UID=await usr.id()}catch(e){UID=null}if(UID){DB=db;cloudOK=true}}

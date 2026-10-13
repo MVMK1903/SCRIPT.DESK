@@ -1,0 +1,22 @@
+{
+  "name": "scriptdesk-mobile",
+  "version": "1.0.0",
+  "description": "ScriptDesk – AI film script breakdown (iOS and Android app)",
+  "private": true,
+  "scripts": {
+    "prepare-web": "node -e \"const fs=require('fs');fs.rmSync('www',{recursive:true,force:true});fs.cpSync('../www','www',{recursive:true})\"",
+    "icons": "capacitor-assets generate --iconBackgroundColor '#0c0d0f' --splashBackgroundColor '#0c0d0f'",
+    "sync": "npm run prepare-web && cap sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/share": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}

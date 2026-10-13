@@ -1,0 +1,8 @@
+{
+  "appId": "com.scriptdesk.app",
+  "appName": "ScriptDesk",
+  "webDir": "www",
+  "backgroundColor": "#0c0d0f",
+  "android": { "allowMixedContent": false },
+  "ios": { "contentInset": "always" }
+}

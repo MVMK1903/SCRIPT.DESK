@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c0d0f">
+<meta name="description" content="AI film script breakdown: single line orders, artist and location lists, breakdown sheets, costume continuity, art and props, character profiles.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ScriptDesk">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>:root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>ScriptDesk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: dark production desk. Film-strip sidebar (sprocket edge) with the report list,
+   a slim top bar for the project, and one report per page as an editable table or card set.
+   Phones get a bottom bar and reports as stacked cards. Deliberately dark-only (cinema look). */
+:root{
+  color-scheme:dark;
+  --bg:#0c0d0f; --bg-2:#111316; --panel:#15171b; --panel-2:#1b1e23; --raise:#22262c;
+  --line:#272b32; --line-2:#1e2227;
+  --fg:#ece8df; --muted:#9da1aa; --faint:#666b75;
+  --accent:#e3a842; --accent-ink:#1b1408; --accent-soft:rgba(227,168,66,.13);
+  --day:#e3c46c; --night:#86a8e6; --ok:#74cf91; --warn:#f0b44c; --bad:#ef7d6f;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-script:"Courier Prime","Courier New",Courier,monospace;
+  --r:6px; --side:236px;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--f-ui);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.shell{position:relative;z-index:1;display:grid;grid-template-columns:var(--side) minmax(0,1fr);height:100%}
+
+/* Sidebar with sprocket edge */
+.side{background:var(--bg-2);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;position:relative;padding-left:14px}
+.side::after{content:"";position:absolute;left:4px;top:0;bottom:0;width:6px;
+  background:repeating-linear-gradient(to bottom,var(--line) 0 7px,transparent 7px 16px);border-radius:2px;opacity:.9}
+.brand{padding:18px 14px 12px 12px;display:flex;align-items:baseline;gap:8px}
+.brand b{font:700 24px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase}
+.brand b span{color:var(--accent)}
+.nav{overflow:auto;padding:4px 10px 16px 6px;flex:1;min-height:0}
+.nav h6{margin:16px 0 4px 8px;font:600 11px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.nav button{display:flex;width:100%;text-align:left;border:0;background:transparent;padding:6px 8px;border-radius:5px;color:var(--muted);cursor:pointer;font-size:13.5px;gap:8px;align-items:center}
+.nav button:hover{background:var(--panel-2);color:var(--fg)}
+.nav button[aria-current="page"]{background:var(--accent-soft);color:var(--fg)}
+.nav button[aria-current="page"]::before{content:"";width:3px;height:14px;background:var(--accent);border-radius:2px;margin-left:-4px}
+.side-foot{padding:10px 12px 14px 8px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.top{display:flex;align-items:center;gap:10px;padding-block:10px;padding-inline:20px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:rgba(12,13,15,.85)}
+.film{display:flex;flex-direction:column;min-width:0;flex:1 1 220px}
+.film input{background:transparent;border:1px solid transparent;border-radius:4px;padding:1px 5px;min-width:0;width:100%;max-width:420px}
+.film input:hover,.film input:focus{border-color:var(--line);background:var(--panel)}
+#fTitle{font:700 20px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+#fProd{font-size:12px;color:var(--muted)}
+.tops{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sync{font-size:12px;color:var(--faint);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--faint)}
+.sync.ok i{background:var(--ok)} .sync.busy i{background:var(--warn)} .sync.err i{background:var(--bad)}
+.btn{border:1px solid var(--line);background:var(--panel-2);border-radius:var(--r);padding:7px 12px;cursor:pointer;font-weight:500;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:var(--fg)}
+.btn:hover{border-color:var(--faint)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.pri:hover{filter:brightness(1.07)}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{background:var(--panel-2);color:var(--fg)}
+.btn.warn{border-color:rgba(240,180,76,.5);color:var(--warn)}
+.btn.danger{color:var(--bad)}
+.job{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.prog{width:120px;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.content{flex:1;overflow:auto;min-height:0;padding-block:18px 40px;padding-inline:20px}
+.ph{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ph h1{margin:0;font:700 30px/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;text-wrap:balance}
+.ph p{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:70ch}
+.ph .grow{flex:1;min-width:220px}
+.ph .acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 11px;cursor:pointer;font-size:12.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--raise);color:var(--fg)}
+.search{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:6px 10px;width:180px;font-size:13px}
+.banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border:1px solid rgba(227,168,66,.25);border-radius:var(--r);padding:10px 12px;margin-bottom:14px;font-size:13px}
+.banner.info{background:var(--panel);border-color:var(--line)}
+.stats{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px}
+.stat b{display:block;font:700 26px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* Tables: Excel-style sheets (white grid, black borders, coloured header cells) */
+.tw{overflow-x:auto;background:#fff;border:1px solid #1a1a1a;color:#111;color-scheme:light;-webkit-overflow-scrolling:touch}
+table.t{border-collapse:collapse;width:100%;min-width:760px;font:13px/1.35 Calibri,Carlito,"Segoe UI",Arial,sans-serif;color:#111}
+.t th{font:700 12.5px/1.25 Calibri,Carlito,"Segoe UI",Arial,sans-serif;color:#111;text-align:center;padding:8px;border:1px solid #1a1a1a;background:#d9d9d9;white-space:nowrap;position:sticky;top:0;z-index:1}
+.t th.c-eff{background:#9dc3e6} .t th.c-loc{background:#ffe699} .t th.c-desc{background:#ddebf7}
+.t td{padding:6px 8px;border:1px solid #1a1a1a;vertical-align:middle;text-align:center;background:#fff}
+.t td.no{font-weight:700;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.t td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.t td.eff{white-space:nowrap;font-weight:700}
+.t td.eff.d{background:#fbf2d0} .t td.eff.n{background:#e3e7f7}
+.t td.loc{font-weight:600}
+.t td.left{text-align:left}
+.t tr.g td{background:#d9d9d9;font:700 13px/1.3 Calibri,Carlito,"Segoe UI",Arial,sans-serif;text-transform:uppercase;letter-spacing:.02em;color:#111;padding:7px 8px}
+.t tr.g td small{font-weight:400;color:#444;text-transform:none;margin-left:8px}
+.t tr.g.band td{background:#bfbfbf}
+.t .eff-n,.t .eff-d{color:#111}
+.t .muted{color:#555} .t .faint{color:#777}
+.t .crowd{color:#444}
+.t .tag{border-color:#9a9a9a;color:#333} .t .tag.warn{border-color:#d08a00;color:#8a5500} .t .tag.bad{border-color:#c0392b;color:#a12a1e} .t .tag.acc{border-color:#c79422;color:#7a5200} .t .tag.ok{color:#1e6b38;border-color:#3c9a5f}
+.t [contenteditable]:hover{background:#eef3fb} .t [contenteditable]:focus{background:#fffbe6;box-shadow:0 0 0 1.5px #c48a12}
+.t [contenteditable]:empty::before{color:#9a9a9a}
+.t select.mini{background:#fff;border-color:#9a9a9a;color:#111}
+.t .btn.ghost{color:#444} .t .btn.danger{color:#b3261e}
+.eff-n{color:var(--night)} .eff-d{color:var(--day)}
+.crowd{color:var(--muted);font-size:12.5px;margin-top:2px}
+[contenteditable]{border-radius:3px;outline:none;min-width:2ch;cursor:text;padding:1px 2px;margin:-1px -2px}
+.t tr.g [contenteditable]{display:inline-block;min-width:10ch}
+[contenteditable]:hover{background:var(--raise)}
+[contenteditable]:focus{background:var(--raise);box-shadow:0 0 0 1.5px var(--accent)}
+[contenteditable]:empty::before{content:"—";color:var(--faint)}
+.crowd[contenteditable]:empty::before{content:"+ crowd"}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.warn{border-color:rgba(240,180,76,.45);color:var(--warn)}
+.tag.bad{border-color:rgba(239,125,111,.45);color:var(--bad)}
+.tag.ok{border-color:rgba(116,207,145,.4);color:var(--ok)}
+.tag.acc{border-color:rgba(227,168,66,.45);color:var(--accent)}
+.muted{color:var(--muted)} .faint{color:var(--faint)}
+.small{font-size:12px}
+select.mini{background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:3px 5px;font-size:12px;max-width:150px}
+
+/* Cards as Excel-style sheets (breakdown sheet per scene, profiles) */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr));gap:16px}
+.card{background:#fff;color:#111;border:1px solid #1a1a1a;min-width:0;color-scheme:light;font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
+.card-h{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;padding:10px 12px;border-bottom:1px solid #1a1a1a;background:#fff}
+.card-h .no{font:700 28px/1 Calibri,Carlito,Arial,sans-serif;grid-row:span 3;min-width:2.2ch;padding-right:10px;border-right:1px solid #1a1a1a;font-variant-numeric:tabular-nums}
+.card-h .hl{font-weight:700;font-size:13px;text-transform:uppercase;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.card-h .hl .effc{padding:1px 6px;border:1px solid #1a1a1a}
+.card-h .hl .effc.d{background:#fbf2d0} .card-h .hl .effc.n{background:#e3e7f7}
+.card-h .ttl{font-weight:700;font-size:14px;text-transform:uppercase}
+.card-h .ttl>div{display:inline-block;background:#ffff00;padding:0 4px}
+.card-h .ttl>div:empty{background:transparent}
+.card-h .ds{font-size:13px;color:#222}
+.kv{display:grid;grid-template-columns:132px minmax(0,1fr);font-size:13px}
+.kv>div{padding:6px 10px;border-bottom:1px solid #1a1a1a;min-width:0;overflow-wrap:anywhere}
+.kv>div:nth-child(odd){background:#f2f2f2;font-weight:600;font-size:12.5px;border-right:1px solid #1a1a1a}
+.kv>div:nth-last-child(-n+2){border-bottom:0}
+.card-f{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #1a1a1a;flex-wrap:wrap;align-items:center;background:#f7f7f7}
+.card .tag{border-color:#9a9a9a;color:#333}.card .tag.warn{border-color:#d08a00;color:#8a5500}.card .tag.bad{border-color:#c0392b;color:#a12a1e}.card .tag.acc{border-color:#c79422;color:#7a5200}
+.card .muted{color:#555}
+.card [contenteditable]:hover{background:#eef3fb}.card [contenteditable]:focus{background:#fffbe6;box-shadow:0 0 0 1.5px #c48a12}.card [contenteditable]:empty::before{color:#9a9a9a}
+.card .btn{background:#fff;border-color:#9a9a9a;color:#111}
+.card .btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.prof textarea,.fieldbox textarea,.fieldbox input{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:8px 10px;resize:vertical;line-height:1.5}
+.card .fieldbox textarea,.card .fieldbox input{background:#fff;border:1px solid #1a1a1a;border-radius:0;color:#111;font-family:inherit}
+.fieldbox{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fieldbox label{font:600 11px/1 var(--f-ui);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.card .fieldbox label{color:#333}
+.prof{padding:14px;display:flex;flex-direction:column;gap:2px}
+.pname{font:700 24px/1 Calibri,Carlito,Arial,sans-serif;text-transform:uppercase;background:#d9d9d9;margin:-14px -14px 10px;padding:10px 14px;border-bottom:1px solid #1a1a1a}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 14px}
+
+/* Script */
+.scr{display:flex;flex-direction:column;gap:14px;max-width:880px}
+.sc{background:#fff;color:#111;border:1px solid #1a1a1a;overflow:hidden;color-scheme:light}
+.sc .tag{border-color:#9a9a9a;color:#333}.sc .eff-n,.sc .eff-d{color:#111}
+.sc .btn{background:#fff;border-color:#9a9a9a;color:#111}.sc .btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}.sc .btn.danger{color:#b3261e}.sc .faint{color:#666}
+.sc-h{display:flex;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid #1a1a1a;background:#d9d9d9;flex-wrap:wrap}
+.sc-h .no{font:700 20px/1 var(--f-display);min-width:2.5ch}
+.sc-h .hd{font-weight:600;text-transform:uppercase;font-size:13px;flex:1;min-width:0}
+.page{padding:18px clamp(14px,5%,48px) 22px;font:13.5px/1.35 var(--f-script);color:#111}
+.page .ln{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.35em}
+.page .chr{padding-left:36%}
+.page .par{padding-left:28%;color:#444}
+.page .dia{padding-left:16%;padding-right:12%}
+.page .trn{text-align:right;color:#444}
+.page textarea{width:100%;min-height:340px;background:#fffef8;border:1px solid #1a1a1a;padding:12px;font:13px/1.4 var(--f-script);color:#111;resize:vertical}
+.front{color:var(--muted);font:13px/1.4 var(--f-script);white-space:pre-wrap;padding:14px;border:1px dashed var(--line);border-radius:var(--r)}
+
+/* Projects */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left}
+.pcard:hover{border-color:var(--faint)}
+.pcard b{font:700 20px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+.empty b{display:block;color:var(--fg);font:700 20px/1.2 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+
+/* Modal, toast, checks */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:10px;width:min(680px,100%);max-height:100%;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.modal-h{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.modal-h h2{margin:0;font:700 22px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;flex:1}
+.modal-b{padding:16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.modal-f{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.drop{border:2px dashed var(--line);border-radius:8px;padding:20px;text-align:center;color:var(--muted);cursor:pointer;display:block}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.modal textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:6px;padding:10px;font:12.5px/1.35 var(--f-script);background:var(--bg-2);resize:vertical}
+.modal input[type=text]{width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px}
+.toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.checks{display:flex;flex-direction:column;gap:6px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel-2);font-size:13px}
+.chk button{margin-left:auto}
+.bbar{display:none}
+.msheet{display:none}
+
+/* Change note, save bar, saved sign */
+.lastnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:7px 10px;margin-bottom:14px}
+.lastnote b{color:var(--fg);font-weight:600}
+.lastnote .when{color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lastnote .what{flex:1;min-width:200px;overflow-wrap:anywhere}
+.savebar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;gap:8px;align-items:center;background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:7px 8px 7px 14px;box-shadow:0 10px 34px rgba(0,0,0,.5);font-size:13px;max-width:calc(100% - 32px)}
+.savebar span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.savedpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:46;background:#103a23;border:1px solid #2f8f55;color:#d8f5e3;border-radius:10px;padding:9px 14px;font-size:13px;box-shadow:0 10px 34px rgba(0,0,0,.5);max-width:min(560px,calc(100% - 32px))}
+.savedpill b{color:#fff}
+.savedpill .ck{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#2f8f55;color:#fff;font-size:12px;margin-right:6px;vertical-align:-3px}
+.savedpill small{display:block;color:#a9d9bb;margin-top:3px;font-size:11.5px}
+@media (max-width:820px){.savebar{bottom:calc(64px + env(safe-area-inset-bottom,0px))}.savedpill{bottom:calc(118px + env(safe-area-inset-bottom,0px))}}
+@media (prefers-reduced-motion:reduce){.prog i{transition:none}}
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr;height:auto;min-height:100%}
+  .side{display:none}
+  .main{min-height:100vh}
+  .top{padding-inline:16px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+  .content{padding-inline:16px;overflow:visible;padding-bottom:90px}
+  .ph h1{font-size:25px}
+  .search{width:100%}
+  .bbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:8px;align-items:center;padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));background:var(--bg-2);border-top:1px solid var(--line)}
+  .bbar .cur{flex:1;font:700 15px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .msheet{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);align-items:flex-end}
+  .msheet.open{display:flex}
+  .msheet .nav{background:var(--bg-2);width:100%;max-height:80vh;border-radius:14px 14px 0 0;padding:12px 16px calc(20px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+  .msheet .nav button{padding:10px 8px;font-size:15px}
+  table.t{min-width:680px;font-size:12.5px}
+  .kv{grid-template-columns:104px minmax(0,1fr)}
+  .page .chr{padding-left:24%} .page .dia{padding-left:8%;padding-right:4%}
+}
+</style>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><b>Script<span>Desk</span></b></div>
+    <nav class="nav" id="nav" aria-label="Reports"></nav>
+    <div class="side-foot" id="sideFoot"></div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <div class="film">
+        <input id="fTitle" aria-label="Film title" placeholder="Film title">
+        <input id="fProd" aria-label="Production house" placeholder="Production house">
+      </div>
+      <div class="tops">
+        <span class="job" id="job" hidden></span>
+        <span class="sync" id="sync"><i></i><span>Ready</span></span>
+        <button class="btn sm warn" id="bChecks" hidden></button>
+        <button class="btn sm ghost" id="bUndo" title="Undo last edit" disabled>Undo</button>
+        <button class="btn sm" id="bInstall" data-act="install" hidden>Install app</button>
+        <button class="btn sm" id="bSettings" data-act="settings" hidden>Settings</button>
+        <button class="btn sm" id="bProjects">Projects</button>
+        <button class="btn sm" id="bAll">Download all</button>
+        <button class="btn sm pri" id="bRun">Run AI breakdown</button>
+      </div>
+    </header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+<div class="bbar"><button class="btn sm" id="bMenu">Menu</button><span class="cur" id="bCur"></span><button class="btn sm" id="bMx">Excel</button><button class="btn sm" id="bMp">PDF</button></div>
+<div class="msheet" id="msheet"><nav class="nav" id="nav2" aria-label="Reports"></nav></div>
+<div id="modalRoot"></div>
+<div class="savebar" id="savebar" hidden><span id="sbLabel">Editing</span><button class="btn sm" id="sbCancel">Cancel</button><button class="btn sm pri" id="sbSave">Save</button></div>
+<div class="savedpill" id="savedPill" role="status" hidden></div>
+
+<script>
+"use strict";
+/* ================= Constants ================= */
+const CDN={
+  xlsx:'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+  xlsxStyle:'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+  jspdf:'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  autotable:'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js',
+  mammoth:'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+  pdfjs:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdfworker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'};
+if(document.querySelector('meta[name="sd-vendor"]')){for(const k in CDN)CDN[k]='./vendor/'+CDN[k].split('/').pop()}
+const STANDALONE=!(window.claude&&window.claude.use);
+const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+const LISTS={juniors:'Juniors / crowd',extras:'Extras',props:'Props',art:'Art / set dressing',makeup:'Makeup / hair',vehicles:'Vehicles',animals:'Animals',vfx:'VFX / CG',sfx:'SFX',spl_sets:'Special sets',spl_props:'Special props',equipment:'Special equipment',technicians:'Special technicians'};
+const LK=Object.keys(LISTS);
+const TIMES=['MOMENTS LATER','CONTINUOUS','MIDNIGHT','AFTERNOON','MORNING','EVENING','SUNRISE','SUNSET','MAGIC HOUR','NIGHT','DAWN','DUSK','NOON','AFTN','MRNG','EVNG','EVE','MNG','DAY','LATER','SAME TIME'];
+const IE_RE=/^\s*(?:\d+[A-Z]?[.)]?\s+)?(INT\.?\s*\/\s*EXT|EXT\.?\s*\/\s*INT|INT\s*\.\s*EXT|INT\s*-\s*EXT|I\s*\/\s*E|INT|EXT|EST)\b\.?\s*[\/\-–.]?\s*(.*)$/i;
+const SCN_RE=/^\s*(?:SCENE|SCN|SC)\s*\.?\s*(?:NO|NUMBER|NUM|#)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,|AND|\/)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)(?![0-9])\s*[.:)\-–]*\s*(.*)$/i;
+const SCN_IN_RE=/^\s*(?:సీన్|సీను|దృశ్యం|సన్నివేశం|दृश्य|सीन|காட்சி|രംഗം|ದೃಶ್ಯ)\s*(?:నెం|నంబర్|నెంబర్|सं|संख्या|எண்)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)\s*[.:)\-–]*\s*(.*)$/i;
+const NOT_CHAR=/^(CUT TO|FADE|DISSOLVE|INTERCUT|INTER CUT|CONTINUED|CONT'?D|THE END|BLACK|SONG|MONTAGE|SUPER|TITLE|FLASH ?BACK|BACK TO|END OF|INTERVAL|LATER|MORNING|NIGHT|DAY|EXT|INT|SCENE|SMASH CUT|MATCH CUT|V\.?O\.?|O\.?S\.?)\b/;
+const PAGES=[
+ {g:'Script',id:'script',nav:'Full script',t:'Full script'},
+ {g:'Script',id:'structure',nav:'Story structure',t:'Story structure'},
+ {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
+ {g:'Single line order',id:'slo',nav:'Single line order',t:'Single line order'},
+ {g:'Single line order',id:'sloLoc',nav:'Location-wise',t:'Location-wise single line order'},
+ {g:'Single line order',id:'sloArt',nav:'Artist-wise',t:'Artist-wise single line order'},
+ {g:'Single line order',id:'sloFight',nav:'Stunt / fight',t:'Stunt / fight single line order'},
+ {g:'Lists',id:'locations',nav:'No. of locations',t:'No. of locations'},
+ {g:'Lists',id:'artists',nav:'No. of artists',t:'No. of artists'},
+ {g:'Lists',id:'locScenes',nav:'Location-wise scenes',t:'Location-wise scene list'},
+ {g:'Lists',id:'artScenes',nav:'Artist-wise scenes',t:'Artist-wise scene list'},
+ {g:'Breakdown',id:'breakdown',nav:'Script breakdown',t:'Script breakdown'},
+ {g:'Breakdown',id:'special',nav:'Special identification',t:'Special identification'},
+ {g:'Breakdown',id:'costume',nav:'Costume continuity',t:'Costume continuity'},
+ {g:'Breakdown',id:'artprops',nav:'Art / props',t:'Art / props breakdown'}];
+const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
+const LSKEY='scriptdesk.v2.';
+
+/* ================= Utilities ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36).slice(-4)+Math.random().toString(36).slice(2,8);
+const U=s=>String(s||'').trim().toUpperCase();
+const norm=s=>U(s).replace(/\(.*?\)/g,'').replace(/[^A-Z0-9ऀ-෿ ]+/g,' ').replace(/\s+/g,' ').trim();
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const today=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+function lsGet(k){try{const v=localStorage.getItem(LSKEY+k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(LSKEY+k,JSON.stringify(v));return true}catch(e){return false}}
+function lsDel(k){try{localStorage.removeItem(LSKEY+k)}catch(e){}}
+function toast(m,ms){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),ms||3800)}
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector('script[src="'+src+'"]')&&loadScript.done[src])return res();const s=document.createElement('script');s.src=src;s.onload=()=>{loadScript.done[src]=1;res()};s.onerror=()=>rej(new Error('Could not load a required component. Check your connection and try again.'));document.head.appendChild(s)})}
+loadScript.done={};
+function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(Math.abs(m-n)>3)return 9;let p=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function natKey(no){const m=String(no||'').match(/(\d+)\s*([A-Z]?)/i);return m?(+m[1])*100+(m[2]?m[2].toUpperCase().charCodeAt(0)-64:0):999999}
+function cleanItem(x){return String(x??'').replace(/\s+/g,' ').replace(/,/g,' /').trim()}
+function splitList(t){return String(t||'').split(/\s*[,;\n]\s*/).map(s=>s.trim()).filter(s=>s&&s!=='—'&&s!=='-')}
+function uniq(arr){const seen=new Set();return arr.filter(x=>{const k=String(x).toLowerCase();if(seen.has(k))return false;seen.add(k);return true})}
+function byteLen(s){return new TextEncoder().encode(s).length}
+function cutBytes(s,max){if(byteLen(s)<=max)return s;let lo=0,hi=s.length;while(lo<hi){const mid=(lo+hi+1)>>1;if(byteLen(s.slice(0,mid))<=max)lo=mid;else hi=mid-1}return s.slice(0,lo)}
+
+/* ================= State ================= */
+let P=null;                 // open project
+let page=lsGet('page')||'slo';
+const VIEW=lsGet('views')||{};
+const AI={sample:null,limits:null};
+let DB=null,UID=null,cloudOK=false;
+let JOB=null;
+const undoStack=[];
+
+/* ================= Model ================= */
+function newScene(o){return Object.assign({id:uid(),no:'',ie:'',time:'',loc:'',timeline:'',heading:'',text:'',title:'',desc:'',setup:'',artists:[],costumes:[],fight:null,song:null,notes:'',status:'new',flags:[],locked:{},cues:[]},blankLists(),o||{})}
+function blankLists(){const o={};LK.forEach(k=>o[k]=[]);return o}
+function newProject(o){return Object.assign({id:uid(),v:2,title:'Untitled film',production:'',front:'',scenes:[],artists:[],profiles:{},structure:null,changes:[],created:Date.now(),updated:Date.now(),sample:false},o||{})}
+const eff=s=>[U(s.ie),U(s.time)].filter(Boolean).join(' / ');
+const isNight=s=>/NIGHT|MIDNIGHT/.test(U(s.time));
+const A=id=>P.artists.find(a=>a.id===id);
+const aName=id=>{const a=A(id);return a?a.name:''};
+function findArtist(n){const k=norm(n);if(!k)return null;return P.artists.find(a=>norm(a.name)===k||(a.aliases||[]).some(x=>norm(x)===k))||null}
+function addArtist(name,tier,flag){const a={id:uid(),name:U(name).replace(/\s+/g,' '),aliases:[],designation:'',tier:tier||'Secondary',actor:'',phone:'',flag:flag||''};P.artists.push(a);dirty.meta=true;return a}
+function namesToIds(list,flag){const ids=[];list.forEach(n=>{n=String(n).replace(/\((V\.?O\.?|O\.?S\.?|CONT'?D)\)/ig,'').trim();if(!n)return;let a=findArtist(n);if(!a)a=addArtist(n,'Secondary',flag||'');if(!ids.includes(a.id))ids.push(a.id)});return ids}
+function artistScenes(id){return P.scenes.filter(s=>s.artists.includes(id))}
+function crowdText(s){return s.juniors.join(', ')}
+function sortedArtists(){const cnt={};P.scenes.forEach(s=>s.artists.forEach(id=>cnt[id]=(cnt[id]||0)+1));
+  return P.artists.slice().sort((a,b)=>(a.tier==='Primary'?0:1)-(b.tier==='Primary'?0:1)||(cnt[b.id]||0)-(cnt[a.id]||0)||a.name.localeCompare(b.name)).map(a=>Object.assign({n:cnt[a.id]||0},a))}
+function locGroups(){const m=new Map();P.scenes.forEach(s=>{const k=U(s.loc)||'(NO LOCATION)';if(!m.has(k))m.set(k,{loc:k,scenes:[],ie:new Set(),tm:new Set()});const g=m.get(k);g.scenes.push(s);if(s.ie)g.ie.add(U(s.ie));if(s.time)g.tm.add(U(s.time))});return [...m.values()]}
+
+/* ================= Persistence ================= */
+const dirty={meta:false,scenes:new Set(),deleted:new Set()};
+let flushT=null,flushing=false;
+function touch(sceneIds){if(!P)return;P.updated=Date.now();dirty.meta=true;(sceneIds||[]).forEach(id=>dirty.scenes.add(id));
+  saveLocal();clearTimeout(flushT);flushT=setTimeout(flush,1200);setSync('busy','Saving…')}
+function saveLocal(){if(!P)return;const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
+function idxEntry(){return {id:P.id,title:P.title,production:P.production,updated:P.updated,scenes:P.scenes.length,sample:!!P.sample}}
+function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx)}
+function metaBody(){const {scenes,...m}=P;m.order=scenes.map(s=>s.id);return JSON.parse(JSON.stringify(m))}
+function base(){return 'data/users/'+UID}
+async function flush(){if(!P)return;if(!cloudOK){dirty.meta=false;dirty.scenes.clear();dirty.deleted.clear();setSync('ok','Saved on this device');return}
+  if(flushing){clearTimeout(flushT);flushT=setTimeout(flush,800);return}
+  flushing=true;setSync('busy','Saving…');const pid=P.id,proj=P;
+  try{
+    const pdoc=DB.collection(base()).doc('p_'+pid);
+    const sids=[...dirty.scenes];dirty.scenes.clear();const dels=[...dirty.deleted];dirty.deleted.clear();
+    for(const sid of sids){const s=proj.scenes.find(x=>x.id===sid);if(!s)continue;await writeDoc(pdoc.collection('scenes').doc(sid),JSON.parse(JSON.stringify(s)))}
+    for(const sid of dels){await pdoc.collection('scenes').doc(sid).delete().catch(()=>{})}
+    if(dirty.meta||sids.length){dirty.meta=false;await writeDoc(pdoc,metaBody());await saveCloudIndex()}
+    setSync('ok','Saved to your account')
+  }catch(e){
+    if(e&&e.code==='quota_exceeded'){setSync('err','Account storage full. Delete an old project.')}
+    else if(e&&e.code==='invalid_argument'&&/256|large|size/i.test(e.message||'')){setSync('err','A scene is too large to sync. Split it in Full script.')}
+    else{setSync('err','Saved on this device. Account sync will retry.');proj.scenes.forEach(s=>dirty.scenes.add(s.id));dirty.meta=true;clearTimeout(flushT);flushT=setTimeout(flush,15000)}
+  }finally{flushing=false}}
+async function writeDoc(ref,body){for(let i=0;i<2;i++){try{await ref.set(body);await sleep(40);return}catch(e){if(e&&(e.code==='resource_exhausted'||e.code==='unavailable')&&i===0){await sleep(1500+Math.random()*800);continue}throw e}}}
+async function cloudIndex(){if(!cloudOK)return [];try{const d=await DB.collection(base()).doc('index').get();return d.exists&&Array.isArray(d.data().projects)?d.data().projects:[]}catch(e){return []}}
+async function saveCloudIndex(){if(!cloudOK)return;const list=(await cloudIndex()).filter(x=>x.id!==P.id);list.unshift(idxEntry());await writeDoc(DB.collection(base()).doc('index'),{projects:list.slice(0,200)})}
+async function listProjects(){const local=lsGet('index')||[];const cloud=await cloudIndex();const m=new Map();[...cloud,...local].forEach(x=>{const e=m.get(x.id);if(!e||x.updated>e.updated)m.set(x.id,x)});return [...m.values()].sort((a,b)=>b.updated-a.updated)}
+async function loadProject(id){let local=lsGet('p.'+id);const il=await IDB.get('p.'+id);if(il&&(!local||il.updated>=local.updated))local=il;let cloud=null;
+  if(cloudOK){try{const pdoc=DB.collection(base()).doc('p_'+id);const m=await pdoc.get();
+    if(m.exists){const meta=m.data();const qs=await pdoc.collection('scenes').limit(1000).get();const byId={};qs.docs.forEach(d=>byId[d.id]=d.data());
+      const scenes=(meta.order||Object.keys(byId)).map(i=>byId[i]).filter(Boolean).map(x=>JSON.parse(JSON.stringify(x)));
+      cloud=Object.assign(JSON.parse(JSON.stringify(meta)),{scenes});delete cloud.order}}catch(e){}}
+  let pick=cloud&&(!local||cloud.updated>=local.updated)?cloud:local;if(!pick)return null;
+  pick=upgrade(pick);
+  if(cloudOK&&local&&(!cloud||local.updated>cloud.updated)){P=pick;dirty.meta=true;pick.scenes.forEach(s=>dirty.scenes.add(s.id));setTimeout(flush,500)}
+  return pick}
+function upgrade(p){p=Object.assign(newProject(),p);p.scenes=(p.scenes||[]).map(s=>{const n=newScene(s);LK.forEach(k=>{if(!Array.isArray(n[k]))n[k]=[]});if(!Array.isArray(n.artists))n.artists=[];if(!Array.isArray(n.costumes))n.costumes=[];if(!n.locked)n.locked={};if(!Array.isArray(n.flags))n.flags=[];return n});p.artists=p.artists||[];p.profiles=p.profiles||{};p.changes=Array.isArray(p.changes)?p.changes:[];return p}
+async function deleteProject(id){lsDel('p.'+id);await IDB.del('p.'+id);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==id));
+  if(cloudOK){try{const pdoc=DB.collection(base()).doc('p_'+id);const qs=await pdoc.collection('scenes').limit(1000).get();for(const d of qs.docs){await pdoc.collection('scenes').doc(d.id).delete()}await pdoc.delete();const list=(await cloudIndex()).filter(x=>x.id!==id);await writeDoc(DB.collection(base()).doc('index'),{projects:list})}catch(e){}}}
+function setSync(cls,msg){const el=$('#sync');el.className='sync '+cls;el.lastElementChild.textContent=msg}
+
+/* ================= Undo ================= */
+function snapshot(){if(!P)return;undoStack.push(JSON.stringify(P));if(undoStack.length>40)undoStack.shift();$('#bUndo').disabled=false}
+function undo(){if(!undoStack.length)return;const prev=JSON.parse(undoStack.pop());const before=new Map(P.scenes.map(s=>[s.id,JSON.stringify(s)]));
+  P.scenes.forEach(s=>{if(!prev.scenes.find(x=>x.id===s.id))dirty.deleted.add(s.id)});
+  prev.scenes.forEach(s=>{if(before.get(s.id)!==JSON.stringify(s))dirty.scenes.add(s.id)});
+  const keepLog=P.changes;P=upgrade(prev);P.changes=keepLog;logChange('Last edit undone','scenes',true);touch([]);$('#bUndo').disabled=!undoStack.length;render();toast('Undone')}
+
+/* ================= Script parsing (local) ================= */
+function parseRest(rest){let r=' '+U(rest).replace(/[–—]/g,'-')+' ';let time='';let note='';
+  const ic=r.match(/[,(]?\s*(INTER ?CUTS?(?: OF| WITH)?[^,)]*)\)?/);if(ic){note=ic[1].trim();r=r.replace(ic[0],' ')}
+  for(const t of TIMES){const re=new RegExp('(^|[\\s\\-/.,(])'+t.replace(/ /g,'\\s+')+'(?=$|[\\s\\-/.,)])');const m=r.match(re);if(m){time=t;r=r.slice(0,m.index)+m[1]+' '+r.slice(m.index+m[0].length);break}}
+  let loc=r.replace(/\s+\d+[A-Z]?\s*$/,'').replace(/^[\s\-\/.,:]+|[\s\-\/.,:]+$/g,'').replace(/\s*-\s*$/,'').replace(/\s{2,}/g,' ').replace(/\s+-\s+-\s+/g,' - ').trim();
+  loc=loc.replace(/^-\s*|\s*-$/g,'').trim();
+  return {time,loc,note}}
+function parseIE(line){const t=line.trim();if(!t||t.length>140)return null;const m=t.match(IE_RE);if(!m)return null;
+  const raw=m[1];const isUpper=raw===raw.toUpperCase();if(!isUpper&&t.length>70)return null;
+  let ie=U(raw).replace(/\s|\./g,'').replace('INT-EXT','INT/EXT').replace('INTEXT','INT/EXT');if(ie==='I/E'||ie==='EXT/INT')ie=ie==='I/E'?'INT/EXT':'EXT/INT';
+  const r=parseRest(m[2]||'');return Object.assign({ie},r)}
+function detectScenes(text){
+  text=String(text||'').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/ /g,' ').replace(/[​﻿]/g,'');
+  const L=text.split('\n');const scenes=[];let cur=null;const front=[];
+  const nextNon=(i)=>{for(let j=i+1;j<L.length&&j<i+5;j++){if(L[j].trim())return j}return -1};
+  for(let i=0;i<L.length;i++){const line=L[i];const t=line.trim();
+    let m=t.length<=150?(t.match(SCN_RE)||t.match(SCN_IN_RE)):null;
+    if(m&&!/^\s*\w+\s+\d+\s+[a-z]{3,}\s+[a-z]/.test(t)){
+      const no=U(m[1]).replace(/\s+/g,' ').replace(/\s*(&|AND|,|\/)\s*/g,' & ');let rest=(m[2]||'').trim();let h={ie:'',time:'',loc:'',note:''};
+      const ie=rest?parseIE(rest):null;
+      if(ie)h=ie;else if(rest){const r=parseRest(rest);h.time=r.time;h.loc=r.loc;h.note=r.note}
+      let heading=t;
+      if(!h.ie){const j=nextNon(i);if(j>0){const ie2=parseIE(L[j]);if(ie2){h=Object.assign(h,{ie:ie2.ie,time:ie2.time||h.time,loc:ie2.loc||h.loc,note:ie2.note||h.note});heading+='  '+L[j].trim();i=j}}}
+      if(h.ie&&!h.loc){const j=nextNon(i);if(j>0&&L[j].trim().length<60&&!/[.!?]$/.test(L[j].trim())&&!parseIE(L[j])&&!SCN_RE.test(L[j].trim())){h.loc=U(L[j].trim().replace(/[()]/g,' ').replace(/\s+/g,' '));heading+='  '+L[j].trim();i=j}}
+      cur=newScene({no,ie:h.ie,time:h.time,loc:h.loc,notes:h.note,heading});cur._lines=[];scenes.push(cur);continue}
+    const ie=parseIE(line);
+    if(ie&&(ie.loc||ie.time)&&U(t.split(/\s/)[0]).match(/^(\d+[A-Z]?[.)]?|INT|EXT|EST|I\/E|INT\.?\/EXT\.?|EXT\.?\/INT\.?|INT\.EXT\.?)/)){
+      const num=(t.match(/^(\d+[A-Z]?)[.)]?\s/)||[])[1]||'';
+      cur=newScene({no:num,ie:ie.ie,time:ie.time,loc:ie.loc,notes:ie.note,heading:t});cur._lines=[];scenes.push(cur);continue}
+    if(cur)cur._lines.push(line);else front.push(line)}
+  const numbered=scenes.filter(s=>s.no).length;const mixed=numbered>=scenes.length/2;let last=0,lastNo='';const used=new Set(scenes.map(s=>U(s.no)).filter(Boolean));
+  scenes.forEach(s=>{while(s._lines.length&&!s._lines[0].trim())s._lines.shift();while(s._lines.length&&!s._lines[s._lines.length-1].trim())s._lines.pop();
+    s.text=s._lines.join('\n');delete s._lines;
+    if(!s.no){if(mixed&&lastNo){const b=(lastNo.match(/\d+/)||[''])[0]||String(last);let c=65;while(used.has(b+String.fromCharCode(c))&&c<90)c++;s.no=b+String.fromCharCode(c);used.add(s.no);s.flags=['This heading had no scene number in the script, so it was numbered '+s.no+'. Check it.']}
+      else{last=Math.floor(last)+1;s.no=String(last)}}
+    else{const n=parseInt(s.no);if(!isNaN(n))last=n}
+    lastNo=s.no;s.cues=extractCues(s.text)});
+  return {front:front.join('\n').trim(),scenes}}
+function cueOf(t){const s=t.trim();if(!s||s.length>34)return null;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
+  if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;return b.replace(/\s+/g,' ')}
+function classify(lines){const out=[];let mode='a',justCue=false;
+  const nextNon=i=>{for(let j=i+1;j<lines.length&&j<i+4;j++){const x=lines[j].trim();if(x)return x}return ''};
+  for(let i=0;i<lines.length;i++){const t=lines[i].trim();
+    if(!t){out.push(['b','']);if(mode==='d'&&!justCue)mode='a';continue}
+    if(mode==='d'){if(/^\(.*\)$/.test(t)){out.push(['par',t]);justCue=true;continue}if(cueOf(t)&&nextNon(i)&&!justCue){out.push(['chr',t]);justCue=true;continue}out.push(['dia',t]);justCue=false;continue}
+    if(/^[A-Z .]+TO:$|^(FADE (IN|OUT)|CUT TO BLACK|INTERCUT|INTER CUT)\b.*$/.test(t)&&t===t.toUpperCase()){out.push(['trn',t]);continue}
+    const nx=nextNon(i);
+    if(cueOf(t)&&nx&&!cueOf(nx)&&!parseIE(nx)&&!SCN_RE.test(nx)){out.push(['chr',t]);mode='d';justCue=true;continue}
+    out.push(['act',t])}
+  return out}
+function extractCues(text){const c=new Set();classify(text.split('\n')).forEach(([k,t])=>{if(k==='chr'){const n=cueOf(t);if(n)c.add(n)}});return [...c]}
+
+/* ================= File import ================= */
+async function fileToText(file,onStatus){const name=file.name.toLowerCase();
+  if(name.endsWith('.pdf'))return pdfToText(await file.arrayBuffer(),onStatus);
+  if(name.endsWith('.docx')){await loadScript(CDN.mammoth);const r=await window.mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});return r.value}
+  if(name.endsWith('.doc'))throw new Error('Old .doc files cannot be read. Save it as .docx or PDF and try again.');
+  const txt=await file.text();
+  if(name.endsWith('.fdx')||/<FinalDraft/.test(txt.slice(0,800)))return fdxToText(txt);
+  if(name.endsWith('.json'))return {json:JSON.parse(txt)};
+  return txt}
+function fdxToText(xml){const d=new DOMParser().parseFromString(xml,'application/xml');const out=[];
+  d.querySelectorAll('Content > Paragraph').forEach(p=>{const ty=p.getAttribute('Type')||'';const t=[...p.querySelectorAll(':scope > Text')].map(x=>x.textContent).join('');if(!t.trim())return;
+    if(ty==='Scene Heading')out.push('',t.toUpperCase(),'');else if(ty==='Character')out.push('',t.toUpperCase());else if(ty==='Dialogue'||ty==='Parenthetical')out.push(t);else out.push('',t)});
+  return out.join('\n').replace(/\n{3,}/g,'\n\n').trim()}
+async function ensurePdfjs(){if(!window.pdfjsLib)await loadScript(CDN.pdfjs);if(!window.pdfjsWorker)await loadScript(CDN.pdfworker);window.pdfjsLib.GlobalWorkerOptions.workerSrc=CDN.pdfworker}
+async function pdfToText(buf,onStatus){await ensurePdfjs();const doc=await window.pdfjsLib.getDocument({data:buf,isEvalSupported:false}).promise;const pages=[];let chars=0;
+  for(let p=1;p<=doc.numPages;p++){onStatus&&onStatus('Reading page '+p+' of '+doc.numPages);const pg=await doc.getPage(p);const tc=await pg.getTextContent();const rows=[];
+    tc.items.forEach(it=>{if(!it.str)return;const y=it.transform[5],x=it.transform[4];let r=rows.find(r=>Math.abs(r.y-y)<3);if(!r){r={y,its:[]};rows.push(r)}r.its.push({x,s:it.str})});
+    rows.sort((a,b)=>b.y-a.y);let prev=null;const lines=[];
+    rows.forEach(r=>{r.its.sort((a,b)=>a.x-b.x);let l='';r.its.forEach(it=>{l+=(l&&!/\s$/.test(l)&&!/^\s/.test(it.s)?' ':'')+it.s});if(prev!==null&&prev-r.y>20)lines.push('');lines.push(l.replace(/\s+/g,' ').trim());prev=r.y});
+    const txt=lines.filter(l=>!/^\d+\.?$/.test(l)&&!/^\(?(MORE|CONTINUED)\)?:?$/i.test(l)).join('\n');chars+=txt.replace(/\s/g,'').length;pages.push(txt)}
+  if(chars<doc.numPages*40)return {scanned:doc};
+  return pages.join('\n\n')}
+async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Add your Claude API key in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
+  const lim=AI.limits&&AI.limits.images;if(!lim)throw new Error('This view cannot send page images to Claude. Use a text PDF or Word file.');
+  const per=Math.max(1,Math.min(lim.maxCount||1,4));const out=[];
+  for(let p=1;p<=doc.numPages;p+=per){const blobs=[];for(let q=p;q<p+per&&q<=doc.numPages;q++){const pg=await doc.getPage(q);const vp=pg.getViewport({scale:1.6});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.85)))}
+    onStatus&&onStatus('Claude is reading pages '+p+'–'+Math.min(p+per-1,doc.numPages)+' of '+doc.numPages);
+    const {text}=await AI.sample('These are consecutive pages of a film screenplay (any language). Transcribe all text exactly as written, page by page, keeping line breaks, scene headings, character names and dialogue. Output only the transcription.',{images:blobs,cache:false});out.push(text)}
+  return out.join('\n\n')}
+
+/* ================= AI ================= */
+const ERRS={no_key:'Add your Claude API key in Settings to use AI. Everything else works without it.',bad_key:'Your Claude API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'The AI model name was not found. Check Settings → Advanced.',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'You have reached your Claude usage limit for now. Try again later.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
+const FATAL=['no_key','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
+function errMsg(e){return (e&&ERRS[e.code])||(e&&e.message&&!e.code?e.message:'Something went wrong with the AI step. Retry failed scenes.')}
+function startJob(label,total){JOB={label,done:0,total,ctl:new AbortController(),fatal:null};renderJob();return JOB}
+function endJob(){JOB=null;renderJob()}
+function renderJob(){const el=$('#job');const run=$('#bRun');if(!JOB){el.hidden=true;run.disabled=false;run.textContent='Run AI breakdown';return}
+  el.hidden=false;const pct=JOB.total?Math.round(JOB.done/JOB.total*100):0;el.innerHTML=`<span>${esc(JOB.label)}${JOB.total?` ${JOB.done}/${JOB.total}`:''}</span><span class="prog"><i style="width:${Math.max(5,pct)}%"></i></span><button class="btn sm" id="bStop">Stop</button>`;
+  $('#bStop').onclick=()=>JOB&&JOB.ctl.abort();run.disabled=true;run.textContent='Working…'}
+async function ask(prompt,opts){if(!AI.sample)throw {code:'not_granted'};return AI.sample.json(prompt,Object.assign({signal:JOB?JOB.ctl.signal:undefined},opts||{}))}
+
+function rosterText(){return P.artists.map(a=>a.name+(a.aliases&&a.aliases.length?' (also: '+a.aliases.join(', ')+')':'')).join('; ')||'none yet'}
+async function aiCast(){const cnt={};P.scenes.forEach(s=>(s.cues||[]).forEach(c=>cnt[c]=(cnt[c]||0)+1));
+  const cands=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,150).map(([n,c])=>n+' ('+c+' scenes)').join('\n')||'(no character cues detected — find the characters from the text)';
+  const sample=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),70000);
+  const r=await ask(`You are a production coordinator on an Indian film. Build the CHARACTER LIST for this screenplay. The script may be in English, Telugu, Tinglish (Telugu in Roman letters), Hindi or another language, in any format.
+Candidate character cues found automatically (name and number of scenes with dialogue):
+${cands}
+
+Rules:
+- Merge spelling variants of the same person into one entry (e.g. GOVINDU / GOVINDHU) and list the variants as aliases.
+- Drop anything that is not a character (transitions, song titles, "INTERCUT", sound cues).
+- Add important characters that appear in the action text even without dialogue.
+- name: UPPERCASE, the most common spelling.
+- designation: short English description of role or relation, e.g. "LEAD ROLE", "HERO'S FATHER", "VILLAIN", "VILLAGE HEAD".
+- tier: "Primary" for main characters who drive the story (usually 2-8), otherwise "Secondary".
+Reply with only JSON: {"artists":[{"name":"","aliases":[],"designation":"","tier":"Primary"}]}
+
+SCRIPT EXCERPT:
+${sample}`,{modelTier:'default'});
+  const list=Array.isArray(r&&r.artists)?r.artists:[];
+  list.forEach(x=>{const name=U(x.name);if(!name)return;let a=findArtist(name)||(x.aliases||[]).map(findArtist).find(Boolean);
+    if(!a){a=addArtist(name,x.tier==='Primary'?'Primary':'Secondary','')}
+    a.aliases=uniq([...(a.aliases||[]),...(x.aliases||[]).map(U)]).filter(v=>norm(v)!==norm(a.name));
+    if(!a.locked){if(x.designation)a.designation=U(x.designation);a.tier=x.tier==='Primary'?'Primary':'Secondary'}});
+  dirty.meta=true}
+function breakdownPrompt(batch){return `You are an experienced Chief Associate Director on an Indian film doing a professional SCRIPT BREAKDOWN. The script may be in English, Telugu, Tinglish (Telugu in Roman letters), Hindi, Tamil or any language and any format. Write every output value in clear ENGLISH.
+Known characters (use these exact UPPERCASE names; map spelling variants to them): ${rosterText()}
+
+For EACH scene below return:
+- id: copy exactly.
+- title: 1-3 word scene title in UPPERCASE (e.g. "HAUNTING", "THE STATEMENT").
+- desc: scene description for a single line order, 1-2 short sentences, present tense, English.
+- loc: the script location in UPPERCASE as written in the heading (fix obvious typos only).
+- ie: INT, EXT, INT/EXT. time: the time/effect exactly as the heading writes it, e.g. DAY, NIGHT, MRNG, AFTN, EVNG, DAWN.
+- timeline: "Present" unless the scene is a flashback, dream or a different period; then e.g. "1947", "Flashback", "Dream".
+- artists: characters present in the scene (named characters only, UPPERCASE).
+- juniors: crowd / junior artistes groups with estimated count, e.g. "Villagers (30)".
+- extras: small non-speaking bit roles, e.g. "Waiter", "Valet guy".
+- setup: the physical set-up in a few words, e.g. "Karthik's bedroom".
+- props: objects handled by actors. art: set dressing and art department items not handled.
+- costumes: [{"artist":"NAME","costume":"short description"}] for artists whose costume is described or implied (period, uniform, wet, bloodied, torn).
+- makeup: "NAME – look", e.g. "BALI – blood on face", "RAYAPPA – wooden leg".
+- vehicles, animals, vfx (CG, digital), sfx (rain, fire, smoke, blasts, breakaways), spl_sets (special or constructed sets), spl_props (special, period or rigged props, weapons), equipment (drone, crane, jimmy jib, car mount, underwater), technicians (fight master, choreographer, animal handler, VFX supervisor, etc.).
+- fight: null, or {"d":"what happens","artists":["NAME"],"fighters":"e.g. 15 fighters","needs":"rope rigging, breakaway glass, safety"} if the scene has a fight, chase or stunt.
+- song: null, or {"d":"short description"} if a song or montage happens in this scene.
+- flags: short notes about anything unclear in the scene (empty if clear).
+Rules: never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies.
+Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"fight":null,"song":null,"flags":[]}]}
+
+SCENES:
+${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}
+${cutBytes(s.text,24000)}`).join('\n\n')}`}
+function makeBatches(list){const out=[];let b=[],n=0;list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>14000||b.length>=4)){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
+function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
+  const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
+  setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
+  if(!s.loc&&r.loc)s.loc=U(r.loc);if(!s.ie&&r.ie)s.ie=U(r.ie);if(!s.time&&r.time)s.time=U(r.time);
+  setIf('timeline',cleanItem(r.timeline)==='Present'?'':cleanItem(r.timeline));
+  if(!L.artists){const ids=namesToIds(arr(r.artists),'Found by AI');s.artists=uniq([...ids])}
+  LK.forEach(k=>{if(!L[k])s[k]=arr(r[k])});
+  if(!L.costumes&&Array.isArray(r.costumes)){s.costumes=r.costumes.filter(c=>c&&c.costume).map(c=>{const a=findArtist(c.artist);return {a:a?a.id:null,n:a?'':U(c.artist),c:cleanItem(c.costume)}})}
+  if(!L.fight){s.fight=r.fight&&r.fight.d?{unit:(s.fight&&s.fight.unit)||'',d:String(r.fight.d).trim(),a:arr(r.fight.artists).map(U).join(', '),f:cleanItem(r.fight.fighters),r:String(r.fight.needs||'').trim()}:null}
+  if(!L.song){s.song=r.song&&r.song.d?{unit:(s.song&&s.song.unit)||'',d:String(r.song.d).trim()}:null}
+  s.flags=arr(r.flags).slice(0,5);s.status='done'}
+function assignUnits(){let f=0,g=0,pf=false,pg=false;P.scenes.forEach(s=>{
+  if(s.fight){if(!pf)f++;if(!s.locked.unit)s.fight.unit='THRILL-'+f;pf=true}else pf=false;
+  if(s.song){if(!pg)g++;if(!s.locked.sunit)s.song.unit='SONG-'+g;pg=true}else pg=false})}
+async function aiSegment(text,onStatus){const L=text.replace(/\r\n?/g,'\n').split('\n');const rows=[];L.forEach((l,i)=>{const t=l.trim();if(t)rows.push(i+'|'+t.slice(0,90))});
+  const wins=[];let w=[],n=0;rows.forEach(r=>{const b=byteLen(r)+1;if(n+b>60000){wins.push(w);w=[];n=0}w.push(r);n+=b});if(w.length)wins.push(w);
+  const starts=[];for(let k=0;k<wins.length;k++){onStatus&&onStatus('Claude is finding scenes ('+(k+1)+'/'+wins.length+')');
+    const r=await ask(`Below are numbered lines ("lineNumber|text") from a film screenplay in any language or format (English, Telugu, Tinglish, Hindi, scene tables, two-column, prose). Identify every line where a NEW SCENE starts. Return the scene number as written (or empty), INT/EXT, the time/effect as written (DAY, NIGHT, MRNG, ...), and the location in UPPERCASE English letters.
+Reply with only JSON: {"scenes":[{"line":0,"no":"","ie":"","time":"","loc":""}]}
+
+${wins[k].join('\n')}`,{modelTier:'default'});
+    (r&&r.scenes||[]).forEach(x=>{const ln=parseInt(x.line);if(!isNaN(ln)&&ln>=0&&ln<L.length)starts.push({ln,no:String(x.no||'').trim(),ie:U(x.ie),time:U(x.time),loc:U(x.loc)})})}
+  starts.sort((a,b)=>a.ln-b.ln);const ded=starts.filter((x,i)=>!i||x.ln!==starts[i-1].ln);if(!ded.length)return null;
+  const scenes=ded.map((x,i)=>{const end=i+1<ded.length?ded[i+1].ln:L.length;const textS=L.slice(x.ln+1,end).join('\n').trim();return newScene({no:x.no,ie:x.ie,time:x.time,loc:x.loc,heading:L[x.ln].trim(),text:textS,cues:extractCues(textS)})});
+  let last=0;scenes.forEach(s=>{if(!s.no){last=Math.floor(last)+1;s.no=String(last)}else{const n=parseInt(s.no);if(!isNaN(n))last=n}});
+  return {front:L.slice(0,ded[0].ln).join('\n').trim(),scenes}}
+function outline(){return P.scenes.map(s=>`Sc ${s.no} | ${eff(s)} | ${s.loc}${s.timeline?' | '+s.timeline:''} | ${s.artists.map(aName).join(', ')} | ${s.desc}`).join('\n')}
+async function aiProfiles(onlyId){const prim=P.artists.filter(a=>a.tier==='Primary'&&(!onlyId||a.id===onlyId));if(!prim.length)throw new Error('Mark at least one artist as Primary in No. of artists first.');
+  const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),150000);
+  const r=await ask(`You are a script consultant. Read this whole screenplay (it may be in Telugu, Tinglish, English or another language) and write CHARACTER PROFILES in clear English for these primary characters: ${prim.map(a=>a.name+(a.designation?' ('+a.designation+')':'')).join(', ')}.
+For each character:
+- description: 3-5 sentences — age, look, background, personality, as the script shows them.
+- arc_start: where they begin (1-2 sentences). arc_turns: 3-5 turning points in story order, each one sentence, with NO scene numbers. arc_end: where they end up (1-2 sentences). If the script seems incomplete, say where they stand at the last scene.
+- relationships: one line per important relationship, "NAME – relationship".
+- key_scenes: 3-6 most important scenes as "Sc 12 – what happens".
+Reply with only JSON: {"profiles":[{"name":"","description":"","arc_start":"","arc_turns":[],"arc_end":"","relationships":[],"key_scenes":[]}]}
+
+SCENE OUTLINE:
+${cutBytes(outline(),40000)}
+
+SCRIPT:
+${scr}`,{modelTier:'complex'});
+  (r&&r.profiles||[]).forEach(x=>{const a=findArtist(x.name);if(!a)return;const j=v=>Array.isArray(v)?v.map(s=>String(s).trim()).filter(Boolean).join('\n'):String(v||'').trim();
+    P.profiles[a.id]={description:j(x.description),start:j(x.arc_start),turns:j(x.arc_turns),end:j(x.arc_end),relationships:j(x.relationships),key:j(x.key_scenes),at:Date.now()}});
+  dirty.meta=true}
+async function aiStructure(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),120000);
+  const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several.
+Return in clear English:
+- main: the main structure. also: other structures it uses (may be empty). why: 2-4 sentences explaining the choice in simple words.
+- parts: the acts or beats of the MAIN structure in order, each {"name":"Act I – Setup","summary":"what happens, 1-3 sentences","scenes":"e.g. Sc 2–14"}. Use scene numbers from the outline.
+- timeline: {"type":"Linear | Non-linear | Flashbacks | Reverse | Circular | Parallel","notes":"periods and time jumps, e.g. 1947 prologue then present"}.
+- incomplete: true if the script appears to be only part of the film (e.g. first half).
+Reply with only JSON: {"main":"","also":[],"why":"","parts":[{"name":"","summary":"","scenes":""}],"timeline":{"type":"","notes":""},"incomplete":false}
+
+SCENE OUTLINE:
+${cutBytes(outline(),40000)}
+
+SCRIPT:
+${scr}`,{modelTier:'complex'});
+  if(!r||!r.main)throw {code:'invalid_json'};
+  P.structure={main:String(r.main),also:(r.also||[]).map(String).join(', '),why:String(r.why||''),parts:(r.parts||[]).map(p=>({name:String(p.name||''),summary:String(p.summary||''),scenes:String(p.scenes||'')})),ttype:String((r.timeline||{}).type||''),tnotes:String((r.timeline||{}).notes||''),incomplete:!!r.incomplete,at:Date.now()};dirty.meta=true}
+
+async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
+  if(!AI.sample){noAI('AI needs ScriptDesk to be opened inside Claude. You can still edit every report by hand.');return}
+  if(STANDALONE&&!navigator.onLine){toast(ERRS.offline,5000);return}
+  if(P.sample){P.sample=false}
+  const pending=P.scenes.filter(s=>opts.only?opts.only.includes(s.id):s.status!=='done');
+  const needCast=!P.artists.length;const needProf=!opts.only&&!Object.keys(P.profiles).length;const needStr=!opts.only&&!P.structure;
+  if(!pending.length&&!needProf&&!needStr&&!needCast){toast('Everything is up to date. Edit a scene in Full script to re-read it.');return}
+  snapshot();const batches=makeBatches(pending);const total=pending.length;startJob('Reading',total);let soft=null;
+  try{
+    if(needCast){JOB.label='Finding characters';renderJob();try{await aiCast()}catch(e){if(FATAL.includes(e&&e.code))throw e;if(e&&e.code==='cancelled')throw e;soft=errMsg(e)}touch([])}
+    JOB.label='Breaking down scenes';renderJob();
+    pending.forEach(s=>s.status='run');if(page==='script'||page==='breakdown')render();
+    const queue=batches.slice();
+    const worker=async()=>{while(queue.length&&!JOB.fatal&&!JOB.ctl.signal.aborted){const b=queue.shift();
+      try{const res=await ask(breakdownPrompt(b),{modelTier:'default'});const arr=Array.isArray(res&&res.scenes)?res.scenes:Array.isArray(res)?res:[];
+        b.forEach((s,i)=>{const r=arr.find(x=>x&&x.id===s.id)||(arr.length===b.length?arr[i]:null);if(r)applyBreakdown(s,r);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}})}
+      catch(e){b.forEach(s=>{s.status='err'});if(e&&e.code==='cancelled'){}else if(FATAL.includes(e&&e.code))JOB.fatal=e;else soft=errMsg(e)}
+      JOB.done+=b.length;renderJob();touch(b.map(s=>s.id));if(['script','breakdown','slo'].includes(page))render()}};
+    await Promise.all([worker(),worker()]);
+    P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});
+    if(JOB.fatal)throw JOB.fatal;if(JOB.ctl.signal.aborted)throw {code:'cancelled'};
+    assignUnits();touch(P.scenes.map(s=>s.id));
+    if(needStr){JOB.label='Reading story structure';JOB.total=0;renderJob();try{await aiStructure()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Story structure could not be written. Use the button on its page to retry.'}touch([])}
+    if(needProf){JOB.label='Writing character profiles';renderJob();try{await aiProfiles()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Character profiles could not be written. Use the button on their page to retry.'}touch([])}
+    const failed=P.scenes.filter(s=>s.status==='err').length;
+    logChange(`AI breakdown: ${pending.length-failed} scene${pending.length-failed===1?'':'s'} read${failed?`, ${failed} failed`:''}`,'scenes',true);
+    toast(failed?`${failed} scene${failed>1?'s':''} failed. Use "Retry failed scenes" in Checks.`:soft||'Breakdown complete. Every report is ready to review and edit.',5000)
+  }catch(e){P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});toast(e&&e.code==='cancelled'?'Stopped. Finished scenes are kept.':errMsg(e),5500)}
+  finally{endJob();touch([]);render()}}
+
+/* ================= Checks ================= */
+function checks(){if(!P)return [];const out=[];const seen={};
+  P.scenes.forEach(s=>{const k=U(s.no);if(seen[k])out.push({lv:'warn',msg:`Scene number ${s.no} is used more than once.`,sid:s.id});seen[k]=1;
+    if(!s.loc)out.push({lv:'warn',msg:`Scene ${s.no}: location is missing.`,sid:s.id});
+    if(!s.ie||!s.time)out.push({lv:'warn',msg:`Scene ${s.no}: effect/time is incomplete (${eff(s)||'empty'}).`,sid:s.id});
+    if(s.status==='err')out.push({lv:'bad',msg:`Scene ${s.no}: the AI breakdown failed.`,sid:s.id,retry:1});
+    if(s.status==='stale')out.push({lv:'warn',msg:`Scene ${s.no}: script was edited. Run AI to update its reports.`,sid:s.id,retry:1});
+    if(s.status==='done'&&!s.artists.length&&!s.juniors.length)out.push({lv:'warn',msg:`Scene ${s.no}: no artists found.`,sid:s.id});
+    (s.flags||[]).forEach(f=>out.push({lv:'info',msg:`Scene ${s.no}: ${f}`,sid:s.id}))});
+  const nums=P.scenes.map(s=>parseInt(s.no)).filter(n=>!isNaN(n));
+  for(let i=1;i<nums.length;i++){if(nums[i]-nums[i-1]>1&&nums[i]>nums[i-1])out.push({lv:'info',msg:`Scene numbers jump from ${nums[i-1]} to ${nums[i]}. Check nothing is missing.`})}
+  const locs=locGroups().map(g=>g.loc);for(let i=0;i<locs.length;i++)for(let j=i+1;j<locs.length;j++){const a=norm(locs[i]),b=norm(locs[j]);if(a&&b&&a!==b&&a.length>4&&lev(a,b)<=2)out.push({lv:'info',msg:`Locations "${locs[i]}" and "${locs[j]}" look like the same place. Merge them in No. of locations.`,pg:'locations'})}
+  const as=P.artists;for(let i=0;i<as.length;i++)for(let j=i+1;j<as.length;j++){const a=norm(as[i].name),b=norm(as[j].name);if(a.length>3&&lev(a,b)<=1)out.push({lv:'info',msg:`Artists "${as[i].name}" and "${as[j].name}" may be the same character. Merge them in No. of artists.`,pg:'artists'})}
+  return out}
+function renderChecksBtn(){const c=P?checks().filter(x=>x.lv!=='info'):[];const b=$('#bChecks');const all=P?checks():[];b.hidden=!all.length;b.textContent=`Checks (${all.length})`;b.className='btn sm '+(c.length?'warn':'ghost')}
+function openChecks(){const list=checks();const failed=P.scenes.filter(s=>s.status==='err'||s.status==='stale');
+  openModal(`<div class="modal-h"><h2>Checks</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><p class="small muted">Things to look at so every report is correct. Nothing here blocks you.</p><div class="checks">${list.map((c,i)=>`<div class="chk"><span class="tag ${c.lv==='bad'?'bad':c.lv==='warn'?'warn':''}">${c.lv==='bad'?'Error':c.lv==='warn'?'Check':'Note'}</span><span>${esc(c.msg)}</span>${c.sid||c.pg?`<button class="btn sm" data-go="${i}">Show</button>`:''}</div>`).join('')||'<p class="muted">No issues found.</p>'}</div></div>
+  <div class="modal-f">${failed.length?`<button class="btn pri" id="bRetry">Retry ${failed.length} scene${failed.length>1?'s':''} with AI</button>`:''}</div>`);
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const c=list[+b.dataset.go];closeModal();if(c.pg)go(c.pg);else{VIEW.focus=c.sid;go('breakdown');setTimeout(()=>{const el=document.getElementById('c-'+c.sid);el&&el.scrollIntoView({block:'start'})},60)}});
+  const r=$('#bRetry');if(r)r.onclick=()=>{closeModal();runAll({only:failed.map(s=>s.id)})}}
+
+/* ================= Editing ================= */
+function ce(attrs,val,cls,label){return `<div contenteditable="true" spellcheck="false" ${attrs}${cls?` class="${cls}"`:''}${label?` aria-label="${esc(label)}"`:''}>${esc(val)}</div>`}
+const sv=(s,f,val,cls,lab)=>ce(`data-s="${s.id}" data-f="${f}"`,val,cls,lab);
+function listStr(s,k){return (s[k]||[]).join(', ')}
+function costumeStr(s){return s.costumes.map(c=>(c.a?aName(c.a):c.n)+' – '+c.c).join('; ')}
+function parseCostumes(t){return String(t||'').split(/\s*[;\n]\s*/).map(x=>x.trim()).filter(Boolean).map(x=>{const m=x.split(/\s+[–—-]\s+|:\s*/);if(m.length>1){const nm=m.shift().trim();const a=findArtist(nm);return {a:a?a.id:null,n:a?'':U(nm),c:m.join(' – ').trim()}}return {a:null,n:'',c:x}})}
+function setSceneField(s,f,t){t=String(t).replace(/ /g,' ').trim();s.locked=s.locked||{};
+  switch(f){
+    case 'no':s.no=U(t);break;
+    case 'loc':s.loc=U(t);break;
+    case 'eff':{const parts=t.split('/').map(x=>U(x)).filter(Boolean);if(parts.length&&/^(INT|EXT|EST|I|INT\.?EXT|EXT\.?INT)$/.test(parts[0].replace(/\./g,''))){s.ie=parts.shift();if(s.ie==='I'&&parts[0]==='E'){s.ie='INT/EXT';parts.shift()}if(['INT','EXT'].includes(s.ie)&&['INT','EXT'].includes(parts[0])){s.ie+='/'+parts.shift()}}s.time=parts.join(' / ');s.locked.ie=s.locked.time=1;return}
+    case 'artists':s.artists=namesToIds(splitList(t),'Added by you');break;
+    case 'crowd':s.juniors=splitList(t);s.locked.juniors=1;return;
+    case 'costumes':s.costumes=parseCostumes(t);break;
+    case 'desc':case 'title':case 'setup':case 'notes':case 'timeline':s[f]=f==='title'?U(t):t;break;
+    case 'fd':case 'fa':case 'ff':case 'fr':case 'funit':{s.fight=s.fight||{unit:'',d:'',a:'',f:'',r:''};const map={fd:'d',fa:'a',ff:'f',fr:'r',funit:'unit'};s.fight[map[f]]=f==='funit'?U(t):t;if(f==='funit')s.locked.unit=1;if(!s.fight.d&&!s.fight.a&&!s.fight.f&&!s.fight.r)s.fight=null;s.locked.fight=1;return}
+    case 'sd':case 'sunit':{s.song=s.song||{unit:'',d:''};if(f==='sd')s.song.d=t;else{s.song.unit=U(t);s.locked.sunit=1}if(!s.song.d&&!s.song.unit)s.song=null;s.locked.song=1;return}
+    default:if(LK.includes(f))s[f]=splitList(t);else return}
+  s.locked[f]=1}
+const FL={no:'Scene number',loc:'Location',eff:'Effect / time',desc:'Description',artists:'Artists',crowd:'Crowd',costumes:'Costumes',title:'Scene title',setup:'Setup',notes:'Notes',timeline:'Timeline',fd:'Fight / stunt',fa:'Fight artists',ff:'Fighters',fr:'Fight requirements',funit:'Fight unit',sd:'Song',sunit:'Song unit'};
+Object.assign(FL,LISTS);
+const ALLSC=['slo','sloLoc','sloArt','sloFight','locations','locScenes','artScenes','breakdown','special','costume','artprops','script'];
+const SHEETS_BY={no:ALLSC,loc:ALLSC,eff:ALLSC,desc:['slo','sloLoc','sloArt','breakdown'],artists:['slo','sloLoc','sloArt','artists','artScenes','breakdown','costume'],crowd:['slo','sloLoc','sloArt','sloFight','breakdown'],juniors:['slo','sloLoc','sloArt','sloFight','breakdown'],
+  costumes:['breakdown','costume'],makeup:['breakdown','costume'],props:['breakdown','artprops'],art:['breakdown','artprops'],spl_props:['breakdown','artprops','special'],setup:['breakdown','artprops'],
+  vfx:['breakdown','special'],sfx:['breakdown','special'],animals:['breakdown','special'],vehicles:['breakdown','special'],spl_sets:['breakdown','special'],equipment:['breakdown','special'],technicians:['breakdown','special'],extras:['breakdown'],
+  fd:['sloFight','breakdown'],fa:['sloFight'],ff:['sloFight'],fr:['sloFight'],funit:['sloFight'],sd:['slo','sloFight','breakdown'],sunit:['slo','sloFight'],title:['breakdown'],notes:['breakdown'],timeline:['breakdown','special','costume'],
+  artistName:['slo','sloLoc','sloArt','sloFight','artists','artScenes','breakdown','costume','profiles'],artistInfo:['artists','artScenes','profiles'],tier:['artists','sloArt','artScenes','costume','profiles'],
+  profile:['profiles'],structure:['structure'],script:ALLSC,scenes:ALLSC.concat(['artists'])};
+const cut=(t,n)=>{t=String(t??'').replace(/\s+/g,' ').trim();n=n||48;return t.length>n?t.slice(0,n-1)+'…':t};
+function sheetName(){return $('#ov')?'Scene list check':(PG[page]?PG[page].t:'ScriptDesk')}
+function fmtWhen(at){return new Date(at).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true})}
+function logChange(what,key,quiet){if(!P)return;const pages=(SHEETS_BY[key]||[page]).filter(id=>PG[id]);
+  P.changes=P.changes||[];P.changes.unshift({at:Date.now(),sheet:sheetName(),what:String(what)});if(P.changes.length>300)P.changes.length=300;dirty.meta=true;
+  renderLastNote();if(!quiet)showSaved(pages)}
+function showSaved(pages){const el=$('#savedPill');const names=pages.map(id=>PG[id].t);
+  el.innerHTML=`<span class="ck" aria-hidden="true">✓</span><b>Saved.</b> ${names.length>1?`Updated in all ${names.length} sheets that use it.`:'Updated.'}${names.length>1?`<small>${esc(names.join(' · '))}</small>`:''}`;
+  el.hidden=false;clearTimeout(showSaved.t);showSaved.t=setTimeout(()=>{el.hidden=true},4200)}
+function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];return `<div class="lastnote" id="lastNote">${c?`<span>Last change</span><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ghost" data-act="history">History (${P.changes.length})</button>`:'<span>No changes yet. Every edit you make is listed here with the sheet, date and time.</span>'}</div>`}
+function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml()}
+function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
+  <div class="modal-b"><p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
+function describeEdit(el,oldV,newV,sids){
+  if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);const f=el.dataset.f;return [`Sc ${s?s.no:''} · ${FL[f]||f}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f]}
+  if(el.dataset.art){const a=A(el.dataset.art);const f=el.dataset.af;const lab={name:'Character name',designation:'Designation',actor:'Artist',phone:'Phone number'}[f]||f;return [`${f==='name'?'Character':a?a.name:''} · ${lab}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f==='name'?'artistName':'artistInfo']}
+  if(el.dataset.ren)return [`Location "${cut(oldV)}" renamed to "${cut(newV)}" in ${sids.length} scene${sids.length===1?'':'s'}`,'loc'];
+  if(el.dataset.item){const k=el.dataset.cat;return [newV.trim()?`${LISTS[k]}: "${cut(oldV)}" → "${cut(newV)}" in ${sids.length} scene${sids.length===1?'':'s'}`:`${LISTS[k]}: "${cut(oldV)}" removed from ${sids.length} scene${sids.length===1?'':'s'}`,k]}
+  if(el.dataset.cs){const s=P.scenes.find(x=>x.id===el.dataset.cs);const key=el.dataset.ca;const nm=key.startsWith('n:')?key.slice(2):aName(key);return [`Sc ${s?s.no:''} · Costume (${nm}): "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,'costumes']}
+  if(el.dataset.pf){const a=A(el.dataset.pa);const lab={description:'Description',start:'Arc start',turns:'Turning points',end:'Arc end',relationships:'Relationships',key:'Key scenes'}[el.dataset.pf];return [`${a?a.name:''} · ${lab} edited`,'profile']}
+  if(el.dataset.st)return [`Story structure · ${({main:'Main structure',also:'Also uses',why:'Why',ttype:'Timeline',tnotes:'Time jumps',pname:'Part name',psum:'Part summary',pscenes:'Part scenes'})[el.dataset.st]||'edited'} edited`,'structure'];
+  return ['Edited',null]}
+function commit(el){if(!P)return;const v=el.isContentEditable?el.innerText:el.value;let changed=false,sids=[];
+  if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);setSceneField(s,el.dataset.f,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id]}}
+  else if(el.dataset.art){const a=A(el.dataset.art);if(!a)return;const f=el.dataset.af;let val=String(v).trim();if(f==='name'){val=U(val);if(!val){el.innerText=a.name;return}const other=findArtist(val);if(other&&other.id!==a.id){toast(`${val} already exists. Use "Merge into" to combine them.`);el.innerText=a.name;return}}
+    if(f==='designation')val=U(val);if(a[f]!==val){undoStack.push(JSON.stringify(P));if(f==='name'&&a.name)a.aliases=uniq([...(a.aliases||[]),a.name]);a[f]=val;a.locked=1;if(f==='tier'||f==='name')needsRender=true;changed=true}}
+  else if(el.dataset.ren){const old=el.dataset.ren;const nv=U(v);if(nv&&nv!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{if(U(s.loc)===old){s.loc=nv;s.locked.loc=1;sids.push(s.id)}});changed=true;needsRender=true}}
+  else if(el.dataset.item){const k=el.dataset.cat,old=el.dataset.item.toLowerCase();const nv=cleanItem(v);if(nv.toLowerCase()!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{const i=(s[k]||[]).findIndex(x=>x.toLowerCase()===old);if(i>=0){if(nv)s[k][i]=nv;else s[k].splice(i,1);s[k]=uniq(s[k]);s.locked[k]=1;sids.push(s.id)}});changed=true;needsRender=true}}
+  else if(el.dataset.cs){const s=P.scenes.find(x=>x.id===el.dataset.cs);if(!s)return;const key=el.dataset.ca;const t=String(v).trim();const i=s.costumes.findIndex(c=>(c.a||'n:'+c.n)===key);const cur=i>=0?s.costumes[i].c:'';
+    if(t!==cur){undoStack.push(JSON.stringify(P));if(i>=0){if(t)s.costumes[i].c=t;else s.costumes.splice(i,1)}else if(t){s.costumes.push(key.startsWith('n:')?{a:null,n:key.slice(2),c:t}:{a:key,n:'',c:t})}s.locked.costumes=1;sids=[s.id];changed=true;needsRender=true}}
+  else if(el.dataset.pf){const id=el.dataset.pa;P.profiles[id]=P.profiles[id]||{};if(P.profiles[id][el.dataset.pf]!==v){undoStack.push(JSON.stringify(P));P.profiles[id][el.dataset.pf]=v;changed=true}}
+  else if(el.dataset.st){P.structure=P.structure||{main:'',also:'',why:'',parts:[],ttype:'',tnotes:''};const f=el.dataset.st;
+    if(f==='pname'||f==='psum'||f==='pscenes'){const p=P.structure.parts[+el.dataset.i];if(!p)return;const k={pname:'name',psum:'summary',pscenes:'scenes'}[f];if(p[k]!==v){undoStack.push(JSON.stringify(P));p[k]=v;changed=true}}
+    else if(P.structure[f]!==v){undoStack.push(JSON.stringify(P));P.structure[f]=v;changed=true}}
+  if(changed){if(undoStack.length>40)undoStack.shift();$('#bUndo').disabled=false;const oldV=el._orig!=null?el._orig:'';const d=describeEdit(el,oldV,String(v).trim(),sids);logChange(d[0],d[1]);touch(sids);renderChecksBtn();
+    if(el.dataset.f&&['no','loc','eff','artists','crowd','costumes'].includes(el.dataset.f))needsRender=true}}
+let needsRender=false;
+const isEd=el=>el&&(el.isContentEditable||el.matches&&el.matches('textarea[data-pf],textarea[data-st],input[data-st],input[data-pf]'));
+document.addEventListener('focusin',e=>{const el=e.target;if(!isEd(el))return;el._orig=el.isContentEditable?el.innerText.trim():el.value;
+  let lab='Editing';if(el.dataset.f){const s=P&&P.scenes.find(x=>x.id===el.dataset.s);lab=`Editing ${FL[el.dataset.f]||'cell'}${s?' · Sc '+s.no:''}`}else if(el.dataset.art)lab='Editing artist';else if(el.dataset.ren)lab='Renaming location';else if(el.dataset.item)lab='Renaming '+(LISTS[el.dataset.cat]||'item');else if(el.dataset.cs)lab='Editing costume';else if(el.dataset.pf)lab='Editing profile';else if(el.dataset.st)lab='Editing story structure';
+  $('#sbLabel').textContent=lab;$('#savebar').hidden=false;$('#savedPill').hidden=true});
+document.addEventListener('focusout',e=>{if(isEd(e.target))setTimeout(()=>{if(!isEd(document.activeElement))$('#savebar').hidden=true},20)});
+['sbSave','sbCancel'].forEach(id=>document.getElementById(id).addEventListener('pointerdown',e=>e.preventDefault()));
+document.getElementById('sbSave').addEventListener('click',()=>{const a=document.activeElement;if(isEd(a))a.blur();$('#savebar').hidden=true});
+document.getElementById('sbCancel').addEventListener('click',()=>{const a=document.activeElement;if(isEd(a)){if(a.isContentEditable)a.innerText=a._orig||'';else a.value=a._orig||'';a.blur()}$('#savebar').hidden=true});
+document.addEventListener('focusout',e=>{const el=e.target;if(!(el.isContentEditable||el.matches('textarea[data-pf],textarea[data-st],input[data-st],input[data-pf]')))return;commit(el);
+  setTimeout(()=>{const a=document.activeElement;if(needsRender&&!(a&&(a.isContentEditable||a.tagName==='TEXTAREA'||a.tagName==='INPUT'||a.tagName==='SELECT'))){needsRender=false;render(true)}},30)});
+document.addEventListener('keydown',e=>{const el=e.target;
+  if(el.isContentEditable&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();el.blur()}
+  if(el.isContentEditable&&e.key==='Escape'){el.innerText=el._orig||'';el.blur()}
+  if(e.key==='Escape'&&$('#ov'))closeModal();
+  if((e.ctrlKey||e.metaKey)&&e.key==='z'&&!(el.isContentEditable||/INPUT|TEXTAREA/.test(el.tagName))){e.preventDefault();undo()}});
+document.addEventListener('paste',e=>{const el=e.target;if(!el.isContentEditable)return;e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t)});
+document.addEventListener('change',e=>{const el=e.target;if(!P)return;
+  if(el.dataset.tier){const a=A(el.dataset.tier);if(a){snapshot();a.tier=el.value;a.locked=1;logChange(`${a.name} · Level set to ${a.tier}`,'tier');touch([]);render(true)}}
+  if(el.dataset.merge&&el.value){const from=A(el.dataset.merge),to=A(el.value);if(from&&to){snapshot();const fn=from.name;mergeArtist(from,to);logChange(`Artist ${fn} merged into ${to.name}`,'artistName');render(true)}}
+  if(el.dataset.mloc&&el.value){const old=el.dataset.mloc,nv=el.value;snapshot();const ids=[];P.scenes.forEach(s=>{if(U(s.loc)===old){s.loc=nv;s.locked.loc=1;ids.push(s.id)}});logChange(`Location ${old} merged into ${nv} (${ids.length} scenes)`,'loc');touch(ids);render(true)}});
+function mergeArtist(from,to){const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(from.id)){s.artists=uniq(s.artists.map(x=>x===from.id?to.id:x));ids.push(s.id)}s.costumes.forEach(c=>{if(c.a===from.id){c.a=to.id;ids.push(s.id)}})});
+  to.aliases=uniq([...(to.aliases||[]),from.name,...(from.aliases||[])]).filter(v=>norm(v)!==norm(to.name));if(!to.actor)to.actor=from.actor;if(!to.phone)to.phone=from.phone;
+  if(P.profiles[from.id]&&!P.profiles[to.id])P.profiles[to.id]=P.profiles[from.id];delete P.profiles[from.id];P.artists=P.artists.filter(a=>a.id!==from.id);touch(uniq(ids))}
+
+/* ================= Rendering helpers ================= */
+const effHtml=s=>`<span class="${isNight(s)?'eff-n':'eff-d'}">${esc(eff(s))}</span>`;
+function sloCells(s){return `<td class="no" data-l="Sc No">${sv(s,'no',s.no,'','Scene number')}</td>
+<td class="loc" data-l="Location">${sv(s,'loc',s.loc,'','Location')}</td>
+<td class="eff" data-l="Effect / time">${ce(`data-s="${s.id}" data-f="eff" class="${isNight(s)?'eff-n':'eff-d'}"`,eff(s),'','Effect / time')}</td>
+<td data-l="Description">${sv(s,'desc',s.desc,'','Scene description')}${s.status==='run'?'<span class="tag acc">Reading…</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':s.status==='stale'?'<span class="tag warn">Script edited</span>':''}</td>
+<td data-l="Artist & crowd">${sv(s,'artists',s.artists.map(aName).join(', '),'','Artists')}${sv(s,'crowd',crowdText(s),'crowd','Crowd')}</td>`}
+const SLO_HEAD='<thead><tr><th>Sc No</th><th>Location</th><th>Effect / Time</th><th>Scene description</th><th>Artist &amp; crowd</th></tr></thead>';
+const sloRow=s=>[s.no,s.loc,eff(s),s.desc,[s.artists.map(aName).join(', '),crowdText(s)].filter(Boolean).join(' + ')];
+const SLO_COLS=[{h:'Sc No',w:8},{h:'Location',w:24},{h:'Effect / Time',w:14},{h:'Scene description',w:60},{h:'Artist & crowd',w:40}];
+function pageHead(title,desc,acts){return `<div class="ph"><div class="grow"><h1>${esc(title)}</h1>${desc?`<p>${desc}</p>`:''}</div><div class="acts">${acts||''}<button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`}
+const searchBox=(ph)=>`<input class="search" type="search" id="q" placeholder="${esc(ph||'Search')}" aria-label="Search this report" value="${esc(VIEW.q||'')}">`;
+function segm(key,opts){const cur=VIEW[key]||opts[0][0];return `<div class="seg" role="group">${opts.map(([v,l])=>`<button data-seg="${key}" data-v="${v}" aria-pressed="${cur===v}">${esc(l)}</button>`).join('')}</div>`}
+function emptyState(){return `<div class="empty"><b>No script yet</b>Import a screenplay to build every report.<br><br><button class="btn pri" data-act="import">Import script</button></div>`}
+function gRow(text,n,cols){return `<tr class="g"><td colspan="${cols}" class="nol">${esc(text)}${n!=null?`<small>${n} scene${n===1?'':'s'}</small>`:''}</td></tr>`}
+
+/* ================= Pages ================= */
+const R={};
+function songStart(s,i){return s.song&&s.song.unit&&!(i>0&&P.scenes[i-1].song&&P.scenes[i-1].song.unit===s.song.unit)}
+R.slo=()=>{const sc=P.scenes;const rows=[];sc.forEach((s,i)=>{if(songStart(s,i))rows.push({group:s.song.unit+' : '+(s.song.d||'')});rows.push(sloRow(s))});
+  return {html:pageHead('Single line order','Click any cell to edit. Changes update every other report. Grey bands mark songs.',searchBox('Search scenes'))+
+  `<div class="tw"><table class="t rt">${SLO_HEAD}<tbody>${sc.map((s,i)=>(songStart(s,i)?`<tr class="g band"><td colspan="5" class="nol">${esc(s.song.unit)} : <span>${sv(s,'sd',s.song.d,'','Song description')}</span></td></tr>`:'')+`<tr data-q="${esc((s.no+' '+s.loc+' '+eff(s)+' '+s.desc+' '+s.artists.map(aName).join(' ')).toLowerCase())}">${sloCells(s)}</tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'landscape',sheets:[{name:'Single line order',cols:SLO_COLS,rows}]}}};
+R.sloLoc=()=>{const gs=locGroups();return {html:pageHead('Location-wise single line order','Scenes grouped by script location.',searchBox())+
+  `<div class="tw"><table class="t rt">${SLO_HEAD}<tbody>${gs.map(g=>gRow(g.loc,g.scenes.length,5)+g.scenes.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+s.desc+' '+s.artists.map(aName).join(' ')).toLowerCase())}">${sloCells(s)}</tr>`).join('')).join('')}</tbody></table></div>`,
+  exp:{orient:'landscape',sheets:[{name:'Location-wise SLO',cols:SLO_COLS,rows:gs.flatMap(g=>[{group:g.loc+' — '+g.scenes.length+' scenes'},...g.scenes.map(sloRow)])}]}}};
+R.sloArt=()=>{const as=sortedArtists().filter(a=>a.n);return {html:pageHead('Artist-wise single line order','Each artist\'s scenes, primary artists first.',searchBox())+
+  `<div class="tw"><table class="t rt">${SLO_HEAD}<tbody>${as.map(a=>gRow(a.name+(a.tier==='Primary'?' · Primary':''),a.n,5)+artistScenes(a.id).map(s=>`<tr data-q="${esc((a.name+' '+s.no+' '+s.loc+' '+s.desc).toLowerCase())}">${sloCells(s)}</tr>`).join('')).join('')||'<tr><td class="muted nol">No artists yet.</td></tr>'}</tbody></table></div>`,
+  exp:{orient:'landscape',sheets:[{name:'Artist-wise SLO',cols:SLO_COLS,rows:as.flatMap(a=>[{group:a.name+' — '+a.n+' scenes'},...artistScenes(a.id).map(sloRow)])}]}}};
+R.sloFight=()=>{const mode=VIEW.fmode||'fight';
+  if(mode==='song'){const sc=P.scenes.filter(s=>s.song);const groups=groupUnits(sc,s=>s.song.unit);
+    return {html:pageHead('Stunt / fight single line order','Songs and montages, numbered as units.',segm('fmode',[['fight','Fights & stunts'],['song','Songs']]))+
+      (sc.length?`<div class="tw"><table class="t rt"><thead><tr><th>Unit</th><th>Sc No</th><th>Location</th><th>Effect / Time</th><th>Song / montage</th><th>Artists</th><th>Juniors</th></tr></thead><tbody>${groups.map(([u,ss])=>gRow(u||'Unnumbered',ss.length,7)+ss.map(s=>`<tr><td data-l="Unit">${sv(s,'sunit',s.song.unit)}</td><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect">${effHtml(s)}</td><td data-l="Song">${sv(s,'sd',s.song.d)}</td><td data-l="Artists">${sv(s,'artists',s.artists.map(aName).join(', '))}</td><td data-l="Juniors">${sv(s,'crowd',crowdText(s))}</td></tr>`).join('')).join('')}</tbody></table></div>`:`<div class="empty"><b>No songs found</b>Songs and montages appear here after the AI breakdown. You can also add one from Script breakdown.</div>`),
+      exp:{orient:'landscape',sheets:[{name:'Songs SLO',cols:[{h:'Unit',w:10},{h:'Sc No',w:8},{h:'Location',w:22},{h:'Effect / Time',w:13},{h:'Song / montage',w:50},{h:'Artists',w:30},{h:'Juniors',w:24}],rows:groups.flatMap(([u,ss])=>[{group:u||'Unnumbered'},...ss.map(s=>[s.song.unit,s.no,s.loc,eff(s),s.song.d,s.artists.map(aName).join(', '),crowdText(s)])])}]}}}
+  const sc=P.scenes.filter(s=>s.fight);const groups=groupUnits(sc,s=>s.fight.unit);
+  return {html:pageHead('Stunt / fight single line order','Fight, chase and stunt scenes. Scenes next to each other share a unit (THRILL-1, THRILL-2). Edit the unit to regroup.',segm('fmode',[['fight','Fights & stunts'],['song','Songs']]))+
+    (sc.length?`<div class="tw"><table class="t rt"><thead><tr><th>Unit</th><th>Sc No</th><th>Location</th><th>Effect / Time</th><th>Fight / stunt</th><th>Artists</th><th>Fighters / juniors</th><th>Requirements</th></tr></thead><tbody>${groups.map(([u,ss])=>gRow(u||'Unnumbered',ss.length,8)+ss.map(s=>`<tr><td data-l="Unit">${sv(s,'funit',s.fight.unit)}</td><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect">${effHtml(s)}</td><td data-l="Fight / stunt">${sv(s,'fd',s.fight.d)}</td><td data-l="Artists">${sv(s,'fa',s.fight.a)}</td><td data-l="Fighters">${sv(s,'ff',s.fight.f)}</td><td data-l="Requirements">${sv(s,'fr',s.fight.r)}</td></tr>`).join('')).join('')}</tbody></table></div>`:`<div class="empty"><b>No fights found</b>Fight and stunt scenes appear here after the AI breakdown. You can also add one from Script breakdown.</div>`),
+    exp:{orient:'landscape',sheets:[{name:'Stunt-fight SLO',cols:[{h:'Unit',w:10},{h:'Sc No',w:8},{h:'Location',w:20},{h:'Effect / Time',w:13},{h:'Fight / stunt',w:50},{h:'Artists',w:26},{h:'Fighters / juniors',w:18},{h:'Requirements',w:32}],rows:groups.flatMap(([u,ss])=>[{group:u||'Unnumbered'},...ss.map(s=>[s.fight.unit,s.no,s.loc,eff(s),s.fight.d,s.fight.a,s.fight.f,s.fight.r])])}]}}};
+function groupUnits(sc,fn){const m=new Map();sc.forEach(s=>{const k=fn(s)||'';if(!m.has(k))m.set(k,[]);m.get(k).push(s)});return [...m.entries()]}
+R.locations=()=>{const gs=locGroups();const nI=gs.filter(g=>[...g.ie].some(x=>/INT/.test(x))).length,nE=gs.filter(g=>[...g.ie].some(x=>/EXT/.test(x))).length;
+  return {html:pageHead('No. of locations','Script locations only. Rename a location here and every scene using it changes. Use "Merge into" for duplicates.',searchBox())+
+  `<div class="stats"><div class="stat"><b>${gs.length}</b><span>Locations</span></div><div class="stat"><b>${nI}</b><span>Interior</span></div><div class="stat"><b>${nE}</b><span>Exterior</span></div><div class="stat"><b>${P.scenes.length}</b><span>Scenes</span></div></div>
+  <div class="tw"><table class="t rt"><thead><tr><th>Sl No</th><th>Location</th><th>Int / Ext</th><th>Effects</th><th>No. of scenes</th><th>Merge into</th></tr></thead><tbody>${gs.map((g,i)=>`<tr data-q="${esc(g.loc.toLowerCase())}"><td class="num" data-l="Sl No">${i+1}</td><td class="loc" data-l="Location">${ce(`data-ren="${esc(g.loc)}"`,g.loc,'','Location name')}</td><td data-l="Int / Ext">${esc([...g.ie].join(', '))}</td><td data-l="Effects">${esc([...g.tm].join(', '))}</td><td class="num" data-l="Scenes">${g.scenes.length}</td><td data-l="Merge"><select class="mini" data-mloc="${esc(g.loc)}" aria-label="Merge ${esc(g.loc)} into"><option value="">—</option>${gs.filter(x=>x.loc!==g.loc).map(x=>`<option>${esc(x.loc)}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'No. of locations',cols:[{h:'Sl No',w:6},{h:'Location',w:36},{h:'Int / Ext',w:12},{h:'Effects',w:22},{h:'No. of scenes',w:12}],rows:gs.map((g,i)=>[i+1,g.loc,[...g.ie].join(', '),[...g.tm].join(', '),g.scenes.length])}]}}};
+R.artists=()=>{const as=sortedArtists();const pri=as.filter(a=>a.tier==='Primary'),sec=as.filter(a=>a.tier!=='Primary');
+  const row=(a,i)=>`<tr data-q="${esc((a.name+' '+a.designation+' '+a.actor).toLowerCase())}"><td class="num" data-l="Sl no">${i+1}</td><td data-l="Character">${ce(`data-art="${a.id}" data-af="name"`,a.name,'','Character name')}${a.flag?` <span class="tag warn" title="${esc(a.flag)}">New</span>`:''}${a.aliases&&a.aliases.length?`<div class="faint small">also ${esc(a.aliases.slice(0,4).join(', '))}</div>`:''}</td><td data-l="Designation">${ce(`data-art="${a.id}" data-af="designation"`,a.designation,'','Designation')}</td><td data-l="Artist">${ce(`data-art="${a.id}" data-af="actor"`,a.actor,'','Artist name')}</td><td data-l="Ph. No">${ce(`data-art="${a.id}" data-af="phone"`,a.phone,'','Phone number')}</td><td class="num" data-l="Scenes">${a.n}</td><td data-l="Level"><select class="mini" data-tier="${a.id}" aria-label="Level"><option ${a.tier==='Primary'?'selected':''}>Primary</option><option ${a.tier!=='Primary'?'selected':''}>Secondary</option></select></td><td data-l="Merge"><select class="mini" data-merge="${a.id}" aria-label="Merge ${esc(a.name)} into"><option value="">—</option>${P.artists.filter(x=>x.id!==a.id).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select> <button class="btn sm ghost danger" data-delart="${a.id}">Delete</button></td></tr>`;
+  const head='<thead><tr><th>Sl no</th><th>Character name</th><th>Designation</th><th>Artist</th><th>Ph. No</th><th>Scenes</th><th>Level</th><th>Actions</th></tr></thead>';
+  const cols=[{h:'Sl no',w:6},{h:'Character name',w:24},{h:'Designation',w:26},{h:'Artist',w:22},{h:'Ph. No',w:16},{h:'Scenes',w:8}];
+  const er=(a,i)=>[i+1,a.name,a.designation,a.actor,a.phone,a.n];
+  return {html:pageHead('No. of artists','Primary artists first, then secondary. Renaming a character updates every report. Phone numbers stay in your private storage.',searchBox()+'<button class="btn sm" data-act="addArtist">Add artist</button>')+
+  `<div class="stats"><div class="stat"><b>${as.length}</b><span>Characters</span></div><div class="stat"><b>${pri.length}</b><span>Primary</span></div><div class="stat"><b>${sec.length}</b><span>Secondary</span></div></div>
+  <div class="tw"><table class="t rt">${head}<tbody>${gRow('Primary artists',null,8)}${pri.map(row).join('')||'<tr><td class="muted nol" colspan="8">None yet. Set an artist\'s level to Primary.</td></tr>'}${gRow('Secondary artists',null,8)}${sec.map(row).join('')}</tbody></table></div>`,
+  exp:{orient:'landscape',sheets:[{name:'No. of artists',cols,rows:[{group:'PRIMARY ARTISTS'},...pri.map(er),{group:'SECONDARY ARTISTS'},...sec.map(er)]}]}}};
+R.locScenes=()=>{const gs=locGroups();return {html:pageHead('Location-wise scene list','Every script location with its scene numbers.',searchBox())+
+  `<div class="tw"><table class="t rt"><thead><tr><th>Location</th><th>Effects</th><th>No.</th><th>Scene numbers</th></tr></thead><tbody>${gs.map(g=>`<tr data-q="${esc(g.loc.toLowerCase())}"><td class="loc" data-l="Location">${esc(g.loc)}</td><td data-l="Effects" class="small">${esc([...g.tm].join(', '))}</td><td class="num" data-l="No.">${g.scenes.length}</td><td data-l="Scenes" style="font-variant-numeric:tabular-nums">${esc(g.scenes.map(s=>s.no).join(', '))}</td></tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'Location-wise scenes',cols:[{h:'Location',w:34},{h:'Effects',w:20},{h:'No.',w:6},{h:'Scene numbers',w:50}],rows:gs.map(g=>[g.loc,[...g.tm].join(', '),g.scenes.length,g.scenes.map(s=>s.no).join(', ')])}]}}};
+R.artScenes=()=>{const as=sortedArtists().filter(a=>a.n);return {html:pageHead('Artist-wise scene list','Every artist with their scene numbers, primary artists first.',searchBox())+
+  `<div class="tw"><table class="t rt"><thead><tr><th>Character</th><th>Level</th><th>Artist</th><th>No.</th><th>Scene numbers</th></tr></thead><tbody>${as.map(a=>`<tr data-q="${esc((a.name+' '+a.actor).toLowerCase())}"><td data-l="Character" style="font-weight:600">${esc(a.name)}</td><td data-l="Level"><span class="tag ${a.tier==='Primary'?'acc':''}">${a.tier}</span></td><td data-l="Artist">${esc(a.actor)||'<span class="faint">—</span>'}</td><td class="num" data-l="No.">${a.n}</td><td data-l="Scenes" style="font-variant-numeric:tabular-nums">${esc(artistScenes(a.id).map(s=>s.no).join(', '))}</td></tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'Artist-wise scenes',cols:[{h:'Character',w:24},{h:'Level',w:11},{h:'Artist',w:20},{h:'No.',w:6},{h:'Scene numbers',w:50}],rows:as.map(a=>[a.name,a.tier,a.actor,a.n,artistScenes(a.id).map(s=>s.no).join(', ')])}]}}};
+const BD_ROWS=[['setup','Setup'],['artists','Artistes'],['extras','Extras'],['juniors','Juniors'],['props','Props'],['art','Art / set'],['costumes','Costumes'],['makeup','Makeup / hair'],['vehicles','Vehicles'],['animals','Animals'],['vfx','VFX / CG'],['sfx','SFX'],['fd','Stunts / fight'],['sd','Song'],['spl_sets','Special sets'],['spl_props','Special props'],['equipment','Spl equipment'],['technicians','Spl technicians'],['notes','Notes']];
+function bdVal(s,k){if(k==='artists')return s.artists.map(aName).join(', ');if(k==='costumes')return costumeStr(s);if(k==='fd')return s.fight?s.fight.d:'';if(k==='sd')return s.song?s.song.d:'';if(LK.includes(k))return listStr(s,k);return s[k]||''}
+R.breakdown=()=>{const sc=P.scenes;return {html:pageHead('Script breakdown','One sheet per scene. Separate list items with commas, costumes with semicolons (NAME – costume).',searchBox('Find a scene'))+
+  `<div class="cards">${sc.map(s=>`<article class="card" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.title+' '+s.desc+' '+s.artists.map(aName).join(' ')+' '+LK.map(k=>s[k].join(' ')).join(' ')).toLowerCase())}">
+   <div class="card-h"><div class="no">${esc(s.no)}</div><div class="hl"><span class="effc ${isNight(s)?'n':'d'}">${esc(eff(s))}</span><span>${esc(s.loc)}</span>${s.timeline?`<span class="tag acc">${esc(s.timeline)}</span>`:''}${s.status==='err'?'<span class="tag bad">AI failed</span>':s.status==='run'?'<span class="tag acc">Reading…</span>':s.status==='stale'?'<span class="tag warn">Script edited</span>':s.status==='new'?'<span class="tag">Not read yet</span>':''}</div>
+   <div class="ttl">${sv(s,'title',s.title,'','Scene title')}</div><div class="ds">${sv(s,'desc',s.desc,'','Scene description')}</div></div>
+   <div class="kv">${BD_ROWS.map(([k,l])=>`<div>${l}</div><div>${sv(s,k,bdVal(s,k),'',l)}</div>`).join('')}<div>Timeline</div><div>${sv(s,'timeline',s.timeline,'','Timeline')}</div></div>
+   <div class="card-f"><button class="btn sm" data-rerun="${s.id}">Re-read with AI</button>${(s.flags||[]).map(f=>`<span class="tag warn">${esc(f)}</span>`).join(' ')}</div></article>`).join('')}</div>`,
+  exp:{orient:'portrait',sheets:[{name:'Script breakdown',cols:[{h:'Sc No',w:8},{h:'Effect / Time',w:13},{h:'Location',w:22},{h:'Title',w:16},{h:'Description',w:40},...BD_ROWS.map(([k,l])=>({h:l,w:24})),{h:'Timeline',w:12}],
+    rows:sc.map(s=>[s.no,eff(s),s.loc,s.title,s.desc,...BD_ROWS.map(([k])=>bdVal(s,k)),s.timeline]),
+    cards:sc.map(s=>({head:`Sc ${s.no}   ${eff(s)}   ${s.loc}${s.title?'   —   '+s.title:''}`,sub:s.desc,rows:BD_ROWS.map(([k,l])=>[l,bdVal(s,k)]).concat([['Timeline',s.timeline]])}))}]}}};
+const SPECIAL=[['vfx','VFX / CG'],['sfx','SFX'],['animals','Animals'],['spl_sets','Special sets'],['spl_props','Special props'],['vehicles','Vehicles'],['equipment','Special equipment'],['technicians','Special technicians']];
+function itemIndex(k){const m=new Map();P.scenes.forEach(s=>(s[k]||[]).forEach(it=>{const key=it.toLowerCase();if(!m.has(key))m.set(key,{name:it,sc:[]});m.get(key).sc.push(s.no)}));return [...m.values()]}
+R.special=()=>{const mode=VIEW.spmode||'item';
+  if(mode==='scene'){const sc=P.scenes.filter(s=>SPECIAL.some(([k])=>s[k].length)||s.timeline);
+    return {html:pageHead('Special identification','Scene-wise view of VFX, effects, animals, special sets and props, vehicles and period scenes.',segm('spmode',[['item','By item'],['scene','Scene-wise']])+searchBox())+
+    `<div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Location</th><th>Effect</th><th>Timeline</th>${SPECIAL.map(([,l])=>`<th>${l}</th>`).join('')}</tr></thead><tbody>${sc.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+SPECIAL.map(([k])=>s[k].join(' ')).join(' ')).toLowerCase())}"><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect">${effHtml(s)}</td><td data-l="Timeline">${sv(s,'timeline',s.timeline)}</td>${SPECIAL.map(([k,l])=>`<td data-l="${l}">${sv(s,k,listStr(s,k),'',l)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
+    exp:{orient:'landscape',sheets:[{name:'Special - scene-wise',cols:[{h:'Sc No',w:7},{h:'Location',w:18},{h:'Effect',w:12},{h:'Timeline',w:11},...SPECIAL.map(([,l])=>({h:l,w:20}))],rows:sc.map(s=>[s.no,s.loc,eff(s),s.timeline,...SPECIAL.map(([k])=>listStr(s,k))])}]}}}
+  const per=P.scenes.filter(s=>s.timeline);const secs=SPECIAL.map(([k,l])=>({k,l,items:itemIndex(k)}));
+  return {html:pageHead('Special identification','Everything that needs special planning. Rename an item to change it in every scene; clear it to remove it.',segm('spmode',[['item','By item'],['scene','Scene-wise']])+searchBox())+
+  `<div class="tw"><table class="t rt"><thead><tr><th>Item</th><th>No.</th><th>Scene numbers</th></tr></thead><tbody>${secs.map(x=>gRow(x.l+' · '+x.items.length,null,3)+(x.items.map(it=>`<tr data-q="${esc((x.l+' '+it.name).toLowerCase())}"><td data-l="Item">${ce(`data-item="${esc(it.name)}" data-cat="${x.k}"`,it.name,'',x.l)}</td><td class="num" data-l="No.">${it.sc.length}</td><td data-l="Scenes">${esc(it.sc.join(', '))}</td></tr>`).join('')||'<tr><td class="faint nol" colspan="3">None</td></tr>')).join('')}
+  ${gRow('Period / flashback scenes · '+per.length,null,3)}${per.map(s=>`<tr><td data-l="Timeline">${esc(s.timeline)}</td><td class="num" data-l="Sc">${esc(s.no)}</td><td data-l="Location">${esc(s.loc)} · ${esc(eff(s))}</td></tr>`).join('')||'<tr><td class="faint nol" colspan="3">None</td></tr>'}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'Special identification',cols:[{h:'Item',w:40},{h:'No.',w:6},{h:'Scene numbers',w:50}],rows:[...secs.flatMap(x=>[{group:x.l},...x.items.map(it=>[it.name,it.sc.length,it.sc.join(', ')])]),{group:'Period / flashback scenes'},...per.map(s=>[s.timeline,s.no,s.loc+' · '+eff(s)])]}]}}};
+function costumeRows(){const rows=[];const prev={},seenC={};
+  P.scenes.forEach(s=>{const keys=uniq([...s.artists,...s.costumes.map(c=>c.a||'n:'+c.n)]);
+    keys.forEach(key=>{const c=s.costumes.find(x=>(x.a||'n:'+x.n)===key);const name=key.startsWith('n:')?key.slice(2):aName(key);if(!name)return;
+      const txt=c?c.c:'';let num='';if(txt){seenC[key]=seenC[key]||[];let i=seenC[key].findIndex(t=>t.toLowerCase()===txt.toLowerCase());if(i<0){seenC[key].push(txt);i=seenC[key].length-1}num='C'+(i+1)}
+      const change=txt&&prev[key]&&prev[key].toLowerCase()!==txt.toLowerCase();if(txt)prev[key]=txt;
+      const mk=s.makeup.filter(m=>{const p=m.split(/\s+[–—-]\s+/)[0];return norm(p)===norm(name)||(A(key)&&(A(key).aliases||[]).some(al=>norm(al)===norm(p)))}).map(m=>m.split(/\s+[–—-]\s+/).slice(1).join(' – ')||m).join('; ');
+      rows.push({s,key,name,txt,num,change,mk})})});return rows}
+R.costume=()=>{const mode=VIEW.cmode||'scene';const rows=costumeRows();
+  const cols=[{h:'Sc No',w:7},{h:'Effect / Time',w:13},{h:'Location',w:20},{h:'Timeline',w:11},{h:'Artist',w:18},{h:'Costume',w:40},{h:'Costume no.',w:9},{h:'Makeup / look',w:28},{h:'Change',w:8}];
+  const er=r=>[r.s.no,eff(r.s),r.s.loc,r.s.timeline,r.name,r.txt,r.num,r.mk,r.change?'Yes':''];
+  const tr=r=>`<tr data-q="${esc((r.name+' '+r.s.no+' '+r.txt).toLowerCase())}"><td class="no" data-l="Sc No">${esc(r.s.no)}</td><td data-l="Artist" style="font-weight:600">${esc(r.name)}</td><td data-l="Costume">${ce(`data-cs="${r.s.id}" data-ca="${esc(r.key)}"`,r.txt,'','Costume')}</td><td data-l="No.">${r.num?`<span class="tag ${r.change?'warn':''}">${r.num}${r.change?' · change':''}</span>`:''}</td><td data-l="Makeup / look" class="small">${esc(r.mk)}</td></tr>`;
+  const head='<thead><tr><th>Sc No</th><th>Artist</th><th>Costume</th><th>Costume no.</th><th>Makeup / look</th></tr></thead>';
+  let body,exRows;
+  if(mode==='artist'){const by=new Map();rows.forEach(r=>{if(!by.has(r.name))by.set(r.name,[]);by.get(r.name).push(r)});const order=[...by.keys()].sort((a,b)=>{const A1=findArtist(a),B1=findArtist(b);return ((A1&&A1.tier==='Primary')?0:1)-((B1&&B1.tier==='Primary')?0:1)||by.get(b).length-by.get(a).length});
+    body=order.map(n=>gRow(n,by.get(n).length,5)+by.get(n).map(tr).join('')).join('');exRows=order.flatMap(n=>[{group:n},...by.get(n).map(er)])}
+  else{const by=new Map();rows.forEach(r=>{if(!by.has(r.s.id))by.set(r.s.id,[]);by.get(r.s.id).push(r)});
+    body=P.scenes.filter(s=>by.has(s.id)).map(s=>gRow(`Sc ${s.no} · ${eff(s)} · ${s.loc}${s.timeline?' · '+s.timeline:''}`,null,5)+by.get(s.id).map(tr).join('')).join('');exRows=P.scenes.filter(s=>by.has(s.id)).flatMap(s=>[{group:`Sc ${s.no} · ${eff(s)} · ${s.loc}`},...by.get(s.id).map(er)])}
+  return {html:pageHead('Costume continuity','Each artist\'s costume per scene. C1, C2… number each costume per artist; "change" marks a new costume from their previous scene.',segm('cmode',[['scene','Scene-wise'],['artist','Artist-wise']])+searchBox())+
+  (rows.length?`<div class="tw"><table class="t rt">${head}<tbody>${body}</tbody></table></div>`:`<div class="empty"><b>No costumes yet</b>Costumes appear after the AI breakdown, or type them into Script breakdown.</div>`),
+  exp:{orient:'landscape',sheets:[{name:'Costume continuity',cols,rows:exRows}]}}};
+R.artprops=()=>{const mode=VIEW.apmode||'overall';
+  if(mode==='scene'){const sc=P.scenes;return {html:pageHead('Art / props breakdown','Scene-wise. Separate items with commas.',segm('apmode',[['overall','Overall'],['scene','Scene-wise']])+searchBox())+
+    `<div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Location</th><th>Effect</th><th>Setup</th><th>Props</th><th>Art / set dressing</th><th>Special props</th></tr></thead><tbody>${sc.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+s.props.join(' ')+' '+s.art.join(' ')).toLowerCase())}"><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect">${effHtml(s)}</td><td data-l="Setup">${sv(s,'setup',s.setup)}</td><td data-l="Props">${sv(s,'props',listStr(s,'props'))}</td><td data-l="Art / set">${sv(s,'art',listStr(s,'art'))}</td><td data-l="Special props">${sv(s,'spl_props',listStr(s,'spl_props'))}</td></tr>`).join('')}</tbody></table></div>`,
+    exp:{orient:'landscape',sheets:[{name:'Art-props scene-wise',cols:[{h:'Sc No',w:7},{h:'Location',w:20},{h:'Effect',w:12},{h:'Setup',w:22},{h:'Props',w:40},{h:'Art / set dressing',w:40},{h:'Special props',w:26}],rows:sc.map(s=>[s.no,s.loc,eff(s),s.setup,listStr(s,'props'),listStr(s,'art'),listStr(s,'spl_props')])}]}}}
+  const secs=[['props','Props'],['spl_props','Special props'],['art','Art / set dressing']].map(([k,l])=>({k,l,items:itemIndex(k).sort((a,b)=>b.sc.length-a.sc.length||a.name.localeCompare(b.name))}));
+  return {html:pageHead('Art / props breakdown','Overall list for the whole script. Rename an item to change it everywhere; clear it to remove it.',segm('apmode',[['overall','Overall'],['scene','Scene-wise']])+searchBox())+
+  `<div class="stats">${secs.map(x=>`<div class="stat"><b>${x.items.length}</b><span>${x.l}</span></div>`).join('')}</div><div class="tw"><table class="t rt"><thead><tr><th>Item</th><th>No. of scenes</th><th>Scene numbers</th></tr></thead><tbody>${secs.map(x=>gRow(x.l,null,3)+(x.items.map(it=>`<tr data-q="${esc(it.name.toLowerCase())}"><td data-l="Item">${ce(`data-item="${esc(it.name)}" data-cat="${x.k}"`,it.name,'',x.l)}</td><td class="num" data-l="Scenes">${it.sc.length}</td><td data-l="Scene numbers">${esc(it.sc.join(', '))}</td></tr>`).join('')||'<tr><td class="faint nol" colspan="3">None</td></tr>')).join('')}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'Art-props overall',cols:[{h:'Item',w:40},{h:'No. of scenes',w:10},{h:'Scene numbers',w:50}],rows:secs.flatMap(x=>[{group:x.l},...x.items.map(it=>[it.name,it.sc.length,it.sc.join(', ')])])}]}}};
+R.profiles=()=>{const prim=sortedArtists().filter(a=>a.tier==='Primary');
+  const btn=`<button class="btn sm pri" data-act="genProfiles">${Object.keys(P.profiles).length?'Rewrite all with AI':'Write profiles with AI'}</button>`;
+  const field=(a,f,l,rows)=>`<div class="fieldbox"><label for="pf-${a.id}-${f}">${l}</label><textarea id="pf-${a.id}-${f}" rows="${rows}" data-pa="${a.id}" data-pf="${f}">${esc((P.profiles[a.id]||{})[f]||'')}</textarea></div>`;
+  return {html:pageHead('Character profiles','The AI reads the whole script and writes a description and arc for each primary artist. Everything here is editable.',btn)+
+  (prim.length?`<div class="cards">${prim.map(a=>`<article class="card"><div class="prof"><div class="pname">${esc(a.name)}</div><div class="muted small" style="margin-bottom:10px">${esc(a.designation||'')}${a.actor?' · played by '+esc(a.actor):''}</div>
+  ${field(a,'description','Description',4)}${field(a,'start','Arc — where they start',2)}${field(a,'turns','Arc — turning points',4)}${field(a,'end','Arc — where they end',2)}<div class="two">${field(a,'relationships','Relationships',4)}${field(a,'key','Key scenes',4)}</div>
+  <div><button class="btn sm" data-prof="${a.id}">Rewrite ${esc(a.name)} with AI</button></div></div></article>`).join('')}</div>`:`<div class="empty"><b>No primary artists yet</b>Set primary artists in No. of artists, then write their profiles.</div>`),
+  exp:{orient:'portrait',sheets:[{name:'Character profiles',cols:[{h:'Character',w:18},{h:'Designation',w:18},{h:'Description',w:50},{h:'Arc start',w:30},{h:'Turning points',w:50},{h:'Arc end',w:30},{h:'Relationships',w:36},{h:'Key scenes',w:36}],
+    rows:prim.map(a=>{const p=P.profiles[a.id]||{};return [a.name,a.designation,p.description,p.start,p.turns,p.end,p.relationships,p.key]}),
+    cards:prim.map(a=>{const p=P.profiles[a.id]||{};return {head:a.name+(a.designation?'  —  '+a.designation:''),rows:[['Description',p.description],['Where they start',p.start],['Turning points',p.turns],['Where they end',p.end],['Relationships',p.relationships],['Key scenes',p.key]]}})}]}}};
+R.structure=()=>{const st=P.structure;const btn=`<button class="btn sm pri" data-act="genStructure">${st?'Re-read with AI':'Find structure with AI'}</button>`;
+  if(!st)return {html:pageHead('Story structure','The AI identifies the structure the script follows (three-act, Hero\'s Journey, Save the Cat, Kishotenketsu, non-linear and more) and maps its acts or beats.',btn)+`<div class="empty"><b>Not read yet</b>Run the AI breakdown or press the button above.</div>`,exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:30},{h:'Summary',w:70}],rows:[]}]}};
+  const inp=(f,l)=>`<div class="fieldbox"><label for="st-${f}">${l}</label><input id="st-${f}" data-st="${f}" value="${esc(st[f]||'')}"></div>`;
+  return {html:pageHead('Story structure','How the story is built. Edit anything; the AI only writes the first draft.',btn)+
+  (st.incomplete?`<div class="banner info">This script looks like part of the film (for example the first half). The structure covers what is here.</div>`:'')+
+  `<div class="card"><div class="prof"><div class="two">${inp('main','Main structure')}${inp('also','Also uses')}</div><div class="fieldbox"><label for="st-why">Why</label><textarea id="st-why" rows="3" data-st="why">${esc(st.why)}</textarea></div><div class="two">${inp('ttype','Timeline')}<div class="fieldbox"><label for="st-tnotes">Time jumps and periods</label><textarea id="st-tnotes" rows="2" data-st="tnotes">${esc(st.tnotes)}</textarea></div></div></div></div>
+  <h2 style="font:700 20px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;margin:22px 0 10px">Acts and beats</h2>
+  <div class="tw"><table class="t rt"><thead><tr><th>Part</th><th>Scenes</th><th>What happens</th></tr></thead><tbody>${st.parts.map((p,i)=>`<tr><td data-l="Part" style="font-weight:600">${ce(`data-st="pname" data-i="${i}"`,p.name)}</td><td data-l="Scenes" class="small" style="white-space:nowrap">${ce(`data-st="pscenes" data-i="${i}"`,p.scenes)}</td><td data-l="What happens">${ce(`data-st="psum" data-i="${i}"`,p.summary)}</td></tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:28},{h:'Scenes',w:14},{h:'What happens',w:70}],rows:[{group:'Main structure: '+st.main+(st.also?' · Also: '+st.also:'')},['Why','',st.why],['Timeline',st.ttype,st.tnotes],{group:'Acts and beats'},...st.parts.map(p=>[p.name,p.scenes,p.summary])]}]}}};
+R.script=()=>{const editing=VIEW.editScene;
+  return {html:pageHead('Full script','Edit a scene to change its text or heading. Its reports update straight away, and the AI re-reads it.',`<button class="btn sm" data-act="checkScenes">Scene list check</button>`+searchBox('Find text'))+
+  (P.front?`<div class="front" style="margin-bottom:14px;max-width:880px">${esc(P.front)}</div>`:'')+
+  `<div class="scr">${P.scenes.map((s,idx)=>`<section class="sc" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase().slice(0,4000))}"><div class="sc-h"><span class="no">${esc(s.no)}</span><span class="hd">${effHtml(s)} · ${esc(s.loc)}${s.timeline?` <span class="tag acc">${esc(s.timeline)}</span>`:''}</span>${s.status==='stale'?'<span class="tag warn">Edited</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':''}${editing===s.id?'':`<button class="btn sm" data-edit="${s.id}">Edit</button>`}</div>
+  <div class="page">${editing===s.id?`<label class="faint small" for="ed-${s.id}">First line is the scene heading. Add another heading line to split the scene.</label><textarea id="ed-${s.id}">${esc(headingLine(s)+'\n\n'+s.text)}</textarea><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn pri sm" data-save="${s.id}">Save scene</button><button class="btn sm" data-cancel>Cancel</button><span style="flex:1"></span>${idx<P.scenes.length-1?`<button class="btn sm" data-mergeNext="${s.id}">Merge with next scene</button>`:''}<button class="btn sm danger" data-delscene="${s.id}">Delete scene</button></div>`:
+  classify(s.text.split('\n')).map(([k,t])=>`<div class="ln ${k}">${esc(t)}</div>`).join('')}</div></section>`).join('')}</div>`,
+  exp:{orient:'portrait',script:true,sheets:[{name:'Full script',cols:[{h:'Sc No',w:8},{h:'Heading',w:40},{h:'Text',w:100}],rows:P.scenes.map(s=>[s.no,headingLine(s),s.text])}]}}};
+function headingLine(s){return `SCENE NO ${s.no} ${[s.ie,s.time].filter(Boolean).join(' ')} ${s.loc}`.replace(/\s+/g,' ').trim()+(s.notes&&/INTERCUT/i.test(s.notes)?', '+s.notes:'')}
+R.projects=()=>({html:`<div class="ph"><div class="grow"><h1>Projects</h1><p>Your scripts${cloudOK?', saved to your private account storage so they open on laptop and phone':STANDALONE?', saved on this device. Use Backup to move a project to another device (open the backup with Import script)':', saved in this browser'}.</p></div><div class="acts"><button class="btn pri" data-act="import">New project</button></div></div><div class="plist" id="plist"><p class="muted">Loading…</p></div>`,exp:null});
+
+/* ================= Render ================= */
+function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.g!==g){g=p.g;h+=`<h6>${esc(g)}</h6>`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}">${esc(p.nav)}</button>`});return h}
+let lastExp=null;
+function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
+  $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();
+  if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTop();return}
+  syncTop();
+  if(!P.scenes.length&&page!=='artists'){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
+  const r=(R[page]||R.slo)();lastExp=r.exp;
+  c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> This is an example script so you can see every report. Import your own script to start.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
+  $('#bCur').textContent=PG[page]?PG[page].t:'';
+  sheetify(c);applySearch();if(keepScroll)c.scrollTop=st;else c.scrollTop=0;renderChecksBtn()}
+function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
+function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
+function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
+  $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
+  if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?'Add your Claude API key in Settings to use AI':'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
+function applySearch(){const q=(VIEW.q||'').toLowerCase().trim();document.querySelectorAll('#content [data-q]').forEach(el=>{el.hidden=!!q&&!el.dataset.q.includes(q)})}
+function go(id){page=id;lsSet('page',id);VIEW.q='';VIEW.editScene=null;$('#msheet').classList.remove('open');render()}
+async function fillProjects(){const box=$('#plist');if(!box)return;const list=await listProjects();
+  box.innerHTML=list.length?list.map(p=>`<div class="pcard" role="button" tabindex="0" data-open="${p.id}"><b>${esc(p.title)}</b><span class="muted small">${esc(p.production||'')}</span><span class="small faint">${p.scenes} scenes · updated ${new Date(p.updated).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}${p.sample?' · sample':''}</span><div style="display:flex;gap:6px;margin-top:6px"><button class="btn sm" data-open="${p.id}">Open</button><button class="btn sm" data-backup="${p.id}">Backup</button><button class="btn sm ghost danger" data-delp="${p.id}">Delete</button></div></div>`).join(''):`<div class="empty"><b>No projects yet</b>Start by importing a script.</div>`}
+
+/* ================= Actions ================= */
+document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-open]');if(!t)return;
+  if(t.dataset.page){go(t.dataset.page);return}
+  if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}
+  if(t.dataset.x){exportPage(t.dataset.x);return}
+  if(t.dataset.delp){e.stopPropagation();if(t.dataset.armed){const id=t.dataset.delp;t.textContent='Deleting…';await deleteProject(id);if(P&&P.id===id)P=null;toast('Project deleted');render();return}t.dataset.armed=1;t.textContent='Confirm delete';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}
+  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp)await saveFile(`${(bp.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(bp));return}
+  if(t.dataset.open){await openProject(t.dataset.open);return}
+  if(t.dataset.edit){VIEW.editScene=t.dataset.edit;render(true);const ta=$('#ed-'+t.dataset.edit);ta&&ta.focus();return}
+  if(t.dataset.cancel!==undefined&&t.hasAttribute('data-cancel')){VIEW.editScene=null;render(true);return}
+  if(t.dataset.save){saveSceneEdit(t.dataset.save);return}
+  if(t.dataset.mergenext){mergeNext(t.dataset.mergenext);return}
+  if(t.dataset.delscene){if(t.dataset.armed){snapshot();const i=P.scenes.findIndex(s=>s.id===t.dataset.delscene);if(i>=0){const no=P.scenes[i].no;dirty.deleted.add(P.scenes[i].id);P.scenes.splice(i,1);logChange(`Scene ${no} deleted`,'scenes')}VIEW.editScene=null;touch([]);render(true);return}t.dataset.armed=1;t.textContent='Confirm delete';return}
+  if(t.dataset.delart){if(t.dataset.armed){snapshot();const id=t.dataset.delart;const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(id)){s.artists=s.artists.filter(x=>x!==id);ids.push(s.id)}s.costumes=s.costumes.filter(c=>c.a!==id)});const dn=aName(id);P.artists=P.artists.filter(a=>a.id!==id);delete P.profiles[id];logChange(`Artist ${dn} deleted`,'artistName');touch(ids);render(true);return}t.dataset.armed=1;t.textContent='Confirm';return}
+  if(t.dataset.rerun){runAll({only:[t.dataset.rerun]});return}
+  if(t.dataset.prof){profileJob(t.dataset.prof);return}
+  const act=t.dataset.act;
+  if(act==='import')openImport();
+  if(act==='addArtist'){snapshot();const a=addArtist('NEW CHARACTER '+(P.artists.length+1),'Secondary','');logChange(`Artist ${a.name} added`,'artistInfo',true);touch([]);render(true);toast('Artist added. Click the name to rename.')}
+  if(act==='history')openHistory();
+  if(act==='settings')openSettings();
+  if(act==='install')doInstall();
+  if(act==='genProfiles')profileJob();
+  if(act==='genStructure')structureJob();
+  if(act==='checkScenes')openSceneCheck();
+  if(act==='startBreakdown'){closeModal();runAll()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('.pcard')){openProject(e.target.dataset.open)}});
+document.addEventListener('input',e=>{if(e.target.id==='q'){VIEW.q=e.target.value;applySearch()}});
+$('#bProjects').onclick=()=>{page='projects';render()};
+$('#bRun').onclick=()=>runAll();
+$('#bUndo').onclick=undo;
+$('#bChecks').onclick=openChecks;
+$('#bAll').onclick=()=>exportAll();
+$('#bMenu').onclick=()=>$('#msheet').classList.add('open');
+$('#msheet').onclick=e=>{if(e.target.id==='msheet')$('#msheet').classList.remove('open')};
+$('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>exportPage('pdf');
+$('#fTitle').addEventListener('change',e=>{if(!P)return;P.title=e.target.value.trim()||'Untitled film';logChange(`Film title set to ${P.title}`,'x',true);touch([])});
+$('#fProd').addEventListener('change',e=>{if(!P)return;P.production=e.target.value.trim();logChange(`Production house set to ${P.production||'—'}`,'x',true);touch([])});
+
+async function openProject(id){const p=await loadProject(id);if(!p){toast('That project could not be opened.');return}await flushNow();P=p;undoStack.length=0;$('#bUndo').disabled=true;lsSet('last',id);if(page==='projects')page=lsGet('page')&&lsGet('page')!=='projects'?lsGet('page'):'slo';render()}
+async function flushNow(){if(P&&(dirty.meta||dirty.scenes.size)){clearTimeout(flushT);await flush()}}
+async function profileJob(id){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude. You can type profiles by hand.');return}snapshot();startJob(id?'Writing profile':'Writing character profiles',0);
+  try{await aiProfiles(id);logChange(id?`${aName(id)} profile rewritten by AI`:'Character profiles written by AI','profile',true);touch([]);toast('Profiles written. Edit anything you like.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
+async function structureJob(){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude.');return}snapshot();startJob('Reading story structure',0);
+  try{await aiStructure();logChange('Story structure written by AI','structure',true);touch([]);toast('Story structure ready.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
+function saveSceneEdit(id){const ta=$('#ed-'+id);const s=P.scenes.find(x=>x.id===id);if(!ta||!s)return;snapshot();
+  const r=detectScenes(ta.value);const idx=P.scenes.indexOf(s);let changed=[s.id];
+  if(!r.scenes.length){s.text=ta.value.trim();s.cues=extractCues(s.text)}
+  else{const f=r.scenes[0];const pre=r.front;s.no=f.no||s.no;s.ie=f.ie||s.ie;s.time=f.time||s.time;s.loc=f.loc||s.loc;s.heading=f.heading;s.text=(pre?pre+'\n\n':'')+f.text;s.cues=f.cues;['no','ie','time','loc'].forEach(k=>s.locked[k]=1);
+    r.scenes.slice(1).forEach((n,i)=>{n.status='stale';P.scenes.splice(idx+1+i,0,n);changed.push(n.id)})}
+  changed.forEach(cid=>{const x=P.scenes.find(y=>y.id===cid);if(x)x.status='stale'});
+  VIEW.editScene=null;logChange(r.scenes.length>1?`Scene ${s.no} script edited and split into ${r.scenes.length} scenes`:`Scene ${s.no} script edited`,'script');touch(changed);render(true);
+  if(AI.sample&&!JOB){toast(r.scenes.length>1?`Saved and split into ${r.scenes.length} scenes. The AI is re-reading them.`:'Saved. The AI is re-reading this scene.');runAll({only:changed})}
+  else toast('Saved. Run AI later to update this scene\'s breakdown.')}
+function mergeNext(id){const i=P.scenes.findIndex(s=>s.id===id);if(i<0||i>=P.scenes.length-1)return;snapshot();const a=P.scenes[i],b=P.scenes[i+1];
+  a.text=a.text+'\n\n'+headingLine(b)+'\n\n'+b.text;a.no=a.no+' & '+b.no;a.status='stale';a.cues=uniq([...a.cues,...b.cues]);a.artists=uniq([...a.artists,...b.artists]);LK.forEach(k=>a[k]=uniq([...a[k],...b[k]]));a.costumes=[...a.costumes,...b.costumes];
+  dirty.deleted.add(b.id);P.scenes.splice(i+1,1);VIEW.editScene=null;logChange(`Scenes merged into ${a.no}`,'scenes');touch([a.id]);render(true)}
+
+/* ================= Import ================= */
+function openModal(html){$('#modalRoot').innerHTML=`<div class="ov" id="ov"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;$('#ov').addEventListener('click',e=>{if(e.target.id==='ov'||e.target.closest('[data-close]'))closeModal()})}
+function closeModal(){$('#modalRoot').innerHTML=''}
+function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><button class="btn ghost" data-close>Close</button></div>
+ <div class="modal-b">
+  <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>
+  <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json). Any language or format.</span></label>
+  <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json" hidden>
+  <div class="fieldbox"><label for="iText">Or paste the script</label><textarea id="iText" placeholder="SCENE NO 1  EXT. VILLAGE - DAY&#10;&#10;..."></textarea></div>
+  <p class="small muted" id="iInfo">After import you'll check the scene list before the AI breakdown starts.</p>
+ </div>
+ <div class="modal-f"><button class="btn" id="iSample">Load sample</button><span style="flex:1"></span><button class="btn pri" id="iGo">Find scenes</button></div>`);
+  let scanned=null;const info=$('#iInfo');
+  const handle=async f=>{if(!f)return;info.textContent='Reading '+f.name+'…';scanned=null;
+    try{const r=await fileToText(f,m=>info.textContent=m);
+      if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
+      if(r&&r.scanned){scanned=r.scanned;info.textContent=`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
+      else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}`}
+      if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/^[0-9a-f]{8}\s/,'')}
+    catch(e){info.textContent=(e&&e.message)||'That file could not be read. Try pasting the text.'}};
+  $('#iFile').onchange=e=>handle(e.target.files[0]);
+  const drop=$('#drop');drop.ondragover=e=>{e.preventDefault();drop.classList.add('over')};drop.ondragleave=()=>drop.classList.remove('over');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');handle(e.dataTransfer.files[0])};
+  $('#iSample').onclick=()=>{P=sampleProject();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render()};
+  $('#iGo').onclick=async()=>{const btn=$('#iGo');btn.disabled=true;
+    try{let text=$('#iText').value;
+      if(scanned){text=await ocrPdf(scanned,m=>info.textContent=m);$('#iText').value=text}
+      if(!text.trim()){info.textContent='Choose a file or paste the script first.';btn.disabled=false;return}
+      let r=detectScenes(text);
+      const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
+      if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}finally{JOB=null}}
+      if(!r.scenes.length){info.textContent='No scenes could be found. Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".';btn.disabled=false;return}
+      await flushNow();
+      P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});
+      undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}
+    catch(e){info.textContent=errMsg(e);btn.disabled=false}}}
+function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no location',(!s.ie||!s.time)&&'effect incomplete',sc.filter(x=>U(x.no)===U(s.no)).length>1&&'duplicate number'].filter(Boolean);
+  const nw=sc.filter(s=>warn(s).length).length;
+  openModal(`<div class="modal-h"><h2>Scene list check</h2><button class="btn ghost" data-close>Close</button></div>
+  <div class="modal-b"><p class="small">${sc.length} scenes found${nw?`, <b style="color:var(--warn)">${nw} need a look</b>`:''}. Fix numbers, effects and locations here (click to edit). To split or merge scenes, use Edit in Full script.</p>
+  <div class="tw" style="max-height:52vh;overflow:auto"><table class="t rt"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Starts with</th></tr></thead><tbody>${sc.map(s=>`<tr><td class="no" data-l="Sc No">${sv(s,'no',s.no)}</td><td class="eff" data-l="Effect">${sv(s,'eff',eff(s))}</td><td class="loc" data-l="Location">${sv(s,'loc',s.loc)}${warn(s).map(w=>` <span class="tag warn">${w}</span>`).join('')}</td><td data-l="Starts with" class="small muted">${esc(s.text.replace(/\s+/g,' ').slice(0,90))}</td></tr>`).join('')}</tbody></table></div></div>
+  <div class="modal-f"><span class="small muted" style="margin-right:auto">${AI.sample?'The breakdown takes a few minutes for a full script.':'AI is off in this view. Reports will fill in as you type.'}</span><button class="btn" data-close>${fresh?'Later':'Done'}</button>${AI.sample?`<button class="btn pri" data-act="startBreakdown">Start AI breakdown</button>`:''}</div>`)}
+
+/* ================= Export ================= */
+async function saveFile(filename,data){if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
+  try{await dl.save({filename,data});toast('Saved '+filename)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited')toast('A save prompt is already open.');else if(c==='rejected_extension'||c==='extension_not_enabled')toast('This file type cannot be saved in this view.');else toast('The file could not be saved. Try again.')}}
+let _dl;async function capDownloads(){if(_dl!==undefined)return _dl;try{_dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){_dl=null}return _dl}
+function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_${rep.replace(/[^\w]+/g,'_')}.${ext}`}
+async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');return}const name=PG[page]?PG[page].t:'Report';
+  try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
+    else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
+async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
+  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure']];
+  try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
+    jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();(r.exp?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
+  await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
+let XLSX_STYLED=false;
+async function loadXlsx(){if(window.XLSX)return;try{await loadScript(CDN.xlsxStyle);XLSX_STYLED=true}catch(e){await loadScript(CDN.xlsx);XLSX_STYLED=false}}
+const XL_FILL={eff:'9DC3E6',loc:'FFE699',desc:'DDEBF7','':'D9D9D9'};
+function xlBorder(){const b={style:'thin',color:{rgb:'000000'}};return {top:b,bottom:b,left:b,right:b}}
+function addSheet(wb,sh,title){const n=sh.cols.length;const aoa=[];const kinds=[];const merges=[];
+  const pad=a=>{while(a.length<n)a.push('');return a};
+  aoa.push(pad([P.production||'']));kinds.push('t1');aoa.push(pad([P.title||'']));kinds.push('t2');aoa.push(pad([title+'   ·   '+today()]));kinds.push('t3');
+  for(let r=0;r<3;r++)merges.push({s:{r,c:0},e:{r,c:n-1}});
+  aoa.push(sh.cols.map(c=>c.h));kinds.push('h');
+  sh.rows.forEach(r=>{if(r&&r.group){merges.push({s:{r:aoa.length,c:0},e:{r:aoa.length,c:n-1}});aoa.push(pad([r.group]));kinds.push('g')}else{aoa.push(pad(r.map(v=>v==null?'':v)));kinds.push('b')}});
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=sh.cols.map(c=>({wch:c.w||14}));ws['!merges']=merges;
+  if(XLSX_STYLED){const hk=sh.cols.map(c=>hdrKind(c.h));const font={name:'Calibri',sz:11,color:{rgb:'000000'}};
+    for(let r=0;r<aoa.length;r++)for(let c=0;c<n;c++){const ref=XLSX.utils.encode_cell({r,c});if(!ws[ref])ws[ref]={t:'s',v:''};const k=kinds[r];let st;
+      if(k==='t1')st={font:Object.assign({},font,{bold:true,sz:12}),alignment:{horizontal:'center',vertical:'center'},border:xlBorder()};
+      else if(k==='t2')st={font:Object.assign({},font,{bold:true,sz:14}),alignment:{horizontal:'center',vertical:'center'},border:xlBorder()};
+      else if(k==='t3')st={font:Object.assign({},font,{bold:true}),alignment:{horizontal:'center',vertical:'center'},border:xlBorder()};
+      else if(k==='h')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:XL_FILL[hk[c]]}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
+      else if(k==='g')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:'D9D9D9'}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
+      else{const v=String(ws[ref].v||'');st={font,alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
+        if(hk[c]==='eff'&&v)st.fill={patternType:'solid',fgColor:{rgb:/NIGHT/i.test(v)?'E3E7F7':'FBF2D0'}};
+        if(c===0||hk[c]==='loc'||hk[c]==='eff')st.font=Object.assign({},font,{bold:true})}
+      ws[ref].s=st}
+    ws['!rows']=[{hpt:20},{hpt:24},{hpt:18},{hpt:22}]}
+  let nm=String(sh.name).replace(/[\\\/?*\[\]:]/g,'-').slice(0,31);let i=2;while(wb.SheetNames.includes(nm)){nm=String(sh.name).slice(0,27)+' '+i++}XLSX.utils.book_append_sheet(wb,ws,nm)}
+async function buildPdf(title,exp){await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:exp.orient||'landscape',unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+  const nonLatin=/[ऀ-෿]/.test(JSON.stringify(exp.sheets));
+  const head=()=>{doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(110);doc.text(U(P.production||''),36,26);doc.setFontSize(14);doc.setTextColor(20);doc.text(U(P.title||'')+'  —  '+title,36,44);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(110);doc.text(today(),W-36,26,{align:'right'});doc.setDrawColor(180);doc.line(36,52,W-36,52)};
+  const foot=()=>{const n=doc.internal.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(140);doc.text(`Page ${i} of ${n}`,W-36,H-18,{align:'right'});doc.text('ScriptDesk',36,H-18)}};
+  const sh=exp.sheets[0];
+  if(exp.script){head();let y=72;doc.setFont('courier','normal');doc.setFontSize(10);doc.setTextColor(20);
+    P.scenes.forEach(s=>{const lines=[headingLine(s).toUpperCase(),'',...s.text.split('\n')];lines.forEach((ln,j)=>{doc.setFont('courier',j===0?'bold':'normal');const wrapped=doc.splitTextToSize(ln||' ',W-108);wrapped.forEach(w=>{if(y>H-40){doc.addPage();head();y=72;doc.setFont('courier','normal');doc.setFontSize(10)}doc.text(w,54,y);y+=12.5})});y+=14});foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+  if(sh.cards&&sh.cards.length){let y=66;head();sh.cards.forEach((c,ci)=>{
+    doc.autoTable({startY:y,margin:{top:66,left:36,right:36},head:[[{content:c.head,colSpan:2,styles:{halign:'left',fillColor:[24,24,26],textColor:255,fontStyle:'bold',fontSize:10}}]],
+      body:[...(c.sub?[[{content:c.sub,colSpan:2,styles:{fontStyle:'italic',textColor:60}}]]:[]),...c.rows.map(([k,v])=>[k,v||''])],theme:'grid',styles:{fontSize:8.5,cellPadding:4,lineColor:[200,200,200],textColor:30,overflow:'linebreak'},columnStyles:{0:{cellWidth:110,textColor:90,fontStyle:'bold'}},didDrawPage:()=>head(),pageBreak:'auto',rowPageBreak:'avoid'});
+    y=doc.lastAutoTable.finalY+16;if(y>H-120&&ci<sh.cards.length-1){doc.addPage();head();y=66}});foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+  const totalW=sh.cols.reduce((a,c)=>a+(c.w||14),0);const avail=W-72;
+  exp.sheets.forEach((s,si)=>{if(si)doc.addPage();
+    doc.autoTable({startY:62,margin:{top:62,left:36,right:36,bottom:34},head:[s.cols.map(c=>c.h)],
+      body:s.rows.map(r=>r&&r.group?[{content:r.group,colSpan:s.cols.length,styles:{fillColor:[217,217,217],fontStyle:'bold',textColor:0,halign:'center'}}]:r.map(v=>v==null?'':String(v))),
+      theme:'grid',styles:{fontSize:8,cellPadding:3.5,lineColor:[0,0,0],lineWidth:.5,textColor:15,overflow:'linebreak',valign:'middle',halign:'center'},headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',halign:'center'},
+      columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/totalW}])),
+      didParseCell:d=>{const k=hdrKind(s.cols[d.column.index]?s.cols[d.column.index].h:'');const hx={eff:[157,195,230],loc:[255,230,153],desc:[221,235,247]};
+        if(d.section==='head'&&hx[k])d.cell.styles.fillColor=hx[k];
+        if(d.section==='body'&&k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string')d.cell.styles.fillColor=/NIGHT/i.test(d.cell.raw)?[227,231,247]:[251,242,208]},
+      didDrawPage:()=>head()})});
+  foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+
+/* ================= Sample ================= */
+function sampleProject(){const txt=`THE LAST FERRY
+
+SCENE NO 1  EXT. HARBOR PIER - DAWN
+
+Fog rolls over black water. A rusted ferry, the MARGARET ANN, groans against its moorings. Gulls circle overhead.
+
+NINA (40s, harbor pilot, oilskin coat) walks the pier with a thermos and a clipboard. She stops at a padlocked gate. The chain has been cut.
+
+NINA
+Not again.
+
+She unclips her radio.
+
+NINA
+(into radio)
+Dispatch, it's Nina. Someone's been on the Margaret Ann.
+
+SCENE NO 2  INT. FERRY CAR DECK - DAWN
+
+Nina climbs aboard, flashlight cutting the dark. An old station wagon sits alone, driver's door open. On the seat: a child's red mitten. A name is stitched inside: LEO.
+
+SCENE NO 3  INT. POLICE STATION - DAY
+
+DETECTIVE SANTOS (50s, rumpled suit) slides the mitten across the table in an evidence bag.
+
+SANTOS
+Leo Marsh. Seven years old. Missing since Thursday.
+
+NINA
+That car's been on my deck three days?
+
+SCENE NO 4  EXT. MARSH HOUSE - DAY
+
+Press vans line the street. Twenty NEIGHBOURS and REPORTERS crowd the lawn. CLAIRE MARSH (30s), exhausted, stands on the porch beside Santos.
+
+CLAIRE
+Please. If anyone has seen my son...
+
+Across the street, Nina watches from her pickup truck.
+
+SCENE NO 5  EXT. NORTH BREAKWATER - NIGHT
+
+A tin shed burns at the end of the rocks. FIREFIGHTERS drag hoses. A FIGURE in a dark hoodie runs along the breakwater. Nina gives chase, slips on the wet rocks and falls hard. Her forehead splits open. The figure vanishes into the fog.
+
+SCENE NO 5A  INT. HOSPITAL ER - NIGHT
+
+A NURSE stitches the gash above Nina's eye. Santos leans in the doorway.
+
+SANTOS
+You chased an arsonist. In the dark. Off a breakwater.
+
+NINA
+He had Leo's other mitten.
+
+SCENE NO 6  INT. FERRY WHEELHOUSE - DAWN
+
+Nina, bandaged, unlocks the wheelhouse. She opens the leather logbook. The last entry is in a child's handwriting: I'M ON THE ISLAND.
+
+SCENE NO 7  EXT. OPEN SEA - DAY
+
+The ferry cuts through grey swells. Nina at the wheel, Santos beside her, seasick. On the horizon an island rises from the mist.`;
+  const r=detectScenes(txt);const p=newProject({title:'The Last Ferry',production:'Sample Productions',front:r.front,scenes:r.scenes,sample:true});P=p;
+  const mk=(n,d,t)=>({id:uid(),name:n,aliases:[],designation:d,tier:t,actor:'',phone:'',flag:''});
+  p.artists=[mk('NINA','LEAD ROLE · HARBOUR PILOT','Primary'),mk('SANTOS','DETECTIVE','Primary'),mk('CLAIRE','LEO\'S MOTHER','Secondary'),mk('NURSE','ER NURSE','Secondary'),mk('FIGURE','HOODED ARSONIST','Secondary')];
+  const id=n=>p.artists.find(a=>a.name===n).id;
+  const D=[
+   {title:'CUT CHAIN',desc:'Nina finds the ferry gate chain cut and radios dispatch.',artists:['NINA'],setup:'Pier gate',props:['Thermos','Clipboard','Handheld radio','Padlock with cut chain'],vehicles:['Ferry Margaret Ann (moored)'],animals:['Gulls'],sfx:['Fog'],costumes:[['NINA','Oilskin coat / work boots']]},
+   {title:'THE MITTEN',desc:'Aboard the ferry, Nina finds a child\'s red mitten in an abandoned car.',artists:['NINA'],setup:'Dark car deck',props:['Flashlight','Red child\'s mitten with LEO stitched'],vehicles:['Old station wagon'],sfx:['Dripping water'],costumes:[['NINA','Oilskin coat / work boots']]},
+   {title:'MISSING BOY',desc:'Santos reveals the boy has been missing since Thursday.',artists:['NINA','SANTOS'],setup:'Interview room',props:['Evidence bag with mitten'],art:['Interview table','Fluorescent lights'],costumes:[['NINA','Oilskin coat / work boots'],['SANTOS','Rumpled grey suit']]},
+   {title:'THE APPEAL',desc:'Claire appeals to the press; Nina watches from her truck.',artists:['CLAIRE','SANTOS','NINA'],juniors:['Neighbours (12)','Reporters (8)'],props:['Press cameras','Microphones'],vehicles:['Press vans (3)','Nina\'s pickup truck'],makeup:['CLAIRE – tired / red eyes'],costumes:[['CLAIRE','Cardigan / house clothes'],['SANTOS','Rumpled grey suit'],['NINA','Denim jacket']]},
+   {title:'BREAKWATER',desc:'Nina chases a hooded figure from a fire, falls and splits her forehead.',artists:['NINA','FIGURE'],juniors:['Firefighters (4)'],props:['Fire hoses'],makeup:['NINA – forehead gash / blood'],sfx:['Shed fire','Fog','Wet rocks'],equipment:['Fire safety standby'],technicians:['Fight master','Fire safety officer'],costumes:[['NINA','Denim jacket'],['FIGURE','Dark hoodie']],fight:{d:'Nina chases the figure along the breakwater, slips and falls on the rocks.',a:'NINA, FIGURE',f:'',r:'Stunt double for Nina, crash pads, wet-rock safety'}},
+   {title:'STITCHES',desc:'In the ER Nina says the arsonist had Leo\'s other mitten.',artists:['NINA','SANTOS','NURSE'],props:['Suture kit'],art:['Gurney','ER curtains and monitors'],makeup:['NINA – gash being stitched'],costumes:[['NINA','Denim jacket / bloodied'],['SANTOS','Rumpled grey suit'],['NURSE','Scrubs']]},
+   {title:'THE LOGBOOK',desc:'Nina finds a child\'s note in the logbook: I\'m on the island.',artists:['NINA'],props:['Ring of keys','Leather logbook with child\'s handwriting'],art:['Nautical charts','Brass compass'],makeup:['NINA – bandage above eye'],costumes:[['NINA','Oilskin coat / work boots']]},
+   {title:'THE CROSSING',desc:'Nina and Santos sail toward the island.',artists:['NINA','SANTOS'],vehicles:['Ferry Margaret Ann (underway)'],vfx:['Island emerging from mist'],makeup:['NINA – bandage above eye','SANTOS – seasick pallor'],equipment:['Camera boat'],costumes:[['NINA','Oilskin coat / work boots'],['SANTOS','Rumpled grey suit / life jacket']]}];
+  p.scenes.forEach((s,i)=>{const d=D[i];if(!d)return;Object.assign(s,{title:d.title,desc:d.desc,setup:d.setup||'',status:'done'});s.artists=d.artists.map(id);LK.forEach(k=>{if(d[k])s[k]=d[k].slice()});s.costumes=(d.costumes||[]).map(([n,c])=>({a:id(n),n:'',c}));if(d.fight)s.fight=Object.assign({unit:''},d.fight)});
+  assignUnits();
+  p.profiles[id('NINA')]={description:'A harbour pilot in her 40s, weathered and practical, who knows every inch of the ferry. Quiet and stubborn, she carries an old grief she never talks about.',start:'Nina keeps her head down and does her job, treating the cut chain as routine trouble.',turns:'Finding the child\'s mitten makes the missing boy her problem.\nSantos\'s questions put her own ferry under suspicion.\nShe risks herself chasing the arsonist and is injured.\nThe logbook note convinces her the boy is alive.',end:'She takes the ferry out herself, choosing action over caution.',relationships:'SANTOS – wary partnership that turns into trust\nCLAIRE – sees her own loss in Claire\'s fear',key:'Sc 2 – finds the mitten\nSc 5 – the breakwater chase\nSc 6 – the logbook note'};
+  p.profiles[id('SANTOS')]={description:'A tired detective in his 50s in a rumpled suit. Procedural and doubtful, but honest.',start:'He treats Nina as a possible suspect.',turns:'Her injury and the second mitten change his mind.\nHe agrees to go without a warrant.',end:'He stands beside Nina on the crossing, seasick but committed.',relationships:'NINA – suspicion turns to trust\nCLAIRE – feels responsible to her',key:'Sc 3 – questions Nina\nSc 5A – hears about the mitten\nSc 7 – the crossing'};
+  p.structure={main:'Three-Act Structure',also:'Hero\'s Journey (early stages)',why:'The opening sets up Nina\'s world and the missing boy, the middle escalates through the chase and her injury, and the logbook note pushes her into the final journey across the water.',parts:[{name:'Act I – Setup',scenes:'Sc 1–3',summary:'Nina finds the cut chain and the mitten; Santos reveals a boy is missing.'},{name:'Act II – Confrontation',scenes:'Sc 4–5A',summary:'Claire\'s appeal raises the stakes; Nina chases the arsonist and is hurt.'},{name:'Act III – Resolution',scenes:'Sc 6–7',summary:'The logbook note sends Nina and Santos across the sea to the island.'}],ttype:'Linear',tnotes:'Told in order over about four days.',incomplete:true};
+  return p}
+
+/* ================= Standalone app (offline install, own API key) ================= */
+const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej)=>{try{const r=indexedDB.open('scriptdesk',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});return this.db},
+  async get(k){try{const d=await this.open();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result??null);q.onerror=()=>rej(q.error)})}catch(e){return null}},
+  async set(k,v){try{const d=await this.open();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});return true}catch(e){return false}},
+  async del(k){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}};
+const MODELS={quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'};
+const apiKey=()=>lsGet('apikey')||'';
+function noAI(msg){if(STANDALONE)openSettings('Add your Claude API key to use the AI features. Everything else works without it, even offline.');else toast(msg)}
+function blobB64(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(r.error);r.readAsDataURL(b)})}
+async function anthropicCall(prompt,opts){opts=opts||{};const key=apiKey();if(!key)throw {code:'no_key'};if(navigator.onLine===false)throw {code:'offline'};
+  const tier=opts.modelTier||'default';const model=(lsGet('models')||{})[tier]||MODELS[tier];const content=[];
+  if(opts.images){for(const b of Array.from(opts.images.length!=null?opts.images:[opts.images])){content.push({type:'image',source:{type:'base64',media_type:/png/.test(b.type)?'image/png':'image/jpeg',data:await blobB64(b)}})}}
+  content.push({type:'text',text:prompt});let r;
+  try{r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:tier==='quick'?4000:16000,messages:[{role:'user',content}]})})}
+  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};throw {code:navigator.onLine===false?'offline':'upstream_error'}}
+  if(!r.ok){let m='';try{m=((await r.json()).error||{}).message||''}catch(e){}
+    if(r.status===401||r.status===403)throw {code:'bad_key',message:m};if(r.status===429)throw {code:'rate_limited',message:m};if(r.status===413)throw {code:'prompt_too_large'};
+    if(/credit|balance|billing/i.test(m))throw {code:'no_credit',message:m};if(r.status===404||/model/i.test(m)&&r.status===400)throw {code:'bad_model',message:m};throw {code:'upstream_error',message:m}}
+  const j=await r.json();const text=(j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');if(!text.trim())throw {code:'empty_completion'};
+  return {text,truncated:j.stop_reason==='max_tokens',modelTierApplied:tier}}
+function parseLooseJSON(t){try{return JSON.parse(t)}catch(e){}const f=t.match(/```(?:json)?\s*([\s\S]*?)```/);if(f){try{return JSON.parse(f[1])}catch(e){}}
+  const a=[t.indexOf('{'),t.indexOf('[')].filter(i=>i>=0);const b=Math.max(t.lastIndexOf('}'),t.lastIndexOf(']'));if(a.length&&Math.min(...a)<b){try{return JSON.parse(t.slice(Math.min(...a),b+1))}catch(e){}}throw {code:'invalid_json',text:t}}
+function standaloneSampler(){const f=(p,o)=>anthropicCall(typeof p==='string'?p:p.map(m=>m.content).join('\n\n'),o);
+  f.json=async(p,o)=>{const r=await f(p+'\n\nYour reply will be machine-parsed: reply with the JSON only.',o);if(r.truncated)throw {code:'invalid_json',text:r.text};return parseLooseJSON(r.text)};
+  f.limits=async()=>({maxPromptBytes:262144,images:{maxCount:4,maxInputBytes:20000000,mediaTypes:['image/jpeg','image/png']}});return f}
+function mimeOf(n){return ({xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',pdf:'application/pdf',json:'application/json'})[n.split('.').pop()]||'application/octet-stream'}
+async function standaloneSave(filename,data){const blob=data instanceof Blob?data:new Blob([data],{type:mimeOf(filename)});
+  if(NATIVE){const pl=window.Capacitor.Plugins;const w=await pl.Filesystem.writeFile({path:filename,data:await blobB64(blob),directory:'CACHE'});await pl.Share.share({title:filename,url:w.uri,dialogTitle:'Save or share '+filename});return}
+  const file=new File([blob],filename,{type:blob.type});
+  if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Saved '+filename)}
+function openSettings(note){const m=lsGet('models')||{};const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);const installed=matchMedia('(display-mode: standalone)').matches||NATIVE;
+  openModal(`<div class="modal-h"><h2>Settings</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+  ${note?`<div class="banner">${esc(note)}</div>`:''}
+  <div class="fieldbox"><label for="sKey">Claude API key</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" value="${esc(apiKey())}"></div>
+  <p class="small muted">Used only for the AI steps (finding scenes, breakdown, character profiles, story structure, reading scanned pages). It is stored only on this device and sent only to Anthropic. Create a key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. Usage is billed to that account. AI needs internet; everything else works offline.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save key</button><button class="btn" id="sTest">Test key</button><button class="btn ghost danger" id="sClear">Remove key</button><span class="small" id="sMsg"></span></div>
+  <details style="margin-top:6px"><summary class="small muted" style="cursor:pointer">Advanced: AI models</summary><div class="two" style="margin-top:10px">${['quick','default','complex'].map(t=>`<div class="fieldbox"><label for="sM-${t}">${t==='quick'?'Fast':t==='default'?'Standard (breakdown)':'Best (profiles, structure)'}</label><input type="text" id="sM-${t}" value="${esc(m[t]||MODELS[t])}"></div>`).join('')}</div></details>
+  ${installed?'':`<div class="banner info" style="margin-top:6px">${isIOS?'To install on iPhone or iPad: tap Share, then "Add to Home Screen".':'To install: use "Install app" at the top, or your browser menu → Install ScriptDesk / Add to Home screen.'}</div>`}
+  </div>`);
+  const msg=t=>{$('#sMsg').textContent=t};
+  const saveModels=()=>{const o={};['quick','default','complex'].forEach(t=>{const v=$('#sM-'+t).value.trim();if(v&&v!==MODELS[t])o[t]=v});lsSet('models',o)};
+  $('#sSave').onclick=()=>{const k=$('#sKey').value.trim();lsSet('apikey',k);saveModels();AI.sample=k?standaloneSampler():null;AI.limits=k?{images:{maxCount:4}}:null;syncTop();msg(k?'Saved.':'Removed.')};
+  $('#sClear').onclick=()=>{lsDel('apikey');$('#sKey').value='';AI.sample=null;syncTop();msg('Removed.')};
+  $('#sTest').onclick=async()=>{const k=$('#sKey').value.trim();if(!k){msg('Paste a key first.');return}lsSet('apikey',k);saveModels();AI.sample=standaloneSampler();msg('Testing…');
+    try{await anthropicCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Key works.')}catch(e){msg(errMsg(e))}}}
+let installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});
+window.addEventListener('appinstalled',()=>{installEvt=null;$('#bInstall').hidden=true;toast('ScriptDesk installed. It works offline.')});
+async function doInstall(){if(installEvt){installEvt.prompt();await installEvt.userChoice;installEvt=null;$('#bInstall').hidden=true}else openSettings()}
+window.addEventListener('online',()=>{if(STANDALONE)setSync('ok','Online · saved on this device')});
+window.addEventListener('offline',()=>{if(STANDALONE)setSync('ok','Offline · saved on this device')});
+if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:\/\/127\./.test(location.href)&&document.querySelector('link[rel="manifest"]')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+
+/* ================= Boot ================= */
+(async function boot(){
+  render();
+  const lastId=lsGet('last');
+  if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}
+  if(!P){const idx=lsGet('index')||[];if(idx.length){const p=await loadProject(idx[0].id);if(p){P=p;render()}}}
+  if(!P){P=sampleProject();saveLocal();render()}
+  if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;if(apiKey()){AI.sample=standaloneSampler();AI.limits={images:{maxCount:4}}}setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();return}
+  const [smp,db,usr]=await Promise.all([window.claude.use('sample').catch(()=>null),window.claude.use('db').catch(()=>null),window.claude.use('user').catch(()=>null)]);
+  AI.sample=smp;AI.checked=true;if(smp){try{AI.limits=await smp.limits()}catch(e){AI.limits=null}}
+  if(db&&usr){try{UID=await usr.id()}catch(e){UID=null}if(UID){DB=db;cloudOK=true}}
+  setSync('ok',cloudOK?'Saved to your account':'Saved on this device');
+  if(cloudOK){const cloud=await cloudIndex();const want=lsGet('last')||(cloud[0]&&cloud[0].id);
+    if(want&&(!P||P.sample||P.id===want)){const p=await loadProject(want);if(p){P=p}}
+    if(P&&!P.sample&&!cloud.find(x=>x.id===P.id)){dirty.meta=true;P.scenes.forEach(s=>dirty.scenes.add(s.id));flush()}}
+  render(true)})();
+window.addEventListener('pagehide',()=>{saveLocal()});
+</script>
+
+</body>
+</html>

@@ -812,7 +812,7 @@ const SHEETS_BY={no:ALLSC,loc:ALLSC,eff:ALLSC,desc:['slo','sloLoc','sloArt','bre
   vfx:['breakdown','special'],sfx:['breakdown','special'],animals:['breakdown','special'],vehicles:['breakdown','special'],spl_sets:['breakdown','special'],equipment:['breakdown','special'],technicians:['breakdown','special'],extras:['breakdown'],
   fd:['sloFight','breakdown'],fa:['sloFight'],ff:['sloFight'],fr:['sloFight'],funit:['sloFight'],sd:['slo','sloFight','breakdown'],sunit:['slo','sloFight'],title:['breakdown'],notes:['breakdown'],timeline:['breakdown','special','costume'],
   artistName:['slo','sloLoc','sloArt','sloFight','artists','artScenes','breakdown','costume','profiles'],artistInfo:['artists','artScenes','profiles'],tier:['artists','sloArt','artScenes','costume','profiles'],
-  profile:['profiles'],structure:['structure'],script:ALLSC,scenes:ALLSC.concat(['artists'])};
+  profile:['profiles'],structure:['structure'],rename:uniq(ALLSC.concat(['artists','artScenes','profiles','structure'])),script:ALLSC,scenes:ALLSC.concat(['artists'])};
 const cut=(t,n)=>{t=String(t??'').replace(/\s+/g,' ').trim();n=n||48;return t.length>n?t.slice(0,n-1)+'…':t};
 function sheetName(){return $('#ov')?'Scene list check':(PG[page]?PG[page].t:'ScriptDesk')}
 function fmtWhen(at){return new Date(at).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true})}
@@ -828,7 +828,7 @@ function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h
   <div class="modal-b"><p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
 function describeEdit(el,oldV,newV,sids){
   if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);const f=el.dataset.f;return [`Sc ${s?s.no:''} · ${FL[f]||f}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f]}
-  if(el.dataset.art){const a=A(el.dataset.art);const f=el.dataset.af;const lab={name:'Character name',designation:'Designation',actor:'Artist',phone:'Phone number'}[f]||f;return [`${f==='name'?'Character':a?a.name:''} · ${lab}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f==='name'?'artistName':'artistInfo']}
+  if(el.dataset.art){const a=A(el.dataset.art);const f=el.dataset.af;const lab={name:'Character name',designation:'Designation',actor:'Artist',phone:'Phone number'}[f]||f;if(f==='name')return [`Character "${cut(oldV)}" renamed to "${cut(newV)}" everywhere (${sids.length} scene${sids.length===1?'':'s'}, script included)`,'rename'];return [`${a?a.name:''} · ${lab}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f==='name'?'artistName':'artistInfo']}
   if(el.dataset.ren)return [`Location "${cut(oldV)}" renamed to "${cut(newV)}" in ${sids.length} scene${sids.length===1?'':'s'}`,'loc'];
   if(el.dataset.item){const k=el.dataset.cat;return [newV.trim()?`${LISTS[k]}: "${cut(oldV)}" → "${cut(newV)}" in ${sids.length} scene${sids.length===1?'':'s'}`:`${LISTS[k]}: "${cut(oldV)}" removed from ${sids.length} scene${sids.length===1?'':'s'}`,k]}
   if(el.dataset.cs){const s=P.scenes.find(x=>x.id===el.dataset.cs);const key=el.dataset.ca;const nm=key.startsWith('n:')?key.slice(2):aName(key);return [`Sc ${s?s.no:''} · Costume (${nm}): "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,'costumes']}
@@ -836,9 +836,11 @@ function describeEdit(el,oldV,newV,sids){
   if(el.dataset.st)return [`Story structure · ${({main:'Main structure',also:'Also uses',why:'Why',ttype:'Timeline',tnotes:'Time jumps',pname:'Part name',psum:'Part summary',pscenes:'Part scenes'})[el.dataset.st]||'edited'} edited`,'structure'];
   return ['Edited',null]}
 function commit(el){if(!P)return;const v=el.isContentEditable?el.innerText:el.value;let changed=false,sids=[];
+  if(el.dataset.s&&el.dataset.f==='artists'){const s=P.scenes.find(x=>x.id===el.dataset.s);if(s){const was=s.artists.map(aName),now=splitList(v).map(x=>U(String(x).replace(/\((V\.?O\.?|O\.?S\.?|CONT'?D)\)/ig,'')));
+    if(was.length===now.length){const d=was.map((x,i)=>[x,now[i]]).filter(([x,y])=>norm(x)!==norm(y));if(d.length===1&&!findArtist(d[0][1])){const a=findArtist(d[0][0]);if(a){const sw={a,from:d[0][0],to:U(d[0][1])};setTimeout(()=>askRename(sw,s,()=>{snapshot();setSceneField(s,'artists',v);logChange(`Sc ${s.no} · Artists: "${cut(was.join(', '))}" → "${cut(now.join(', '))}"`,'artists');touch([s.id]);render(true)}),0);return}}}}}
   if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);setSceneField(s,el.dataset.f,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id]}}
   else if(el.dataset.art){const a=A(el.dataset.art);if(!a)return;const f=el.dataset.af;let val=String(v).trim();if(f==='name'){val=U(val);if(!val){el.innerText=a.name;return}const other=findArtist(val);if(other&&other.id!==a.id){toast(`${val} already exists. Use "Merge into" to combine them.`);el.innerText=a.name;return}}
-    if(f==='designation')val=U(val);if(a[f]!==val){undoStack.push(JSON.stringify(P));if(f==='name'&&a.name)a.aliases=uniq([...(a.aliases||[]),a.name]);a[f]=val;a.locked=1;if(f==='tier'||f==='name')needsRender=true;changed=true}}
+    if(f==='designation')val=U(val);if(a[f]!==val){undoStack.push(JSON.stringify(P));if(f==='name'&&a.name){sids=renameArtistAll(a,val);el._renamed=sids.length}else a[f]=val;a.locked=1;if(f==='tier'||f==='name')needsRender=true;changed=true}}
   else if(el.dataset.ren){const old=el.dataset.ren;const nv=U(v);if(nv&&nv!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{if(U(s.loc)===old){s.loc=nv;s.locked.loc=1;sids.push(s.id)}});changed=true;needsRender=true}}
   else if(el.dataset.item){const k=el.dataset.cat,old=el.dataset.item.toLowerCase();const nv=cleanItem(v);if(nv.toLowerCase()!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{const i=(s[k]||[]).findIndex(x=>x.toLowerCase()===old);if(i>=0){if(nv)s[k][i]=nv;else s[k].splice(i,1);s[k]=uniq(s[k]);s.locked[k]=1;sids.push(s.id)}});changed=true;needsRender=true}}
   else if(el.dataset.cs){const s=P.scenes.find(x=>x.id===el.dataset.cs);if(!s)return;const key=el.dataset.ca;const t=String(v).trim();const i=s.costumes.findIndex(c=>(c.a||'n:'+c.n)===key);const cur=i>=0?s.costumes[i].c:'';
@@ -873,6 +875,44 @@ document.addEventListener('change',e=>{const el=e.target;if(!P)return;
 function mergeArtist(from,to){const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(from.id)){s.artists=uniq(s.artists.map(x=>x===from.id?to.id:x));ids.push(s.id)}s.costumes.forEach(c=>{if(c.a===from.id){c.a=to.id;ids.push(s.id)}})});
   to.aliases=uniq([...(to.aliases||[]),from.name,...(from.aliases||[])]).filter(v=>norm(v)!==norm(to.name));if(!to.actor)to.actor=from.actor;if(!to.phone)to.phone=from.phone;
   if(P.profiles[from.id]&&!P.profiles[to.id])P.profiles[to.id]=P.profiles[from.id];delete P.profiles[from.id];P.artists=P.artists.filter(a=>a.id!==from.id);touch(uniq(ids))}
+/* ---- One character name, changed everywhere: script text, cues, sheets, profiles ---- */
+const reEsc=t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function caseLike(src,rep){if(src===src.toUpperCase())return rep.toUpperCase();if(src===src.toLowerCase())return rep.toLowerCase();return rep.toLowerCase().replace(/(^|[\s'’-])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase())}
+function swapName(str,oldN,newN){if(typeof str!=='string'||!str)return str;const re=new RegExp('(^|[^\\p{L}\\p{N}_])('+reEsc(oldN).replace(/\s+/g,'\\s+')+')(?![\\p{L}\\p{N}_])','giu');return str.replace(re,(m,pre,w)=>(w===w.toLowerCase()&&w!==w.toUpperCase())?m:pre+caseLike(w,newN))}
+function swapObj(o,oldN,newN,skip){if(!o||typeof o!=='object')return;Object.keys(o).forEach(k=>{if(skip&&skip.includes(k))return;if(typeof o[k]==='string')o[k]=swapName(o[k],oldN,newN)})}
+function renameEverywhere(oldN,newN){const sids=[];if(!oldN||!newN||norm(oldN)===norm(newN))return sids;const sw=x=>swapName(x,oldN,newN);
+  P.scenes.forEach(sc=>{const before=JSON.stringify(sc);
+    ['text','heading','title','desc','setup','notes','timeline'].forEach(k=>sc[k]=sw(sc[k]));
+    swapObj(sc.fight,oldN,newN,['unit']);swapObj(sc.song,oldN,newN,['unit']);
+    sc.costumes.forEach(c=>{if(c.n)c.n=U(sw(c.n));c.c=sw(c.c)});
+    LK.forEach(k=>{sc[k]=uniq((sc[k]||[]).map(sw))});
+    if(JSON.stringify(sc)!==before){sc.cues=extractCues(sc.text);sids.push(sc.id)}});
+  P.front=sw(P.front);
+  Object.values(P.profiles||{}).forEach(pr=>swapObj(pr,oldN,newN));
+  if(P.structure){swapObj(P.structure,oldN,newN);(P.structure.parts||[]).forEach(pt=>swapObj(pt,oldN,newN,['scenes']))}
+  P.artists.forEach(a=>{a.designation=U(sw(a.designation))});
+  return sids}
+function renameArtistAll(a,newN,quiet){const oldN=a.name;const nn=U(newN).replace(/\s+/g,' ');if(!nn||norm(nn)===norm(oldN))return [];
+  const sids=renameEverywhere(oldN,nn);a.aliases=uniq([...(a.aliases||[]),oldN]).filter(x=>norm(x)!==norm(nn));a.name=nn;a.locked=1;
+  P.scenes.forEach(sc=>{if(sc.artists.includes(a.id)&&!sids.includes(sc.id))sids.push(sc.id)});
+  return sids}
+/* Keep a scene's artists in step with its dialogue after a script edit (no AI needed) */
+function syncSceneCast(sc,oldCues){const now=sc.cues||[];const gone=(oldCues||[]).filter(c=>!now.some(n=>norm(n)===norm(c)));const added=now.filter(c=>!(oldCues||[]).some(o=>norm(o)===norm(c)));
+  if(added.length)sc.artists=uniq([...sc.artists,...namesToIds(added,'Added from script')]);
+  gone.forEach(g=>{const a=findArtist(g);if(!a)return;const names=[a.name,...(a.aliases||[])];const still=names.some(n=>new RegExp('(^|[^\\p{L}\\p{N}_])'+reEsc(n)+'(?![\\p{L}\\p{N}_])','iu').test(sc.text));if(!still)sc.artists=sc.artists.filter(x=>x!==a.id)})}
+/* Which speaker name was swapped for another? Compares the cue lines in order. */
+function cueSwap(oldText,newText){const seq=t=>classify(t.split('\n')).filter(([k])=>k==='chr').map(([,t])=>cueOf(t)).filter(Boolean);
+  const a=seq(oldText),b=seq(newText);const pairs=new Map();
+  if(a.length===b.length){a.forEach((x,i)=>{if(norm(x)!==norm(b[i]))pairs.set(norm(x)+'>'+norm(b[i]),[x,b[i]])})}
+  else{const gone=uniq(a).filter(x=>!b.some(y=>norm(y)===norm(x))),add=uniq(b).filter(y=>!a.some(x=>norm(x)===norm(y)));if(gone.length===1&&add.length===1)pairs.set('g',[gone[0],add[0]])}
+  if(pairs.size!==1)return null;const [o,n]=[...pairs.values()][0];const art=findArtist(o);if(!art)return null;const other=findArtist(n);if(other&&other.id!==art.id)return null;return {a:art,from:o,to:U(n)}}
+let pendingRename=null;
+function askRename(sw,sc,only){const n=artistScenes(sw.a.id).length;pendingRename={only};
+  openModal(`<div class="modal-h"><h2>Rename everywhere?</h2></div><div class="modal-b"><p>You changed <b>${esc(sw.a.name)}</b> to <b>${esc(sw.to)}</b>${sc?` in scene ${esc(sc.no)}`:''}.</p>
+  <p class="muted small">Rename everywhere updates every dialogue and action line in the full script, the artist list, all single line orders, scene lists, the breakdown, costumes, story structure and character profiles${n?` (${n} scene${n===1?'':'s'})`:''}. You can undo it.</p></div>
+  <div class="modal-f"><button class="btn" id="rnOnly">Only ${sc?'this scene':'here'}</button><button class="btn pri" id="rnAll">Rename everywhere</button></div>`);
+  $('#rnAll').onclick=()=>{pendingRename=null;closeModal();snapshot();const old=sw.a.name;const sids=renameArtistAll(sw.a,sw.to);logChange(`Character ${old} renamed to ${sw.a.name} everywhere (${sids.length} scene${sids.length===1?'':'s'})`,'rename');touch(sids);render(true)};
+  $('#rnOnly').onclick=()=>closeModal()}
 
 /* ================= Rendering helpers ================= */
 const effHtml=s=>`<span class="${isNight(s)?'eff-n':'eff-d'}">${esc(eff(s))}</span>`;
@@ -1086,22 +1126,24 @@ async function profileJob(id){if(JOB)return;if(!AI.sample){noAI('AI needs Script
   try{await aiProfiles(id);logChange(id?`${aName(id)} profile rewritten by AI`:'Character profiles written by AI','profile',true);touch([]);toast('Profiles written. Edit anything you like.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
 async function structureJob(){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude.');return}snapshot();startJob('Reading story structure',0);
   try{await aiStructure();logChange('Story structure written by AI','structure',true);touch([]);toast('Story structure ready.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
-function saveSceneEdit(id){const ta=$('#ed-'+id);const s=P.scenes.find(x=>x.id===id);if(!ta||!s)return;snapshot();
+function saveSceneEdit(id){const ta=$('#ed-'+id);const s=P.scenes.find(x=>x.id===id);if(!ta||!s)return;snapshot();const oldText=s.text,oldCues=(s.cues||[]).slice();
   const r=detectScenes(ta.value);const idx=P.scenes.indexOf(s);let changed=[s.id];
   if(!r.scenes.length){s.text=ta.value.trim();s.cues=extractCues(s.text)}
   else{const f=r.scenes[0];const pre=r.front;s.no=f.no||s.no;s.ie=f.ie||s.ie;s.time=f.time||s.time;s.loc=f.loc||s.loc;s.heading=f.heading;s.text=(pre?pre+'\n\n':'')+f.text;s.cues=f.cues;['no','ie','time','loc'].forEach(k=>s.locked[k]=1);
     r.scenes.slice(1).forEach((n,i)=>{n.status='stale';P.scenes.splice(idx+1+i,0,n);changed.push(n.id)})}
-  changed.forEach(cid=>{const x=P.scenes.find(y=>y.id===cid);if(x)x.status='stale'});
+  const swp=cueSwap(oldText,s.text);
+  changed.forEach(cid=>{const x=P.scenes.find(y=>y.id===cid);if(x){x.status='stale';if(!(swp&&x===s))syncSceneCast(x,x===s?oldCues:[])}});
   VIEW.editScene=null;logChange(r.scenes.length>1?`Scene ${s.no} script edited and split into ${r.scenes.length} scenes`:`Scene ${s.no} script edited`,'script');touch(changed);render(true);
   if(AI.sample&&!JOB){toast(r.scenes.length>1?`Saved and split into ${r.scenes.length} scenes. The AI is re-reading them.`:'Saved. The AI is re-reading this scene.');runAll({only:changed})}
-  else toast('Saved. Run AI later to update this scene\'s breakdown.')}
+  else toast('Saved. Run AI later to update this scene\'s breakdown.');
+  if(swp)askRename(swp,s,()=>{syncSceneCast(s,oldCues);touch([s.id]);render(true)})}
 function mergeNext(id){const i=P.scenes.findIndex(s=>s.id===id);if(i<0||i>=P.scenes.length-1)return;snapshot();const a=P.scenes[i],b=P.scenes[i+1];
   a.text=a.text+'\n\n'+headingLine(b)+'\n\n'+b.text;a.no=a.no+' & '+b.no;a.status='stale';a.cues=uniq([...a.cues,...b.cues]);a.artists=uniq([...a.artists,...b.artists]);LK.forEach(k=>a[k]=uniq([...a[k],...b[k]]));a.costumes=[...a.costumes,...b.costumes];
   dirty.deleted.add(b.id);P.scenes.splice(i+1,1);VIEW.editScene=null;logChange(`Scenes merged into ${a.no}`,'scenes');touch([a.id]);render(true)}
 
 /* ================= Import ================= */
 function openModal(html){$('#modalRoot').innerHTML=`<div class="ov" id="ov"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;$('#ov').addEventListener('click',e=>{if(e.target.id==='ov'||e.target.closest('[data-close]'))closeModal()})}
-function closeModal(){$('#modalRoot').innerHTML=''}
+function closeModal(){$('#modalRoot').innerHTML='';if(pendingRename){const f=pendingRename.only;pendingRename=null;f()}}
 function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><button class="btn ghost" data-close>Close</button></div>
  <div class="modal-b">
   <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>

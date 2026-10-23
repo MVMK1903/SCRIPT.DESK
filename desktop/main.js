@@ -21,7 +21,7 @@ if (process.platform === 'darwin') {
   Menu.setApplicationMenu(Menu.buildFromTemplate([{ role: 'editMenu' }, { role: 'viewMenu' }]));
 }
 // AI services: let the bundled app talk to cloud AI APIs and to Ollama / LM Studio on this computer.
-const AI_HOSTS = /^https:\/\/(api\.anthropic\.com|generativelanguage\.googleapis\.com|api\.groq\.com|openrouter\.ai)\/|^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
+const AI_HOSTS = /^https:\/\/(api\.anthropic\.com|generativelanguage\.googleapis\.com|api\.groq\.com|openrouter\.ai|ollama\.com)\/|^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
 function allowAI() {
   const ses = session.defaultSession;
   ses.webRequest.onBeforeSendHeaders((d, cb) => {
@@ -34,7 +34,7 @@ function allowAI() {
     const h = d.responseHeaders || {};
     for (const k of Object.keys(h)) if (/^access-control-allow-/i.test(k)) delete h[k];
     h['Access-Control-Allow-Origin'] = ['*'];
-    h['Access-Control-Allow-Headers'] = ['*'];
+    h['Access-Control-Allow-Headers'] = ['authorization, content-type, x-api-key, x-goog-api-key, anthropic-version, anthropic-dangerous-direct-browser-access, http-referer, x-title'];
     h['Access-Control-Allow-Methods'] = ['GET, POST, OPTIONS'];
     cb(d.method === 'OPTIONS' ? { responseHeaders: h, statusLine: 'HTTP/1.1 204 No Content' } : { responseHeaders: h });
   });

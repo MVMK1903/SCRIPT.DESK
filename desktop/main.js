@@ -5,7 +5,7 @@ const path = require('path');
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440, height: 900, minWidth: 900, minHeight: 600,
-    backgroundColor: '#0c0d0f', title: 'ScriptDesk', autoHideMenuBar: true,
+    backgroundColor: '#0d0e12', title: 'ScriptDesk', autoHideMenuBar: true,
     icon: path.join(__dirname, 'build', 'icon.png'),
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true }
   });

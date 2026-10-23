@@ -22,7 +22,7 @@ HEAD = '''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-{vendor}<meta name="theme-color" content="#0c0d0f">
+{vendor}<meta name="theme-color" content="#0d0e12">
 <meta name="description" content="AI film script breakdown: single line orders, artist and location lists, breakdown sheets, costume continuity, art and props, character profiles.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">

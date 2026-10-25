@@ -12,7 +12,8 @@ AI film script breakdown for film and web-series production teams. Import a scre
 | **Windows** | `ScriptDesk-Setup-x.y.z.exe` from Actions / Releases | Yes |
 | **Mac** | `ScriptDesk-x.y.z-mac.dmg` from Actions / Releases | Yes |
 | **Android** | `ScriptDesk-android.apk` from Actions / Releases | Yes |
-| **iPhone / iPad** | Web app (above), or build the iOS app in Xcode (below) | Yes |
+| **iPhone / iPad** | `ScriptDesk-iphone-unsigned.ipa` from Releases, installed with **xtool** from Windows, Linux or Mac (below); or the web app (above) | Yes |
+| **Using your Claude subscription (no API key)** | Open the ScriptDesk link inside Claude (claude.ai or the Claude app). Separate apps can only use Claude through an API key. | No (needs internet) |
 
 ## AI: free options
 
@@ -53,7 +54,14 @@ ScriptDesk sends smaller pieces and waits automatically when a free tier's limit
 - **Windows:** unsigned, so SmartScreen may show "Windows protected your PC" → **More info → Run anyway**. A code-signing certificate removes this.
 - **Mac:** unsigned, so the first time **right-click the app → Open → Open**. An Apple Developer ID ($99/yr) with notarization removes this.
 - **Android APK:** allow "Install unknown apps" for your browser or Files app. For the Play Store, create a signed release bundle (`./gradlew bundleRelease`) with your upload key and a Google Play developer account ($25 once).
-- **iPhone / iPad app (needs a Mac with Xcode):**
+- **iPhone / iPad with xtool (no Mac, no Xcode download needed):** every release includes `ScriptDesk-iphone-unsigned.ipa`, built by GitHub. [xtool](https://github.com/xtool-org/xtool) signs it with your Apple ID and installs it over USB.
+  1. Install xtool: Windows → install WSL and USBIPD first (see xtool's Linux/Windows guide); Linux → `usbmuxd`; Mac → see xtool's macOS guide. Then download `xtool` from its releases page.
+  2. `xtool auth login` — choose **Password** for a free Apple ID (a spare Apple ID is safer, as this uses Apple's private sign-in), or **API Key** if you have a paid developer account.
+  3. Connect the iPhone by USB, unlock it and tap **Trust**. Check with `xtool devices`.
+  4. `xtool install ScriptDesk-iphone-unsigned.ipa`
+  5. On the iPhone: Settings → General → VPN & Device Management → trust your Apple ID; turn on Settings → Privacy & Security → Developer Mode if asked.
+  With a free Apple ID the app stops opening after 7 days: run step 4 again (your projects stay on the phone). A paid account lasts a year.
+- **iPhone / iPad app in Xcode (Mac):**
   ```
   python3 scripts/build.py --vendor
   cd mobile && npm install && npm run prepare-web

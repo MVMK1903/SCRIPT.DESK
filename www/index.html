@@ -1419,6 +1419,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   <div id="sBody"></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
   <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
+  <div class="banner info small" style="display:block;line-height:1.55"><b>Have a Claude subscription?</b> Apps outside Claude can only reach Claude with an API key. To use your subscription instead, open ScriptDesk inside Claude: <a href="https://claude.ai/artifact/E9UvNpxLmvFjyudnWrKGs6" target="_blank" rel="noopener">Open ScriptDesk in Claude</a> (sign in with your Claude account).</div>
   ${installed?'':`<div class="banner info" style="margin-top:6px">${isIOS?'To install on iPhone or iPad: tap Share, then "Add to Home Screen".':'To install: use "Install app" at the top, or your browser menu → Install ScriptDesk / Add to Home screen.'}</div>`}
   </div>`);
   const msg=t=>{$('#sMsg').textContent=t};

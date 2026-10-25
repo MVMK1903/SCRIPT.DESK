@@ -4,6 +4,18 @@ AI film script breakdown for film and web-series production teams. Works with an
 
 **Reports:** Full script · Story structure · Character profiles · Single line order · Location-wise and artist-wise single line orders · Stunt / fight single line order · No. of locations · No. of artists · Location-wise and artist-wise scene lists · Script breakdown · Special identification · Costume continuity · Art / props. Every edit updates all sheets and is logged with sheet, date and time.
 
+## Write scripts (Celtx-style)
+
+**Write script** is a screenplay editor in the standard industry layout: US Letter, Courier 12 pt, scene numbers in the left margin, headings and action at 1.5", character names at 3.5", dialogue in a 3.5"-wide column, transitions on the right. It is the same layout as a Celtx or Final Draft shooting script.
+
+- **Enter** moves to the next element: Scene heading → Action → Character → Dialogue → Action. **Tab** changes the element, and on a filled character or dialogue line it adds a parenthetical. **Ctrl+1…7** picks an element. On phones, tap the element buttons.
+- Auto-complete for INT./EXT., locations, DAY/NIGHT and character names.
+- Scene list, page count and page breaks.
+- Title page, undo and redo.
+- Saves on the device as you type. Inside Claude it also syncs to your account.
+- Download as **PDF**, **Final Draft (.fdx)** (opens in Celtx, Final Draft, WriterDuet, Fade In), **Fountain** or **text**. Open .fdx, .fountain, .txt, .docx or .pdf scripts to revise them.
+- **Update breakdown** sends the script to every report: changed scenes are marked, new scenes added, and artists picked up from the dialogue. Scene numbers then lock, so a new scene between 5 and 6 becomes 5A.
+
 ## Apps
 
 | Device | How to get it | Offline |

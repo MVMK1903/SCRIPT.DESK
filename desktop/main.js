@@ -21,12 +21,14 @@ if (process.platform === 'darwin') {
   Menu.setApplicationMenu(Menu.buildFromTemplate([{ role: 'editMenu' }, { role: 'viewMenu' }]));
 }
 // AI services: let the bundled app talk to cloud AI APIs and to Ollama / LM Studio on this computer.
-const AI_HOSTS = /^https:\/\/(api\.anthropic\.com|generativelanguage\.googleapis\.com|api\.groq\.com|openrouter\.ai|ollama\.com)\/|^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
+// Any online AI service (https) plus AI servers on this computer or the office network (Ollama, LM Studio, vLLM...).
+const LOCAL_AI = /^http:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?\//;
+const AI_HOSTS = { test: (u) => /^https:\/\//.test(u) || LOCAL_AI.test(u) };
 function allowAI() {
   const ses = session.defaultSession;
   ses.webRequest.onBeforeSendHeaders((d, cb) => {
     const h = d.requestHeaders;
-    if (/^http:\/\/(localhost|127\.0\.0\.1)/.test(d.url)) { delete h.Origin; delete h.origin; } // Ollama accepts requests without an Origin
+    if (LOCAL_AI.test(d.url)) { delete h.Origin; delete h.origin; } // Ollama accepts requests without an Origin
     cb({ requestHeaders: h });
   });
   ses.webRequest.onHeadersReceived((d, cb) => {

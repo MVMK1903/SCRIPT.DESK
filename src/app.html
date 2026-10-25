@@ -592,7 +592,7 @@ async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Re
   return out.join('\n\n')}
 
 /* ================= AI ================= */
-const ERRS={no_key:'Choose an AI service in Settings to use AI (free options available). Everything else works without it.',no_model:'Choose an AI model in Settings first (use "Load models").',ollama_down:'ScriptDesk cannot reach Ollama on this computer. Open the Ollama app (install it free from ollama.com), then try again.',ollama_origin:'Ollama blocked ScriptDesk. See Settings → Ollama for the one-line fix, then restart Ollama.',bad_key:'Your API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'That AI model was not found. Pick another in Settings (use "Load models").',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'The AI service\'s usage limit is reached for now. Try again later, or switch to another service in Settings.',cors_blocked:'The browser blocked the connection to Ollama Cloud. Use the ScriptDesk desktop or Android app, or Ollama on your computer signed in to your account (see Settings).',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
+const ERRS={no_key:'Choose an AI service in Settings to use AI (free options available). Everything else works without it.',no_model:'Choose an AI model in Settings first (use "Load models").',ollama_down:'ScriptDesk cannot reach Ollama on this computer. Open the Ollama app (install it free from ollama.com), then try again.',ollama_origin:'Ollama blocked ScriptDesk. See Settings → Ollama for the one-line fix, then restart Ollama.',bad_key:'Your API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'That AI model was not found. Pick another in Settings (use "Load models").',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'The AI service\'s usage limit is reached for now. Try again later, or switch to another service in Settings.',cors_blocked:'The browser blocked the connection to this AI service. Use the ScriptDesk desktop or Android app for this service, or pick another one in Settings.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
 const FATAL=['no_key','cors_blocked','no_model','ollama_down','ollama_origin','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
 function errMsg(e){return (e&&ERRS[e.code])||(e&&e.message&&!e.code?e.message:'Something went wrong with the AI step. Retry failed scenes.')}
 function startJob(label,total){JOB={label,done:0,total,ctl:new AbortController(),fatal:null};renderJob();return JOB}
@@ -719,7 +719,7 @@ ${scr}`,{modelTier:'complex'});
 
 async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
   if(!AI.sample){noAI('AI needs ScriptDesk to be opened inside Claude. You can still edit every report by hand.');return}
-  if(STANDALONE&&!navigator.onLine&&aiCfg().provider!=='ollama'){toast(ERRS.offline,5000);return}
+  if(STANDALONE&&!navigator.onLine&&aiCfg().provider!=='ollama'&&!/localhost|127\.0\.0\.1|\/\/(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(aiCfg().base[aiCfg().provider]||'')){toast(ERRS.offline,5000);return}
   if(P.sample){P.sample=false}
   const pending=P.scenes.filter(s=>opts.only?opts.only.includes(s.id):s.status!=='done');
   const needCast=!P.artists.length;const needProf=!opts.only&&!Object.keys(P.profiles).length;const needStr=!opts.only&&!P.structure;
@@ -1316,24 +1316,41 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
   async del(k){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}};
 /* ---- AI services: Claude (paid) or free options (Gemini, Groq, OpenRouter free models, Ollama on this computer, any OpenAI-compatible server) ---- */
 const PROVIDERS={
-  ollama:{name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
+  ollama:{group:'local',name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
     help:'Runs open-source AI models on your own computer: free, works without internet, and your script never leaves the computer. 1) Install Ollama free from ollama.com and open it. 2) Download a model once, e.g. in a terminal: <code>ollama pull qwen3:8b</code> (8–16 GB RAM) or a larger one if your computer allows. 3) Press "Load models" and pick it. In the ScriptDesk desktop app this just works. For the web app version only, allow it once with <code>OLLAMA_ORIGINS=*</code> (Mac: <code>launchctl setenv OLLAMA_ORIGINS "*"</code>; Windows: add an environment variable OLLAMA_ORIGINS = *), then restart Ollama. Smaller models are slower and less accurate with Telugu than Claude or Gemini. Tip: Ollama on your computer can also run the big free cloud models: run <code>ollama signin</code>, then <code>ollama pull gpt-oss:120b-cloud</code>, and pick that model here (needs internet for those models).'},
-  ollamacloud:{name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
+  ollamacloud:{group:'free',name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
     help:'Large open models (gpt-oss 120B, DeepSeek, Gemma, Qwen and more) run by Ollama on its servers, so nothing to install and no powerful computer needed. Free key: sign up at ollama.com (email only, no card) → Settings → API keys → Create, paste it here, press "Load models" and pick one (gpt-oss:120b is a good start). Free use has hourly and weekly limits; ScriptDesk waits and retries when it hits them. Your script is sent to Ollama\'s servers. Works in the ScriptDesk desktop and Android apps. If the web app version says the connection was blocked, use the desktop app, or use "Ollama · on this computer" signed in to your Ollama account (see its help).'},
-  gemini:{name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
+  gemini:{group:'free',name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
     help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. Good with Telugu and Tinglish. Free use has daily limits. Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
-  groq:{name:'Groq',tag:'Free tier',key:true,keyHint:'gsk_…',base:'https://api.groq.com/openai/v1',budget:20000,workers:1,models:{default:'openai/gpt-oss-120b'},keyUrl:'https://console.groq.com/keys',
+  groq:{group:'free',jsonMode:1,maxOut:4096,name:'Groq',tag:'Free tier',key:true,keyHint:'gsk_…',base:'https://api.groq.com/openai/v1',budget:20000,workers:1,models:{default:'openai/gpt-oss-120b'},keyUrl:'https://console.groq.com/keys',
     help:'Free key: console.groq.com/keys → Create API Key. Very fast, but small per-minute limits, so ScriptDesk sends smaller pieces and waits when needed. Character profiles and story structure see less of the script than with Gemini or Claude.'},
-  openrouter:{name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://openrouter.ai/settings/keys',
+  openrouter:{group:'free',name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://openrouter.ai/settings/keys',
     help:'Free key: openrouter.ai/settings/keys. Press "Load models" and pick one ending in ":free" (no cost). Free models allow about 50 requests a day, enough for roughly one feature script. Free models may log what you send.'},
-  claude:{name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
+  claude:{group:'paid',name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
     help:'Best quality for Telugu and Tinglish scripts. Billed per use to your Anthropic account (console.anthropic.com).'},
-  custom:{name:'Other · OpenAI-compatible',tag:'Your server',key:true,keyHint:'optional',base:'http://localhost:1234/v1',budget:30000,workers:1,models:{default:''},keyUrl:'',
-    help:'LM Studio, vLLM, LocalAI, or any service with an OpenAI-compatible /chat/completions endpoint. Enter its address, a key if it needs one, and a model name.'}};
+  nvidia:{group:'free',name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:''},keyUrl:'https://build.nvidia.com/',
+    help:'Free key for 100+ open models (DeepSeek, Qwen, Llama, Mistral, Nemotron, Kimi and more) running on NVIDIA servers. Sign in at build.nvidia.com, open any model and press "Get API Key" (starts with nvapi-). Paste it here, press "Load models" and pick one; large ones such as DeepSeek or Qwen are the most accurate. Free use allows about 40 requests a minute and is meant for testing; ScriptDesk waits and retries when it hits the limit. Your script is sent to NVIDIA.'},
+  cloudflare:{group:'free',name:'Cloudflare Workers AI',tag:'Free daily allowance',key:true,keyHint:'Cloudflare API token',base:'https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/v1',editBase:1,budget:20000,maxOut:4096,workers:1,models:{default:'@cf/openai/gpt-oss-120b'},keyUrl:'https://dash.cloudflare.com/profile/api-tokens',
+    help:'Free daily allowance with a Cloudflare account. Create an API token with "Workers AI" permission, paste it here, and replace YOUR_ACCOUNT_ID in the Address with your account ID (shown in the Cloudflare dashboard). Some large models need a paid plan.'},
+  openai:{group:'paid',jsonMode:1,name:'OpenAI',tag:'Paid',key:true,keyHint:'sk-…',base:'https://api.openai.com/v1',budget:120000,workers:2,models:{default:''},keyUrl:'https://platform.openai.com/api-keys',
+    help:'Billed per use to your OpenAI account. Press "Load models" and pick one.'},
+  deepseek:{group:'paid',jsonMode:1,name:'DeepSeek',tag:'Paid · low cost',key:true,keyHint:'sk-…',base:'https://api.deepseek.com/v1',budget:120000,maxOut:8000,workers:2,models:{default:'deepseek-chat'},keyUrl:'https://platform.deepseek.com/api_keys',
+    help:'DeepSeek\'s own service. Very low cost per script; add a small balance at platform.deepseek.com. Strong at long scripts.'},
+  mistral:{group:'paid',jsonMode:1,name:'Mistral AI',tag:'Free plan / paid',key:true,keyHint:'API key',base:'https://api.mistral.ai/v1',budget:80000,workers:1,models:{default:'mistral-large-latest'},keyUrl:'https://console.mistral.ai/api-keys',
+    help:'Key from console.mistral.ai. Includes a small free monthly allowance on some plans.'},
+  together:{group:'paid',jsonMode:1,name:'Together AI',tag:'Paid',key:true,keyHint:'API key',base:'https://api.together.xyz/v1',budget:80000,workers:2,models:{default:''},keyUrl:'https://api.together.xyz/settings/api-keys',
+    help:'Many open-source models, billed per use. Press "Load models" and pick one.'},
+  cerebras:{group:'paid',jsonMode:1,name:'Cerebras',tag:'Trial credits',key:true,keyHint:'csk-…',base:'https://api.cerebras.ai/v1',budget:30000,maxOut:8000,workers:1,models:{default:''},keyUrl:'https://cloud.cerebras.ai/',
+    help:'Very fast open models. New accounts get trial credits. Press "Load models" and pick one.'},
+  huggingface:{group:'paid',name:'Hugging Face',tag:'Credits / PRO',key:true,keyHint:'hf_…',base:'https://router.huggingface.co/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://huggingface.co/settings/tokens',
+    help:'Thousands of open models through Hugging Face Inference Providers. Needs purchased credits or a PRO account. Press "Load models" and pick one.'},
+  custom:{group:'any',name:'Any other AI · OpenAI-compatible',tag:'Any address',key:true,keyHint:'if the service needs one',base:'http://localhost:1234/v1',budget:30000,workers:1,models:{default:''},keyUrl:'',
+    help:'Connect any AI that offers an OpenAI-compatible API: LM Studio, Jan, vLLM, LocalAI or text-generation-webui on this computer or your office network, or any online service. Enter its address (usually ending in /v1), its key if it needs one, then "Load models" or type the model name. Examples: LM Studio http://localhost:1234/v1 · Jan http://localhost:1337/v1 · vLLM http://SERVER:8000/v1.'}};
+const PGROUPS={local:'On this computer · offline',free:'Free keys',paid:'Paid keys',any:'Any other AI'};
 function aiCfg(){let c=lsGet('ai');if(!c){c={provider:'claude',keys:{},base:{},model:{}};const old=lsGet('apikey');if(old){c.keys.claude=old;const m=lsGet('models')||{};c.model.claude={default:m.default||'',complex:m.complex||''}}else c.provider='ollama'}
   c.keys=c.keys||{};c.base=c.base||{};c.model=c.model||{};return c}
 const apiKey=()=>{const c=aiCfg();return c.keys[c.provider]||''};
-function aiReady(){const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)return false;if(c.provider==='ollama')return !!((c.model.ollama||{}).default);if(c.provider==='custom')return !!((c.model.custom||{}).default);return !!c.keys[c.provider]}
+function aiReady(){const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)return false;const model=(c.model[c.provider]||{}).default||(c.provider==='ollama'?'':p.models.default);if(!model)return false;return !p.key||c.provider==='custom'||!!c.keys[c.provider]}
 function aiBudget(){if(!STANDALONE)return 150000;const p=PROVIDERS[aiCfg().provider];return p?p.budget:30000}
 function aiWorkers(){if(!STANDALONE)return 2;const p=PROVIDERS[aiCfg().provider];return p?p.workers:1}
 function noAI(msg){if(STANDALONE)openSettings('Choose an AI service to use the AI features. Free options are available, and everything else works without AI, even offline.');else toast(msg)}
@@ -1343,14 +1360,14 @@ async function httpErr(r,provider){let m='';try{const j=await r.json();m=(j.erro
   const ra=parseFloat(r.headers.get('retry-after')||'')||0;
   if(provider==='ollama'){if(st===403)return {code:'ollama_origin',message:m};if(st===404||/not found|pull/i.test(m))return {code:'bad_model',message:m}}
   if(st===401||(st===403&&provider!=='ollama')||/API_KEY_INVALID|invalid api key|invalid x-api-key/i.test(m))return {code:'bad_key',message:m};
-  if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===413)return {code:'prompt_too_large',message:m};
+  if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===400&&/max_tokens|max_completion_tokens|maximum context|context length|too many tokens/i.test(m))return {code:'max_tokens',message:m};if(st===413)return {code:'prompt_too_large',message:m};
   if(st===402||/credit|balance|billing|quota exceeded for metric.*free/i.test(m))return {code:st===402?'no_credit':'rate_limited',message:m,wait:ra};
   if(st===404||(st===400&&/model/i.test(m)))return {code:'bad_model',message:m};return {code:'upstream_error',message:m}}
 async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[prov]||'';const base=(c.base[prov]||p.base).replace(/\/+$/,'');const tier=opts.modelTier||'default';
   const mc=c.model[prov]||{};const model=(tier==='complex'?(mc.complex||mc.default):tier==='quick'?(mc.quick||mc.default):mc.default)||p.models[tier]||p.models.default;
   if(!model)throw {code:'no_model'};
   const imgs=[];if(opts.images){for(const b of Array.from(opts.images.length!=null?opts.images:[opts.images]))imgs.push({mime:/png/.test(b.type)?'image/png':'image/jpeg',data:await blobB64(b)})}
-  const maxOut=prov==='groq'?4096:tier==='quick'?4000:16000;let r;
+  const maxOut=Math.min(opts.maxOut||99999,p.maxOut||(tier==='quick'?4000:16000));let r;
   try{
     if(prov==='claude'){r=await fetch(base+'/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model,max_tokens:maxOut,messages:[{role:'user',content:[...imgs.map(i=>({type:'image',source:{type:'base64',media_type:i.mime,data:i.data}})),{type:'text',text:prompt}]}]})})}
@@ -1360,8 +1377,8 @@ async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[
       body:JSON.stringify(Object.assign({model,stream:false,messages:[Object.assign({role:'user',content:prompt},imgs.length?{images:imgs.map(i=>i.data)}:{})],options:Object.assign({temperature:0.2},prov==='ollama'?{num_ctx:16384}:{})},opts.json?{format:'json'}:{}))})}
     else{const h={'content-type':'application/json'};if(key)h.authorization='Bearer '+key;if(prov==='openrouter'){h['HTTP-Referer']='https://github.com/MVMK1903/SCRIPT.DESK';h['X-Title']='ScriptDesk'}
       r=await fetch(base+'/chat/completions',{method:'POST',signal:opts.signal,headers:h,body:JSON.stringify(Object.assign({model,max_tokens:maxOut,temperature:0.2,
-        messages:[{role:'user',content:imgs.length?[{type:'text',text:prompt},...imgs.map(i=>({type:'image_url',image_url:{url:`data:${i.mime};base64,${i.data}`}}))]:prompt}]},opts.json&&prov==='groq'?{response_format:{type:'json_object'}}:{}))})}}
-  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};if(prov==='ollamacloud'&&navigator.onLine!==false&&STANDALONE&&!NATIVE&&!/Electron/.test(navigator.userAgent))throw {code:'cors_blocked'};if(prov==='ollama'||prov==='custom'&&/localhost|127\.0\.0\.1/.test(base))throw {code:prov==='ollama'?'ollama_down':'upstream_error'};throw {code:navigator.onLine===false?'offline':'upstream_error'}}
+        messages:[{role:'user',content:imgs.length?[{type:'text',text:prompt},...imgs.map(i=>({type:'image_url',image_url:{url:`data:${i.mime};base64,${i.data}`}}))]:prompt}]},opts.json&&p.jsonMode?{response_format:{type:'json_object'}}:{}))})}}
+  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};if(navigator.onLine!==false&&STANDALONE&&!NATIVE&&!/Electron/.test(navigator.userAgent)&&!/localhost|127\.0\.0\.1/.test(base)&&!['claude','gemini','groq','openrouter'].includes(prov))throw {code:'cors_blocked',svc:p.name};if(prov==='ollama'||prov==='custom'&&/localhost|127\.0\.0\.1/.test(base))throw {code:prov==='ollama'?'ollama_down':'upstream_error'};throw {code:navigator.onLine===false?'offline':'upstream_error'}}
   if(!r.ok)throw await httpErr(r,prov);
   const j=await r.json();let text='',trunc=false;
   if(prov==='claude'){text=(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('');trunc=j.stop_reason==='max_tokens'}
@@ -1373,6 +1390,7 @@ async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg(),p=PROVIDERS[c.p
   if(p.key&&c.provider!=='custom'&&!c.keys[c.provider])throw {code:'no_key'};
   if(c.provider!=='ollama'&&!/localhost|127\.0\.0\.1/.test(c.base[c.provider]||p.base)&&navigator.onLine===false)throw {code:'offline'};
   for(let attempt=0;;attempt++){try{return await callOnce(prompt,opts,c,p)}catch(e){
+    if(e&&e.code==='max_tokens'&&!opts._small){opts=Object.assign({},opts,{maxOut:4096,_small:1});continue}
     if(e&&(e.code==='rate_limited'||e.code==='upstream_error')&&attempt<4&&!(opts.signal&&opts.signal.aborted)){
       const wait=Math.min(90,Math.max(e.wait||0,e.code==='rate_limited'?20*(attempt+1):5*(attempt+1)));
       if(JOB){const old=JOB.label;JOB.label=e.code==='rate_limited'?`Free-tier limit reached, waiting ${wait}s`:'Connection hiccup, retrying';renderJob();await sleepAbort(wait*1000,opts.signal);JOB.label=old;renderJob()}else await sleepAbort(wait*1000,opts.signal);continue}
@@ -1390,7 +1408,7 @@ async function listModels(c){const prov=c.provider,p=PROVIDERS[prov],key=c.keys[
     else if(prov==='ollama')r=await fetch(base+'/api/tags');
     else if(prov==='ollamacloud')r=await fetch(base+'/api/tags',{headers:key?{authorization:'Bearer '+key}:{}});
     else r=await fetch(base+'/models',{headers:key?{authorization:'Bearer '+key}:{}})}
-  catch(e){throw {code:prov==='ollama'?'ollama_down':navigator.onLine===false?'offline':prov==='ollamacloud'&&!NATIVE&&!/Electron/.test(navigator.userAgent)?'cors_blocked':'upstream_error'}}
+  catch(e){throw {code:prov==='ollama'?'ollama_down':navigator.onLine===false?'offline':!NATIVE&&!/Electron/.test(navigator.userAgent)&&!/localhost|127\.0\.0\.1/.test(base)&&!['claude','gemini','groq','openrouter'].includes(prov)?'cors_blocked':'upstream_error'}}
   if(!r.ok)throw await httpErr(r,prov);const j=await r.json();
   if(prov==='gemini')return (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>m.name.replace(/^models\//,'')).filter(n=>!/embed|aqa|imagen|tts|image/i.test(n));
   if(prov==='ollama'||prov==='ollamacloud')return (j.models||[]).map(m=>m.name||m.model).filter(Boolean);
@@ -1398,7 +1416,7 @@ async function listModels(c){const prov=c.provider,p=PROVIDERS[prov],key=c.keys[
 function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);const installed=matchMedia('(display-mode: standalone)').matches||NATIVE;let cur=c.provider;
   openModal(`<div class="modal-h"><h2>Settings</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${note?`<div class="banner">${esc(note)}</div>`:''}
-  <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PROVIDERS).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</select></div>
+  <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
   <div id="sBody"></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
   <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
@@ -1409,7 +1427,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   const body=()=>{const p=PROVIDERS[cur];const mc=c.model[cur]||{};
     $('#sBody').innerHTML=`<div class="banner info small" style="display:block;line-height:1.55">${p.help}${p.keyUrl?` <a href="${p.keyUrl}" target="_blank" rel="noopener">${cur==='ollama'?'Download Ollama':cur==='ollamacloud'?'Get a free Ollama key':'Get a key'}</a>`:''}</div>
     ${p.key?`<div class="fieldbox"><label for="sKey">API key${cur==='custom'?' (if needed)':''}</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="${esc(p.keyHint||'')}" value="${esc(c.keys[cur]||'')}"></div>`:''}
-    ${cur==='ollama'||cur==='custom'?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
+    ${cur==='ollama'||cur==='custom'||p.editBase?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
     <div class="two"><div class="fieldbox"><label for="sModel">Model</label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
     <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>`;
@@ -1417,7 +1435,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   const collect=()=>{c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
   body();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
-  $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Pick a model to use AI.'))};
+  $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))};
   $('#sTest').onclick=async()=>{collect();lsSet('ai',c);refreshAI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.')}catch(e){msg(errMsg(e))}}}
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});

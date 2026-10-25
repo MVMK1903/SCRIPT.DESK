@@ -1,7 +1,7 @@
 {
   "name": "scriptdesk-desktop",
   "productName": "ScriptDesk",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "ScriptDesk \u2013 AI film script breakdown (desktop app for Windows and Mac)",
   "author": "Bhargav Madasu",
   "main": "main.js",

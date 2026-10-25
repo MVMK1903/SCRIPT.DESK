@@ -698,6 +698,32 @@ ${sample}`,{modelTier:'default'});
     a.aliases=uniq([...(a.aliases||[]),...(x.aliases||[]).map(U)]).filter(v=>norm(v)!==norm(a.name));
     if(!a.locked){if(x.designation)a.designation=U(x.designation);a.tier=x.tier==='Primary'?'Primary':'Secondary'}});
   dirty.meta=true}
+/* Characters a scene certainly has, without relying on the AI */
+function nameHit(text,n){if(!n||n.length<2)return -1;const re=new RegExp('(^|[^\\p{L}\\p{N}_])('+reEsc(n).replace(/\s+/g,'\\s+')+')(?![\\p{L}\\p{N}_])','giu');let m;while((m=re.exec(text))){const w=m[2];if(!(w===w.toLowerCase()&&w!==w.toUpperCase()))return m.index}return -1}
+function sceneSpeakers(s){return uniq((s.cues&&s.cues.length?s.cues:extractCues(s.text)).map(c=>U(String(c).replace(/\((V\.?O\.?|O\.?S\.?|O\.?C\.?|CONT'?D)\)/ig,'')).replace(/\s+TO\s+.*$/,'').trim()).filter(Boolean))}
+function sceneMentionIds(s){const act=classify(String(s.text||'').split('\n')).filter(([k])=>k==='act').map(([,t])=>t).join('\n');return P.artists.filter(a=>[a.name,...(a.aliases||[])].some(n=>String(n).length>=3&&nameHit(act,n)>=0)).map(a=>a.id)}
+function byAppearance(s,ids){const pos=id=>{const a=A(id);if(!a)return 1e9;const hits=[a.name,...(a.aliases||[])].map(n=>nameHit(s.text,n)).filter(i=>i>=0);return hits.length?Math.min(...hits):1e9};return uniq(ids).map(id=>[id,pos(id)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0])}
+function sureCast(s){return [...namesToIds(sceneSpeakers(s),'Found in dialogue'),...sceneMentionIds(s)]}
+function thorough(){if(!STANDALONE)return false;const c=aiCfg();return c.thorough!=null?!!c.thorough:c.provider!=='claude'}
+function checkPrompt(s){const cur={desc:s.desc,artists:s.artists.map(aName),costumes:s.costumes.map(c=>(c.a?aName(c.a):c.n)+' – '+c.c)};LK.forEach(k=>cur[k]=s[k]);
+  return `You are double-checking a SCRIPT BREAKDOWN for an Indian film. Read the scene below slowly, line by line (it may be in English, Telugu, Tinglish or Hindi), and list everything the CURRENT BREAKDOWN MISSED. Write values in English.
+Check especially: every character who appears, speaks or is described as present (including non-speaking ones); every object an actor touches or uses; vehicles; animals; crowd and junior artistes; costume or look changes (wet, blood, uniform, period); special effects; weapons; anything needing VFX.
+Known characters (use these exact names): ${rosterText()}
+Rules: add only things clearly in this scene; never repeat items already in the breakdown; never invent; keep items short (1-6 words), no commas inside items.
+desc_fix: a corrected 1-2 sentence single-line-order description ONLY if the current description is wrong or misses the main event; otherwise "".
+Reply with only JSON: {"artists":[],"juniors":[],"extras":[],"props":[],"art":[],"costumes":[{"artist":"","costume":""}],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"desc_fix":""}
+
+CURRENT BREAKDOWN:
+${JSON.stringify(cur)}
+
+SCENE ${s.no} | ${s.heading||eff(s)+' '+s.loc}
+${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`}
+function mergeCheck(s,r){if(!r||typeof r!=='object')return 0;const L=s.locked||{};let n=0;const arr=a=>Array.isArray(a)?a.map(cleanItem).filter(Boolean):[];
+  if(!L.artists){const add=namesToIds(arr(r.artists),'Found by AI check').filter(id=>!s.artists.includes(id));if(add.length){s.artists=byAppearance(s,[...s.artists,...add]);n+=add.length}}
+  LK.forEach(k=>{if(L[k])return;const have=new Set((s[k]||[]).map(x=>norm(x)));const add=arr(r[k]).filter(x=>!have.has(norm(x)));if(add.length){s[k]=uniq([...(s[k]||[]),...add]).slice(0,80);n+=add.length}});
+  if(!L.costumes&&Array.isArray(r.costumes))r.costumes.forEach(c=>{if(!c||!c.costume)return;const a=findArtist(c.artist);const key=a?a.id:'n:'+U(c.artist);if(s.costumes.some(x=>(x.a||'n:'+x.n)===key))return;s.costumes.push(a?{a:a.id,n:'',c:cleanItem(c.costume)}:{a:null,n:U(c.artist),c:cleanItem(c.costume)});n++});
+  const fix=String(r.desc_fix||'').trim();if(fix&&!L.desc&&fix.length>10){s.desc=fix.slice(0,400);n++}
+  return n}
 function breakdownPrompt(batch){return `You are an experienced Chief Associate Director on an Indian film doing a professional SCRIPT BREAKDOWN. The script may be in English, Telugu, Tinglish (Telugu in Roman letters), Hindi, Tamil or any language and any format. Write every output value in clear ENGLISH.
 Known characters (use these exact UPPERCASE names; map spelling variants to them): ${rosterText()}
 
@@ -708,7 +734,7 @@ For EACH scene below return:
 - loc: the script location in UPPERCASE as written in the heading (fix obvious typos only).
 - ie: INT, EXT, INT/EXT. time: the time/effect exactly as the heading writes it, e.g. DAY, NIGHT, MRNG, AFTN, EVNG, DAWN.
 - timeline: "Present" unless the scene is a flashback, dream or a different period; then e.g. "1947", "Flashback", "Dream".
-- artists: characters present in the scene (named characters only, UPPERCASE).
+- artists: EVERY named character present in the scene, in order of appearance: everyone who speaks (listed under each scene below; all of them must be included) plus everyone described in the action, even if silent (UPPERCASE).
 - juniors: crowd / junior artistes groups with estimated count, e.g. "Villagers (30)".
 - extras: small non-speaking bit roles, e.g. "Waiter", "Valet guy".
 - setup: the physical set-up in a few words, e.g. "Karthik's bedroom".
@@ -719,19 +745,20 @@ For EACH scene below return:
 - fight: null, or {"d":"what happens","artists":["NAME"],"fighters":"e.g. 15 fighters","needs":"rope rigging, breakaway glass, safety"} if the scene has a fight, chase or stunt.
 - song: null, or {"d":"short description"} if a song or montage happens in this scene.
 - flags: short notes about anything unclear in the scene (empty if clear).
-Rules: never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies.
+Rules: read each scene line by line and do not skip details from the middle or end of a scene; never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies. Return one entry for EVERY scene id.
 Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"fight":null,"song":null,"flags":[]}]}
 
 SCENES:
-${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}
+${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}${sceneSpeakers(s).length?`\nSpeaking characters (must be in artists): ${sceneSpeakers(s).join(', ')}`:''}
 ${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`).join('\n\n')}`}
-function makeBatches(list){const out=[];let b=[],n=0;list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=(aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
+function batchMax(){if(!STANDALONE)return 4;const c=aiCfg(),p=PROVIDERS[c.provider]||{};return p.batchMax||(c.provider==='ollama'?1:2)}
+function makeBatches(list){const out=[];let b=[],n=0;const mx=batchMax();list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=Math.min(mx,aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
 function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
   const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
   setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
   if(!s.loc&&r.loc)s.loc=U(r.loc);if(!s.ie&&r.ie)s.ie=U(r.ie);if(!s.time&&r.time)s.time=U(r.time);
   setIf('timeline',cleanItem(r.timeline)==='Present'?'':cleanItem(r.timeline));
-  if(!L.artists){const ids=namesToIds(arr(r.artists),'Found by AI');s.artists=uniq([...ids])}
+  if(!L.artists){const ids=namesToIds(arr(r.artists),'Found by AI');s.artists=byAppearance(s,[...sureCast(s),...ids])}
   LK.forEach(k=>{if(!L[k])s[k]=arr(r[k])});
   if(!L.costumes&&Array.isArray(r.costumes)){s.costumes=r.costumes.filter(c=>c&&c.costume).map(c=>{const a=findArtist(c.artist);return {a:a?a.id:null,n:a?'':U(c.artist),c:cleanItem(c.costume)}})}
   if(!L.fight){s.fight=r.fight&&r.fight.d?{unit:(s.fight&&s.fight.unit)||'',d:String(r.fight.d).trim(),a:arr(r.fight.artists).map(U).join(', '),f:cleanItem(r.fight.fighters),r:String(r.fight.needs||'').trim()}:null}
@@ -792,6 +819,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
   if(!AI.sample){noAI('AI needs ScriptDesk to be opened inside Claude. You can still edit every report by hand.');return}
   if(STANDALONE&&!navigator.onLine&&aiCfg().provider!=='ollama'&&!/localhost|127\.0\.0\.1|\/\/(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(aiCfg().base[aiCfg().provider]||'')){toast(ERRS.offline,5000);return}
   if(P.sample){P.sample=false}
+  if(opts.recheck){return recheckAll(opts.only)}
   const pending=P.scenes.filter(s=>opts.only?opts.only.includes(s.id):s.status!=='done');
   const needCast=!P.artists.length;const needProf=!opts.only&&!Object.keys(P.profiles).length;const needStr=!opts.only&&!P.structure;
   if(!pending.length&&!needProf&&!needStr&&!needCast){toast('Everything is up to date. Edit a scene in Full script to re-read it.');return}
@@ -809,6 +837,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     await Promise.all(Array.from({length:aiWorkers()},worker));
     P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});
     if(JOB.fatal)throw JOB.fatal;if(JOB.ctl.signal.aborted)throw {code:'cancelled'};
+    if(thorough()){const done=pending.filter(s=>s.status==='done');JOB.label='Double-checking scenes';JOB.done=0;JOB.total=done.length;renderJob();await checkPass(done)}
     assignUnits();touch(P.scenes.map(s=>s.id));
     if(needStr){JOB.label='Reading story structure';JOB.total=0;renderJob();try{await aiStructure()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Story structure could not be written. Use the button on its page to retry.'}touch([])}
     if(needProf){JOB.label='Writing character profiles';renderJob();try{await aiProfiles()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Character profiles could not be written. Use the button on their page to retry.'}touch([])}
@@ -817,6 +846,22 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     toast(failed?`${failed} scene${failed>1?'s':''} failed. Use "Retry failed scenes" in Checks.`:soft||'Breakdown complete. Every report is ready to review and edit.',5000)
   }catch(e){P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});toast(e&&e.code==='cancelled'?'Stopped. Finished scenes are kept.':errMsg(e),5500)}
   finally{endJob();touch([]);render()}}
+
+async function checkPass(list){const q=list.slice();let added=0;
+  const worker=async()=>{while(q.length&&!JOB.fatal&&!JOB.ctl.signal.aborted){const s=q.shift();
+    try{const r=await ask(checkPrompt(s),{modelTier:'default'});added+=mergeCheck(s,r)}catch(e){if(e&&e.code==='cancelled')return;if(FATAL.includes(e&&e.code)){JOB.fatal=e;return}}
+    JOB.done++;renderJob();touch([s.id]);if(['script','breakdown','slo'].includes(page))render(true)}};
+  await Promise.all(Array.from({length:aiWorkers()},worker));if(JOB.fatal)throw JOB.fatal;return added}
+async function recheckAll(only){if(JOB)return;if(!AI.sample){noAI('AI is needed to double-check scenes.');return}
+  const list=P.scenes.filter(s=>s.status==='done'&&(!only||only.includes(s.id)));if(!list.length){toast('Run the AI breakdown first.');return}
+  snapshot();let fixed=0;P.scenes.forEach(s=>{if(s.locked&&s.locked.artists)return;const before=s.artists.length;s.artists=byAppearance(s,[...s.artists,...sureCast(s)]);fixed+=s.artists.length-before});
+  startJob('Double-checking scenes',list.length);
+  try{const added=await checkPass(list);assignUnits();logChange(`AI double-check: ${list.length} scenes re-read, ${added+fixed} missing item${added+fixed===1?'':'s'} added`,'scenes');toast(`Double-check done: ${added+fixed} missing item${added+fixed===1?'':'s'} added. Review the reports.`,6000)}
+  catch(e){toast(e&&e.code==='cancelled'?'Stopped. Checked scenes are kept.':errMsg(e),5500)}
+  finally{endJob();touch(P.scenes.map(s=>s.id));render()}}
+function fillSpeakers(){snapshot();let n=0;const ids=[];P.scenes.forEach(s=>{if(s.locked&&s.locked.artists)return;const before=s.artists.length;s.artists=byAppearance(s,[...s.artists,...sureCast(s)]);if(s.artists.length>before){n+=s.artists.length-before;ids.push(s.id)}});
+  logChange(`Added ${n} missing character${n===1?'':'s'} to ${ids.length} scene${ids.length===1?'':'s'} from dialogue and action`,'artists');touch(ids);render(true);return n}
+function missingSpeakers(){const out=[];P.scenes.forEach(s=>{if(s.locked&&s.locked.artists)return;const miss=sceneSpeakers(s).filter(n=>{const a=findArtist(n);return !a||!s.artists.includes(a.id)});if(miss.length)out.push([s,miss])});return out}
 
 /* ================= Checks ================= */
 function checks(){if(!P)return [];const out=[];const seen={};
@@ -827,6 +872,7 @@ function checks(){if(!P)return [];const out=[];const seen={};
     if(s.status==='stale')out.push({lv:'warn',msg:`Scene ${s.no}: script was edited. Run AI to update its reports.`,sid:s.id,retry:1});
     if(s.status==='done'&&!s.artists.length&&!s.juniors.length)out.push({lv:'warn',msg:`Scene ${s.no}: no artists found.`,sid:s.id});
     (s.flags||[]).forEach(f=>out.push({lv:'info',msg:`Scene ${s.no}: ${f}`,sid:s.id}))});
+  const ms=missingSpeakers();if(ms.length)out.unshift({lv:'warn',msg:`${ms.length} scene${ms.length===1?'':'s'} miss characters who speak in them (e.g. Sc ${ms[0][0].no}: ${ms[0][1].slice(0,3).join(', ')}).`,fix:'speakers'});
   const nums=P.scenes.map(s=>parseInt(s.no)).filter(n=>!isNaN(n));
   for(let i=1;i<nums.length;i++){if(nums[i]-nums[i-1]>1&&nums[i]>nums[i-1])out.push({lv:'info',msg:`Scene numbers jump from ${nums[i-1]} to ${nums[i]}. Check nothing is missing.`})}
   const locs=locGroups().map(g=>g.loc);for(let i=0;i<locs.length;i++)for(let j=i+1;j<locs.length;j++){const a=norm(locs[i]),b=norm(locs[j]);if(a&&b&&a!==b&&a.length>4&&lev(a,b)<=2)out.push({lv:'info',msg:`Locations "${locs[i]}" and "${locs[j]}" look like the same place. Merge them in No. of locations.`,pg:'locations'})}
@@ -834,8 +880,10 @@ function checks(){if(!P)return [];const out=[];const seen={};
   return out}
 function renderChecksBtn(){const c=P?checks().filter(x=>x.lv!=='info'):[];const b=$('#bChecks');const all=P?checks():[];b.hidden=!all.length;b.textContent=`Checks (${all.length})`;b.className='btn sm '+(c.length?'warn':'ghost')}
 function openChecks(){const list=checks();const failed=P.scenes.filter(s=>s.status==='err'||s.status==='stale');
-  openModal(`<div class="modal-h"><h2>Checks</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><p class="small muted">Things to look at so every report is correct. Nothing here blocks you.</p><div class="checks">${list.map((c,i)=>`<div class="chk"><span class="tag ${c.lv==='bad'?'bad':c.lv==='warn'?'warn':''}">${c.lv==='bad'?'Error':c.lv==='warn'?'Check':'Note'}</span><span>${esc(c.msg)}</span>${c.sid||c.pg?`<button class="btn sm" data-go="${i}">Show</button>`:''}</div>`).join('')||'<p class="muted">No issues found.</p>'}</div></div>
-  <div class="modal-f">${failed.length?`<button class="btn pri" id="bRetry">Retry ${failed.length} scene${failed.length>1?'s':''} with AI</button>`:''}</div>`);
+  openModal(`<div class="modal-h"><h2>Checks</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><p class="small muted">Things to look at so every report is correct. Nothing here blocks you.</p><div class="checks">${list.map((c,i)=>`<div class="chk"><span class="tag ${c.lv==='bad'?'bad':c.lv==='warn'?'warn':''}">${c.lv==='bad'?'Error':c.lv==='warn'?'Check':'Note'}</span><span>${esc(c.msg)}</span>${c.fix?`<button class="btn sm pri" data-fix="${c.fix}">Add them</button>`:c.sid||c.pg?`<button class="btn sm" data-go="${i}">Show</button>`:''}</div>`).join('')||'<p class="muted">No issues found.</p>'}</div></div>
+  <div class="modal-f">${AI.sample&&P.scenes.some(s=>s.status==='done')?`<button class="btn" id="bRecheck" title="The AI re-reads every scene against its breakdown and adds what was missed">Double-check all scenes with AI</button>`:''}${failed.length?`<button class="btn pri" id="bRetry">Retry ${failed.length} scene${failed.length>1?'s':''} with AI</button>`:''}</div>`);
+  document.querySelectorAll('[data-fix=speakers]').forEach(b=>b.onclick=()=>{const n=fillSpeakers();closeModal();toast(`Added ${n} missing character${n===1?'':'s'}. Every report is updated.`)});
+  const rc=$('#bRecheck');if(rc)rc.onclick=()=>{closeModal();recheckAll()};
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const c=list[+b.dataset.go];closeModal();if(c.pg)go(c.pg);else{VIEW.focus=c.sid;go('breakdown');setTimeout(()=>{const el=document.getElementById('c-'+c.sid);el&&el.scrollIntoView({block:'start'})},60)}});
   const r=$('#bRetry');if(r)r.onclick=()=>{closeModal();runAll({only:failed.map(s=>s.id)})}}
 
@@ -954,7 +1002,7 @@ function renameArtistAll(a,newN,quiet){const oldN=a.name;const nn=U(newN).replac
   return sids}
 /* Keep a scene's artists in step with its dialogue after a script edit (no AI needed) */
 function syncSceneCast(sc,oldCues){const now=sc.cues||[];const gone=(oldCues||[]).filter(c=>!now.some(n=>norm(n)===norm(c)));const added=now.filter(c=>!(oldCues||[]).some(o=>norm(o)===norm(c)));
-  if(added.length)sc.artists=uniq([...sc.artists,...namesToIds(added,'Added from script')]);
+  if(added.length)sc.artists=uniq([...sc.artists,...namesToIds(uniq(added.map(c=>U(c).replace(/\((V\.?O\.?|O\.?S\.?|CONT'?D)\)/ig,'').replace(/\s+TO\s+.*$/,'').trim()).filter(Boolean)),'Added from script')]);
   gone.forEach(g=>{const a=findArtist(g);if(!a)return;const names=[a.name,...(a.aliases||[])];const still=names.some(n=>new RegExp('(^|[^\\p{L}\\p{N}_])'+reEsc(n)+'(?![\\p{L}\\p{N}_])','iu').test(sc.text));if(!still)sc.artists=sc.artists.filter(x=>x!==a.id)})}
 /* Which speaker name was swapped for another? Compares the cue lines in order. */
 function cueSwap(oldText,newText){const seq=t=>classify(t.split('\n')).filter(([k])=>k==='chr').map(([,t])=>cueOf(t)).filter(Boolean);
@@ -1308,7 +1356,7 @@ async function wrApply(){wrSave();const els=draft().els;if(!els.some(e=>e.t==='h
   const next=r.scenes.map(n=>{const o=old.get(U(n.no));if(o&&!keep.has(o.id)){keep.add(o.id);
       if(flat(o.text)!==flat(n.text)||U(o.loc)!==U(n.loc)||o.ie!==n.ie||o.time!==n.time){const oc=(o.cues||[]).slice();Object.assign(o,{ie:n.ie,time:n.time,loc:n.loc,heading:n.heading,text:n.text,cues:n.cues,status:'stale'});syncSceneCast(o,oc);changed.push(o.id)}
       return o}
-    n.status='new';n.artists=namesToIds(n.cues||[],'Added from script');added.push(n.id);return n});
+    n.status='new';n.artists=byAppearance(n,namesToIds(sceneSpeakers(n),'Added from script'));added.push(n.id);return n});
   const removed=P.scenes.filter(s=>!keep.has(s.id));removed.forEach(s=>dirty.deleted.add(s.id));P.scenes=next;
   const D=draft();const nums=wrNumbers(D.els);D.els.forEach((e,i)=>{if(e.t==='h')e.n=nums[i]});D.syncedAt=Date.now();D.at=D.syncedAt;dirty.draft=true;
   if(!P.title||P.title==='Untitled script')P.title=D.tp.title||P.title;
@@ -1657,7 +1705,7 @@ const PROVIDERS={
     help:'Free key: console.groq.com/keys → Create API Key. Very fast, but small per-minute limits, so ScriptDesk sends smaller pieces and waits when needed. Character profiles and story structure see less of the script than with Gemini or Claude.'},
   openrouter:{group:'free',name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://openrouter.ai/settings/keys',
     help:'Free key: openrouter.ai/settings/keys. Press "Load models" and pick one ending in ":free" (no cost). Free models allow about 50 requests a day, enough for roughly one feature script. Free models may log what you send.'},
-  claude:{group:'paid',name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
+  claude:{group:'paid',batchMax:4,name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
     help:'Best quality for Telugu and Tinglish scripts. Billed per use to your Anthropic account (console.anthropic.com).'},
   nvidia:{group:'free',name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:''},keyUrl:'https://build.nvidia.com/',
     help:'Free key for 100+ open models (DeepSeek, Qwen, Llama, Mistral, Nemotron, Kimi and more) running on NVIDIA servers. Sign in at build.nvidia.com, open any model and press "Get API Key" (starts with nvapi-). Paste it here, press "Load models" and pick one; large ones such as DeepSeek or Qwen are the most accurate. Free use allows about 40 requests a minute and is meant for testing; ScriptDesk waits and retries when it hits the limit. Your script is sent to NVIDIA.'},
@@ -1749,6 +1797,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   ${note?`<div class="banner">${esc(note)}</div>`:''}
   <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
   <div id="sBody"></div>
+  <label class="small" style="display:flex;gap:10px;align-items:flex-start;line-height:1.5"><input type="checkbox" id="sThorough" ${thorough()?'checked':''} style="margin-top:3px"><span><b>Double-check every scene</b> (recommended for free and open-source AI). The AI reads each scene a second time and adds characters, props and details it missed. Takes about twice as long and uses more of a free allowance.</span></label>
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
   <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
   <div class="banner info small" style="display:block;line-height:1.55"><b>Have a Claude subscription?</b> Apps outside Claude can only reach Claude with an API key. To use your subscription instead, open ScriptDesk inside Claude: <a href="https://claude.ai/artifact/E9UvNpxLmvFjyudnWrKGs6" target="_blank" rel="noopener">Open ScriptDesk in Claude</a> (sign in with your Claude account).</div>
@@ -1763,7 +1812,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
     <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>`;
     $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found. Click the Model box to pick one.`:'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0]}catch(e){$('#sLoadMsg').textContent=errMsg(e)}}};
-  const collect=()=>{c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
+  const collect=()=>{const th=$('#sThorough');if(th)c.thorough=th.checked;c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
   body();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
   $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))};

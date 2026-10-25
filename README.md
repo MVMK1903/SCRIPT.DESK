@@ -1,6 +1,6 @@
 # ScriptDesk
 
-AI film script breakdown for film and web-series production teams. Import a screenplay in any language or format (English, Telugu, Tinglish, Hindi; Word, PDF, Final Draft, Fountain, text, scanned pages) and get every production report as Excel-style sheets you can edit and download as formatted Excel and PDF.
+AI film script breakdown for film and web-series production teams. Works with any AI: open-source models on your own computer (Ollama, LM Studio, Jan, llama.cpp, vLLM), free online services (Ollama Cloud, NVIDIA, Gemini, Groq, OpenRouter, Cloudflare), paid ones (Claude, OpenAI, DeepSeek, Mistral and more), or none at all. Import a screenplay in any language or format (English, Telugu, Tinglish, Hindi; Word, PDF, Final Draft, Fountain, text, scanned pages) and get every production report as Excel-style sheets you can edit and download as formatted Excel and PDF.
 
 **Reports:** Full script · Story structure · Character profiles · Single line order · Location-wise and artist-wise single line orders · Stunt / fight single line order · No. of locations · No. of artists · Location-wise and artist-wise scene lists · Script breakdown · Special identification · Costume continuity · Art / props. Every edit updates all sheets and is logged with sheet, date and time.
 
@@ -15,24 +15,53 @@ AI film script breakdown for film and web-series production teams. Import a scre
 | **iPhone / iPad** | `ScriptDesk-iphone-unsigned.ipa` from Releases, installed with **xtool** from Windows, Linux or Mac (below); or the web app (above) | Yes |
 | **Using your Claude subscription (no API key)** | Open the ScriptDesk link inside Claude (claude.ai or the Claude app). Separate apps can only use Claude through an API key. | No (needs internet) |
 
-## AI: free options
+## AI: works with any AI, including all open-source models
 
-Only the AI steps (finding scenes, breakdown, character profiles, story structure, reading scanned pages) use an AI service. Choose one in **Settings → AI service**:
+ScriptDesk is not tied to one AI company. Only the AI steps (finding scenes, scene descriptions, the breakdown, character profiles, story structure, reading scanned pages) use an AI service, and you choose which one in **Settings → AI service**. Everything else works with no AI and no internet.
 
-| Service | Cost | Internet | Best for |
-|---|---|---|---|
-| **Ollama** (on your computer) | Free | Not needed | Confidential scripts; fully private and offline. Needs a decent laptop (16 GB RAM recommended). |
-| **Google Gemini** | Free tier (daily limits) | Needed | Best free quality, good with Telugu and Tinglish. Free-tier data may be used by Google, so avoid for confidential scripts. |
-| **Groq** | Free tier | Needed | Very fast; small per-minute limits, so long scripts take longer. |
-| **OpenRouter** (`:free` models) | Free models (~50 requests/day) | Needed | Trying different open models. |
-| **Claude** (Anthropic) | Paid per use | Needed | Highest quality. |
-| **Other** (LM Studio, vLLM…) | Free if self-hosted | Depends | Any OpenAI-compatible server. |
+**Open-source models it can run:** any model your chosen service offers. That includes DeepSeek, Qwen, Llama, Mistral, Gemma, gpt-oss, Kimi, GLM, MiniMax, Nemotron, Phi and others, at any size.
 
-**Quick start (free):**
-- **Gemini:** get a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → Settings → Google Gemini → paste key → **Load models** → pick a Flash model → **Save** → **Test**.
-- **Ollama:** install from [ollama.com](https://ollama.com/download), run `ollama pull qwen3:8b` (or another model your computer can handle) → Settings → Ollama → **Load models** → pick it → **Save** → **Test**. Works in the desktop app directly; for the web app set `OLLAMA_ORIGINS=*` once and restart Ollama.
+### On your own computer (free, offline, private)
 
-ScriptDesk sends smaller pieces and waits automatically when a free tier's limit is reached. Keys are stored only on your device. Projects are saved on the device; use **Projects → Backup** to move a project to another device (open it with **Import script**).
+| Tool | How to connect |
+|---|---|
+| **Ollama** | Built-in option "Ollama · on this computer". Download a model once (`ollama pull qwen3:8b`), then **Load models**. |
+| **LM Studio** | "Any other AI" → address `http://localhost:1234/v1` |
+| **Jan** | "Any other AI" → address `http://localhost:1337/v1` |
+| **llama.cpp server, LocalAI, text-generation-webui, KoboldCpp** | "Any other AI" → the server's address (ends in `/v1`) |
+| **vLLM / TGI / SGLang on an office machine** | "Any other AI" → e.g. `http://192.168.1.20:8000/v1` |
+
+The script never leaves your computer or office network. The desktop app connects to these without extra setup.
+
+### Online, free keys
+
+| Service | Notes |
+|---|---|
+| **Ollama Cloud** | Free key from ollama.com. Large open models; for best accuracy pick `deepseek-v4-pro`. |
+| **NVIDIA** (build.nvidia.com) | Free trial key (`nvapi-…`), 100+ open models, about 40 requests a minute. |
+| **Google Gemini** | Free tier with daily limits. Good with Telugu and Tinglish. Free-tier data may be used by Google. |
+| **Groq** | Free tier, very fast, small per-minute limits. |
+| **OpenRouter** (`:free` models) | About 50 requests a day free. |
+| **Cloudflare Workers AI** | Free daily allowance. Put your account ID in the address. |
+
+### Online, paid keys
+
+**Claude (Anthropic)**, **OpenAI**, **DeepSeek**, **Mistral**, **Together AI**, **Cerebras**, **Hugging Face**. Any other online service with an OpenAI-compatible API works through **"Any other AI"**.
+
+### Using your Claude subscription
+
+Open ScriptDesk inside Claude (claude.ai or the Claude app). There it uses your Claude account, with no API key. Separate apps can reach Claude only with an API key.
+
+### How it copes with free limits
+
+- Sends smaller pieces to services with small limits, one request at a time.
+- Waits and retries automatically when a limit is reached.
+- Asks for answers in a strict format where the service supports it. If a service rejects a long answer, it retries with a shorter one.
+- Keys are stored only on your device.
+
+**Quick start (free, offline):** install [Ollama](https://ollama.com/download), run `ollama pull qwen3:8b`, then in ScriptDesk choose Settings → **Ollama · on this computer** → **Load models** → pick it → **Test** → **Save**.
+
+Projects are saved on the device. Use **Projects → Backup** to move a project to another device (open it with **Import script**).
 
 ## What it costs (everything else is free and open source)
 
@@ -41,13 +70,13 @@ ScriptDesk sends smaller pieces and waits automatically when a free tier's limit
 | App, Excel/PDF/Word/PDF-import libraries (SheetJS, jsPDF, pdf.js, Mammoth), Electron, Capacitor | Free, open source |
 | GitHub repo, Actions builds, Pages hosting (public repo) | Free |
 | Windows .exe, Mac .dmg, Android APK from Releases | Free (unsigned: install warnings, see below) |
-| iPhone / iPad | Free via the web app (Add to Home Screen). A native App Store app needs an Apple Developer account ($99/yr). |
+| iPhone / iPad | Free: the web app (Add to Home Screen), or the `.ipa` from Releases installed with xtool and a free Apple ID (reinstall every 7 days). An App Store app needs an Apple Developer account ($99/yr). |
 | Optional: Play Store listing $25 once · Windows code-signing certificate · Apple notarization | Paid, only if you want store listings or no warnings |
 
 ## One-time GitHub setup
 
 1. **Settings → Pages → Build and deployment → Source: GitHub Actions.** The web app is then published at `https://mvmk1903.github.io/SCRIPT.DESK/` on every push.
-2. Push to `main`. The **Build ScriptDesk apps** workflow (Actions tab) builds the web app, Windows installer, Mac app and Android APK. Download them from the run's **Artifacts**.
+2. Push to `main`. The **Build ScriptDesk apps** workflow (Actions tab) builds the web app, Windows installer, Mac app, Android APK and iPhone .ipa. Download them from the run's **Artifacts**.
 3. To publish a release with the installers attached: `git tag v1.0.0 && git push origin v1.0.0`.
 
 ### Notes on installers

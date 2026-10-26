@@ -148,6 +148,12 @@ a{color:var(--accent)}
 .cs-dept{grid-template-columns:repeat(2,minmax(110px,170px) 1fr)}
 .cs-multi{display:block;white-space:pre-wrap;min-height:2.4em;padding:6px 8px!important;margin:4px 0 0!important;border:1px dashed var(--line);border-radius:8px;font-size:13px}
 @media (max-width:640px){.cs-kv,.cs-dept{grid-template-columns:1fr}.cs-k{margin-top:6px;font-weight:600}}
+.seg.gneed{flex-wrap:wrap;margin-bottom:6px;max-width:100%}.seg.gneed button{white-space:nowrap}
+.gk{margin:18px 0 10px;font:700 15px/1.3 var(--f-ui)}
+.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.gcard{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.gcard p{margin:0;line-height:1.5}.gc-h{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}.gc-h b{font-size:14px}
+.gc-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;padding-top:6px}.gc-f .grow{flex:1}.gc-f a{color:var(--accent)}
 .pool-box{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-inset-sm);padding:14px 16px;margin:6px 0 14px}
 .pool-box h3{margin:0 0 6px;font:700 14px/1.3 var(--f-ui)}
 .pool-row{display:flex;gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;border-radius:14px;box-shadow:var(--sh-raise-sm);background:var(--bg)}
@@ -440,6 +446,7 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-order{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M4 12h10 M4 18h10 M18 5v14 M15 16l3 3 3-3'/%3E%3C/svg%3E")}
 .i-dood{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4z M4 10h16 M4 15h16 M10 4v16 M15 4v16'/%3E%3C/svg%3E")}
 .i-callsheet{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6v3H9z M7 5H5v16h14V5h-2 M8 11h8 M8 15h6'/%3E%3C/svg%3E")}
+.i-gear{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8'/%3E%3C/svg%3E")}
 .i-run{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.200 6.300L20.500 11.500l-6.300 2.200L12 20l-2.200-6.300L3.500 11.500l6.300-2.200z M19 3v4 M17 5h4'/%3E%3C/svg%3E")}
 .i-undo{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E")}
 .i-install{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
@@ -535,7 +542,8 @@ const PAGES=[
  {g:'Shooting',id:'sched',nav:'Shooting schedule',t:'Shooting schedule'},
  {g:'Shooting',id:'order',nav:'Shoot order',t:'Shoot order'},
  {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
- {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'}];
+ {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'},
+ {g:'Shooting',id:'gear',nav:'Camera & equipment',t:'Camera & equipment'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
 const LSKEY='scriptdesk.v2.';
 
@@ -681,8 +689,11 @@ function detectScenes(text){
     else{const n=parseInt(s.no);if(!isNaN(n))last=n}
     lastNo=s.no;s.cues=extractCues(s.text)});
   return {front:front.join('\n').trim(),scenes}}
+/* Lines in capitals that are not character names: sound effects, screen or phone text, editing notes, shouted lines */
+const NOT_CUE_W=/(^|[\s'-])(CALLING|CALLS|SCREEN|CUTS?|IMPACT|STOP|SOUNDS?|SFX|NOISE|MUSIC|BGM|TITLES?|CARD|TEXT|INSERT|ANGLE|POV|CLOSE ?UP|SHOTS?|MONTAGE|VFX|SLOW MOTION|FREEZE|BLACKOUT|SILENCE|PAUSE|BEAT|BANG|BOOM|CRASH|THUD|BEEP|KNOCK|HONK|SCREAMS?|RINGING|RINGS|LATER|CONTINUOUS|FLASHBACK|FLASH|MY|ME|YOU|YOUR|WE|US|OUR|IS|ARE|WAS|WERE|AM|DON'?T|CAN'?T|WON'?T|I'?M|IT'?S|THIS|THAT|WHAT|WHY|HOW|HERE|THERE|PLEASE|HELP|KILLED|KILL)(?=$|[\s'-])/;
+function looksLikeName(b){b=String(b||'').trim();if(!b)return false;if(/[.!?,…:]$/.test(b)&&!/(^|\s)(MR|MRS|MS|DR|SR|JR|ST)\.$/.test(b))return false;if(/([A-Z])\1\1/.test(b))return false;if(NOT_CUE_W.test(b))return false;return true}
 function cueOf(t){const s=t.trim();if(!s||s.length>34)return null;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
-  if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;return b.replace(/\s+/g,' ')}
+  if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;if(!looksLikeName(b))return null;return b.replace(/\s+/g,' ')}
 function classify(lines){const out=[];let mode='a',justCue=false;
   const nextNon=i=>{for(let j=i+1;j<lines.length&&j<i+4;j++){const x=lines[j].trim();if(x)return x}return ''};
   for(let i=0;i<lines.length;i++){const t=lines[i].trim();
@@ -737,7 +748,7 @@ function renderJob(){const el=$('#job');const run=$('#bRun');if(!JOB){el.hidden=
 async function ask(prompt,opts){if(!AI.sample)throw {code:'not_granted'};return AI.sample.json(prompt,Object.assign({signal:JOB?JOB.ctl.signal:undefined},opts||{}))}
 
 function rosterText(){return P.artists.map(a=>a.name+(a.aliases&&a.aliases.length?' (also: '+a.aliases.join(', ')+')':'')).join('; ')||'none yet'}
-async function aiCast(){const cnt={};P.scenes.forEach(s=>(s.cues||[]).forEach(c=>cnt[c]=(cnt[c]||0)+1));
+async function aiCast(){const cnt={};P.scenes.forEach(s=>(s.cues||[]).filter(looksLikeName).forEach(c=>cnt[c]=(cnt[c]||0)+1));
   const cands=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,150).map(([n,c])=>n+' ('+c+' scenes)').join('\n')||'(no character cues detected — find the characters from the text)';
   const sample=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(70000,aiBudget()*0.8));
   const r=await ask(`You are a production coordinator on an Indian film. Build the CHARACTER LIST for this screenplay. The script may be in English, Telugu, Tinglish (Telugu in Roman letters), Hindi or another language, in any format.
@@ -761,9 +772,38 @@ ${sample}`,{modelTier:'default'});
     a.aliases=uniq([...(a.aliases||[]),...(x.aliases||[]).map(U)]).filter(v=>norm(v)!==norm(a.name));
     if(!a.locked){if(x.designation)a.designation=U(x.designation);a.tier=x.tier==='Primary'?'Primary':'Secondary'}});
   dirty.meta=true}
+/* Designations for the artist list, and names the AI says are not characters */
+async function aiDesignations(){const as=sortedArtists();if(!as.length)return {n:0,bad:0};
+  const lines=as.map(a=>`${a.name}${a.aliases&&a.aliases.length?' (also '+a.aliases.join(', ')+')':''} | ${a.n} scene${a.n===1?'':'s'}${a.n?' | first in Sc '+artistScenes(a.id)[0].no:''}${a.designation?' | now: '+a.designation:''}`).join('\n');
+  const r=await ask(`You are a production coordinator on an Indian feature film. For each name in the list below, decide whether it is really a CHARACTER (a person, or a voice or animal played by an artist), and give a short DESIGNATION for the cast list.
+- designation: short English description of the role or relation, in capitals, like a cast list: "LEAD ROLE", "HEROINE", "HERO'S FATHER", "VILLAIN", "NILA'S MOTHER", "POLICE INSPECTOR", "COLLEGE PRINCIPAL", "NEWS READER". Work out relations from the script.
+- is_character: false only for things that are not characters: sound effects (e.g. "SCRRRAAAPEE"), screen or phone text (e.g. "NOEL CALLING", "ON SCREEN"), camera or editing notes (e.g. "FAST CUTS", "IMPACT"), a shouted line of dialogue written in capitals, transitions.
+The script may be in English, Telugu, Tinglish, Malayalam, Hindi or another language. Keep every name exactly as given.
+Reply with only JSON: {"artists":[{"name":"","designation":"","is_character":true}]}
+
+NAMES (name | scenes | first scene):
+${lines}
+
+SCENE OUTLINE:
+${cutBytes(outline(),Math.min(40000,aiBudget()*0.3))}
+
+SCRIPT EXCERPT:
+${cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(60000,aiBudget()*0.4))}`,{modelTier:'default'});
+  let n=0;const bad=[];(Array.isArray(r&&r.artists)?r.artists:[]).forEach(x=>{const a=findArtist(x.name);if(!a)return;
+    if(x.is_character===false||x.is_character==='false'){if(!a.locked)bad.push(a.id);return}
+    const d=U(x.designation||'').slice(0,60);if(d&&!a.designation){a.designation=d;n++}});
+  P.notChars=bad;dirty.meta=true;return {n,bad:bad.length}}
+function fakeArtists(){const ai=new Set(P.notChars||[]);return P.artists.filter(a=>!a.locked&&(ai.has(a.id)||!looksLikeName(a.name)))}
+function removeArtists(ids){const ids2=[];P.scenes.forEach(s=>{const b=s.artists.length;s.artists=s.artists.filter(x=>!ids.includes(x));s.costumes=s.costumes.filter(c=>!ids.includes(c.a));if(s.artists.length!==b)ids2.push(s.id)});
+  P.artists=P.artists.filter(a=>!ids.includes(a.id));ids.forEach(id=>{delete P.profiles[id];if(P.doodx)delete P.doodx[id]});P.notChars=(P.notChars||[]).filter(x=>!ids.includes(x));return ids2}
+async function desigJob(){if(JOB)return;if(!AI.sample){noAI('AI needs a connected AI service. You can type designations by hand.');return}if(!P.artists.length){toast('No artists yet.');return}
+  snapshot();startJob('Writing designations',0);
+  try{const r=await aiDesignations();logChange(`Designations filled by AI for ${r.n} artist${r.n===1?'':'s'}`,'artistInfo',true);touch([]);
+    toast(`${r.n} designation${r.n===1?'':'s'} filled in.${r.bad?` ${r.bad} name${r.bad===1?' looks':'s look'} like ${r.bad===1?'it is':'they are'} not a character; see Checks to remove ${r.bad===1?'it':'them'}.`:''} Edit anything you like.`,6500)}
+  catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
 /* Characters a scene certainly has, without relying on the AI */
 function nameHit(text,n){if(!n||n.length<2)return -1;const re=new RegExp('(^|[^\\p{L}\\p{N}_])('+reEsc(n).replace(/\s+/g,'\\s+')+')(?![\\p{L}\\p{N}_])','giu');let m;while((m=re.exec(text))){const w=m[2];if(!(w===w.toLowerCase()&&w!==w.toUpperCase()))return m.index}return -1}
-function sceneSpeakers(s){return uniq((s.cues&&s.cues.length?s.cues:extractCues(s.text)).map(c=>U(String(c).replace(/\((V\.?O\.?|O\.?S\.?|O\.?C\.?|CONT'?D)\)/ig,'')).replace(/\s+TO\s+.*$/,'').trim()).filter(Boolean))}
+function sceneSpeakers(s){return uniq((s.cues&&s.cues.length?s.cues:extractCues(s.text)).map(c=>U(String(c).replace(/\((V\.?O\.?|O\.?S\.?|O\.?C\.?|CONT'?D)\)/ig,'')).replace(/\s+TO\s+.*$/,'').trim()).filter(n=>n&&looksLikeName(n)))}
 function sceneMentionIds(s){const act=classify(String(s.text||'').split('\n')).filter(([k])=>k==='act').map(([,t])=>t).join('\n');return P.artists.filter(a=>[a.name,...(a.aliases||[])].some(n=>String(n).length>=3&&nameHit(act,n)>=0)).map(a=>a.id)}
 function byAppearance(s,ids){const pos=id=>{const a=A(id);if(!a)return 1e9;const hits=[a.name,...(a.aliases||[])].map(n=>nameHit(s.text,n)).filter(i=>i>=0);return hits.length?Math.min(...hits):1e9};return uniq(ids).map(id=>[id,pos(id)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0])}
 function sureCast(s){return [...namesToIds(sceneSpeakers(s),'Found in dialogue'),...sceneMentionIds(s)]}
@@ -904,6 +944,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     assignUnits();touch(P.scenes.map(s=>s.id));
     if(needStr){JOB.label='Reading story structure';JOB.total=0;renderJob();try{await aiStructure()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Story structure could not be written. Use the button on its page to retry.'}touch([])}
     if(needProf){JOB.label='Writing character profiles';renderJob();try{await aiProfiles()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Character profiles could not be written. Use the button on their page to retry.'}touch([])}
+    if(P.artists.some(a=>!a.designation)){JOB.label='Writing designations';JOB.total=0;renderJob();try{await aiDesignations()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e}touch([])}
     const failed=P.scenes.filter(s=>s.status==='err').length;
     logChange(`AI breakdown: ${pending.length-failed} scene${pending.length-failed===1?'':'s'} read${failed?`, ${failed} failed`:''}`,'scenes',true);
     toast(failed?`${failed} scene${failed>1?'s':''} failed. Use "Retry failed scenes" in Checks.`:soft||'Breakdown complete. Every report is ready to review and edit.',5000)
@@ -935,6 +976,7 @@ function checks(){if(!P)return [];const out=[];const seen={};
     if(s.status==='stale')out.push({lv:'warn',msg:`Scene ${s.no}: script was edited. Run AI to update its reports.`,sid:s.id,retry:1});
     if(s.status==='done'&&!s.artists.length&&!s.juniors.length)out.push({lv:'warn',msg:`Scene ${s.no}: no artists found.`,sid:s.id});
     (s.flags||[]).forEach(f=>out.push({lv:'info',msg:`Scene ${s.no}: ${f}`,sid:s.id}))});
+  const fk=fakeArtists();if(fk.length)out.unshift({lv:'warn',msg:`${fk.length} name${fk.length===1?'':'s'} in the artist list ${fk.length===1?'looks':'look'} like sound effects, screen text or editing notes, not characters: ${fk.slice(0,6).map(a=>a.name).join(', ')}${fk.length>6?'…':''}.`,fix:'fakes'});
   const ms=missingSpeakers();if(ms.length)out.unshift({lv:'warn',msg:`${ms.length} scene${ms.length===1?'':'s'} miss characters who speak in them (e.g. Sc ${ms[0][0].no}: ${ms[0][1].slice(0,3).join(', ')}).`,fix:'speakers'});
   const nums=P.scenes.map(s=>parseInt(s.no)).filter(n=>!isNaN(n));
   for(let i=1;i<nums.length;i++){if(nums[i]-nums[i-1]>1&&nums[i]>nums[i-1])out.push({lv:'info',msg:`Scene numbers jump from ${nums[i-1]} to ${nums[i]}. Check nothing is missing.`})}
@@ -943,8 +985,9 @@ function checks(){if(!P)return [];const out=[];const seen={};
   return out}
 function renderChecksBtn(){const c=P?checks().filter(x=>x.lv!=='info'):[];const b=$('#bChecks');const all=P?checks():[];b.hidden=!all.length;b.textContent=`Checks (${all.length})`;b.className='btn sm '+(c.length?'warn':'ghost')}
 function openChecks(){const list=checks();const failed=P.scenes.filter(s=>s.status==='err'||s.status==='stale');
-  openModal(`<div class="modal-h"><h2>Checks</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><p class="small muted">Things to look at so every report is correct. Nothing here blocks you.</p><div class="checks">${list.map((c,i)=>`<div class="chk"><span class="tag ${c.lv==='bad'?'bad':c.lv==='warn'?'warn':''}">${c.lv==='bad'?'Error':c.lv==='warn'?'Check':'Note'}</span><span>${esc(c.msg)}</span>${c.fix?`<button class="btn sm pri" data-fix="${c.fix}">Add them</button>`:c.sid||c.pg?`<button class="btn sm" data-go="${i}">Show</button>`:''}</div>`).join('')||'<p class="muted">No issues found.</p>'}</div></div>
+  openModal(`<div class="modal-h"><h2>Checks</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><p class="small muted">Things to look at so every report is correct. Nothing here blocks you.</p><div class="checks">${list.map((c,i)=>`<div class="chk"><span class="tag ${c.lv==='bad'?'bad':c.lv==='warn'?'warn':''}">${c.lv==='bad'?'Error':c.lv==='warn'?'Check':'Note'}</span><span>${esc(c.msg)}</span>${c.fix?`<button class="btn sm pri" data-fix="${c.fix}">${c.fix==='fakes'?'Remove them':'Add them'}</button>`:c.sid||c.pg?`<button class="btn sm" data-go="${i}">Show</button>`:''}</div>`).join('')||'<p class="muted">No issues found.</p>'}</div></div>
   <div class="modal-f">${AI.sample&&P.scenes.some(s=>s.status==='done')?`<button class="btn" id="bRecheck" title="The AI re-reads every scene against its breakdown and adds what was missed">Double-check all scenes with AI</button>`:''}${failed.length?`<button class="btn pri" id="bRetry">Retry ${failed.length} scene${failed.length>1?'s':''} with AI</button>`:''}</div>`);
+  document.querySelectorAll('[data-fix=fakes]').forEach(b=>b.onclick=()=>{const fk=fakeArtists();snapshot();const sids=removeArtists(fk.map(a=>a.id));logChange(`Removed ${fk.length} non-character name${fk.length===1?'':'s'} from the artist list: ${fk.map(a=>a.name).join(', ')}`,'artistName');touch(sids);closeModal();render(true);toast(`Removed ${fk.length} name${fk.length===1?'':'s'} that ${fk.length===1?'was':'were'} not characters. Undo brings them back.`)});
   document.querySelectorAll('[data-fix=speakers]').forEach(b=>b.onclick=()=>{const n=fillSpeakers();closeModal();toast(`Added ${n} missing character${n===1?'':'s'}. Every report is updated.`)});
   const rc=$('#bRecheck');if(rc)rc.onclick=()=>{closeModal();recheckAll()};
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const c=list[+b.dataset.go];closeModal();if(c.pg)go(c.pg);else{VIEW.focus=c.sid;go('breakdown');setTimeout(()=>{const el=document.getElementById('c-'+c.sid);el&&el.scrollIntoView({block:'start'})},60)}});
@@ -1133,7 +1176,7 @@ R.artists=()=>{const as=sortedArtists();const pri=as.filter(a=>a.tier==='Primary
   const head='<thead><tr><th>Sl no</th><th>Character name</th><th>Designation</th><th>Artist</th><th>Ph. No</th><th>Scenes</th><th>Level</th><th>Actions</th></tr></thead>';
   const cols=[{h:'Sl no',w:6},{h:'Character name',w:24},{h:'Designation',w:26},{h:'Artist',w:22},{h:'Ph. No',w:16},{h:'Scenes',w:8}];
   const er=(a,i)=>[i+1,a.name,a.designation,a.actor,a.phone,a.n];
-  return {html:pageHead('No. of artists','Primary artists first, then secondary. Renaming a character updates every report. Phone numbers stay in your private storage.',searchBox()+'<button class="btn sm" data-act="addArtist">Add artist</button>')+
+  return {html:pageHead('No. of artists','Primary artists first, then secondary. Renaming a character updates every report. Phone numbers stay in your private storage.',searchBox()+'<button class="btn sm" data-act="desig">Fill designations with AI</button><button class="btn sm" data-act="addArtist">Add artist</button>')+
   `<div class="stats"><div class="stat"><b>${as.length}</b><span>Characters</span></div><div class="stat"><b>${pri.length}</b><span>Primary</span></div><div class="stat"><b>${sec.length}</b><span>Secondary</span></div></div>
   <div class="tw"><table class="t rt">${head}<tbody>${gRow('Primary artists',null,8)}${pri.map(row).join('')||'<tr><td class="muted nol" colspan="8">None yet. Set an artist\'s level to Primary.</td></tr>'}${gRow('Secondary artists',null,8)}${sec.map(row).join('')}</tbody></table></div>`,
   exp:{orient:'landscape',sheets:[{name:'No. of artists',cols,rows:[{group:'PRIMARY ARTISTS'},...pri.map(er),{group:'SECONDARY ARTISTS'},...sec.map(er)]}]}}};
@@ -1716,6 +1759,80 @@ R.callsheet=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),shoo
     ...(crew.length?[{name:'Crew list',cols:[{h:'Department',w:20},{h:'Role',w:24},{h:'Name',w:30},{h:'Phone',w:20}],rows:crew.map(c=>[c.dept||'',c.role||'',c.name||'',c.phone||''])}]:[]),
     ...(nx?[{name:'Advance schedule',cols:cols2,rows:[[dayLabel(nx,nums,dates),dayScenes(nx).map(s=>'Sc '+s.no+' ('+eff(s)+', '+s.loc+')').join('; ')]]}]:[])]}}};
 
+/* ---------- Page: Camera & equipment (researched suggestions, per-scene picks, own list) ---------- */
+const NEEDS=[['day','Day exteriors'],['night','Night / low light'],['action','Action & stunts'],['slowmo','Slow motion'],['aerial','Aerial'],['tight','Handheld & tight spaces'],['vfx','VFX & green screen'],['song','Songs & dance'],['budget','Lower budget']];
+const GEAR=[
+ {k:'Camera',n:'ARRI ALEXA 35',sp:'Super 35 4.6K sensor, 17 stops dynamic range, EI 160–6400, up to 120 fps, built-in ND filters.',t:['day','night','vfx','slowmo'],w:'The all-round first choice: skin tones, highlights and night work hold up; 120 fps covers most slow motion.',u:'Most-used camera in 2025–26 festival camera surveys.',src:'https://ymcinema.com/2022/05/31/arri-introduces-the-alexa-35/',src2:'https://ymcinema.com/2025/10/27/fall-2025-most-popular-cinema-cameras/'},
+ {k:'Camera',n:'ARRI ALEXA LF / Mini LF',sp:'Large-format 4.5K sensor; Mini LF is the compact body for gimbals and handheld.',t:['day','night','vfx','tight'],w:'Big-screen, naturalistic image; RRR used it for IMAX and CinemaScope framing at the same time.',u:'RRR (K.K. Senthil Kumar), shot mostly at 800 ASA.',src:'https://www.arri.com/news-en/alexa-lf-signature-primes-and-skypanels-on-the-film-rrr'},
+ {k:'Camera',n:'ARRI ALEXA 65',sp:'65 mm-format sensor for the largest image.',t:['day','vfx'],w:'Epic scale and heavy VFX work where image size matters most.',u:'Kalki 2898 AD, with ARRI Prime DNA lenses.',src:'https://imdb.com/title/tt12735488/technical'},
+ {k:'Camera',n:'ARRI ALEXA XT (older ALEXA)',sp:'3.4K Open Gate, ARRIRAW; widely available for rent.',t:['day','budget'],w:'Proven, flattering skin tones; good when budget rules out newer bodies.',u:'Baahubali: The Beginning (ARRIRAW, 120 fps in 16:9 for slow motion).',src:'https://www.arri.com/news-en/alexa-on-the-biggest-ever-indian-movie-'},
+ {k:'Camera',n:'Sony VENICE 2',sp:'8.6K full-frame sensor, dual base ISO 800 / 3200, 8 stops built-in ND.',t:['night','day','vfx'],w:'ISO 3200 base keeps night exteriors clean with less lighting; strong colour separation and skin tones.',u:'Main camera on Mission: Impossible 7.',src:'https://theasc.com/article/sony-unveils-venice-2/',src2:'https://ymcinema.com/2023/07/17/the-action-camera-behind-mission-impossible-7/'},
+ {k:'Camera',n:'Sony BURANO',sp:'8.6K full frame (VENICE 2 colour), dual base ISO 800 / 3200, in-body stabilisation, 4K Super 35 up to 120 fps, variable ND.',t:['night','tight','budget'],w:'VENICE-like image in a lighter body with stabilisation: good for night handheld and smaller crews.',u:'Used on festival features in 2026.',src:'https://www.videomaker.com/news/sony-just-released-a-25k-digital-cinema-camera-burano/'},
+ {k:'Camera',n:'Sony FX6',sp:'Full-frame 4K, dual ISO 800 / 12800, 15 stops, 4K up to 120 fps, HD up to 240 fps, variable ND.',t:['night','budget','tight','slowmo'],w:'Very clean at high ISO and small: night streets with available light, B-camera, quick setups.',u:'Common B-camera and low-budget main camera.',src:'https://digitalcameraworld.com/news/sony-fx6-full-frame-e-mount-camcorder-is-on-its-way'},
+ {k:'Camera',n:'RED V-RAPTOR [X]',sp:'8K VistaVision global shutter, 17+ stops; up to 120 fps at 8K, 240 fps at 4K, 480–600 fps at 2K.',t:['action','slowmo','vfx','day'],w:'Global shutter: no rolling-shutter bend on whip pans, car rigs and fast action; high frame rates for impacts.',u:'High-end action and VFX work.',src:'https://www.videomaker.com/news/red-announces-v-raptor-x-with-8k-vista-vision-global-shutter/'},
+ {k:'Camera',n:'RED KOMODO',sp:'6K Super 35, global shutter, very small body.',t:['action','tight','budget','aerial'],w:'Small and light for car rigs, stunt and crash positions, drones and tight spaces.',u:'Used as a second camera for movement and tight spaces in 2025 features.',src:'https://ymcinema.com/2025/10/27/fall-2025-most-popular-cinema-cameras/',src2:'https://Red.Com/shot-on-komodo'},
+ {k:'Camera',n:'Z CAM E2-F6 (crash cam)',sp:'Compact full-frame camera, about US$3,000, weather sealed and fanless.',t:['action','budget'],w:'Cheap enough to put close to crashes and stunts in a crash housing; matches well with VENICE.',u:'Mission: Impossible 7 car pursuits, train crash and motorbike stunts.',src:'https://ymcinema.com/2023/07/17/the-action-camera-behind-mission-impossible-7/'},
+ {k:'Camera',n:'DJI Ronin 4D',sp:'Full-frame camera built into a 4-axis stabiliser, with remote framing and switchable stabilisation modes.',t:['action','tight','song'],w:'Run-and-gun movement without a separate gimbal crew; fast chases and dance moves.',u:'Civil War (Rob Hardy); 327 shots in F1.',src:'https://dronexl.co/2024/09/16/dji-ronin-4d-camera-movie-civil-war',src2:'https://dronexl.co/2025/12/08/dji-ronin-4d-f1-movie'},
+ {k:'High-speed camera',n:'Phantom Flex4K',sp:'Up to 1,000 fps at 4K and about 2,000 fps at 1080p; 6.3 kg body.',t:['slowmo','action','song'],w:'The reference for extreme slow motion: impacts, water, glass, hair and dance beats.',u:'Standard for high-end slow motion.',src:'https://www.abelcine.com/articles/blog-and-knowledge/tools-charts-and-downloads/choosing-the-right-phantom-for-the-job',src2:'https://vmi.tv/blog/learn-help/the_difference_between_the_phantom_flex_4k_and_phantom_veo-4k/'},
+ {k:'High-speed camera',n:'Phantom VEO 4K',sp:'Up to 1,000 fps at 4K, 1,775 fps at 2K; 2.5 kg body, fits gimbals, jibs and drones.',t:['slowmo','action','song','aerial'],w:'Same sensor as Flex4K in a lighter body for location work and moving rigs.',u:'Location slow motion; in many Indian equipment lists.',src:'https://vmi.tv/blog/learn-help/the_difference_between_the_phantom_flex_4k_and_phantom_veo-4k/'},
+ {k:'High-speed camera',n:'Freefly Ember S5K',sp:'Super 35; 5K up to 600 fps, 4K up to 800 fps; about 800 g.',t:['slowmo','budget','action'],w:'Lower-cost high speed on small rigs and gimbals.',u:'Launched as a compact alternative to Phantom.',src:'https://ymcinema.com/2022/12/20/freefly-launches-ember-ultra-high-speed-super-35-compact-cinema-camera/'},
+ {k:'Drone',n:'DJI Inspire 3 (Zenmuse X9-8K Air)',sp:'Stabilised full-frame 8K camera on a drone.',t:['aerial','day'],w:'Cinema-quality aerials and chase tracking without a helicopter.',u:'Common for feature-film aerials.',src:'https://www.cined.com/dji-inspire-3-drone-explained-full-frame-8k-cinema-drone/'},
+ {k:'Lenses',n:'ARRI Signature Primes',sp:'Large-format primes, 18–150 mm used on RRR at T2.8–T4.',t:['day','night','vfx'],w:'Clean, natural look for large format; strong for fire and low-light scenes.',u:'RRR, on ALEXA LF.',src:'https://www.arri.com/news-en/alexa-lf-signature-primes-and-skypanels-on-the-film-rrr'},
+ {k:'Lenses',n:'ARRI/ZEISS Master Primes',sp:'Fast, sharp Super 35 primes.',t:['night','day','vfx'],w:'Sharp with texture, soft fall-off and flattering skin; speed helps at night.',u:'Baahubali: The Beginning.',src:'https://www.arri.com/news-en/alexa-on-the-biggest-ever-indian-movie-'},
+ {k:'Lenses',n:'ARRI Prime DNA',sp:'Large-format primes with vintage character.',t:['day','vfx'],w:'Characterful look for large-format and 65 mm cameras.',u:'Kalki 2898 AD, on ALEXA 65.',src:'https://imdb.com/title/tt12735488/technical'},
+ {k:'Lenses',n:'Cooke Anamorphic and Spherical primes',sp:'Pushpa 2 used 32 mm and 50 mm most, anamorphic at T4–T5.6, spherical at T2.8.',t:['day','action','song'],w:'Holds highlight detail well; anamorphic gives wide, graphic compositions.',u:'Pushpa 2: The Rule (Mirosław Kuba Brożek).',src:'https://cookeoptics.com/?p=28729'},
+ {k:'Lenses',n:'Angenieux Optimo 24-290 zoom',sp:'Long-range cinema zoom.',t:['action','song','day'],w:'Reframes fast for action, crowds and songs without lens changes; long end for compression.',u:'Venice 2026 feature Jupiter; standard in many kits.',src:'https://ymcinema.com/2026/09/11/venice-2026-cameras-arri-alexa-35-film-dp/'},
+ {k:'Lenses',n:'Zeiss Super Speeds',sp:'Fast vintage primes, widely rehoused.',t:['night','budget'],w:'Wide aperture and soft vintage character for low light at a lower rental price.',u:'Venice 2026 feature The Basics of Philosophy, on VENICE 2.',src:'https://ymcinema.com/2026/09/11/venice-2026-cameras-arri-alexa-35-film-dp/'},
+ {k:'Lights',n:'ARRI SkyPanel (S30 to S360)',sp:'Soft LED panels with full colour control and effects.',t:['night','vfx','song','day'],w:'Soft key and fill, firelight and other effects, blue and green screen lighting.',u:'RRR.',src:'https://www.arri.com/news-en/alexa-lf-signature-primes-and-skypanels-on-the-film-rrr'},
+ {k:'Lights',n:'Nanlux Evoke 2400B / 1200',sp:'High-output LED for hard daylight.',t:['day','song'],w:'Sunlight effects, shafts of light through windows, hard backlight.',u:'Kalki 2898 AD (desert chase, Kasi sunlight, window shafts).',src:'https://britishcinematographer.co.uk/sponsored-content-nanlux-2/'},
+ {k:'Lights',n:'Nanlux Dyno',sp:'Large LED soft sources, can fly on cranes.',t:['night','vfx'],w:'Moon fill for night exteriors, sky fill, fire effects, lighting for blue-screen driving.',u:'Kalki 2898 AD.',src:'https://britishcinematographer.co.uk/sponsored-content-nanlux-2/'},
+ {k:'Lights',n:'Nanlite PavoTube / Forza 60C',sp:'Small LED tubes and fixtures.',t:['night','tight','budget'],w:'Hidden fills and practical-looking light in tight interiors.',u:'Kalki 2898 AD.',src:'https://britishcinematographer.co.uk/sponsored-content-nanlux-2/'}];
+const GEAR_TPL=[['Camera','Main camera body',1],['Camera','Second camera body',1],['Camera','High-speed camera',1],['Lenses','Prime lens set',1],['Lenses','Zoom lens',1],['Camera support','Fluid head + tripods (tall, short, low base)',1],['Camera support','Gimbal / Steadicam',1],['Focus & monitoring','Wireless follow focus',1],['Focus & monitoring','Director\'s monitor with wireless video',1],['Focus & monitoring','Focus puller monitor',1],['Filters','ND set',1],['Filters','Polariser',1],['Lights','Large LED / HMI for sun',2],['Lights','Soft LED panels',4],['Lights','LED tubes',6],['Grip','Frames: 20x20, 12x12, 8x8, 6x6',1],['Grip','Black, bleached and unbleached cloths',1],['Grip','Track and dolly',1],['Grip','Crane / jib',1],['Power','Generator',1]];
+function sceneNeeds(s){const t=U(s.text+' '+s.desc),n=[];if(isNight(s))n.push('night');else if(/EXT/.test(U(s.ie)))n.push('day');
+  if(s.fight||/\b(FIGHT|CHASE|STUNT|EXPLO|GUN|CRASH|PUNCH)/.test(t))n.push('action');if(/SLOW ?MO|SLOW MOTION/.test(t)||s.fight)n.push('slowmo');
+  if(/DRONE|AERIAL|TOP ANGLE|BIRD'?S EYE|HELICOPTER/.test(t))n.push('aerial');if(s.song)n.push('song');if((s.vfx||[]).length||/GREEN ?SCREEN|BLUE ?SCREEN|CG\b|VFX/.test(t))n.push('vfx');
+  if(/INT/.test(U(s.ie))&&/\b(CAR|AUTO|BUS|LIFT|ELEVATOR|TOILET|BATHROOM|CORRIDOR|HUT|JEEP|TRAIN|CABIN)\b/.test(U(s.loc)))n.push('tight');return uniq(n)}
+function ruleGear(needs){const pick=k=>{for(const nd of needs){const g=GEAR.find(x=>x.k===k&&x.t[0]===nd)||GEAR.find(x=>x.k===k&&x.t.includes(nd));if(g)return g.n}return ''};
+  const cam=needs.includes('slowmo')&&needs.includes('action')?'Main: '+(pick('Camera')||'ARRI ALEXA 35')+' + high speed: Phantom VEO 4K':needs.includes('slowmo')?'ARRI ALEXA 35 (120 fps) or Phantom VEO 4K':pick('Camera')||'ARRI ALEXA 35';
+  return {camera:cam,lens:pick('Lenses')||'ARRI/ZEISS Master Primes',light:pick('Lights')||'ARRI SkyPanel (S30 to S360)'}}
+async function aiGearBatch(b){const cat=GEAR.map(g=>`${g.k}: ${g.n} (${g.t.join(', ')})`).join('\n');
+  const r=await ask(`You are the director of photography of an Indian feature film. For each scene below, suggest the camera, lenses and lighting to use. Prefer items from the equipment list (it shows what each is good for); you may name other standard film equipment if clearly better. Think about day or night, interior or exterior, action, stunts, slow motion, songs, VFX, tight spaces and crowd size. Keep each field short.
+Reply with only JSON: {"scenes":[{"k":"s0","needs":["night","action"],"camera":"","lens":"","light":"","notes":"rigs, frame rate, special kit"}]}
+
+EQUIPMENT LIST (type: name (good for)):
+${cat}
+
+SCENES (key | scene no | INT/EXT | time | location | what happens | cast | special):
+${b.map((s,i)=>`s${i} | Sc ${s.no} | ${U(s.ie)||'?'} | ${U(s.time)||'?'} | ${s.loc||'?'} | ${cut(s.desc||s.text,220)} | ${s.artists.map(aName).join(', ')||'-'} | ${[...sceneFlags(s),...sceneNeeds(s)].join(', ')||'-'}`).join('\n')}`);
+  const out=(r&&r.scenes)||[];if(!out.length)throw {code:'invalid_json'};
+  out.forEach(x=>{const m=String(x.k||'').match(/(\d+)/);const s=m&&b[+m[1]];if(!s)return;const o=s.gear||{};if(o.locked)return;
+    s.gear={camera:String(x.camera||'').trim(),lens:String(x.lens||'').trim(),light:String(x.light||'').trim(),notes:String(x.notes||'').trim(),needs:(Array.isArray(x.needs)?x.needs:[]).map(String),ai:1}})}
+async function gearJob(){if(JOB)return;if(!AI.sample){noAI('AI needs a connected AI service. The rule-based suggestions on this page work without it.');return}
+  const list=P.scenes.slice();const per=Math.max(4,Math.min(20,batchMax()*6));const batches=[];for(let i=0;i<list.length;i+=per)batches.push(list.slice(i,i+per));
+  snapshot();startJob('Suggesting camera and lenses',list.length);const done=[];let fails=0;
+  const work=async()=>{while(batches.length&&JOB&&!JOB.ctl.signal.aborted){const b=batches.shift();try{await aiGearBatch(b);done.push(...b.map(s=>s.id))}catch(e){if(e&&e.code==='cancelled')return;fails++;if(['no_key','bad_key','not_granted'].includes(e&&e.code)){JOB.fatal=e;batches.length=0}}if(JOB){JOB.done+=b.length;renderJob()}}};
+  try{await Promise.all(Array.from({length:Math.max(1,Math.min(aiWorkers(),batches.length))},work));
+    if(JOB&&JOB.fatal&&!done.length)toast(errMsg(JOB.fatal),5000);else toast(`Suggestions ready for ${done.length} scene${done.length===1?'':'s'}${fails?`; ${fails} part${fails===1?'':'s'} failed, press again to retry`:''}. Edit anything you like.`,5000);
+    if(done.length){logChange(`Camera and lens suggestions by AI for ${done.length} scenes`,'prod',true);touch(done)}}finally{endJob();render(true)}}
+function sceneGear(s){const g=s.gear;if(g&&(g.camera||g.lens||g.light||g.notes))return Object.assign({needs:sceneNeeds(s)},g);return Object.assign({needs:sceneNeeds(s),rule:1,notes:''},ruleGear(sceneNeeds(s)))}
+R.gear=()=>{const mode=VIEW.gmode||'needs',need=VIEW.gneed||'all';const NL=Object.fromEntries(NEEDS);
+  const tabs=segm('gmode',[['needs','Suggestions by need'],['scenes','For each scene'],['list','Our equipment list']]);
+  if(mode==='scenes'){const sc=P.scenes;
+    return {html:pageHead('Camera & equipment','Suggested camera, lenses and lights for every scene. Without AI the page picks from the researched list by day/night, action, slow motion, songs and VFX; "Suggest with AI" reads each scene. Type over anything.',tabs+searchBox('Find a scene')+'<button class="btn sm pri" data-pa="gearAI">Suggest with AI</button>')+
+    `<div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Needs</th><th>Camera</th><th>Lenses</th><th>Lights</th><th>Notes</th></tr></thead><tbody>${sc.map(s=>{const g=sceneGear(s);const c=f=>ce(`data-pk="gear" data-sid="${s.id}" data-gf="${f}"`,g[f]||'','',f);
+      return `<tr data-q="${esc((s.no+' '+s.loc+' '+g.camera+' '+g.lens+' '+g.light).toLowerCase())}"><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="eff" data-l="Effect / Time">${effHtml(s)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td data-l="Needs" class="small">${(g.needs||[]).map(n=>`<span class="tag">${esc(NL[n]||n)}</span>`).join(' ')}${g.rule?'<div class="faint small">rule-based</div>':g.ai?'<div class="faint small">AI</div>':''}</td><td data-l="Camera" class="left small">${c('camera')}</td><td data-l="Lenses" class="left small">${c('lens')}</td><td data-l="Lights" class="left small">${c('light')}</td><td data-l="Notes" class="left small">${c('notes')}</td></tr>`}).join('')}</tbody></table></div>`,
+    exp:{orient:'landscape',sheets:[{name:'Camera per scene',cols:[{h:'Sc No',w:7},{h:'Effect / Time',w:12},{h:'Location',w:18},{h:'Needs',w:16},{h:'Camera',w:24},{h:'Lenses',w:22},{h:'Lights',w:22},{h:'Notes',w:24}],rows:sc.map(s=>{const g=sceneGear(s);return [s.no,eff(s),s.loc,(g.needs||[]).map(n=>NL[n]||n).join(', '),g.camera,g.lens,g.light,g.notes]})}]}}}
+  if(mode==='list'){const L=P.gearList||[];
+    return {html:pageHead('Camera & equipment','Your own equipment list for this film. Start from the standard kit or add items from the suggestions, then type models and quantities.',tabs+'<button class="btn sm" data-pa="gearTpl">Start from a standard kit</button><button class="btn sm" data-pa="gearAdd">Add item</button>')+
+    (L.length?`<div class="tw"><table class="t rt"><thead><tr><th>Department</th><th>Item</th><th>Qty</th><th>Notes</th><th></th></tr></thead><tbody>${L.map((g,i)=>`<tr>${[['dept','Department'],['item','Item'],['qty','Qty'],['notes','Notes']].map(([f,l])=>`<td data-l="${l}"${f==='item'||f==='notes'?' class="left"':''}>${ce(`data-pk="glist" data-gi="${i}" data-gf="${f}"`,g[f]==null?'':String(g[f]),'',l)}</td>`).join('')}<td><button class="btn sm ghost danger" data-pa="gearDel" data-gi="${i}" aria-label="Remove">✕</button></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty"><b>No equipment list yet</b>Start from the standard kit, add items from "Suggestions by need", or add your own.</div>`),
+    exp:{orient:'portrait',sheets:[{name:'Equipment list',cols:[{h:'Department',w:18},{h:'Item',w:44},{h:'Qty',w:6},{h:'Notes',w:32}],rows:L.map(g=>[g.dept,g.item,g.qty,g.notes])}]}}}
+  const items=GEAR.filter(g=>need==='all'||g.t.includes(need)).sort((a,b)=>need==='all'?0:(a.t.indexOf(need)-b.t.indexOf(need)));const kinds=uniq(items.map(g=>g.k));
+  const chips=`<div class="seg gneed" role="group">${[['all','All'],...NEEDS].map(([v,l])=>`<button data-gneed="${v}" aria-pressed="${need===v}">${esc(l)}</button>`).join('')}</div>`;
+  return {html:pageHead('Camera & equipment','Cameras, lenses and lights used on recent Indian and international films, grouped by what they are best for. Each has a source. Add any to your equipment list.',tabs)+chips+
+    kinds.map(k=>`<h3 class="gk">${esc(k)}</h3><div class="gcards">${items.filter(g=>g.k===k).map(g=>`<article class="gcard"><div class="gc-h"><b>${esc(g.n)}</b><button class="btn sm" data-pa="gearPick" data-gn="${esc(g.n)}">+ Add to list</button></div><p class="small">${esc(g.sp)}</p><p class="small"><b>Why:</b> ${esc(g.w)}</p><p class="small muted"><b>Used on:</b> ${esc(g.u)}</p><div class="gc-f">${g.t.map(n=>`<span class="tag${n===need?' acc':''}">${esc(NL[n])}</span>`).join(' ')}<span class="grow"></span><a class="small" href="${esc(g.src)}" target="_blank" rel="noopener">Source</a>${g.src2?` · <a class="small" href="${esc(g.src2)}" target="_blank" rel="noopener">Source 2</a>`:''}</div></article>`).join('')}</div>`).join('')+
+    '<p class="small faint" style="margin-top:14px">Research from public sources, October 2026. Availability and rental prices vary by city; check with your rental house.</p>',
+    exp:{orient:'landscape',sheets:[{name:'Equipment suggestions',cols:[{h:'Type',w:12},{h:'Equipment',w:22},{h:'Best for',w:22},{h:'Key specs',w:34},{h:'Why',w:34},{h:'Used on',w:24},{h:'Source',w:26}],rows:items.map(g=>[g.k,g.n,g.t.map(n=>NL[n]).join(', '),g.sp,g.w,g.u,g.src])}]}}};
+
 /* ---------- Editing, moving, buttons ---------- */
 function prodCommit(el,v){const k=el.dataset.pk;v=String(v).replace(/ /g,' ').trim();
   if(k==='shot'){const s=scById(el.dataset.sid),h=s&&shotsOf(s).find(x=>x.id===el.dataset.shot),f=el.dataset.sf;if(!h||(h[f]||'')===v)return null;snapshot();const o=h[f]||'';h[f]=['size','cast'].includes(f)?U(v):v;return {sids:[s.id],desc:`Sc ${s.no} · Shot ${h.no} · ${(SHOT_F.find(x=>x[0]===f)||[,f])[1]}: "${cut(o)||'—'}" → "${cut(v)||'—'}"`}}
@@ -1725,9 +1842,12 @@ function prodCommit(el,v){const k=el.dataset.pk;v=String(v).replace(/ /g,' ').t
   if(k==='cs'){const d=dayById(el.dataset.day),f=el.dataset.cf;if(!d)return null;d.cs=d.cs||{};const shown=csData(d).v(f);if((d.cs[f]||'')===v||(!d.cs[f]&&v===shown))return null;snapshot();d.cs[f]=v;return {sids:[],desc:`Call sheet · ${dayLabel(d)} · edited`}}
   if(k==='csg'){P.csg=P.csg||{};const f=el.dataset.cf;if((P.csg[f]||'')===v)return null;snapshot();P.csg[f]=v;return {sids:[],desc:'Call sheet · key credits edited'}}
   if(k==='crew'){const c=(P.crew||[])[+el.dataset.ci],f=el.dataset.cf;if(!c||(c[f]||'')===v)return null;snapshot();c[f]=f==='dept'?v:v;return {sids:[],desc:`Crew list · ${f} → "${cut(v)||'—'}"`}}
+  if(k==='gear'){const s=scById(el.dataset.sid),f=el.dataset.gf;if(!s)return null;const cur=sceneGear(s);if((cur[f]||'')===v)return null;snapshot();const g=Object.assign({},s.gear&&(s.gear.camera||s.gear.lens||s.gear.light||s.gear.notes)?s.gear:{camera:cur.camera,lens:cur.lens,light:cur.light,notes:cur.notes||''});g[f]=v;g.locked=1;s.gear=g;return {sids:[s.id],desc:`Camera & equipment · Sc ${s.no} · ${f} → "${cut(v)||'—'}"`}}
+  if(k==='glist'){const g=(P.gearList||[])[+el.dataset.gi],f=el.dataset.gf;if(!g||String(g[f]==null?'':g[f])===v)return null;snapshot();g[f]=v;return {sids:[],desc:`Equipment list · ${f} → "${cut(v)||'—'}"`}}
   if(k==='sset'){const S=SCH(),f=el.dataset.sf;if((S[f]||'')===v)return null;snapshot();S[f]=v;return {sids:[],desc:'Schedule · notes for the AI planner edited'}}
   return null}
-document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-dd]');if(!t||!P)return;
+document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-dd],[data-gneed]');if(!t||!P)return;
+  if(t.dataset.gneed){VIEW.gneed=t.dataset.gneed;render(true);return}
   if(t.dataset.dd){const [aid,did]=t.dataset.dd.split('|');const r=doodData().find(x=>x.a.id===aid),c=r&&r.cells.find(x=>x.d.id===did);if(!c)return;const nx=DOOD_CYCLE[(DOOD_CYCLE.indexOf(c.code)+1)%DOOD_CYCLE.length];
     snapshot();P.doodx=P.doodx||{};P.doodx[aid]=P.doodx[aid]||{};if(nx===c.auto)delete P.doodx[aid][did];else P.doodx[aid][did]=nx;prodSave(`Day out of days · ${aName(aid)} · ${dayLabel(dayById(did))} set to ${nx||'not called'}`);return}
   const a=t.dataset.pa,S=SCH(),s=t.dataset.sid?scById(t.dataset.sid):null,d=t.dataset.day?dayById(t.dataset.day):null,idx=d?S.days.indexOf(d):-1;
@@ -1749,6 +1869,11 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-
   if(a==='fillTimes'&&d){snapshot();fillTimes(d);prodSave(`Shoot order · ${dayLabel(d)} · times filled in`)}
   if(a==='orderAI'&&d)orderJob(d.id);
   if(a==='doodReset'){if(!P.doodx||!Object.keys(P.doodx).length){toast('No manual changes to clear.');return}snapshot();P.doodx={};prodSave('Day out of days · manual changes cleared')}
+  if(a==='gearAI')gearJob();
+  if(a==='gearTpl'){snapshot();P.gearList=[...(P.gearList||[]),...GEAR_TPL.map(([d,i,q])=>({dept:d,item:i,qty:String(q),notes:''}))];prodSave('Equipment list started from the standard kit')}
+  if(a==='gearAdd'){snapshot();P.gearList=P.gearList||[];P.gearList.push({dept:'',item:'',qty:'1',notes:''});prodSave('Equipment item added')}
+  if(a==='gearDel'){snapshot();(P.gearList||[]).splice(+t.dataset.gi,1);prodSave('Equipment item removed')}
+  if(a==='gearPick'){const g=GEAR.find(x=>x.n===t.dataset.gn);if(!g)return;P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===g.n)){toast(g.n+' is already in your list.');return}snapshot();P.gearList.push({dept:g.k,item:g.n,qty:'1',notes:''});prodSave(`${g.n} added to the equipment list`);toast(g.n+' added to "Our equipment list".')}
   if(a==='crewAdd'){snapshot();P.crew=P.crew||[];P.crew.push({dept:'',role:'',name:'',phone:''});prodSave('Crew member added')}
   if(a==='crewDel'){snapshot();(P.crew||[]).splice(+t.dataset.ci,1);prodSave('Crew member removed')}});
 document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset)return;if(el.tagName==='INPUT'&&(el.dataset.sset!==undefined||el.dataset.ddate||el.dataset.dcall||el.dataset.dwrap))el.blur();
@@ -1808,6 +1933,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(act==='import')openImport();
   if(act==='wrNew')wrNewProject();if(act==='wrTitle')wrTitle();if(act==='wrOpen')wrOpen();if(act==='wrDownload')wrDownload();if(act==='wrApply')wrApply();if(act==='wrFromProject')wrFromProject();if(act==='wrBlank')wrBlank();if(act==='wrRenumber')wrRenumber();
   if(act==='addArtist'){snapshot();const a=addArtist('NEW CHARACTER '+(P.artists.length+1),'Secondary','');logChange(`Artist ${a.name} added`,'artistInfo',true);touch([]);render(true);toast('Artist added. Click the name to rename.')}
+  if(act==='desig')desigJob();
   if(act==='history')openHistory();
   if(act==='settings')openSettings();
   if(act==='install')doInstall();
@@ -1906,7 +2032,7 @@ async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');r
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
     else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
-  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood']];
+  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
     jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
   await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}

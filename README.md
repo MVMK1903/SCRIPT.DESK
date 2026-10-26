@@ -39,6 +39,8 @@ A **Shooting** section in the menu (new in v1.7.0). Nothing in the other reports
 
 Every page exports to Excel and PDF and is included in "Download all".
 
+- **Camera & equipment** (v1.8.0): researched suggestions of cameras, lenses and lights used on recent Indian and international films (RRR, Baahubali, Kalki 2898 AD, Pushpa 2, Mission: Impossible 7, Civil War and 2025–26 festival surveys), grouped by need: day exteriors, night and low light, action and stunts, slow motion, aerial, handheld and tight spaces, VFX, songs, lower budget. Each item has its source. "For each scene" suggests camera, lenses and lights per scene (rules without AI, or "Suggest with AI"), and "Our equipment list" holds your own kit, starting from a standard kit.
+
 ## AI: works with any AI, including all open-source models
 
 ScriptDesk is not tied to one AI company. Only the AI steps (finding scenes, scene descriptions, the breakdown, character profiles, story structure, reading scanned pages) use an AI service, and you choose which one in **Settings → AI service**. Everything else works with no AI and no internet.

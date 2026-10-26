@@ -101,8 +101,17 @@ a{color:var(--accent)}
 .pool-box h3{margin:0 0 6px;font:700 14px/1.3 var(--f-ui)}
 .pool-row{display:flex;gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;border-radius:14px;box-shadow:var(--sh-raise-sm);background:var(--bg)}
 .pool-row.off{opacity:.55}.pool-main{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.pool-main b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.mgrp{margin:10px 0;padding:10px 12px;border-radius:14px;box-shadow:var(--sh-inset-sm);background:var(--bg)}
+.mgrp h4{margin:0 0 8px;font:700 12.5px/1.3 var(--f-ui);display:flex;gap:8px;align-items:center}.mgrp h4 span{font-weight:600;color:var(--muted)}
+.mgrp.free h4{color:var(--accent)}.mgrp.paid h4{color:var(--muted)}
+.mgrp>div{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{border:0;font:12px/1.2 var(--f-ui);padding:6px 10px;border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer;box-shadow:var(--sh-raise-sm)}
+.mchip.free::before{content:"FREE";font-size:9.5px;font-weight:800;letter-spacing:.04em;color:var(--accent);margin-right:6px}
+.mchip.busy{opacity:.85}.mchip.paid{cursor:default;box-shadow:none;opacity:.55;text-decoration:line-through}
+.mchip.na{cursor:default;box-shadow:none;opacity:.5}
+.mchip.paid::before{content:"PAID";font-size:9.5px;font-weight:800;margin-right:6px;text-decoration:none;display:inline-block}
 .pool-opt{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
-.pool-opt select{width:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--fg)}
+.pool-opt select{width:auto!important;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--fg)}
 @media (max-width:560px){.pool-row{flex-wrap:wrap}.pool-main{flex-basis:100%}}
 .btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
 .btn.ghost:hover{box-shadow:var(--sh-raise-sm);color:var(--fg)}
@@ -1687,7 +1696,7 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
 const PROVIDERS={
   ollama:{group:'local',name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
     help:'Runs open-source AI models on your own computer: free, works without internet, and your script never leaves the computer. 1) Install Ollama free from ollama.com and open it. 2) Download a model once, e.g. in a terminal: <code>ollama pull qwen3:8b</code> (8–16 GB RAM) or a larger one if your computer allows. 3) Press "Load models" and pick it. In the ScriptDesk desktop app this just works. For the web app version only, allow it once with <code>OLLAMA_ORIGINS=*</code> (Mac: <code>launchctl setenv OLLAMA_ORIGINS "*"</code>; Windows: add an environment variable OLLAMA_ORIGINS = *), then restart Ollama. Smaller models are slower and less accurate with Telugu than Claude or Gemini. Tip: Ollama on your computer can also run the big free cloud models: run <code>ollama signin</code>, then <code>ollama pull gpt-oss:120b-cloud</code>, and pick that model here (needs internet for those models).'},
-  ollamacloud:{group:'free',name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
+  ollamacloud:{group:'free',probe:1,name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
     help:'Large open models (gpt-oss 120B, DeepSeek, Gemma, Qwen and more) run by Ollama on its servers, so nothing to install and no powerful computer needed. Free key: sign up at ollama.com (email only, no card) → Settings → API keys → Create, paste it here, press "Load models" and pick one (gpt-oss:120b is a good start). Free use has hourly and weekly limits; ScriptDesk waits and retries when it hits them. Your script is sent to Ollama\'s servers. Works in the ScriptDesk desktop and Android apps. If the web app version says the connection was blocked, use the desktop app, or use "Ollama · on this computer" signed in to your Ollama account (see its help).'},
   gemini:{group:'free',name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
     help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. Good with Telugu and Tinglish. Free use has daily limits. Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
@@ -1719,6 +1728,7 @@ const PGROUPS={local:'On this computer · offline',free:'Free keys',paid:'Paid k
 function aiCfg(){let c=lsGet('ai');if(!c){c={provider:'claude',keys:{},base:{},model:{}};const old=lsGet('apikey');if(old){c.keys.claude=old;const m=lsGet('models')||{};c.model.claude={default:m.default||'',complex:m.complex||''}}else c.provider='ollama'}
   c.keys=c.keys||{};c.base=c.base||{};c.model=c.model||{};return c}
 const apiKey=()=>{const c=aiCfg();return c.keys[c.provider]||''};
+ERRS.needs_plan='This model needs a paid plan on your account. In Settings press "Check free vs paid" and pick one from the Free list.';
 /* AI pool: several saved keys/services; the best-scoring ready one is used, others take over on limits or errors */
 const COOL={};let POOLRR=0,POOLLAST='';
 function accScore(e){const m=String(e.model||(PROVIDERS[e.provider]||{models:{}}).models.default||'').toLowerCase(),pv=e.provider;
@@ -1737,7 +1747,7 @@ function poolPick(list,tried){const now=Date.now(),av=list.filter(e=>!tried.has(
   av.sort((a,b)=>accScore(b)-accScore(a));const top=accScore(av[0]),tier=av.filter(e=>accScore(e)>=top-6);return tier[POOLRR++%tier.length]}
 function coolFor(e,x){const code=x&&x.code,now=Date.now();let ms=15e3;
   if(code==='rate_limited')ms=Math.max(30e3,(x.wait||0)*1000);else if(code==='no_credit')ms=36e5;
-  else if(code==='bad_key'||code==='bad_model'||code==='no_model')ms=36e5;
+  else if(code==='bad_key'||code==='bad_model'||code==='no_model'||code==='needs_plan')ms=36e5;
   else if(code==='cors_blocked'||code==='ollama_down'||code==='ollama_origin')ms=6e5;
   COOL[e.id]={until:now+ms,why:code}}
 async function poolCall(prompt,opts,c){const list=poolEntries(c);let last=null;
@@ -1759,6 +1769,7 @@ const sleepAbort=(ms,signal)=>new Promise((res,rej)=>{const t=setTimeout(res,ms)
 async function httpErr(r,provider){let m='';try{const j=await r.json();m=(j.error&&(j.error.message||j.error))||j.message||''}catch(e){}m=String(m);const st=r.status;
   const ra=parseFloat(r.headers.get('retry-after')||'')||0;
   if(provider==='ollama'){if(st===403)return {code:'ollama_origin',message:m};if(st===404||/not found|pull/i.test(m))return {code:'bad_model',message:m}}
+  if(/subscription|upgrade|paid plan|pro plan|requires? (a )?(paid|pro|premium)|payment required/i.test(m)&&st!==429)return {code:'needs_plan',message:m};
   if(st===401||(st===403&&provider!=='ollama')||/API_KEY_INVALID|invalid api key|invalid x-api-key/i.test(m))return {code:'bad_key',message:m};
   if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===400&&/max_tokens|max_completion_tokens|maximum context|context length|too many tokens/i.test(m))return {code:'max_tokens',message:m};if(st===413)return {code:'prompt_too_large',message:m};
   if(st===402||/credit|balance|billing|quota exceeded for metric.*free/i.test(m))return {code:st===402?'no_credit':'rate_limited',message:m,wait:ra};
@@ -1774,7 +1785,7 @@ async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[
     else if(prov==='gemini'){r=await fetch(`${base}/v1beta/models/${encodeURIComponent(model.replace(/^models\//,''))}:generateContent`,{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-goog-api-key':key},
       body:JSON.stringify({contents:[{role:'user',parts:[...imgs.map(i=>({inline_data:{mime_type:i.mime,data:i.data}})),{text:prompt}]}],generationConfig:Object.assign({maxOutputTokens:maxOut,temperature:0.2},opts.json?{responseMimeType:'application/json'}:{})})})}
     else if(prov==='ollama'||prov==='ollamacloud'){const h={'content-type':'application/json'};if(key)h.authorization='Bearer '+key;r=await fetch(base+'/api/chat',{method:'POST',signal:opts.signal,headers:h,
-      body:JSON.stringify(Object.assign({model,stream:false,messages:[Object.assign({role:'user',content:prompt},imgs.length?{images:imgs.map(i=>i.data)}:{})],options:Object.assign({temperature:0.2},prov==='ollama'?{num_ctx:16384}:{})},opts.json?{format:'json'}:{}))})}
+      body:JSON.stringify(Object.assign({model,stream:false,messages:[Object.assign({role:'user',content:prompt},imgs.length?{images:imgs.map(i=>i.data)}:{})],options:Object.assign({temperature:0.2},prov==='ollama'?{num_ctx:16384}:{},opts.probe?{num_predict:8}:{})},opts.json?{format:'json'}:{}))})}
     else{const h={'content-type':'application/json'};if(key)h.authorization='Bearer '+key;if(prov==='openrouter'){h['HTTP-Referer']='https://github.com/MVMK1903/SCRIPT.DESK';h['X-Title']='ScriptDesk'}
       r=await fetch(base+'/chat/completions',{method:'POST',signal:opts.signal,headers:h,body:JSON.stringify(Object.assign({model,max_tokens:maxOut,temperature:0.2,
         messages:[{role:'user',content:imgs.length?[{type:'text',text:prompt},...imgs.map(i=>({type:'image_url',image_url:{url:`data:${i.mime};base64,${i.data}`}}))]:prompt}]},opts.json&&p.jsonMode?{response_format:{type:'json_object'}}:{}))})}}
@@ -1836,8 +1847,31 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     ${cur==='ollama'||cur==='custom'||p.editBase?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
     <div class="two"><div class="fieldbox"><label for="sModel">Model</label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
-    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>`;
-    $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found. Click the Model box to pick one.`:'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0]}catch(e){$('#sLoadMsg').textContent=errMsg(e)}}};
+    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> ${p.key&&cur!=='custom'?'<button class="btn sm" id="sCheck">Check free vs paid</button> ':''}<span class="small muted" id="sLoadMsg"></span></div><div id="sChk"></div>`;
+    $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found.`+(p.probe?'':' Click the Model box to pick one.'):'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0];if(ids.length&&p.probe)runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
+    const ck=$('#sCheck');if(ck)ck.onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');if(!ids.length){$('#sLoadMsg').textContent='No models found.';return}runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
+    chkUI()};
+  /* Free vs paid: send one tiny test request per model and sort the models by what this key can actually use */
+  const ckey=()=>cur+':'+(c.keys[cur]||'').slice(-6)+':'+(c.base[cur]||'');
+  const chkUI=()=>{const el=$('#sChk');if(!el)return;const r=(c.checks||{})[ckey()];if(!r){el.innerHTML='';return}
+    const chip=(m,cls)=>`<button type="button" class="mchip ${cls}" data-m="${esc(m)}" title="rating ${accScore({provider:cur,model:m})}">${esc(m)}</button>`,dead=m=>`<span class="mchip paid">${esc(m)}</span>`,na=m=>`<span class="mchip na">${esc(m)}</span>`;
+    el.innerHTML=`<div class="mgrp free"><h4>Free with your key <span>${r.free.length}</span></h4><div>${r.free.map(m=>chip(m,'free')).join('')||'<span class="small muted">None found. Try again later if a limit was hit.</span>'}</div></div>`+
+      (r.busy.length?`<div class="mgrp"><h4>Limit hit while checking, probably free <span>${r.busy.length}</span></h4><div>${r.busy.map(m=>chip(m,'busy')).join('')}</div></div>`:'')+
+      (r.paid.length?`<div class="mgrp paid"><h4>Needs a paid plan <span>${r.paid.length}</span></h4><div>${r.paid.map(dead).join('')}</div></div>`:'')+
+      (r.err.length?`<div class="mgrp"><h4>Not available <span>${r.err.length}</span></h4><div>${r.err.map(na).join('')}</div></div>`:'')+
+      '<p class="small muted" style="margin:6px 0 0">Tap a free model to use it. The test sends one tiny request per model, so it uses almost none of your allowance.</p>';
+    el.onclick=ev=>{const b=ev.target.closest('button[data-m]');if(b){$('#sModel').value=b.dataset.m;$('#sLoadMsg').textContent='Selected '+b.dataset.m+'. Press Save or Add to AI pool.'}}};
+  let checking=false;
+  const runCheck=async ids=>{if(checking)return;checking=true;const prov=cur,key=ckey(),list=ids.slice(0,60),r={free:[],busy:[],paid:[],err:[],at:Date.now()};
+    try{for(let i=0;i<list.length;i++){if(!$('#sChk')||cur!==prov){return}$('#sLoadMsg').textContent=`Checking which are free… ${i+1}/${list.length}`;
+      const m=list[i];let res='err';
+      for(let a=0;a<2;a++){try{await callOnce('Reply with the single word OK.',{probe:1,maxOut:16},entryCfg({provider:prov,key:c.keys[prov]||'',base:c.base[prov]||'',model:m}),PROVIDERS[prov]);res='free';break}
+        catch(x){const k=x&&x.code;if(k==='empty_completion'||k==='max_tokens'){res='free';break}if(k==='needs_plan'||k==='no_credit'){res='paid';break}
+          if(k==='bad_key'){$('#sLoadMsg').textContent=errMsg(x);return}if(k==='rate_limited'){res='busy';if(a===0)await new Promise(z=>setTimeout(z,2500));continue}res='err';break}}
+      r[res].push(m)}
+      r.free.sort((a,b)=>accScore({provider:prov,model:b})-accScore({provider:prov,model:a}));c.checks=c.checks||{};c.checks[key]=r;lsSet('ai',c);chkUI();
+      $('#sLoadMsg').textContent=`${r.free.length} free, ${r.paid.length} need a paid plan.`+(r.busy.length?` ${r.busy.length} hit a limit while checking.`:'')}
+    finally{checking=false}};
   const collect=()=>{const th=$('#sThorough');if(th)c.thorough=th.checked;c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
   const TST={};
   const poolUI=()=>{const L=c.pool||[],now=Date.now();$('#sMin').value=String(c.minAcc==null?75:c.minAcc);
@@ -1851,6 +1885,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   $('#sMin').onchange=()=>{c.minAcc=+$('#sMin').value;savePool()};
   $('#sAdd').onclick=()=>{collect();const p=PROVIDERS[cur],mc=c.model[cur]||{},e={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),provider:cur,key:c.keys[cur]||'',base:c.base[cur]||'',model:mc.default||p.models.default||'',complex:mc.complex||'',on:true};
     if(!entryReady(e)){msg(p.key&&cur!=='custom'&&!e.key?'Paste a key first.':'Pick a model first (press "Load models").');return}
+    {const r=(c.checks||{})[ckey()];if(r&&r.paid.includes(e.model)){msg('That model needs a paid plan on your account. Pick one from the Free list.');return}}
     c.pool=c.pool||[];if(c.pool.some(x=>x.provider===e.provider&&x.key===e.key&&x.model===e.model&&x.base===e.base)){msg('That one is already in the pool.');return}
     c.pool.push(e);c.usePool=true;savePool();if(p.key&&$('#sKey')){$('#sKey').value='';c.keys[cur]=''}msg(`Added. ${poolEntries(c).length} AI${poolEntries(c).length>1?'s':''} ready in the pool.`+(p.key?' You can paste another key now.':''))};
   $('#sTestAll').onclick=async()=>{const L=c.pool||[];if(!L.length){msg('Add an AI to the pool first.');return}msg('Testing…');

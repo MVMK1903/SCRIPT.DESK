@@ -1,6 +1,6 @@
 {
   "name": "scriptdesk-mobile",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "ScriptDesk \u2013 AI film script breakdown (iOS and Android app)",
   "private": true,
   "scripts": {

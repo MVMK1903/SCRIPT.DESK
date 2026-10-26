@@ -27,6 +27,18 @@ AI film script breakdown for film and web-series production teams. Works with an
 | **iPhone / iPad** | `ScriptDesk-iphone-unsigned.ipa` from Releases, installed with **xtool** from Windows, Linux or Mac (below); or the web app (above) | Yes |
 | **Using your Claude subscription (no API key)** | Open the ScriptDesk link inside Claude (claude.ai or the Claude app). Separate apps can only use Claude through an API key. | No (needs internet) |
 
+## Shooting: shot division, schedule, shoot order, day out of days, call sheet
+
+A **Shooting** section in the menu (new in v1.7.0). Nothing in the other reports changes.
+
+- **Shot division:** AI suggests a shot list for every scene (size, angle, movement, lens, what we see, cast, notes). Scene numbers stay exactly as in the script; shots are numbered from them (14B-1, 14B-2). Add, edit, reorder or delete any shot.
+- **Shooting schedule:** "Plan with AI" groups scenes by location, day/night, cast and length, following your notes (actor dates, location availability). "Quick plan (no AI)" works offline. Drag scenes between days, add days off and travel days, fix dates; weekly day off and pages-per-day target in Plan settings.
+- **Shoot order:** each day's scenes in order with times. "Fill times (no AI)" spreads the day by page length around lunch; AI can suggest order and times using sunrise and sunset.
+- **Day out of days:** each artist's SW / W / WF / H / T days, built from the schedule. Click a cell to change it.
+- **Call sheet:** one per shoot day, filled from the schedule and breakdown: scenes, cast, crowd, requirements, department call times, crew list, advance schedule, and sunrise and sunset worked out on the device for your shoot city. Type over anything.
+
+Every page exports to Excel and PDF and is included in "Download all".
+
 ## AI: works with any AI, including all open-source models
 
 ScriptDesk is not tied to one AI company. Only the AI steps (finding scenes, scene descriptions, the breakdown, character profiles, story structure, reading scanned pages) use an AI service, and you choose which one in **Settings → AI service**. Everything else works with no AI and no internet.

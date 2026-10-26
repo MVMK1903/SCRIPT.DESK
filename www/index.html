@@ -114,6 +114,40 @@ a{color:var(--accent)}
 .btn.pri:hover{filter:brightness(1.07);color:var(--accent-ink)}
 .btn.pri:active:not(:disabled){box-shadow:inset 0 2px 8px rgba(0,0,0,.28)}
 .btn.sm{padding:7px 13px;font-size:12.5px}
+.shotcard{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 14px;margin-bottom:14px}
+.sc-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}.sc-h .no{font-size:15px;color:var(--accent);min-width:2.5em}.sc-h .grow{flex:1;min-width:160px}.sc-h .loc{font-weight:600}
+.sc-f{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.nowrap{white-space:nowrap}
+.sset{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-inset-sm);padding:10px 14px;margin-bottom:16px}
+.sset summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
+.sset-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 14px;margin-top:10px}
+.sset-g label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.sset-g input,.sset-g select{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--fg);font:inherit;font-size:13px}
+.brief{display:block;min-height:3.2em;padding:8px 10px!important;margin:0!important;border:1px solid var(--line);border-radius:10px;white-space:pre-wrap;background:var(--bg-2)}
+[contenteditable][data-ph]:empty::before{content:attr(data-ph);color:var(--faint)}
+.sday{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 14px;margin-bottom:14px;transition:box-shadow .15s}
+.sday.t-off,.sday.t-travel{background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(127,127,127,.07) 10px 20px),var(--bg)}
+.sday.bin{box-shadow:var(--sh-inset-sm)}.sday.drop-over{box-shadow:0 0 0 2px var(--accent),var(--sh-raise-sm)}
+.sday-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.sday-h b{font-size:14px}.sday-h .grow{flex:1}
+.sday-h input.mini,.sday-h select.mini,.ph select.mini{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:4px 7px;color:var(--fg);font-size:12.5px}
+.sday-note{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+.grip{color:var(--faint);margin-right:6px;cursor:grab;letter-spacing:-2px}tr.dragging{opacity:.4}.drop-hint{margin:6px 0 2px}
+.dood-w{overflow:auto}.t.dood th,.t.dood td{padding:4px 5px}
+.t.dood .stk{position:sticky;left:0;background:#fff;z-index:1;text-align:left;white-space:nowrap}
+.t.dood th.dh{font-size:11px;white-space:nowrap}.t.dood th.dh small{display:block;font-weight:400;color:#666}
+.t.dood th.off,.t.dood th.travel,.t.dood td.off{background:#f1f1f1}
+.dd{border:0;background:transparent;font:700 11px/1 var(--f-ui);min-width:32px;padding:6px 3px;border-radius:6px;cursor:pointer;color:#333}
+.dd.c-x{color:#bbb;font-weight:400}.dd.c-W{background:#d9efe0;color:#1e6b38}.dd.c-SW,.dd.c-WF,.dd.c-SWF{background:#b7dfc5;color:#14532d}.dd.c-H{background:#fdf0c4;color:#8a5500}.dd.c-T{background:#dbe7fb;color:#1d4ed8}
+.dd.over{box-shadow:inset 0 0 0 1.5px #2f6fd6}
+.cs{display:flex;flex-direction:column;gap:14px}
+.cs-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:14px 18px}
+.cs-prod{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.cs-film{font-size:20px;font-weight:800}.cs-day{font-weight:700;color:var(--accent);margin-top:2px}
+.cs-sun{display:flex;gap:18px;align-items:center}.cs-sun div{display:flex;flex-direction:column;align-items:center}.cs-sun span{font-size:11px;color:var(--muted)}.cs-sun b{font-size:18px}
+.cs-sec{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 16px}
+.cs-sec h3{margin:0 0 10px;font:700 14px/1.3 var(--f-ui)}
+.cs-kv{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px;font-size:13px;margin-bottom:8px}.cs-k{color:var(--muted)}
+.cs-dept{grid-template-columns:repeat(2,minmax(110px,170px) 1fr)}
+.cs-multi{display:block;white-space:pre-wrap;min-height:2.4em;padding:6px 8px!important;margin:4px 0 0!important;border:1px dashed var(--line);border-radius:8px;font-size:13px}
+@media (max-width:640px){.cs-kv,.cs-dept{grid-template-columns:1fr}.cs-k{margin-top:6px;font-weight:600}}
 .pool-box{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-inset-sm);padding:14px 16px;margin:6px 0 14px}
 .pool-box h3{margin:0 0 6px;font:700 14px/1.3 var(--f-ui)}
 .pool-row{display:flex;gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;border-radius:14px;box-shadow:var(--sh-raise-sm);background:var(--bg)}
@@ -401,6 +435,11 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-special{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z'/%3E%3C/svg%3E")}
 .i-costume{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3 3 6l2 4 3-1v12h8V9l3 1 2-4-5-3c-.5 1.500-2 2.500-4 2.500S8.500 4.500 8 3z'/%3E%3C/svg%3E")}
 .i-artprops{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7.500 12 3l9 4.500v9L12 21l-9-4.500z M3 7.500 12 12l9-4.500 M12 12v9'/%3E%3C/svg%3E")}
+.i-shots{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7h12v10H3z M15 10l6-3v10l-6-3'/%3E%3C/svg%3E")}
+.i-sched{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16v15H4z M4 9h16 M8 3v4 M16 3v4 M8 13h3 M13 13h3 M8 16h3'/%3E%3C/svg%3E")}
+.i-order{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M4 12h10 M4 18h10 M18 5v14 M15 16l3 3 3-3'/%3E%3C/svg%3E")}
+.i-dood{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4z M4 10h16 M4 15h16 M10 4v16 M15 4v16'/%3E%3C/svg%3E")}
+.i-callsheet{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6v3H9z M7 5H5v16h14V5h-2 M8 11h8 M8 15h6'/%3E%3C/svg%3E")}
 .i-run{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.200 6.300L20.500 11.500l-6.300 2.200L12 20l-2.200-6.300L3.500 11.500l6.300-2.200z M19 3v4 M17 5h4'/%3E%3C/svg%3E")}
 .i-undo{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E")}
 .i-install{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
@@ -491,7 +530,12 @@ const PAGES=[
  {g:'Breakdown',id:'breakdown',nav:'Script breakdown',t:'Script breakdown'},
  {g:'Breakdown',id:'special',nav:'Special identification',t:'Special identification'},
  {g:'Breakdown',id:'costume',nav:'Costume continuity',t:'Costume continuity'},
- {g:'Breakdown',id:'artprops',nav:'Art / props',t:'Art / props breakdown'}];
+ {g:'Breakdown',id:'artprops',nav:'Art / props',t:'Art / props breakdown'},
+ {g:'Shooting',id:'shots',nav:'Shot division',t:'Shot division'},
+ {g:'Shooting',id:'sched',nav:'Shooting schedule',t:'Shooting schedule'},
+ {g:'Shooting',id:'order',nav:'Shoot order',t:'Shoot order'},
+ {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
+ {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
 const LSKEY='scriptdesk.v2.';
 
@@ -625,6 +669,9 @@ function detectScenes(text){
     if(ie&&(ie.loc||ie.time)&&U(t.split(/\s/)[0]).match(/^(\d+[A-Z]?[.)]?|INT|EXT|EST|I\/E|INT\.?\/EXT\.?|EXT\.?\/INT\.?|INT\.EXT\.?)/)){
       const num=(t.match(/^(\d+[A-Z]?)[.)]?\s/)||[])[1]||'';
       cur=newScene({no:num,ie:ie.ie,time:ie.time,loc:ie.loc,notes:ie.note,heading:t});cur._lines=[];scenes.push(cur);continue}
+    const bk=t.length<=170?t.match(/^(\d+[A-Z]?)\s+(\S.*?)\s+\1$/):null;
+    if(bk&&!/^\(?(CONTINUED|CONT'?D|MORE)\b/i.test(bk[2])&&/^[A-Z][A-Z'’.:\-]+(\s|$)/.test(bk[2])){const tm=(U(bk[2]).match(/^(DAY|NIGHT|DAWN|DUSK|MORNING|EVENING|AFTERNOON|SUNRISE|SUNSET|MAGIC HOUR|CONTINUOUS|LATER)\b/)||[])[1]||'';
+      cur=newScene({no:U(bk[1]),time:tm,heading:t,flags:['This heading has no INT/EXT or location. Add them in Scene list check.']});cur._lines=[];scenes.push(cur);continue}
     if(cur)cur._lines.push(line);else front.push(line)}
   const numbered=scenes.filter(s=>s.no).length;const mixed=numbered>=scenes.length/2;let last=0,lastNo='';const used=new Set(scenes.map(s=>U(s.no)).filter(Boolean));
   scenes.forEach(s=>{while(s._lines.length&&!s._lines[0].trim())s._lines.shift();while(s._lines.length&&!s._lines[s._lines.length-1].trim())s._lines.pop();
@@ -945,6 +992,7 @@ function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtm
 function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b"><p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
 function describeEdit(el,oldV,newV,sids){
+  if(el._desc){const d=el._desc;el._desc=null;return [d,'prod']}
   if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);const f=el.dataset.f;return [`Sc ${s?s.no:''} · ${FL[f]||f}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f]}
   if(el.dataset.art){const a=A(el.dataset.art);const f=el.dataset.af;const lab={name:'Character name',designation:'Designation',actor:'Artist',phone:'Phone number'}[f]||f;if(f==='name')return [`Character "${cut(oldV)}" renamed to "${cut(newV)}" everywhere (${sids.length} scene${sids.length===1?'':'s'}, script included)`,'rename'];return [`${a?a.name:''} · ${lab}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f==='name'?'artistName':'artistInfo']}
   if(el.dataset.ren)return [`Location "${cut(oldV)}" renamed to "${cut(newV)}" in ${sids.length} scene${sids.length===1?'':'s'}`,'loc'];
@@ -956,7 +1004,8 @@ function describeEdit(el,oldV,newV,sids){
 function commit(el){if(!P)return;const v=el.isContentEditable?el.innerText:el.value;let changed=false,sids=[];
   if(el.dataset.s&&el.dataset.f==='artists'){const s=P.scenes.find(x=>x.id===el.dataset.s);if(s){const was=s.artists.map(aName),now=splitList(v).map(x=>U(String(x).replace(/\((V\.?O\.?|O\.?S\.?|CONT'?D)\)/ig,'')));
     if(was.length===now.length){const d=was.map((x,i)=>[x,now[i]]).filter(([x,y])=>norm(x)!==norm(y));if(d.length===1&&!findArtist(d[0][1])){const a=findArtist(d[0][0]);if(a){const sw={a,from:d[0][0],to:U(d[0][1])};setTimeout(()=>askRename(sw,s,()=>{snapshot();setSceneField(s,'artists',v);logChange(`Sc ${s.no} · Artists: "${cut(was.join(', '))}" → "${cut(now.join(', '))}"`,'artists');touch([s.id]);render(true)}),0);return}}}}}
-  if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);setSceneField(s,el.dataset.f,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id]}}
+  if(el.dataset.pk){const r=prodCommit(el,v);if(r){el._desc=r.desc;sids=r.sids||[];changed=true}}
+  else if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);setSceneField(s,el.dataset.f,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id]}}
   else if(el.dataset.art){const a=A(el.dataset.art);if(!a)return;const f=el.dataset.af;let val=String(v).trim();if(f==='name'){val=U(val);if(!val){el.innerText=a.name;return}const other=findArtist(val);if(other&&other.id!==a.id){toast(`${val} already exists. Use "Merge into" to combine them.`);el.innerText=a.name;return}}
     if(f==='designation')val=U(val);if(a[f]!==val){undoStack.push(JSON.stringify(P));if(f==='name'&&a.name){sids=renameArtistAll(a,val);el._renamed=sids.length}else a[f]=val;a.locked=1;if(f==='tier'||f==='name')needsRender=true;changed=true}}
   else if(el.dataset.ren){const old=el.dataset.ren;const nv=U(v);if(nv&&nv!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{if(U(s.loc)===old){s.loc=nv;s.locked.loc=1;sids.push(s.id)}});changed=true;needsRender=true}}
@@ -1005,6 +1054,7 @@ function renameEverywhere(oldN,newN){const sids=[];if(!oldN||!newN||norm(oldN)==
     swapObj(sc.fight,oldN,newN,['unit']);swapObj(sc.song,oldN,newN,['unit']);
     sc.costumes.forEach(c=>{if(c.n)c.n=U(sw(c.n));c.c=sw(c.c)});
     LK.forEach(k=>{sc[k]=uniq((sc[k]||[]).map(sw))});
+    (sc.shots||[]).forEach(h=>{h.desc=sw(h.desc);h.notes=sw(h.notes);if(h.cast)h.cast=U(sw(h.cast))});
     if(JSON.stringify(sc)!==before){sc.cues=extractCues(sc.text);sids.push(sc.id)}});
   P.front=sw(P.front);
   if(P.draft&&Array.isArray(P.draft.els)){let ch=false;P.draft.els.forEach(e=>{const v=sw(e.x);if(v!==e.x){e.x=v;ch=true}});if(P.draft.tp)swapObj(P.draft.tp,oldN,newN);if(ch){P.draft.at=Date.now();dirty.draft=true}}
@@ -1431,6 +1481,292 @@ async function wrPdf(){await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;co
   return doc}
 
 /* ================= Render ================= */
+/* ================= Production: shot division · shooting schedule · shoot order · day out of days · call sheet ================= */
+const SHOT_F=[['no','Shot'],['size','Size'],['angle','Angle'],['move','Movement'],['lens','Lens'],['desc','What we see'],['cast','Cast'],['notes','Notes']];
+const DEPTS=['Production','Direction','Camera','Lighting','Grip','Art','Costume','Makeup & hair','Sound','Stunts','Choreography','VFX','Catering','Transport'];
+const DOOD_CYCLE=['','W','H','T','SW','WF','SWF'];
+function shotsOf(s){if(!Array.isArray(s.shots))s.shots=[];return s.shots}
+function newShot(s,o){return Object.assign({id:uid(),no:s.no+'-'+(shotsOf(s).length+1),size:'',angle:'',move:'',lens:'',desc:'',cast:'',notes:''},o||{})}
+/* Script length in eighths of a page (1 page ≈ 56 printed lines) */
+function pgE(s){if(s.pages8>0)return s.pages8;const t=(s.heading?s.heading+'\n':'')+(s.text||'');let n=0;t.split('\n').forEach(l=>{n+=Math.max(1,Math.ceil(l.length/60))});return Math.max(1,Math.round(n/56*8))}
+function fmtPg(e){e=Math.round(e||0);const w=Math.floor(e/8),r=e%8;return ((w?w:'')+(w&&r?' ':'')+(r?r+'/8':''))||'0'}
+function parsePg(t){t=String(t||'').trim();let m=t.match(/^(\d+)\s+(\d)\/8$/);if(m)return +m[1]*8+ +m[2];m=t.match(/^(\d+)\/8$/);if(m)return +m[1];const f=parseFloat(t);return isFinite(f)&&f>0?Math.round(f*8):0}
+function SCH(){if(!P.sched)P.sched={start:'',weekOff:[],call:'07:00',wrap:'18:00',lunch:'13:00',target:'4',latlng:'17.385, 78.4867',brief:'',days:[],aiNote:''};const S=P.sched;S.days=S.days||[];return S}
+function newDay(o){return Object.assign({id:uid(),type:'shoot',date:'',items:[],note:'',cs:{}},o||{})}
+const isoD=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function fmtD(iso,long){if(!iso)return '';const d=new Date(iso+'T00:00');return isNaN(d)?'':d.toLocaleDateString('en-GB',long?{weekday:'short',day:'2-digit',month:'short',year:'numeric'}:{day:'2-digit',month:'short'})}
+function dayDates(){const S=SCH(),out={};let cur=S.start?new Date(S.start+'T00:00'):null,first=true;
+  S.days.forEach(d=>{if(d.date)cur=new Date(d.date+'T00:00');else if(cur&&!isNaN(cur)){if(!first)cur=new Date(cur.getTime()+864e5);let g=0;while(d.type==='shoot'&&(S.weekOff||[]).includes(cur.getDay())&&g++<7)cur=new Date(cur.getTime()+864e5)}
+    first=false;out[d.id]=cur&&!isNaN(cur)?isoD(cur):''});return out}
+const dayById=id=>SCH().days.find(d=>d.id===id);
+const scById=id=>P.scenes.find(s=>s.id===id);
+function dayNums(){const m={};let n=0;SCH().days.forEach(d=>{if(d.type==='shoot')m[d.id]=++n});return m}
+function dayLabel(d,nums,dates){nums=nums||dayNums();dates=dates||dayDates();const dt=dates[d.id]?' · '+fmtD(dates[d.id],1):'';return (d.type==='shoot'?'Day '+nums[d.id]:d.type==='travel'?'Travel day':'Day off')+dt}
+function pruneSched(){const S=SCH(),ids=new Set(P.scenes.map(s=>s.id)),seen=new Set();S.days.forEach(d=>{d.items=(d.items||[]).filter(it=>ids.has(it.sid)&&!seen.has(it.sid)&&seen.add(it.sid))})}
+function sceneDay(){const m={};SCH().days.forEach(d=>d.items.forEach(it=>m[it.sid]=d.id));return m}
+function dayScenes(d){return d.items.map(it=>scById(it.sid)).filter(Boolean)}
+function dayCast(d){const ids=[];dayScenes(d).forEach(s=>s.artists.forEach(a=>{if(!ids.includes(a))ids.push(a)}));return ids}
+function dayPages(d){return dayScenes(d).reduce((a,s)=>a+pgE(s),0)}
+function sceneFlags(s){return [s.fight&&'fight/stunt',s.song&&'song',(s.vfx||[]).length&&'VFX',(s.vehicles||[]).length&&'vehicles',(s.animals||[]).length&&'animals'].filter(Boolean)}
+function placeScene(sid,dayId,beforeSid){const S=SCH();let it={sid,t:'',shots:'',n:''};S.days.forEach(d=>{const i=d.items.findIndex(x=>x.sid===sid);if(i>=0){it=d.items[i];d.items.splice(i,1)}});
+  if(!dayId)return;const d=dayById(dayId);if(!d)return;if(d.type!=='shoot')d.type='shoot';const j=beforeSid?d.items.findIndex(x=>x.sid===beforeSid):-1;if(j>=0)d.items.splice(j,0,it);else d.items.push(it)}
+function prodSave(msg,sids){logChange(msg,'prod',true);touch(sids||[]);render(true)}
+function toMin(t){const m=String(t||'').match(/(\d{1,2})[:.](\d{2})/);return m?(+m[1])*60+(+m[2]):null}
+const toHM=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
+function latLng(){const m=String(SCH().latlng||'').match(/(-?\d+(?:\.\d+)?)\s*[, ]\s*(-?\d+(?:\.\d+)?)/);return m?[+m[1],+m[2]]:null}
+/* Sunrise / sunset, worked out on the device (no internet): standard sunrise equation */
+function sunTimes(iso){const ll=latLng();if(!iso||!ll)return null;const [lat,lng]=ll,r=Math.PI/180;
+  const J=new Date(iso+'T12:00:00Z').getTime()/864e5+2440587.5,n=Math.ceil(J-2451545+0.0008),Js=n-lng/360,M=(357.5291+0.98560028*Js)%360;
+  const C=1.9148*Math.sin(M*r)+0.02*Math.sin(2*M*r)+0.0003*Math.sin(3*M*r),L=(M+C+180+102.9372)%360,Jt=2451545+Js+0.0053*Math.sin(M*r)-0.0069*Math.sin(2*L*r);
+  const sd=Math.sin(L*r)*Math.sin(23.4397*r),cd=Math.cos(Math.asin(sd)),cw=(Math.sin(-0.833*r)-Math.sin(lat*r)*sd)/(Math.cos(lat*r)*cd);if(cw<-1||cw>1)return null;
+  const w=Math.acos(cw)/r,t=j=>new Date((j-2440587.5)*864e5).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});return {rise:t(Jt-w/360),set:t(Jt+w/360)}}
+
+/* ---------- Plans without AI ---------- */
+function quickPlan(){const S=SCH(),T=parsePg(S.target)||32;const days=[];
+  locGroups().forEach(g=>{[g.scenes.filter(s=>!isNight(s)),g.scenes.filter(isNight)].forEach(list=>{let cur=null;
+    list.forEach(s=>{const p=pgE(s);if(!cur||(cur.p+p>T&&cur.items.length)){cur=newDay({note:U(g.loc)+(isNight(s)?' · NIGHT':' · DAY')});cur.p=0;days.push(cur)}cur.items.push({sid:s.id,t:'',shots:'',n:''});cur.p+=p})})});
+  days.forEach(d=>delete d.p);return days}
+function fillTimes(d){const S=SCH();const st=toMin(d.call||S.call)??420,en=toMin(d.wrap||S.wrap)??1080,lu=toMin(S.lunch);const sc=dayScenes(d);if(!sc.length)return;
+  const hasLunch=lu!=null&&lu>st&&lu<en,work=Math.max(60,en-st-(hasLunch?60:0)),tot=sc.reduce((a,s)=>a+pgE(s),0)||1;let t=st;
+  d.items.forEach(it=>{const s=scById(it.sid);if(!s)return;const dur=Math.max(15,Math.round(work*pgE(s)/tot/5)*5);let a=t;if(hasLunch&&a>=lu&&a<lu+60)a=lu+60;let b=a+dur;if(hasLunch&&a<lu&&b>lu)b+=60;it.t=toHM(a)+' – '+toHM(b);t=b})}
+
+/* ---------- AI: shot division ---------- */
+async function aiShotBatch(b){const per=Math.max(3000,Math.floor(Math.min(aiBudget()*0.7,60000)/b.length));
+  const r=await ask(`You are the director of photography and first assistant director on an Indian feature film. Divide each scene below into a practical SHOT LIST for the shoot. The script may be in Telugu, Tinglish, English or another language; write the shot list in English.
+For every scene:
+- Keep the scene number exactly as given. Do not renumber scenes.
+- Dialogue scenes: an establishing or master shot, then coverage (singles, over-the-shoulder, two-shots, reactions, inserts). Action, fight and song scenes need more shots. Very short scenes may need 1-3 shots.
+- Each shot: "size" (one of WS, LS, MS, MCU, CU, ECU, OTS, 2-SHOT, INSERT, POV, TOP, AERIAL), "angle" (Eye level, Low, High, Dutch, Overhead), "move" (Static, Pan, Tilt, Track, Dolly, Crane, Handheld, Steadicam, Gimbal, Drone, Zoom), "lens" (e.g. 24mm, 35mm, 50mm, 85mm), "desc" (one clear line of what we see), "cast" (character names in frame, comma separated), "notes" (slow motion, VFX, stunt, special rig; else empty).
+- List the shots in story order.
+Reply with only JSON: {"scenes":[{"k":"s0","shots":[{"size":"","angle":"","move":"","lens":"","desc":"","cast":"","notes":""}]}]}
+
+${b.map((s,i)=>`=== s${i} · SCENE ${s.no} · ${eff(s)} · ${s.loc}\nCast: ${s.artists.map(aName).join(', ')||'-'}\n${cutBytes(s.text,per)}`).join('\n\n')}`);
+  const out=(r&&r.scenes)||[];if(!out.length)throw {code:'invalid_json'};let got=0;
+  out.forEach(x=>{const m=String(x.k||'').match(/(\d+)/);const s=m&&b[+m[1]];if(!s||!Array.isArray(x.shots)||!x.shots.length)return;got++;
+    s.shots=x.shots.map((z,i)=>({id:uid(),no:s.no+'-'+(i+1),size:U(z.size||''),angle:String(z.angle||'').trim(),move:String(z.move||'').trim(),lens:String(z.lens||'').trim(),desc:String(z.desc||'').trim(),cast:U(Array.isArray(z.cast)?z.cast.join(', '):z.cast||''),notes:String(z.notes||'').trim()}))});
+  if(!got)throw {code:'invalid_json'}}
+async function shotJob(only){if(JOB)return;if(!AI.sample){noAI('AI needs a connected AI service. You can add shots by hand.');return}
+  const list=only?[scById(only)].filter(Boolean):P.scenes.filter(s=>!shotsOf(s).length);
+  if(!list.length){toast('Every scene already has shots. Use "Suggest again" on a scene to redo it.');return}
+  snapshot();startJob(only?'Dividing the scene into shots':'Dividing scenes into shots',list.length);const done=[];let fails=0;
+  const per=Math.max(1,Math.min(3,batchMax()));const batches=[];for(let i=0;i<list.length;i+=per)batches.push(list.slice(i,i+per));
+  const work=async()=>{while(batches.length&&JOB&&!JOB.ctl.signal.aborted){const b=batches.shift();try{await aiShotBatch(b);done.push(...b.map(s=>s.id))}catch(e){if(e&&e.code==='cancelled')return;fails++;if(['no_key','bad_key','not_granted'].includes(e&&e.code)){JOB.fatal=e;batches.length=0}}if(JOB){JOB.done+=b.length;renderJob()}}};
+  try{await Promise.all(Array.from({length:Math.max(1,Math.min(aiWorkers(),batches.length))},work));
+    if(JOB&&JOB.fatal&&!done.length)toast(errMsg(JOB.fatal),5000);else if(JOB&&JOB.ctl.signal.aborted)toast('Stopped.');else toast(`Shots ready for ${done.length} scene${done.length===1?'':'s'}${fails?`. ${fails} part${fails===1?'':'s'} failed; press the button again to retry`:''}. Edit anything you like.`,5000);
+    if(done.length){logChange(`Shot division by AI for ${done.length} scene${done.length===1?'':'s'}`,'prod',true);touch(done)}}
+  finally{endJob();render(true)}}
+
+/* ---------- AI: shooting schedule and day order ---------- */
+function schedLines(list){return list.map((s,i)=>`s${i} | Sc ${s.no} | ${U(s.ie)||'?'} | ${U(s.time)||'?'} | ${s.loc||'?'} | ${fmtPg(pgE(s))} pg | cast: ${s.artists.map(aName).join(', ')||'-'} | ${(s.juniors||[]).length?'crowd: '+s.juniors.join(', '):'-'} | ${sceneFlags(s).join(', ')||'-'}`)}
+async function schedJob(){if(JOB)return;if(!AI.sample){noAI('AI needs a connected AI service. Use "Quick plan (no AI)" or arrange the days by hand.');return}
+  const S=SCH(),list=P.scenes.slice(),T=parsePg(S.target)||32;snapshot();startJob('Planning the shooting schedule',0);
+  try{const r=await ask(`You are an experienced first assistant director scheduling an Indian feature film shoot. Make a practical shooting schedule from this scene list.
+Rules, most important first:
+1. Follow the producer's notes below (actor dates, location availability, scenes to shoot first or last) when given.
+2. Keep each location together: shoot all scenes at one location on consecutive days before moving on. At most one company move (location change) per day.
+3. At a location, put day scenes and night scenes on separate days, and keep night shoots together in a block.
+4. Keep each main actor's working days as few and as continuous as possible.
+5. Fights, stunts and songs usually need their own day or days. Keep crowd scenes together where possible.
+6. Aim for about ${fmtPg(T)} script pages per shoot day (lengths are in eighths of a page, e.g. "1 3/8 pg"). A heavy action or song scene can take a whole day.
+7. Every scene key must appear exactly once. Refer to scenes by key (s0, s1, …). Never renumber scenes.
+Reply with only JSON: {"days":[{"scenes":["s4","s9"],"note":"short reason, e.g. RAJU HOUSE · day scenes"}],"notes":"one or two lines of overall advice"}
+
+PRODUCER'S NOTES:
+${S.brief||'(none)'}
+
+SCENES (key | scene no | INT/EXT | time | location | length | cast | crowd | special):
+${cutBytes(schedLines(list).join('\n'),Math.min(90000,aiBudget()*0.7))}`,{modelTier:'complex'});
+    const days=(r&&r.days)||[];if(!days.length)throw {code:'invalid_json'};const used=new Set(),nd=[];
+    days.forEach(x=>{const d=newDay({note:String(x.note||'')});(x.scenes||[]).forEach(k=>{const m=String(k).match(/(\d+)/);const s=m&&list[+m[1]];if(s&&!used.has(s.id)){used.add(s.id);d.items.push({sid:s.id,t:'',shots:'',n:''})}});if(d.items.length)nd.push(d)});
+    if(!nd.length)throw {code:'invalid_json'};S.days=nd;S.aiNote=String(r.notes||'');const left=list.length-used.size;
+    logChange(`Shooting schedule planned by AI: ${nd.length} shoot days${left?`, ${left} scenes not placed`:''}`,'prod',true);touch([]);
+    toast(left?`${nd.length} shoot days planned. ${left} scene${left===1?' was':'s were'} left out; see "Not scheduled yet".`:`${nd.length} shoot days planned. Move scenes or days to make it yours.`,6000)}
+  catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
+async function orderJob(id){if(JOB)return;const d=dayById(id);if(!d)return;if(!AI.sample){noAI('AI needs a connected AI service. Use "Fill times (no AI)" or type the times.');return}
+  const S=SCH(),sc=dayScenes(d);if(!sc.length){toast('This day has no scenes yet.');return}const sun=sunTimes(dayDates()[d.id]);snapshot();startJob('Ordering the day',0);
+  try{const r=await ask(`You are the first assistant director of an Indian feature film. Put this shoot day's scenes in the best shooting order and give each a start and end time.
+Crew call ${d.call||S.call||'07:00'}, wrap ${d.wrap||S.wrap||'18:00'}, one hour lunch at ${S.lunch||'13:00'}.${sun?` Sunrise ${sun.rise}, sunset ${sun.set}.`:''}
+Think about: exterior day scenes need daylight; night scenes after sunset; keep the same set-up and lighting together; release actors early where possible; give longer time to long, action, song and crowd scenes. Scene lengths are in eighths of a page.
+Reply with only JSON: {"order":[{"k":"s0","start":"07:00","end":"08:30","note":"short reason"}]}
+
+SCENES (key | scene no | INT/EXT | time | location | length | cast | crowd | special):
+${schedLines(sc).join('\n')}`);
+    const o=(r&&r.order)||[];if(!o.length)throw {code:'invalid_json'};const items=[],seen=new Set();
+    o.forEach(x=>{const m=String(x.k||'').match(/(\d+)/);const s=m&&sc[+m[1]];if(!s||seen.has(s.id))return;seen.add(s.id);const it=d.items.find(y=>y.sid===s.id);if(!it)return;
+      if(x.start)it.t=String(x.start).trim()+(x.end?' – '+String(x.end).trim():'');if(x.note&&!it.n)it.n=String(x.note).trim();items.push(it)});
+    d.items.forEach(it=>{if(!seen.has(it.sid))items.push(it)});d.items=items;logChange(`Shoot order for ${dayLabel(d)} suggested by AI`,'prod',true);touch([]);toast('Order and times suggested. Edit anything you like.')}
+  catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
+
+/* ---------- Page: Shot division ---------- */
+R.shots=()=>{const sc=P.scenes;const tot=sc.reduce((a,s)=>a+shotsOf(s).length,0),withS=sc.filter(s=>shotsOf(s).length).length;
+  return {html:pageHead('Shot division','Scenes keep the script\'s own numbers. Shots are numbered from them (14B-1, 14B-2). AI suggests a shot list; edit, add, move or remove any shot.',searchBox('Find a scene')+`<button class="btn sm pri" data-pa="shotsAI">${withS?'Suggest shots for remaining scenes':'Suggest shots with AI'}</button>`)+
+  `<div class="stats"><div class="stat"><b>${tot}</b><span>Shots</span></div><div class="stat"><b>${withS}/${sc.length}</b><span>Scenes divided</span></div></div>`+
+  sc.map(s=>{const L=shotsOf(s);return `<section class="shotcard" data-q="${esc((s.no+' '+s.loc+' '+s.desc).toLowerCase())}"><div class="sc-h"><b class="no">${esc(s.no)}</b>${effHtml(s)}<span class="loc">${esc(s.loc)}</span><span class="small muted grow">${esc(cut(s.desc,110))}</span><span class="small faint">${L.length} shot${L.length===1?'':'s'}</span></div>
+  ${L.length?`<div class="tw"><table class="t rt shots"><thead><tr>${SHOT_F.map(([,l])=>`<th>${l}</th>`).join('')}<th>Order</th></tr></thead><tbody>${L.map(h=>`<tr>${SHOT_F.map(([f,l])=>`<td data-l="${l}"${f==='desc'||f==='notes'?' class="left"':''}>${ce(`data-pk="shot" data-sid="${s.id}" data-shot="${h.id}" data-sf="${f}"`,h[f],'',l)}</td>`).join('')}<td data-l="Order" class="nowrap"><button class="btn sm ghost" data-pa="shotUp" data-sid="${s.id}" data-shot="${h.id}" aria-label="Move shot up">↑</button><button class="btn sm ghost danger" data-pa="shotDel" data-sid="${s.id}" data-shot="${h.id}" aria-label="Delete shot">✕</button></td></tr>`).join('')}</tbody></table></div>`:''}
+  <div class="sc-f"><button class="btn sm" data-pa="shotAdd" data-sid="${s.id}">Add shot</button><button class="btn sm" data-pa="shotAI1" data-sid="${s.id}">${L.length?'Suggest again with AI':'Suggest with AI'}</button>${L.length?`<button class="btn sm ghost" data-pa="shotRenum" data-sid="${s.id}">Renumber shots</button>`:''}</div></section>`}).join(''),
+  exp:{orient:'landscape',sheets:[{name:'Shot division',cols:[{h:'Sc No',w:7},{h:'Shot',w:8},{h:'Size',w:8},{h:'Angle',w:10},{h:'Movement',w:11},{h:'Lens',w:8},{h:'What we see',w:46},{h:'Cast',w:22},{h:'Notes',w:22}],
+    rows:sc.flatMap(s=>shotsOf(s).length?[{group:`SC ${s.no}   ${eff(s)}   ${s.loc}`},...shotsOf(s).map(h=>[s.no,h.no,h.size,h.angle,h.move,h.lens,h.desc,h.cast,h.notes])]:[])}]}}};
+
+/* ---------- Page: Shooting schedule ---------- */
+const SCHED_COLS=[{h:'Sc No',w:7},{h:'Effect / Time',w:13},{h:'Location',w:22},{h:'Pages',w:7},{h:'Scene description',w:46},{h:'Cast',w:28},{h:'Crowd',w:18},{h:'Notes',w:16}];
+function schedRows(){const S=SCH(),dates=dayDates(),nums=dayNums(),rows=[];
+  S.days.forEach(d=>{const sc=dayScenes(d);rows.push({group:`${dayLabel(d,nums,dates).toUpperCase()}${d.type==='shoot'?`   ·   ${fmtPg(dayPages(d))} pages   ·   ${uniq(sc.map(s=>U(s.loc))).join(' / ')}`:''}${d.note?'   ·   '+d.note:''}`});
+    sc.forEach(s=>{const it=d.items.find(x=>x.sid===s.id)||{};rows.push([s.no,eff(s),s.loc,fmtPg(pgE(s)),s.desc,s.artists.map(aName).join(', '),crowdText(s),it.n||''])})});
+  const un=P.scenes.filter(s=>!sceneDay()[s.id]);if(un.length){rows.push({group:'NOT SCHEDULED YET'});un.forEach(s=>rows.push([s.no,eff(s),s.loc,fmtPg(pgE(s)),s.desc,s.artists.map(aName).join(', '),crowdText(s),'']))}return rows}
+R.sched=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),sd=sceneDay(),T=parsePg(S.target)||32;const un=P.scenes.filter(s=>!sd[s.id]);
+  const shoot=S.days.filter(d=>d.type==='shoot'),offs=S.days.length-shoot.length,totP=P.scenes.reduce((a,s)=>a+pgE(s),0),has=S.days.some(d=>d.items.length);
+  const opts=sel=>`<option value="">Not scheduled</option>`+shoot.map(d=>`<option value="${d.id}"${d.id===sel?' selected':''}>${esc(dayLabel(d,nums,dates))}</option>`).join('')+'<option value="+">+ New shoot day</option>';
+  const row=(s,d)=>`<tr draggable="true" data-drag="${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.desc+' '+s.artists.map(aName).join(' ')).toLowerCase())}"><td class="no" data-l="Sc No"><span class="grip" aria-hidden="true">⋮⋮</span>${esc(s.no)}</td><td class="eff" data-l="Effect / Time">${effHtml(s)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="num" data-l="Pages">${ce(`data-pk="pg" data-sid="${s.id}"`,fmtPg(pgE(s)),'','Length in pages, e.g. 1 3/8')}</td><td data-l="Scene description" class="left small">${esc(cut(s.desc,150))}${sceneFlags(s).map(f=>` <span class="tag">${f}</span>`).join('')}</td><td data-l="Cast &amp; crowd" class="small">${esc(s.artists.map(aName).join(', '))}${(s.juniors||[]).length?`<div class="faint">+ ${esc(s.juniors.join(', '))}</div>`:''}</td><td data-l="Move to" class="nowrap"><select class="mini" data-movesc="${s.id}" aria-label="Move scene ${esc(s.no)} to">${opts(d?d.id:'')}</select>${d?`<button class="btn sm ghost" data-pa="scUp" data-sid="${s.id}" aria-label="Earlier in the day">↑</button>`:''}</td></tr>`;
+  const head='<thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Pages</th><th>Scene description</th><th>Cast &amp; crowd</th><th>Move to</th></tr></thead>';
+  const dayHtml=d=>{const sc=dayScenes(d),pg=dayPages(d),locs=uniq(sc.map(s=>U(s.loc)).filter(Boolean)),cast=dayCast(d);
+    return `<section class="sday t-${d.type}" data-dropday="${d.id}"><div class="sday-h"><b>${esc(dayLabel(d,nums,dates))}</b>
+    <select class="mini" data-dtype="${d.id}" aria-label="Day type"><option value="shoot"${d.type==='shoot'?' selected':''}>Shoot day</option><option value="off"${d.type==='off'?' selected':''}>Day off / holiday</option><option value="travel"${d.type==='travel'?' selected':''}>Travel</option></select>
+    <input type="date" class="mini" data-ddate="${d.id}" value="${esc(d.date||'')}" title="Fix this day to a date. Leave empty to follow on from the day before." aria-label="Fixed date">
+    ${d.type==='shoot'?`<span class="tag ${pg>T*1.25?'warn':'acc'}">${fmtPg(pg)} pages</span><span class="small muted">${sc.length} scene${sc.length===1?'':'s'} · ${locs.length} location${locs.length===1?'':'s'}${locs.length>1?' · company move':''} · ${cast.length} cast</span>`:''}
+    <span class="grow"></span><span class="nowrap"><button class="btn sm ghost" data-pa="dayUp" data-day="${d.id}" aria-label="Move day earlier">↑</button><button class="btn sm ghost" data-pa="dayDown" data-day="${d.id}" aria-label="Move day later">↓</button><button class="btn sm ghost" data-pa="dayOffAfter" data-day="${d.id}">+ Day off after</button><button class="btn sm ghost danger" data-pa="dayDel" data-day="${d.id}">Delete</button></span></div>
+    <div class="sday-note">${ce(`data-pk="day" data-day="${d.id}" data-df="note" data-ph="Add a note for this day"`,d.note,'','Day note')}</div>
+    ${d.type==='shoot'?(sc.length?`<div class="tw"><table class="t rt">${head}<tbody>${sc.map(s=>row(s,d)).join('')}</tbody></table></div>`:'<p class="small faint drop-hint">Drag scenes here, or choose this day in "Move to".</p>'):''}</section>`};
+  const wo=(S.weekOff||[])[0];
+  return {html:pageHead('Shooting schedule','AI makes a first plan from locations, day/night, cast and length. Then make it yours: drag scenes between days, change days, add days off. Scene numbers stay as in the script.',searchBox('Find a scene')+`<button class="btn sm pri" data-pa="schedAI">${has?'Re-plan with AI':'Plan with AI'}</button><button class="btn sm" data-pa="schedQuick">Quick plan (no AI)</button><button class="btn sm" data-pa="dayAdd">Add shoot day</button><button class="btn sm" data-pa="dayOffAdd">Add day off</button>`)+
+  `<details class="sset"${S.days.length?'':' open'}><summary>Plan settings · start ${esc(S.start?fmtD(S.start,1):'not set')} · ${esc(S.target||'4')} pages a day · call ${esc(S.call)} – wrap ${esc(S.wrap)}</summary><div class="sset-g">
+    <label>First shoot day<input type="date" data-sset="start" value="${esc(S.start||'')}"></label>
+    <label>Weekly day off<select data-sset="weekOff"><option value="">None</option>${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].map((w,i)=>`<option value="${i}"${wo===i?' selected':''}>${w}</option>`).join('')}</select></label>
+    <label>Pages a day<input type="text" inputmode="decimal" data-sset="target" value="${esc(S.target||'4')}" placeholder="e.g. 4 or 3 4/8"></label>
+    <label>Crew call<input type="time" data-sset="call" value="${esc(S.call||'')}"></label>
+    <label>Wrap<input type="time" data-sset="wrap" value="${esc(S.wrap||'')}"></label>
+    <label>Lunch<input type="time" data-sset="lunch" value="${esc(S.lunch||'')}"></label>
+    <label>Shoot city (latitude, longitude)<input type="text" data-sset="latlng" value="${esc(S.latlng||'')}" placeholder="17.385, 78.4867"><span class="small faint">For sunrise and sunset on call sheets. Hyderabad is filled in.</span></label></div>
+    <div class="fieldbox" style="margin-top:10px"><label>Notes for the AI planner</label>${ce(`data-pk="sset" data-sf="brief" data-ph="Actor dates (e.g. HERO available 2-20 Nov only), location availability, scenes to shoot first or last, night-shoot limits… Shift+Enter for a new line."`,S.brief||'','brief','Notes for the AI planner')}</div></details>`+
+  `<div class="stats"><div class="stat"><b>${shoot.length}</b><span>Shoot days</span></div><div class="stat"><b>${offs}</b><span>Days off / travel</span></div><div class="stat"><b>${P.scenes.length-un.length}/${P.scenes.length}</b><span>Scenes placed</span></div><div class="stat"><b>${fmtPg(totP)}</b><span>Script pages</span></div>${shoot.length?`<div class="stat"><b>${fmtPg(totP/shoot.length)}</b><span>Pages a day</span></div>`:''}</div>`+
+  (S.aiNote?`<div class="banner info small"><span><b>AI planner:</b> ${esc(S.aiNote)}</span></div>`:'')+
+  (un.length?`<section class="sday bin" data-dropday=""><div class="sday-h"><b>Not scheduled yet</b><span class="tag warn">${un.length} scene${un.length===1?'':'s'}</span><span class="small muted">${fmtPg(un.reduce((a,s)=>a+pgE(s),0))} pages</span></div><div class="tw"><table class="t rt">${head}<tbody>${un.map(s=>row(s,null)).join('')}</tbody></table></div></section>`:'')+
+  (S.days.length?S.days.map(dayHtml).join(''):`<div class="empty"><b>No schedule yet</b>Press "Plan with AI" for a first plan, or "Quick plan (no AI)" to group scenes by location and day/night.</div>`),
+  exp:{orient:'landscape',sheets:[{name:'Shooting schedule',cols:SCHED_COLS,rows:schedRows()}]}}};
+
+/* ---------- Page: Shoot order ---------- */
+R.order=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),shoot=S.days.filter(d=>d.type==='shoot');
+  if(!shoot.length)return {html:pageHead('Shoot order','Each shoot day in order, with times.')+`<div class="empty"><b>No shooting schedule yet</b>Plan the schedule first. Every shoot day then gets its own shoot order here.<br><br><button class="btn pri" data-page="sched">Open shooting schedule</button></div>`,exp:null};
+  let cur=VIEW.oday;if(cur!=='all'&&!dayById(cur))cur=shoot[0].id;VIEW.oday=cur;const ds=cur==='all'?shoot:[dayById(cur)];
+  const pick=`<select class="mini" data-oday aria-label="Shoot day">${shoot.map(d=>`<option value="${d.id}"${d.id===cur?' selected':''}>${esc(dayLabel(d,nums,dates))}</option>`).join('')}<option value="all"${cur==='all'?' selected':''}>All days</option></select>`;
+  const head='<thead><tr><th>#</th><th>Time</th><th>Sc No</th><th>Shots</th><th>Location</th><th>Effect / Time</th><th>Pages</th><th>Scene description</th><th>Cast</th><th>Notes</th><th></th></tr></thead>';
+  const shotsTxt=(it,s)=>it.shots||shotsOf(s).map(h=>h.no).join(', ');
+  const tbl=d=>{const sc=dayScenes(d);const sun=sunTimes(dates[d.id]);
+    return `<section class="sday"><div class="sday-h"><b>${esc(dayLabel(d,nums,dates))}</b><label class="small">Call <input type="time" class="mini" data-dcall="${d.id}" value="${esc(d.call||S.call||'')}"></label><label class="small">Wrap <input type="time" class="mini" data-dwrap="${d.id}" value="${esc(d.wrap||S.wrap||'')}"></label>${sun?`<span class="small muted">Sunrise ${sun.rise} · Sunset ${sun.set}</span>`:''}<span class="tag acc">${fmtPg(dayPages(d))} pages</span><span class="grow"></span>
+      ${cur!=='all'?`<button class="btn sm" data-pa="fillTimes" data-day="${d.id}">Fill times (no AI)</button><button class="btn sm pri" data-pa="orderAI" data-day="${d.id}">Suggest order &amp; times with AI</button>`:''}</div>
+      ${sc.length?`<div class="tw"><table class="t rt">${head}<tbody>${d.items.map((it,i)=>{const s=scById(it.sid);if(!s)return '';return `<tr><td class="num" data-l="#">${i+1}</td><td data-l="Time" class="nowrap">${ce(`data-pk="oi" data-day="${d.id}" data-sid="${s.id}" data-of="t" data-ph="07:00 – 08:30"`,it.t||'','','Time')}</td><td class="no" data-l="Sc No">${esc(s.no)}</td><td data-l="Shots" class="small">${ce(`data-pk="oi" data-day="${d.id}" data-sid="${s.id}" data-of="shots"`,shotsTxt(it,s),'','Shots')}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect / Time">${effHtml(s)}</td><td class="num" data-l="Pages">${fmtPg(pgE(s))}</td><td data-l="Scene description" class="left small">${esc(cut(s.desc,150))}</td><td data-l="Cast" class="small">${esc(s.artists.map(aName).join(', '))}</td><td data-l="Notes" class="left small">${ce(`data-pk="oi" data-day="${d.id}" data-sid="${s.id}" data-of="n"`,it.n||'','','Notes')}</td><td data-l="" class="nowrap"><button class="btn sm ghost" data-pa="oUp" data-day="${d.id}" data-sid="${s.id}" aria-label="Earlier">↑</button><button class="btn sm ghost" data-pa="oDown" data-day="${d.id}" data-sid="${s.id}" aria-label="Later">↓</button></td></tr>`}).join('')}</tbody></table></div>`:'<p class="small faint">No scenes on this day. Add them in Shooting schedule.</p>'}</section>`};
+  const rows=[];ds.forEach(d=>{rows.push({group:`${dayLabel(d,nums,dates).toUpperCase()}   ·   CALL ${d.call||S.call||''}   ·   WRAP ${d.wrap||S.wrap||''}   ·   ${fmtPg(dayPages(d))} PAGES`});d.items.forEach((it,i)=>{const s=scById(it.sid);if(s)rows.push([i+1,it.t||'',s.no,shotsTxt(it,s),s.loc,eff(s),fmtPg(pgE(s)),s.desc,s.artists.map(aName).join(', '),it.n||''])})});
+  return {html:pageHead('Shoot order','The order of scenes and shots for each shoot day, with times. AI can suggest the order; you can type or move anything.',pick)+ds.map(tbl).join(''),
+    exp:{orient:'landscape',sheets:[{name:'Shoot order',cols:[{h:'#',w:4},{h:'Time',w:12},{h:'Sc No',w:7},{h:'Shots',w:16},{h:'Location',w:20},{h:'Effect / Time',w:12},{h:'Pages',w:6},{h:'Scene description',w:42},{h:'Cast',w:24},{h:'Notes',w:18}],rows}]}}};
+
+/* ---------- Page: Day out of days ---------- */
+function doodData(){const S=SCH(),days=S.days,X=P.doodx||{},work={};
+  days.forEach(d=>{if(d.type==='shoot')dayCast(d).forEach(a=>{(work[a]=work[a]||new Set()).add(d.id)})});
+  return sortedArtists().filter(a=>work[a.id]||(X[a.id]&&Object.keys(X[a.id]).length)).map(a=>{const w=work[a.id]||new Set();const idx=days.map((d,i)=>w.has(d.id)?i:-1).filter(i=>i>=0),f=idx[0],l=idx[idx.length-1];
+    const cells=days.map((d,i)=>{let c='';if(w.has(d.id))c=(i===f&&i===l)?'SWF':i===f?'SW':i===l?'WF':'W';else if(f!=null&&i>f&&i<l&&d.type==='shoot')c='H';const o=X[a.id]&&X[a.id][d.id];return {d,auto:c,code:o!=null?o:c,over:o!=null&&o!==c}});
+    const k=re=>cells.filter(c=>re.test(c.code)).length,dates=dayDates();const fi=cells.findIndex(c=>c.code),li=cells.length-1-cells.slice().reverse().findIndex(c=>c.code);
+    return {a,cells,work:k(/W/),hold:k(/^H$/),travel:k(/^T$/),start:fi>=0?dates[cells[fi].d.id]:'',finish:fi>=0?dates[cells[li].d.id]:''}})}
+R.dood=()=>{pruneSched();const S=SCH(),days=S.days,nums=dayNums(),dates=dayDates();
+  if(!days.some(d=>d.type==='shoot'&&d.items.length))return {html:pageHead('Day out of days','Each artist\'s working days.')+`<div class="empty"><b>No shooting schedule yet</b>Day out of days is built from the shooting schedule.<br><br><button class="btn pri" data-page="sched">Open shooting schedule</button></div>`,exp:null};
+  const rows=doodData();const dh=d=>d.type==='shoot'?'D'+nums[d.id]:d.type==='travel'?'TRV':'OFF';
+  return {html:pageHead('Day out of days','Worked out from the schedule. SW start work · W work · WF work finish · SWF one day only · H hold (paid, not working) · T travel. Click a cell to change it.',searchBox('Find an artist')+'<button class="btn sm ghost" data-pa="doodReset">Clear my changes</button>')+
+    `<div class="tw dood-w"><table class="t dood"><thead><tr><th class="stk">Character</th><th>Artist</th>${days.map(d=>`<th class="dh ${d.type}">${dh(d)}<small>${esc(fmtD(dates[d.id]))}</small></th>`).join('')}<th>Work</th><th>Hold</th><th>Travel</th><th>Total</th><th>Start</th><th>Finish</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr data-q="${esc((r.a.name+' '+r.a.actor).toLowerCase())}"><td class="stk"><b>${esc(r.a.name)}</b>${r.a.tier==='Primary'?' <span class="tag acc">P</span>':''}</td><td class="small">${esc(r.a.actor||'')}</td>${r.cells.map(c=>`<td class="dc ${c.d.type!=='shoot'?'off':''}"><button class="dd c-${c.code||'x'}${c.over?' over':''}" data-dd="${r.a.id}|${c.d.id}" aria-label="${esc(r.a.name)} ${esc(dh(c.d))}: ${c.code||'not called'}">${c.code||'·'}</button></td>`).join('')}<td class="num">${r.work}</td><td class="num">${r.hold}</td><td class="num">${r.travel}</td><td class="num"><b>${r.work+r.hold+r.travel}</b></td><td class="small nowrap">${esc(fmtD(r.start))}</td><td class="small nowrap">${esc(fmtD(r.finish))}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small faint">A blue dot marks a cell you changed by hand. Changes to the schedule update this chart; your own changes stay until you clear them.</p>`,
+    exp:{orient:'landscape',sheets:[{name:'Day out of days',cols:[{h:'Character',w:18},{h:'Artist',w:14},...days.map(d=>({h:dh(d)+' '+fmtD(dates[d.id]),w:5})),{h:'Work',w:5},{h:'Hold',w:5},{h:'Travel',w:5},{h:'Total',w:5},{h:'Start',w:8},{h:'Finish',w:8}],rows:rows.map(r=>[r.a.name,r.a.actor||'',...r.cells.map(c=>c.code),r.work,r.hold,r.travel,r.work+r.hold+r.travel,fmtD(r.start),fmtD(r.finish)])}]}}};
+
+/* ---------- Page: Call sheet ---------- */
+const CS_TOP=[['shift','Shift timings'],['crewCall','Crew call'],['breakfast','Breakfast ready by'],['lunchT','Lunch ready by'],['location','Location'],['address','Location address'],['map','Map link'],['hospital','Nearest hospital'],['hospAddr','Hospital address'],['police','Nearest police station'],['weather','Weather forecast'],['instr','Special instructions']];
+const CS_REQ=[['props','Props'],['art','Art / set'],['costumes','Costumes'],['makeup','Makeup / hair'],['vehicles','Vehicles'],['animals','Animals'],['sfx','SFX'],['vfx','VFX / CG'],['equipment','Special equipment'],['technicians','Special technicians'],['spl_props','Special props'],['spl_sets','Special sets']];
+function csData(d){const S=SCH(),cs=d.cs||{},dates=dayDates(),sc=dayScenes(d),sun=sunTimes(dates[d.id]),call=d.call||S.call||'',wrap=d.wrap||S.wrap||'';
+  const dflt={shift:call&&wrap?call+' – '+wrap:'',crewCall:call,lunchT:S.lunch||'',location:uniq(sc.map(s=>U(s.loc)).filter(Boolean)).join(' / ')};
+  const v=f=>cs[f]!=null&&cs[f]!==''?cs[f]:(dflt[f]||'');const cast=dayCast(d).map(A).filter(Boolean);
+  const req=CS_REQ.map(([k,l])=>{const m=new Map();sc.forEach(s=>{(k==='costumes'?(s.costumes||[]).map(c=>(c.a?aName(c.a):c.n)+' – '+c.c):(s[k]||[])).forEach(x=>{const key=String(x).toLowerCase();if(!m.has(key))m.set(key,{x,sc:[]});m.get(key).sc.push(s.no)})});return [l,[...m.values()].map(o=>o.x+' ('+uniq(o.sc).join(', ')+')').join('; ')]}).filter(([,t])=>t);
+  const crowd=sc.filter(s=>(s.juniors||[]).length||(s.extras||[]).length).map(s=>['Sc '+s.no,[...(s.juniors||[]),...(s.extras||[])].join(', ')]);
+  return {cs,v,sc,sun,cast,req,crowd,dates,call}}
+R.callsheet=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),shoot=S.days.filter(d=>d.type==='shoot');
+  if(!shoot.length)return {html:pageHead('Call sheet','One call sheet for each shoot day.')+`<div class="empty"><b>No shooting schedule yet</b>Call sheets are filled in from the shooting schedule.<br><br><button class="btn pri" data-page="sched">Open shooting schedule</button></div>`,exp:null};
+  let cur=VIEW.csday;if(!dayById(cur)||dayById(cur).type!=='shoot')cur=shoot[0].id;VIEW.csday=cur;const d=dayById(cur),D=csData(d),G=P.csg||{};
+  const nx=shoot[shoot.indexOf(d)+1];const pick=`<select class="mini" data-csday aria-label="Shoot day">${shoot.map(x=>`<option value="${x.id}"${x.id===cur?' selected':''}>${esc(dayLabel(x,nums,dates))}</option>`).join('')}</select>`;
+  const fld=(f,l)=>`<div class="cs-k">${l}</div><div class="cs-v">${ce(`data-pk="cs" data-day="${d.id}" data-cf="${f}" data-ph="—"`,D.v(f),'',l)}</div>`;
+  const ct=(aid,k,dv)=>{const key='c:'+aid+':'+k;return ce(`data-pk="cs" data-day="${d.id}" data-cf="${key}" data-ph="${esc(dv||'—')}"`,D.cs[key]||'','',k)};
+  const crew=P.crew||[];
+  const html=pageHead('Call sheet','Filled in from the schedule and breakdown. Type over anything; your entries are kept for this day.',pick)+
+  `<div class="cs">
+   <div class="cs-top"><div><div class="cs-prod">${esc(P.production||'Production house')}</div><div class="cs-film">${esc(P.title||'')}</div><div class="cs-day">${esc(dayLabel(d,nums,dates))} <span class="muted">of ${shoot.length}</span></div></div>
+    <div class="cs-sun">${D.sun?`<div><span>Sunrise</span><b>${D.sun.rise}</b></div><div><span>Sunset</span><b>${D.sun.set}</b></div>`:'<span class="small faint">Set the first shoot day and city in Shooting schedule for sunrise and sunset.</span>'}</div></div>
+   <div class="cs-sec"><h3>Unit</h3><div class="cs-kv">${CS_TOP.map(([f,l])=>fld(f,l)).join('')}</div></div>
+   <div class="cs-sec"><h3>Key credits <span class="small faint">· same on every call sheet</span></h3>${ce(`data-pk="csg" data-cf="credits" data-ph="DIRECTOR – name&#10;PRODUCER – name&#10;DOP – name … (Shift+Enter for a new line)"`,G.credits||'','cs-multi','Key credits')}</div>
+   <div class="cs-sec"><h3>Scenes</h3><div class="tw"><table class="t rt"><thead><tr><th>Time</th><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Pages</th><th>Scene description</th><th>Cast</th></tr></thead><tbody>${d.items.map(it=>{const s=scById(it.sid);return s?`<tr><td data-l="Time" class="nowrap">${esc(it.t||'')}</td><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="eff" data-l="Effect / Time">${effHtml(s)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="num" data-l="Pages">${fmtPg(pgE(s))}</td><td data-l="Scene description" class="left small">${esc(cut(s.desc,160))}</td><td data-l="Cast" class="small">${esc(s.artists.map(aName).join(', '))}</td></tr>`:''}).join('')}</tbody></table></div><p class="small faint">Total ${fmtPg(dayPages(d))} pages. Times come from Shoot order.</p></div>
+   <div class="cs-sec"><h3>Cast</h3><div class="tw"><table class="t rt"><thead><tr><th>Character</th><th>Artist</th><th>Phone</th><th>Scenes</th><th>Pick-up</th><th>Makeup</th><th>On set</th><th>Remarks</th></tr></thead><tbody>${D.cast.map(a=>`<tr><td data-l="Character"><b>${esc(a.name)}</b></td><td data-l="Artist">${esc(a.actor||'')}</td><td data-l="Phone" class="small">${esc(a.phone||'')}</td><td data-l="Scenes" class="small">${esc(D.sc.filter(s=>s.artists.includes(a.id)).map(s=>s.no).join(', '))}</td><td data-l="Pick-up">${ct(a.id,'pu','')}</td><td data-l="Makeup">${ct(a.id,'mu','')}</td><td data-l="On set">${ct(a.id,'on',D.call)}</td><td data-l="Remarks">${ct(a.id,'rm','')}</td></tr>`).join('')||'<tr><td colspan="8" class="muted">No cast on this day.</td></tr>'}</tbody></table></div></div>
+   <div class="cs-sec"><h3>Crowd / juniors</h3>${D.crowd.length?`<div class="cs-kv">${D.crowd.map(([k,v])=>`<div class="cs-k">${esc(k)}</div><div class="cs-v">${esc(v)}</div>`).join('')}</div>`:'<p class="small faint">No crowd listed in the breakdown for this day.</p>'}${ce(`data-pk="cs" data-day="${d.id}" data-cf="crowdNote" data-ph="Crowd call time, numbers, supplier…"`,D.cs.crowdNote||'','cs-multi','Crowd notes')}</div>
+   <div class="cs-sec"><h3>Department call times</h3><div class="cs-kv cs-dept">${DEPTS.map(n=>`<div class="cs-k">${esc(n)}</div><div class="cs-v">${ce(`data-pk="cs" data-day="${d.id}" data-cf="dept:${esc(n)}" data-ph="${esc(D.v('crewCall')||'—')}"`,D.cs['dept:'+n]||'','',n)}</div>`).join('')}</div></div>
+   <div class="cs-sec"><h3>Requirements <span class="small faint">· from Script breakdown</span></h3>${D.req.length?`<div class="cs-kv">${D.req.map(([k,v])=>`<div class="cs-k">${esc(k)}</div><div class="cs-v small">${esc(v)}</div>`).join('')}</div>`:'<p class="small faint">Nothing listed yet. Run the AI breakdown or fill Script breakdown.</p>'}${ce(`data-pk="cs" data-day="${d.id}" data-cf="req" data-ph="Camera, lights and anything else for today…"`,D.cs.req||'','cs-multi','Other requirements')}</div>
+   <div class="cs-sec"><h3>Crew list <span class="small faint">· same on every call sheet</span></h3><div class="tw"><table class="t rt"><thead><tr><th>Department</th><th>Role</th><th>Name</th><th>Phone</th><th></th></tr></thead><tbody>${crew.map((c,i)=>`<tr>${['dept','role','name','phone'].map(f=>`<td data-l="${{dept:'Department',role:'Role',name:'Name',phone:'Phone'}[f]}">${ce(`data-pk="crew" data-ci="${i}" data-cf="${f}"`,c[f]||'','',f)}</td>`).join('')}<td><button class="btn sm ghost danger" data-pa="crewDel" data-ci="${i}" aria-label="Remove">✕</button></td></tr>`).join('')}</tbody></table></div><button class="btn sm" data-pa="crewAdd">Add crew member</button></div>
+   <div class="cs-sec"><h3>Advance schedule</h3>${nx?`<p class="small"><b>${esc(dayLabel(nx,nums,dates))}</b>: ${esc(dayScenes(nx).map(s=>'Sc '+s.no+' ('+eff(s)+', '+s.loc+')').join('; ')||'no scenes yet')}</p>`:'<p class="small faint">This is the last shoot day.</p>'}</div>
+  </div>`;
+  const kv=[['Production',P.production||''],['Film',P.title||''],['Day',dayLabel(d,nums,dates)+' of '+shoot.length],...(D.sun?[['Sunrise / sunset',D.sun.rise+' / '+D.sun.set]]:[]),...CS_TOP.map(([f,l])=>[l,D.v(f)]),['Key credits',G.credits||'']].filter(([,v])=>v);
+  const cols2=[{h:'Item',w:22},{h:'Details',w:78}];
+  return {html,exp:{orient:'portrait',flow:true,sheets:[
+    {name:'Call sheet',cols:cols2,rows:kv},
+    {name:'Scenes',cols:[{h:'Time',w:12},{h:'Sc No',w:7},{h:'Effect / Time',w:12},{h:'Location',w:18},{h:'Pages',w:8},{h:'Scene description',w:38},{h:'Cast',w:22}],rows:d.items.map(it=>{const s=scById(it.sid);return s?[it.t||'',s.no,eff(s),s.loc,fmtPg(pgE(s)),s.desc,s.artists.map(aName).join(', ')]:null}).filter(Boolean)},
+    {name:'Cast',cols:[{h:'Character',w:18},{h:'Artist',w:16},{h:'Phone',w:13},{h:'Scenes',w:12},{h:'Pick-up',w:9},{h:'Makeup',w:9},{h:'On set',w:9},{h:'Remarks',w:16}],rows:D.cast.map(a=>[a.name,a.actor||'',a.phone||'',D.sc.filter(s=>s.artists.includes(a.id)).map(s=>s.no).join(', '),D.cs['c:'+a.id+':pu']||'',D.cs['c:'+a.id+':mu']||'',D.cs['c:'+a.id+':on']||D.call,D.cs['c:'+a.id+':rm']||''])},
+    ...(D.crowd.length||D.cs.crowdNote?[{name:'Crowd - juniors',cols:cols2,rows:[...D.crowd,...(D.cs.crowdNote?[['Notes',D.cs.crowdNote]]:[])]}]:[]),
+    {name:'Department calls',cols:cols2,rows:DEPTS.map(n=>[n,D.cs['dept:'+n]||D.v('crewCall')])},
+    ...(D.req.length||D.cs.req?[{name:'Requirements',cols:cols2,rows:[...D.req,...(D.cs.req?[['Other',D.cs.req]]:[])]}]:[]),
+    ...(crew.length?[{name:'Crew list',cols:[{h:'Department',w:20},{h:'Role',w:24},{h:'Name',w:30},{h:'Phone',w:20}],rows:crew.map(c=>[c.dept||'',c.role||'',c.name||'',c.phone||''])}]:[]),
+    ...(nx?[{name:'Advance schedule',cols:cols2,rows:[[dayLabel(nx,nums,dates),dayScenes(nx).map(s=>'Sc '+s.no+' ('+eff(s)+', '+s.loc+')').join('; ')]]}]:[])]}}};
+
+/* ---------- Editing, moving, buttons ---------- */
+function prodCommit(el,v){const k=el.dataset.pk;v=String(v).replace(/ /g,' ').trim();
+  if(k==='shot'){const s=scById(el.dataset.sid),h=s&&shotsOf(s).find(x=>x.id===el.dataset.shot),f=el.dataset.sf;if(!h||(h[f]||'')===v)return null;snapshot();const o=h[f]||'';h[f]=['size','cast'].includes(f)?U(v):v;return {sids:[s.id],desc:`Sc ${s.no} · Shot ${h.no} · ${(SHOT_F.find(x=>x[0]===f)||[,f])[1]}: "${cut(o)||'—'}" → "${cut(v)||'—'}"`}}
+  if(k==='pg'){const s=scById(el.dataset.sid);if(!s)return null;const e=parsePg(v);if(!e||e===pgE(s)){el.innerText=fmtPg(pgE(s));return null}snapshot();s.pages8=e;needsRender=true;return {sids:[s.id],desc:`Sc ${s.no} · Length set to ${fmtPg(e)} pages`}}
+  if(k==='day'){const d=dayById(el.dataset.day),f=el.dataset.df;if(!d||(d[f]||'')===v)return null;snapshot();d[f]=v;return {sids:[],desc:`Schedule · ${dayLabel(d)} · note edited`}}
+  if(k==='oi'){const d=dayById(el.dataset.day),it=d&&d.items.find(x=>x.sid===el.dataset.sid),f=el.dataset.of;if(!it)return null;const s=scById(it.sid);const cur=f==='shots'?(it.shots||shotsOf(s).map(h=>h.no).join(', ')):(it[f]||'');if(cur===v)return null;snapshot();it[f]=v;return {sids:[],desc:`Shoot order · ${dayLabel(d)} · Sc ${s?s.no:''} · ${({t:'Time',shots:'Shots',n:'Notes'})[f]} → "${cut(v)||'—'}"`}}
+  if(k==='cs'){const d=dayById(el.dataset.day),f=el.dataset.cf;if(!d)return null;d.cs=d.cs||{};const shown=csData(d).v(f);if((d.cs[f]||'')===v||(!d.cs[f]&&v===shown))return null;snapshot();d.cs[f]=v;return {sids:[],desc:`Call sheet · ${dayLabel(d)} · edited`}}
+  if(k==='csg'){P.csg=P.csg||{};const f=el.dataset.cf;if((P.csg[f]||'')===v)return null;snapshot();P.csg[f]=v;return {sids:[],desc:'Call sheet · key credits edited'}}
+  if(k==='crew'){const c=(P.crew||[])[+el.dataset.ci],f=el.dataset.cf;if(!c||(c[f]||'')===v)return null;snapshot();c[f]=f==='dept'?v:v;return {sids:[],desc:`Crew list · ${f} → "${cut(v)||'—'}"`}}
+  if(k==='sset'){const S=SCH(),f=el.dataset.sf;if((S[f]||'')===v)return null;snapshot();S[f]=v;return {sids:[],desc:'Schedule · notes for the AI planner edited'}}
+  return null}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-dd]');if(!t||!P)return;
+  if(t.dataset.dd){const [aid,did]=t.dataset.dd.split('|');const r=doodData().find(x=>x.a.id===aid),c=r&&r.cells.find(x=>x.d.id===did);if(!c)return;const nx=DOOD_CYCLE[(DOOD_CYCLE.indexOf(c.code)+1)%DOOD_CYCLE.length];
+    snapshot();P.doodx=P.doodx||{};P.doodx[aid]=P.doodx[aid]||{};if(nx===c.auto)delete P.doodx[aid][did];else P.doodx[aid][did]=nx;prodSave(`Day out of days · ${aName(aid)} · ${dayLabel(dayById(did))} set to ${nx||'not called'}`);return}
+  const a=t.dataset.pa,S=SCH(),s=t.dataset.sid?scById(t.dataset.sid):null,d=t.dataset.day?dayById(t.dataset.day):null,idx=d?S.days.indexOf(d):-1;
+  const armed=msg=>{if(t.dataset.armed)return true;t.dataset.armed=1;const o=t.textContent;t.textContent=msg;setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent=o}},3500);return false};
+  if(a==='shotsAI')shotJob();
+  if(a==='shotAI1'&&s){if(shotsOf(s).length&&!armed('Replace these shots?'))return;shotJob(s.id)}
+  if(a==='shotAdd'&&s){snapshot();shotsOf(s).push(newShot(s));prodSave(`Sc ${s.no} · shot added`,[s.id])}
+  if((a==='shotDel'||a==='shotUp')&&s){const L=shotsOf(s),i=L.findIndex(h=>h.id===t.dataset.shot);if(i<0)return;snapshot();if(a==='shotDel'){const n=L[i].no;L.splice(i,1);prodSave(`Sc ${s.no} · shot ${n} deleted`,[s.id])}else if(i>0){[L[i-1],L[i]]=[L[i],L[i-1]];prodSave(`Sc ${s.no} · shot ${L[i-1].no} moved up`,[s.id])}}
+  if(a==='shotRenum'&&s){snapshot();shotsOf(s).forEach((h,i)=>h.no=s.no+'-'+(i+1));prodSave(`Sc ${s.no} · shots renumbered`,[s.id])}
+  if(a==='schedAI'){if(S.days.some(x=>x.items.length)&&!armed('Click again to replace the plan'))return;schedJob()}
+  if(a==='schedQuick'){if(S.days.some(x=>x.items.length)&&!armed('Click again to replace the plan'))return;snapshot();S.days=quickPlan();S.aiNote='';prodSave(`Quick plan made: ${S.days.length} shoot days`);toast(`${S.days.length} shoot days, grouped by location and day/night. Move anything you like.`)}
+  if(a==='dayAdd'){snapshot();S.days.push(newDay());prodSave('Shoot day added')}
+  if(a==='dayOffAdd'){snapshot();S.days.push(newDay({type:'off'}));prodSave('Day off added')}
+  if(a==='dayOffAfter'&&d){snapshot();S.days.splice(idx+1,0,newDay({type:'off'}));prodSave(`Day off added after ${dayLabel(d)}`)}
+  if((a==='dayUp'||a==='dayDown')&&d){const j=a==='dayUp'?idx-1:idx+1;if(j<0||j>=S.days.length)return;snapshot();[S.days[idx],S.days[j]]=[S.days[j],S.days[idx]];prodSave(`${dayLabel(d)} moved ${a==='dayUp'?'earlier':'later'}`)}
+  if(a==='dayDel'&&d){snapshot();const n=d.items.length,lab=dayLabel(d);S.days.splice(idx,1);prodSave(`${lab} deleted${n?`; ${n} scenes back to "Not scheduled yet"`:''}`);toast('Day deleted. Undo brings it back.')}
+  if(a==='scUp'&&s){const dd=dayById(sceneDay()[s.id]);if(!dd)return;const i=dd.items.findIndex(x=>x.sid===s.id);if(i>0){snapshot();[dd.items[i-1],dd.items[i]]=[dd.items[i],dd.items[i-1]];prodSave(`Sc ${s.no} moved earlier in ${dayLabel(dd)}`)}}
+  if((a==='oUp'||a==='oDown')&&d){const i=d.items.findIndex(x=>x.sid===t.dataset.sid),j=a==='oUp'?i-1:i+1;if(i<0||j<0||j>=d.items.length)return;snapshot();[d.items[i],d.items[j]]=[d.items[j],d.items[i]];prodSave(`Shoot order · ${dayLabel(d)} reordered`)}
+  if(a==='fillTimes'&&d){snapshot();fillTimes(d);prodSave(`Shoot order · ${dayLabel(d)} · times filled in`)}
+  if(a==='orderAI'&&d)orderJob(d.id);
+  if(a==='doodReset'){if(!P.doodx||!Object.keys(P.doodx).length){toast('No manual changes to clear.');return}snapshot();P.doodx={};prodSave('Day out of days · manual changes cleared')}
+  if(a==='crewAdd'){snapshot();P.crew=P.crew||[];P.crew.push({dept:'',role:'',name:'',phone:''});prodSave('Crew member added')}
+  if(a==='crewDel'){snapshot();(P.crew||[]).splice(+t.dataset.ci,1);prodSave('Crew member removed')}});
+document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset)return;if(el.tagName==='INPUT'&&(el.dataset.sset!==undefined||el.dataset.ddate||el.dataset.dcall||el.dataset.dwrap))el.blur();
+  if(el.dataset.sset!==undefined){const S=SCH(),f=el.dataset.sset;snapshot();S[f]=f==='weekOff'?(el.value===''?[]:[+el.value]):el.value;prodSave(`Schedule settings · ${f} changed`)}
+  else if(el.dataset.dtype){const d=dayById(el.dataset.dtype);if(!d)return;snapshot();d.type=el.value;if(d.type!=='shoot'&&d.items.length){toast(`${d.items.length} scenes moved to "Not scheduled yet".`);d.items=[]}prodSave(`Day set to ${el.value}`)}
+  else if(el.dataset.ddate){const d=dayById(el.dataset.ddate);if(!d)return;snapshot();d.date=el.value;prodSave(`${dayLabel(d)} date ${el.value?'fixed':'cleared'}`)}
+  else if(el.dataset.movesc){const s=scById(el.dataset.movesc);if(!s)return;snapshot();let to=el.value;if(to==='+'){const nd=newDay();SCH().days.push(nd);to=nd.id}placeScene(s.id,to||null);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)}
+  else if(el.dataset.dcall||el.dataset.dwrap){const d=dayById(el.dataset.dcall||el.dataset.dwrap);if(!d)return;snapshot();d[el.dataset.dcall?'call':'wrap']=el.value;prodSave(`${dayLabel(d)} ${el.dataset.dcall?'call':'wrap'} set to ${el.value}`)}
+  else if(el.hasAttribute('data-oday')){VIEW.oday=el.value;render()}
+  else if(el.hasAttribute('data-csday')){VIEW.csday=el.value;render()}});
+/* Drag scenes between days (desktop) */
+let DRAG=null;
+document.addEventListener('dragstart',e=>{const r=e.target.closest&&e.target.closest('tr[data-drag]');if(!r)return;DRAG=r.dataset.drag;r.classList.add('dragging');try{e.dataTransfer.setData('text/plain',DRAG);e.dataTransfer.effectAllowed='move'}catch(x){}});
+document.addEventListener('dragend',e=>{document.querySelectorAll('.dragging,.drop-over').forEach(x=>x.classList.remove('dragging','drop-over'));DRAG=null});
+document.addEventListener('dragover',e=>{if(!DRAG)return;const z=e.target.closest&&e.target.closest('[data-dropday]');if(!z)return;e.preventDefault();document.querySelectorAll('.drop-over').forEach(x=>{if(x!==z)x.classList.remove('drop-over')});z.classList.add('drop-over')});
+document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closest&&e.target.closest('[data-dropday]');if(!z)return;e.preventDefault();const row=e.target.closest('tr[data-drag]');const sid=DRAG;DRAG=null;
+  const before=row&&row.dataset.drag!==sid?row.dataset.drag:null;const to=z.dataset.dropday||null;const s=scById(sid);if(!s)return;snapshot();placeScene(sid,to,before);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)});
+
 function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.g!==g){g=p.g;h+=`<h6>${esc(g)}</h6>`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic i-${p.id}" aria-hidden="true"></i><span>${esc(p.nav)}</span></button>`});return h}
 let lastExp=null;
 function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
@@ -1570,9 +1906,9 @@ async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');r
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
     else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
-  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure']];
+  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
-    jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();(r.exp?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
+    jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
   await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 let XLSX_STYLED=false;
 async function loadXlsx(){if(window.XLSX)return;try{await loadScript(CDN.xlsxStyle);XLSX_STYLED=true}catch(e){await loadScript(CDN.xlsx);XLSX_STYLED=false}}
@@ -1611,11 +1947,12 @@ async function buildPdf(title,exp){await loadScript(CDN.jspdf);await loadScript(
       body:[...(c.sub?[[{content:c.sub,colSpan:2,styles:{fontStyle:'italic',textColor:60}}]]:[]),...c.rows.map(([k,v])=>[k,v||''])],theme:'grid',styles:{fontSize:8.5,cellPadding:4,lineColor:[200,200,200],textColor:30,overflow:'linebreak'},columnStyles:{0:{cellWidth:110,textColor:90,fontStyle:'bold'}},didDrawPage:()=>head(),pageBreak:'auto',rowPageBreak:'avoid'});
     y=doc.lastAutoTable.finalY+16;if(y>H-120&&ci<sh.cards.length-1){doc.addPage();head();y=66}});foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
   const totalW=sh.cols.reduce((a,c)=>a+(c.w||14),0);const avail=W-72;
-  exp.sheets.forEach((s,si)=>{if(si)doc.addPage();
-    doc.autoTable({startY:62,margin:{top:62,left:36,right:36,bottom:34},head:[s.cols.map(c=>c.h)],
+  exp.sheets.forEach((s,si)=>{let y0=62;const tw=s.cols.reduce((a,c)=>a+(c.w||14),0)||totalW;
+    if(exp.flow){y0=si?doc.lastAutoTable.finalY+30:76;if(y0>H-90){doc.addPage();head();y0=76}doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(20);doc.text(U(s.name),36,y0-8);doc.setFont('helvetica','normal')}else if(si)doc.addPage();
+    doc.autoTable({startY:y0,margin:{top:62,left:36,right:36,bottom:34},head:[s.cols.map(c=>c.h)],
       body:s.rows.map(r=>r&&r.group?[{content:r.group,colSpan:s.cols.length,styles:{fillColor:[217,217,217],fontStyle:'bold',textColor:0,halign:'center'}}]:r.map(v=>v==null?'':String(v))),
       theme:'grid',styles:{fontSize:8,cellPadding:3.5,lineColor:[0,0,0],lineWidth:.5,textColor:15,overflow:'linebreak',valign:'middle',halign:'center'},headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',halign:'center'},
-      columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/totalW}])),
+      columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/tw}])),
       didParseCell:d=>{const k=hdrKind(s.cols[d.column.index]?s.cols[d.column.index].h:'');const hx={eff:[157,195,230],loc:[255,230,153],desc:[221,235,247]};
         if(d.section==='head'&&hx[k])d.cell.styles.fillColor=hx[k];
         if(d.section==='body'&&k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string')d.cell.styles.fillColor=/NIGHT/i.test(d.cell.raw)?[227,231,247]:[251,242,208]},

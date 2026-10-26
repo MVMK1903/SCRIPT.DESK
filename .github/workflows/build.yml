@@ -102,6 +102,11 @@ jobs:
       - run: npm run icons -- --ios || echo "icon generation skipped"
         working-directory: mobile
       - run: npx cap sync ios
+      - name: Let the Files app show ScriptDesk's Documents folder
+        working-directory: mobile
+        run: |
+          /usr/libexec/PlistBuddy -c 'Add :UIFileSharingEnabled bool true' ios/App/App/Info.plist || true
+          /usr/libexec/PlistBuddy -c 'Add :LSSupportsOpeningDocumentsInPlace bool true' ios/App/App/Info.plist || true
         working-directory: mobile
       - name: Build app without signing (xtool signs it with your Apple ID when installing)
         working-directory: mobile/ios/App

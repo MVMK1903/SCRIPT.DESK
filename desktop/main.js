@@ -1,13 +1,27 @@
 // ScriptDesk desktop shell (Windows and Mac). Loads the bundled offline app.
-const { app, BrowserWindow, shell, Menu, session } = require('electron');
+const { app, BrowserWindow, shell, Menu, session, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
+
+// Saving to the hard disk: everything goes under Documents/ScriptDesk
+const ROOT = () => path.join(app.getPath('documents'), 'ScriptDesk');
+ipcMain.handle('sd:root', () => ROOT());
+ipcMain.handle('sd:open', () => shell.openPath(ROOT()));
+ipcMain.handle('sd:write', (e, rel, payload) => {
+  const root = ROOT();
+  const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
+  if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, payload && payload.b64 ? Buffer.from(payload.b64, 'base64') : String((payload && payload.text) || ''));
+  return true;
+});
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440, height: 900, minWidth: 900, minHeight: 600,
     backgroundColor: '#0d0e12', title: 'ScriptDesk', autoHideMenuBar: true,
     icon: path.join(__dirname, 'build', 'icon.png'),
-    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true }
+    webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true }
   });
   win.loadFile(path.join(__dirname, 'www', 'index.html'));
   // Links (e.g. console.anthropic.com) open in the normal browser, not inside the app.

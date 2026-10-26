@@ -173,6 +173,12 @@ a{color:var(--accent)}
 @media (max-width:820px){.gst{margin-inline:-16px;margin-bottom:-120px}.gst-tiles{grid-template-columns:1fr 1fr;gap:10px}.gst-alts li{flex-wrap:wrap}.gst-pick select{max-width:44vw}.gst-top{top:calc(var(--appbar-h,0px) + env(safe-area-inset-top,0px))}}
 @media (prefers-reduced-motion:reduce){.gst *{animation:none!important;transition:none!important}}
 
+
+.bhead{display:flex;align-items:center;gap:10px;margin:22px 0 8px;flex-wrap:wrap}.bhh{font-weight:700;font-size:13px;letter-spacing:.06em}.bhname{outline:none;border-radius:6px;padding:2px 4px}
+.bacts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.bbar2{position:relative;height:10px;border-radius:6px;background:var(--line,#e6e3dc);overflow:hidden;min-width:120px}.bbar2 i{position:absolute;left:0;top:0;bottom:0;display:block}.bbar2 i.pl{background:#c9c4b8}.bbar2 i.ac{background:#2f7d5b}.bbar2 i.ov{background:#c0392b}
+.rules{margin:14px 0}.rules li{margin:4px 0;line-height:1.5}.pgn{font-size:11px;color:var(--mute,#888)}.bsum td{font-variant-numeric:tabular-nums}
+.tt-tb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px}.tt-hide{display:none!important}.ttx{border:0;background:#0001;color:#a33;border-radius:50%;width:18px;height:18px;line-height:16px;cursor:pointer;font-size:13px;margin-left:6px;padding:0}.ttx.rowx{margin:0 6px 0 0}.tt-cx[contenteditable],.tt-cx div{min-width:90px}
+.tt-custom td{background:rgba(47,125,91,.06)}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .gcard{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
 .gcard p{margin:0;line-height:1.5}.gc-h{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}.gc-h b{font-size:14px}
@@ -469,6 +475,7 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-order{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M4 12h10 M4 18h10 M18 5v14 M15 16l3 3 3-3'/%3E%3C/svg%3E")}
 .i-dood{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4z M4 10h16 M4 15h16 M10 4v16 M15 4v16'/%3E%3C/svg%3E")}
 .i-callsheet{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6v3H9z M7 5H5v16h14V5h-2 M8 11h8 M8 15h6'/%3E%3C/svg%3E")}
+.i-budget{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='18' height='12' rx='2'/%3E%3Cpath d='M12 9v6M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.3-2.5 1.5-2.5.6-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5'/%3E%3C/svg%3E")}
 .i-gear{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8'/%3E%3C/svg%3E")}
 .i-run{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.200 6.300L20.500 11.500l-6.300 2.200L12 20l-2.200-6.300L3.500 11.500l6.300-2.200z M19 3v4 M17 5h4'/%3E%3C/svg%3E")}
 .i-undo{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E")}
@@ -566,7 +573,8 @@ const PAGES=[
  {g:'Shooting',id:'order',nav:'Shoot order',t:'Shoot order'},
  {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
  {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'},
- {g:'Shooting',id:'gear',nav:'Camera & equipment',t:'Camera & equipment'}];
+ {g:'Shooting',id:'gear',nav:'Camera & equipment',t:'Camera & equipment'},
+ {g:'Budget',id:'budget',nav:'Budget & rates',t:'Budget & rate card'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
 const LSKEY='scriptdesk.v2.';
 
@@ -578,9 +586,102 @@ const U=s=>String(s||'').trim().toUpperCase();
 const norm=s=>U(s).replace(/\(.*?\)/g,'').replace(/[^A-Z0-9ऀ-෿ ]+/g,' ').replace(/\s+/g,' ').trim();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const today=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-function lsGet(k){try{const v=localStorage.getItem(LSKEY+k);return v?JSON.parse(v):null}catch(e){return null}}
-function lsSet(k,v){try{localStorage.setItem(LSKEY+k,JSON.stringify(v));return true}catch(e){return false}}
-function lsDel(k){try{localStorage.removeItem(LSKEY+k)}catch(e){}}
+function lsGet(k){try{if(SEC.on&&PROT(k)){const m=SEC.mem[k];return m?JSON.parse(m):null}const v=localStorage.getItem(LSKEY+k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.mem[k]=JSON.stringify(v);secPersist(k);return true}localStorage.setItem(LSKEY+k,JSON.stringify(v));return true}catch(e){return false}}
+function lsDel(k){try{if(SEC.on&&PROT(k)){delete SEC.mem[k]}localStorage.removeItem(LSKEY+k)}catch(e){}}
+/* ---------- Security: encryption on this device (AES-256-GCM, key from your passphrase) ---------- */
+const SEC={on:false,unlocked:false,dek:null,cfg:null,mem:{},pend:{},chain:Promise.resolve()};
+const SEC_ITER=310000;
+const PROT=k=>k==='index'||k==='ai'||k==='apikey'||k.startsWith('p.');
+try{const c=localStorage.getItem('scriptdesk.v2.sec');if(c){SEC.cfg=JSON.parse(c);SEC.on=true}}catch(e){}
+const b64=u=>{u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+async function secKek(pass,salt,iter){const m=await crypto.subtle.importKey('raw',new TextEncoder().encode(String(pass).normalize('NFKC')),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['wrapKey','unwrapKey'])}
+async function secWrap(kek,dek){const iv=rnd(12);return {iv:b64(iv),ct:b64(await crypto.subtle.wrapKey('raw',dek,kek,{name:'AES-GCM',iv}))}}
+const secUnwrap=(kek,w)=>crypto.subtle.unwrapKey('raw',unb64(w.ct),kek,{name:'AES-GCM',iv:unb64(w.iv)},{name:'AES-GCM',length:256},true,['encrypt','decrypt']);
+const recNorm=s=>String(s||'').toUpperCase().replace(/[^A-Z2-7]/g,'');
+function newRecovery(){const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',b=rnd(20);let bits='';b.forEach(x=>bits+=x.toString(2).padStart(8,'0'));let o='';for(let i=0;i<160;i+=5)o+=A[parseInt(bits.slice(i,i+5),2)];return o.match(/.{4}/g).join('-')}
+async function secCfg(dek,pass,rec,old){const sp=rnd(16),sr=old?unb64(old.saltR):rnd(16);return {v:1,iter:SEC_ITER,saltP:b64(sp),wp:await secWrap(await secKek(pass,sp,SEC_ITER),dek),saltR:b64(sr),wr:rec?await secWrap(await secKek(recNorm(rec),sr,SEC_ITER),dek):old.wr}}
+async function secOpen(cfg,secret){const it=cfg.iter||SEC_ITER;try{return await secUnwrap(await secKek(secret,unb64(cfg.saltP),it),cfg.wp)}catch(e){}try{return await secUnwrap(await secKek(recNorm(secret),unb64(cfg.saltR),it),cfg.wr)}catch(e){}return null}
+async function aesEnc(dek,str){const iv=rnd(12);return 'ENC1:'+b64(iv)+':'+b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},dek,new TextEncoder().encode(str)))}
+async function aesDec(dek,s){const p=String(s).split(':');return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},dek,unb64(p[2])))}
+function secPersist(k){if(SEC.pend[k])return;SEC.pend[k]=1;SEC.chain=SEC.chain.then(async()=>{SEC.pend[k]=0;try{if(SEC.mem[k]==null)return;localStorage.setItem(LSKEY+k,await aesEnc(SEC.dek,SEC.mem[k]))}catch(e){}})}
+async function secLoadAll(){SEC.mem={};const keys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(LSKEY))keys.push(k.slice(LSKEY.length))}
+  for(const k of keys){if(!PROT(k))continue;const v=localStorage.getItem(LSKEY+k);if(v&&v.startsWith('ENC1:'))try{SEC.mem[k]=await aesDec(SEC.dek,v)}catch(e){}}}
+function secGate(){return new Promise(res=>{if(!SEC.on||SEC.unlocked)return res();const d=document.createElement('div');d.id='seclock';d.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg,#f4f3ef);display:flex;align-items:center;justify-content:center;padding:20px';
+  d.innerHTML=`<form class="modal" style="max-width:420px;width:100%;padding:26px;border-radius:20px;background:var(--bg-2,#fff)"><h2 style="margin:0 0 6px">ScriptDesk is locked</h2><p class="small muted" style="line-height:1.5">Your scripts are encrypted on this device. Enter your passphrase, or your recovery key.</p><input type="password" id="sl-p" autocomplete="current-password" class="srch" style="width:100%;margin:10px 0" placeholder="Passphrase or recovery key"><div id="sl-m" class="small" style="color:#c0392b;min-height:18px" role="alert"></div><button class="btn pri" style="width:100%" id="sl-go" type="submit">Unlock</button></form>`;document.body.appendChild(d);const inp=d.querySelector('#sl-p');inp.focus();
+  d.querySelector('form').onsubmit=async e=>{e.preventDefault();const b=d.querySelector('#sl-go');b.disabled=true;d.querySelector('#sl-m').textContent='Checking…';const dek=await secOpen(SEC.cfg,inp.value);if(!dek){b.disabled=false;d.querySelector('#sl-m').textContent='That is not right. Try again.';inp.select();return}
+    SEC.dek=dek;await secLoadAll();SEC.unlocked=true;d.remove();res()}})}
+async function secEnable(pass){const dek=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']),rec=newRecovery();const cfg=await secCfg(dek,pass,rec);
+  const ids=(lsGet('index')||[]).map(x=>x.id);const idbPlain={};for(const id of ids){const v=await IDB.get('p.'+id);if(v)idbPlain[id]=v}
+  SEC.mem={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(LSKEY)){const kk=k.slice(LSKEY.length);if(PROT(kk)){const v=localStorage.getItem(k);if(v&&!v.startsWith('ENC1:'))SEC.mem[kk]=v}}}
+  SEC.dek=dek;SEC.cfg=cfg;
+  for(const k of Object.keys(SEC.mem))localStorage.setItem(LSKEY+k,await aesEnc(dek,SEC.mem[k]));
+  SEC.on=true;SEC.unlocked=true;for(const id of Object.keys(idbPlain))await IDB.set('p.'+id,idbPlain[id]);
+  localStorage.setItem(LSKEY+'sec',JSON.stringify(cfg));cloudOK=false;DISK.sched(true);return rec}
+async function secDisable(){const ids=(lsGet('index')||[]).map(x=>x.id);const idb={};for(const id of ids){const v=await IDB.get('p.'+id);if(v)idb[id]=v}
+  await SEC.chain;for(const k of Object.keys(SEC.mem))localStorage.setItem(LSKEY+k,SEC.mem[k]);
+  SEC.on=false;SEC.unlocked=false;SEC.dek=null;SEC.cfg=null;SEC.mem={};localStorage.removeItem(LSKEY+'sec');for(const id of Object.keys(idb))await IDB.set('p.'+id,idb[id]);DISK.sched(true)}
+async function secChangePass(np){const cfg=await secCfg(SEC.dek,np,null,SEC.cfg);SEC.cfg=cfg;localStorage.setItem(LSKEY+'sec',JSON.stringify(cfg))}
+/* An encrypted file (.scriptdesk): carries its own key wrapping, so any copy opens with the passphrase */
+async function envMake(str,askPassFn){let dek=SEC.dek,cfg=SEC.cfg;if(!(SEC.on&&dek)){const pass=await askPassFn();if(!pass)return null;dek=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);const c=await secCfg(dek,pass,newRecovery());cfg=c}
+  return JSON.stringify({scriptdesk:'enc1',cfg,data:await aesEnc(dek,str)})}
+async function envOpen(env,pass){const dek=await secOpen(env.cfg,pass);if(!dek)throw new Error('Wrong passphrase.');return aesDec(dek,env.data)}
+function askPass(title,label,cb){openModal(`<div class="modal-h"><h2>${esc(title)}</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><label class="small muted" for="apx">${esc(label)}</label><input type="password" class="srch" id="apx" style="width:100%;margin:8px 0" autocomplete="off"><div class="bacts"><button class="btn pri" id="apok">OK</button></div></div>`);
+  const go=()=>{const v=$('#apx').value;if(!v)return;closeModal();cb(v)};$('#apok').onclick=go;$('#apx').onkeydown=e=>{if(e.key==='Enter')go()};$('#apx').focus()}
+const askPassP=(t,l)=>new Promise(r=>askPass(t,l,r));
+/* ---------- Saving to this computer or phone ---------- */
+const DISK={mode:null,on:false,handle:null,msg:'',t:0,safe:s=>String(s||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')||'film',
+  async init(){const pref=lsGet('disk')||{};if(window.sdDisk){this.mode='electron';this.root=await window.sdDisk.root().catch(()=>'');this.on=pref.on!==false}
+    else if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Filesystem){this.mode='cap';this.root='Documents/ScriptDesk';this.on=pref.on!==false}
+    else if(typeof window.showDirectoryPicker==='function'&&STANDALONE){this.mode='fsa';try{this.handle=await IDB.get('diskdir')}catch(e){}this.root=this.handle?this.handle.name:'';this.on=!!this.handle&&pref.on!==false}},
+  async fsaDir(rel){const h=this.handle;if(!h)throw new Error('no folder');if(h.queryPermission&&await h.queryPermission({mode:'readwrite'})!=='granted'){if(!(navigator.userActivation&&navigator.userActivation.isActive)||await h.requestPermission({mode:'readwrite'})!=='granted')throw new Error('needs permission')}
+    const parts=rel.split('/').filter(Boolean),file=parts.pop();let d=h;for(const p of parts)d=await d.getDirectoryHandle(p,{create:true});return {d,file}},
+  async write(rel,data){if(!this.mode)return false;try{const text=typeof data==='string';
+      if(this.mode==='electron')await window.sdDisk.write(rel,text?{text:data}:{b64:b64(data)});
+      else if(this.mode==='cap'){const F=window.Capacitor.Plugins.Filesystem;await F.writeFile(Object.assign({path:'ScriptDesk/'+rel,directory:'DOCUMENTS',recursive:true},text?{data,encoding:'utf8'}:{data:b64(data)}))}
+      else{const {d,file}=await this.fsaDir(rel);const w=await (await d.getFileHandle(file,{create:true})).createWritable();await w.write(data);await w.close()}
+      this.msg='';return true}catch(e){this.msg=e&&e.message==='needs permission'?'Allow access to the folder (press Save now)':'Could not write to the folder';this.err=this.msg;return false}},
+  sched(now){if(!this.on||!P||!this.mode)return;clearTimeout(this.t);this.t=setTimeout(()=>this.saveProject(),now?50:2000)},
+  async saveProject(){if(!this.on||!P||P.sample)return false;const dir='Projects/'+this.safe(P.title)+'__'+P.id.slice(0,6)+'/';const json=JSON.stringify(P);
+    let body=json,txt=P.scenes.map(s=>headingLine(s)+'\n\n'+s.text).join('\n\n');let name='project.scriptdesk.json',tn='script.txt';
+    if(SEC.on&&SEC.dek){body=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,json)});txt=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,txt)});name='project.scriptdesk';tn='script.scriptdesk'}
+    const a=await this.write(dir+name,body),b=await this.write(dir+tn,txt);if(a&&b)lsSet('disklast',{at:Date.now(),dir});renderDiskNote();return a&&b},
+  async exportCopy(filename,data){if(!this.on||!this.mode||!P)return;await this.write('Exports/'+this.safe(P.title)+'/'+filename,data)}};
+function renderDiskNote(){const n=document.getElementById('diskNote');if(n)n.innerHTML=diskNoteHtml()}
+function diskNoteHtml(){const l=lsGet('disklast');if(!DISK.mode)return 'Saving to a folder is not available in this view. Open ScriptDesk as the Windows, Mac, Android or iPhone app, or in Chrome or Edge, to choose a folder. Files you export are saved through your browser downloads.';
+  if(!DISK.on)return DISK.mode==='fsa'?'Choose a folder and every script and export is saved there.':'Saving to the device is switched off.';
+  return `Saving to <b>${esc(DISK.root||'')}</b>${l?' · last saved '+new Date(l.at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}${DISK.msg?`<br><span style="color:#c0392b">${esc(DISK.msg)}</span>`:''}`}
+function openSecurity(){const on=SEC.on;openModal(`<div class="modal-h"><h2>Security &amp; saving</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+  <h3 style="margin:0 0 6px">Encryption</h3>
+  ${on?`<p class="small" style="line-height:1.55"><b>On.</b> Your scripts, project list and AI keys are encrypted (AES-256) on this device. They can only be opened with your passphrase or your recovery key. If you lose both, nobody can recover them, including us.</p>
+   <div class="bacts"><button class="btn sm" data-sec="change">Change passphrase</button><button class="btn sm" data-sec="expbak">Export encrypted backup</button><button class="btn sm" data-sec="off">Turn off encryption</button></div>`
+  :`<p class="small muted" style="line-height:1.55">Locks your scripts with a passphrase you choose. Everything stored on this device is encrypted, and so are the backups and project files saved to disk. Cloud sync inside Claude is switched off while encryption is on.</p>
+   <input type="password" class="srch" id="sc-p1" style="width:100%;margin:6px 0" placeholder="Choose a passphrase (8 or more characters)" autocomplete="new-password"><input type="password" class="srch" id="sc-p2" style="width:100%;margin:6px 0" placeholder="Type it again" autocomplete="new-password"><div id="sc-m" class="small" style="color:#c0392b;min-height:16px"></div>
+   <div class="bacts"><button class="btn pri sm" data-sec="on">Turn on encryption</button><button class="btn sm" data-sec="expbak">Export encrypted backup</button></div>`}
+  <div class="bacts"><button class="btn sm" data-sec="imp">Open an encrypted backup (.scriptdesk)</button></div>
+  <div class="banner info small" style="display:block;line-height:1.5;margin-top:10px">One limit to know: when you run the AI breakdown, the scene text is sent to the AI service you chose, because that is how the AI reads it. For a confidential script use Ollama on this computer, which keeps everything local.</div>
+  <h3 style="margin:22px 0 6px">Saving to your computer or phone</h3><p class="small muted" id="diskNote" style="line-height:1.55">${diskNoteHtml()}</p>
+  <div class="bacts">${DISK.mode==='fsa'?'<button class="btn sm" data-sec="folder">Choose folder</button>':''}${DISK.mode?`<button class="btn sm" data-sec="dtog">${DISK.on?'Switch off':'Switch on'}</button><button class="btn sm pri" data-sec="dnow">Save now</button>`:''}${DISK.mode==='electron'?'<button class="btn sm" data-sec="dopen">Open folder</button>':''}</div>
+  <p class="small muted" style="line-height:1.5">Every script is saved as <i>Projects / name / project</i> plus a plain script text file, and every report you export is also copied to <i>Exports</i>. ${on?'Project files are encrypted. Exported reports stay readable so you can print and share them.':''}</p></div>`);}
+document.addEventListener('click',async e=>{const t=e.target.closest('[data-sec]');if(!t)return;const a=t.dataset.sec,msg=m=>{const el=document.getElementById('sc-m');if(el)el.textContent=m};
+  if(a==='open'){closeModal();openSecurity();return}
+  if(a==='on'){const p1=$('#sc-p1').value,p2=$('#sc-p2').value;if(p1.length<8)return msg('Use at least 8 characters.');if(p1!==p2)return msg('The two passphrases are different.');t.disabled=true;msg('');
+    try{const rec=await secEnable(p1);closeModal();showRecovery(rec)}catch(err){t.disabled=false;msg('Could not turn encryption on.')}return}
+  if(a==='off'){if(!confirm('Turn off encryption? Your scripts will be stored unlocked on this device again.'))return;await secDisable();closeModal();toast('Encryption is off.');return}
+  if(a==='change'){askPass('Change passphrase','New passphrase (8 or more characters)',async v=>{if(v.length<8)return toast('Use at least 8 characters.');await secChangePass(v);toast('Passphrase changed.')});return}
+  if(a==='expbak'){if(!P)return toast('Open a project first.');const s=await envMake(JSON.stringify(P),()=>askPassP('Backup passphrase','Choose a passphrase for this backup file'));if(s)await saveFile(DISK.safe(P.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',s);return}
+  if(a==='imp'){const inp=document.createElement('input');inp.type='file';inp.accept='.scriptdesk,.json';inp.onchange=async()=>{const f=inp.files[0];if(f)await openEncBackup(JSON.parse(await f.text()))};inp.click();return}
+  if(a==='folder'){try{const h=await window.showDirectoryPicker({mode:'readwrite'});DISK.handle=h;DISK.root=h.name;DISK.on=true;await IDB.set('diskdir',h);lsSet('disk',{on:true});await DISK.saveProject();renderDiskNote()}catch(err){}return}
+  if(a==='dtog'){DISK.on=!DISK.on;lsSet('disk',{on:DISK.on});if(DISK.on)DISK.sched(true);openSecurity();return}
+  if(a==='dnow'){t.disabled=true;const ok=await DISK.saveProject();t.disabled=false;toast(ok?'Saved to the folder.':(DISK.msg||'Could not save.'));renderDiskNote();return}
+  if(a==='dopen'){window.sdDisk.open()}});
+function showRecovery(rec){openModal(`<div class="modal-h"><h2>Save your recovery key</h2></div><div class="modal-b"><p class="small" style="line-height:1.55">Encryption is on. This recovery key opens your scripts if you forget your passphrase. It is shown only now. Write it down or save it somewhere safe, away from this device.</p><div style="font:600 18px/1.6 ui-monospace,Menlo,Consolas,monospace;padding:14px;border:1px dashed var(--line,#bbb);border-radius:12px;text-align:center;user-select:all" id="recKey">${esc(rec)}</div><div class="bacts"><button class="btn sm" id="recCopy">Copy</button><button class="btn sm" id="recSave">Save as a text file</button><button class="btn pri sm" data-close>I have saved it</button></div></div>`);
+  $('#recCopy').onclick=()=>{try{navigator.clipboard.writeText(rec);toast('Copied.')}catch(e){}};$('#recSave').onclick=()=>saveFile('ScriptDesk_recovery_key.txt',new TextEncoder().encode('ScriptDesk recovery key\n\n'+rec+'\n\nKeep this safe. Anyone with it and your device data can open your scripts.\n'))}
+async function openEncBackup(env){if(!env||env.scriptdesk!=='enc1')throw new Error('This is not an encrypted ScriptDesk file.');
+  askPass('Open encrypted backup','Passphrase for this file',async pass=>{try{const j=JSON.parse(await envOpen(env,pass));const p=upgrade(j);if(!Array.isArray(p.scenes))throw 0;p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.')}catch(e){toast('Wrong passphrase, or the file is damaged.')}})}
+
 function toast(m,ms){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),ms||3800)}
 function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector('script[src="'+src+'"]')&&loadScript.done[src])return res();const s=document.createElement('script');s.src=src;s.onload=()=>{loadScript.done[src]=1;res()};s.onerror=()=>rej(new Error('Could not load a required component. Check your connection and try again.'));document.head.appendChild(s)})}
 loadScript.done={};
@@ -624,7 +725,7 @@ const dirty={meta:false,draft:false,scenes:new Set(),deleted:new Set()};
 let flushT=null,flushing=false;
 function touch(sceneIds){if(!P)return;P.updated=Date.now();dirty.meta=true;(sceneIds||[]).forEach(id=>dirty.scenes.add(id));
   saveLocal();clearTimeout(flushT);flushT=setTimeout(flush,1200);setSync('busy','Saving…')}
-function saveLocal(){if(!P)return;const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
+function saveLocal(){if(!P)return;DISK.sched();const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
 function idxEntry(){return {id:P.id,title:P.title,production:P.production,updated:P.updated,scenes:P.scenes.length,sample:!!P.sample}}
 function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx)}
 const DRAFT_CH=60000;
@@ -739,6 +840,7 @@ async function fileToText(file,onStatus){const name=file.name.toLowerCase();
   if(name.endsWith('.doc'))throw new Error('Old .doc files cannot be read. Save it as .docx or PDF and try again.');
   const txt=await file.text();
   if(name.endsWith('.fdx')||/<FinalDraft/.test(txt.slice(0,800)))return fdxToText(txt);
+  if(name.endsWith('.scriptdesk'))return {enc:JSON.parse(txt)};
   if(name.endsWith('.json'))return {json:JSON.parse(txt)};
   return txt}
 function fdxToText(xml){const d=new DOMParser().parseFromString(xml,'application/xml');const out=[];
@@ -2063,6 +2165,7 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
 
 /* ---------- Editing, moving, buttons ---------- */
 function prodCommit(el,v){const k=el.dataset.pk;v=String(v).replace(/ /g,' ').trim();
+  if(k==='bud')return budCommit(el,v);if(k==='rate')return rateCommit(el,v);
   if(k==='shot'){const s=scById(el.dataset.sid),h=s&&shotsOf(s).find(x=>x.id===el.dataset.shot),f=el.dataset.sf;if(!h||(h[f]||'')===v)return null;snapshot();const o=h[f]||'';h[f]=['size','cast'].includes(f)?U(v):v;return {sids:[s.id],desc:`Sc ${s.no} · Shot ${h.no} · ${(SHOT_F.find(x=>x[0]===f)||[,f])[1]}: "${cut(o)||'—'}" → "${cut(v)||'—'}"`}}
   if(k==='pg'){const s=scById(el.dataset.sid);if(!s)return null;const e=parsePg(v);if(!e||e===pgE(s)){el.innerText=fmtPg(pgE(s));return null}snapshot();s.pages8=e;needsRender=true;return {sids:[s.id],desc:`Sc ${s.no} · Length set to ${fmtPg(e)} pages`}}
   if(k==='day'){const d=dayById(el.dataset.day),f=el.dataset.df;if(!d||(d[f]||'')===v)return null;snapshot();d[f]=v;return {sids:[],desc:`Schedule · ${dayLabel(d)} · note edited`}}
@@ -2131,16 +2234,378 @@ document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closes
   const before=row&&row.dataset.drag!==sid?row.dataset.drag:null;const to=z.dataset.dropday||null;const s=scById(sid);if(!s)return;snapshot();placeScene(sid,to,before);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)});
 
 function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.g!==g){g=p.g;h+=`<h6>${esc(g)}</h6>`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic i-${p.id}" aria-hidden="true"></i><span>${esc(p.nav)}</span></button>`});return h}
+/* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
+const RATE_SRC='Telugu Film Chamber of Commerce and Telugu Film Industry Employees Federation, "General conditions and wages" agreement dated 01-07-2022 (valid 01-07-2022 to 30-06-2025; stunt wages to 30-03-2025 as printed)';
+/* [union, role / item, rupees, unit, pdf page, note] */
+const RATES0=[
+ ["Dubbing Artists","Hero / Heroine",39000,"per film",11,""],
+ ["Dubbing Artists","2nd hero, 2nd heroine, villain, comedian or any role with 7+ scenes",19500,"per film, each",12,""],
+ ["Dubbing Artists","Other roles with fewer than 7 scenes",12480,"per film, each",12,""],
+ ["Dubbing Artists","Small roles, daily basis (9am-9pm)",5960,"per day",12,""],
+ ["Dubbing Artists","Crowd dubbing",2210,"per call sheet",12,""],
+ ["Dubbing Artists","Fight effects (up to three)",2210,"up to three",12,"Each extra effect Rs 860"],
+ ["Dubbing Artists","Each extra fight effect",860,"each",12,""],
+ ["Dubbing Artists","Voice test",500,"per test",12,""],
+ ["Dubbing Artists","Conveyance",250,"per day",12,""],
+ ["Costumers","Chief costumer (social film, contract)",139930,"per film",18,"Mythological / historical films: agree in writing"],
+ ["Costumers","1st assistant (contract)",91260,"per film",19,""],
+ ["Costumers","2nd assistant (contract)",70980,"per film",19,""],
+ ["Costumers","Dress man (contract)",55690,"per film",19,""],
+ ["Costumers","1st assistant (daily)",1935,"per call sheet",19,""],
+ ["Costumers","2nd assistant (daily)",1550,"per call sheet",19,""],
+ ["Costumers","Dress man (daily)",1350,"per call sheet",19,""],
+ ["Makeup and Hair","Chief makeup man (social film, contract)",141960,"per film",26,"Mythological / historical films: agree in writing"],
+ ["Makeup and Hair","1st assistant (contract)",92665,"per film",26,""],
+ ["Makeup and Hair","2nd assistant (contract)",72070,"per film",26,""],
+ ["Makeup and Hair","Hair dresser (contract)",92665,"per film",26,""],
+ ["Makeup and Hair","Makeup man / 1st assistant (daily, local)",2100,"per call sheet",27,"Outstation: add Rs 100 per person per day"],
+ ["Makeup and Hair","Hair dresser (daily, local)",2100,"per call sheet",27,""],
+ ["Makeup and Hair","2nd assistant (daily, local)",1650,"per call sheet",27,""],
+ ["Cine and Digital Artists","Small character artist",1710,"per call sheet",36,"Characters in one or two scenes: officers, police, doctors, nurses, maids, teachers, lawyers and similar. Gym boys, models, bouncers and special characters: negotiate"],
+ ["Production Assistants","Production assistant (local or outstation)",1280,"per call sheet",43,"Film shooting only, not post-production"],
+ ["Production Assistants","Special allowance",40,"per day",44,""],
+ ["Junior Artists Agents","Agent, travel expenses",1190,"per shooting day",50,""],
+ ["Junior Artists Agents","Agent's assistant, travel expenses",680,"per shooting day",50,""],
+ ["Production Women Workers","Women worker (12-hour call)",1020,"per call sheet",58,""],
+ ["Production Women Workers","Special allowance",90,"per day",60,""],
+ ["Production Women Workers","Conveyance if no vehicle (local)",60,"per day",60,""],
+ ["Junior Artists","A grade (rich ladies and gents, Marwadi and similar)",1235,"per call sheet",65,"Hyderabad city and surroundings only"],
+ ["Junior Artists","B grade (police, doctors, lawyers, students, soldiers, security, wedding scenes)",1020,"per call sheet",65,""],
+ ["Junior Artists","C grade (general public, men, women, children)",810,"per call sheet",66,""],
+ ["Junior Artists","Risk, powder, rain, group-song dance shots",120,"per shot, extra",67,""],
+ ["Junior Artists","Own silk saris / white-and-white / suits",60,"extra with call sheet",67,""],
+ ["Junior Artists","Chest bullet fitted",550,"extra",67,"Not part of call sheet"],
+ ["Junior Artists","Bit dialogue",60,"extra",67,""],
+ ["Junior Artists","Long dialogue",120,"extra",67,""],
+ ["Junior Artists","Conveyance if no vehicle (within 50 km)",150,"per day",68,""],
+ ["Junior Artists","Travel allowance 50-100 km (plus vehicle)",120,"per day",68,"Ramoji Film City counts as within 50 km"],
+ ["Junior Artists","Outstation up-and-down journey allowance",485,"per 24 hours",68,""],
+ ["Studio Workers","Carpenter / painter / moulder mestri",1480,"per 8-hour shift",74,"Local work"],
+ ["Studio Workers","Carpenter",1015,"per 8-hour shift",74,""],
+ ["Studio Workers","Painter",1015,"per 8-hour shift",74,""],
+ ["Studio Workers","Moulder",1015,"per 8-hour shift",74,""],
+ ["Studio Workers","Helper",830,"per 8-hour shift",74,"Outstation work: 1.5 times the local call sheet"],
+ ["Studio Workers","Travel within Hyderabad if no vehicle",45,"per day",75,""],
+ ["Studio Workers","Hill-station special allowance (no special labour)",85,"per day",77,""],
+ ["Drivers","Driver (12-hour call)",1195,"per call sheet",81,"Half call sheet Rs 598"],
+ ["Outdoor Lightmen","Lightman, local",1375,"per call sheet",87,"Half call sheet Rs 685"],
+ ["Outdoor Lightmen","Lightman, outstation",1400,"per call sheet",87,"Half call sheet Rs 700"],
+ ["Outdoor Lightmen","Crane assistant, local",1390,"per call sheet",87,"Half call sheet Rs 695"],
+ ["Outdoor Lightmen","Crane assistant, outstation",1415,"per call sheet",87,"Half call sheet Rs 710"],
+ ["Outdoor Lightmen","Special allowance, local shoot",65,"per day",88,""],
+ ["Outdoor Lightmen","Special allowance, outdoor shoot",95,"per day",88,""],
+ ["Outdoor Lightmen","Travel allowance 50-100 km from Hyderabad",700,"per day",91,"Ramoji Film City counts as within 50 km"],
+ ["Outdoor Lightmen","Hill-station special allowance (no special labour)",150,"per day",92,""],
+ ["Stunt Directors and Artists","Stunt scene, if no agreement",50375,"per scene",99,"Normally agreed in writing with the stunt director; minimum Rs 1,500 per day to the master"],
+ ["Stunt Directors and Artists","Fighter",4460,"per call sheet",99,"Rates printed as valid to 30-03-2025"],
+ ["Stunt Directors and Artists","Stunt scene finished in one day (local master engaged)",6000,"per scene",99,""],
+ ["Stunt Directors and Artists","Same scene, second day",2920,"per day",99,""],
+ ["Stunt Directors and Artists","Dupe and assistant",4785,"per call sheet",99,""],
+ ["Stunt Directors and Artists","Dupe / assistant, scene finished in one day",6500,"per scene",99,"Only if a local master is engaged"],
+ ["Stunt Directors and Artists","Dupe / assistant, second day",3070,"per day",99,""],
+ ["Stunt Directors and Artists","Helper",2225,"per call sheet",100,""],
+ ["Stunt Directors and Artists","Room waiting: fighter / dupe / assistant",2225,"per day",100,"Outdoor, when the fighter must wait. Helper Rs 1,115"],
+ ["Stunt Directors and Artists","Face painting (with daily wage)",4960,"total",100,""],
+ ["Stunt Directors and Artists","Whole-body painting (with daily wage)",8160,"total",100,""],
+ ["Stunt Directors and Artists","Rain, mud or soil areas, extra",970,"per day",100,""],
+ ["Stunt Directors and Artists","Special makeup / colour decoration",5000,"per stunt scene",100,""],
+ ["Stunt Directors and Artists","Glass jump (sugar glass)",8250,"extra",101,""],
+ ["Stunt Directors and Artists","Fire shot",10527,"extra",101,"Fire safety must be ready on location"],
+ ["Stunt Directors and Artists","Travel / food on a 24-hour journey",820,"each",102,""],
+ ["Stunt Directors and Artists","Look-alike dupe, small expenses",495,"per day",103,""],
+ ["Stunt Directors and Artists","Fight with animals or in animal costume",5445,"per artist",104,"After two days, half of this for each extra day"],
+ ["Stunt Directors and Artists","Safety assistant (stunt union member)",770,"per call sheet, per fight",104,""],
+ ["Stunt Directors and Artists","Rope worker",1458,"per fight",104,""],
+ ["Outdoor Unit Technicians","Camera: Phantom high-speed, RED V-Raptor / Ranger / Monstro / Weapon Helium / Gemini, ARRI Alexa XT / SXT / Mini / Mini LF / LF, Sony Venice",9250,"per call sheet",107,"Listed by camera model in the scan; a few model names are hard to read"],
+ ["Outdoor Unit Technicians","Camera: RED Epic / RED Dragon",7800,"per call sheet",108,""],
+ ["Outdoor Unit Technicians","Camera: RED MX",6175,"per call sheet",108,""],
+ ["Outdoor Unit Technicians","Camera first assistant",4150,"per call sheet",107,""],
+ ["Outdoor Unit Technicians","Camera second assistant",2900,"per call sheet",107,""],
+ ["Outdoor Unit Technicians","Camera third assistant",2200,"per call sheet",107,""],
+ ["Outdoor Unit Technicians","Sound recordist and assistant, local",3800,"per call sheet",108,"Rs 2,000 plus Rs 1,800"],
+ ["Outdoor Unit Technicians","Sound recordist and assistant, outdoor",3880,"per call sheet",108,"Foreign shoot: Rs 7,600"],
+ ["Outdoor Unit Technicians","Boom assistant, local",1800,"per call sheet",108,"Outdoor Rs 1,840; foreign Rs 3,600"],
+ ["Outdoor Unit Technicians","Electrician, local",1530,"per call sheet",108,"Outdoor Rs 1,570; foreign Rs 3,060"],
+ ["Outdoor Unit Technicians","Driver, local",1465,"per call sheet",108,"Outdoor Rs 1,500"],
+ ["Outdoor Unit Technicians","Generator operator, local",1465,"per call sheet",108,"Outdoor Rs 1,500"],
+ ["Outdoor Unit Technicians","Outstation call sheet, extra",40,"per call sheet",108,""],
+ ["All unions","Tiffin when producer arranges none",70,"per tiffin",6,"Morning and evening"],
+ ["All unions","Lunch or dinner when producer arranges none",100,"per meal",6,""]
+];
+const RATES_NOTE_ALL='These rates come from the Telugu Film Chamber and Employees Federation agreement of 01-07-2022 and were printed as valid only until 30-06-2025 (stunt wages until 30-03-2025). Check the current agreement with the Chamber before you budget; type over any rate to use the new one. Rates apply to feature films, not web series or TV, and a film made within Rs 4 crore is a "small film" that pays 85% of the jointly fixed wages (page 1).';
+/* general conditions and per-union rules: [union, [[pdf page, rule], ...]] */
+const RULES0=[
+ ["General conditions (all unions)",[
+  [1,"A producer is free to hire anyone for the film, from the Federation or from anywhere in India or abroad."],
+  [1,"A film made within Rs 4 crore production cost, up to first copy, counts as a small film when the Chamber and Federation committee says so, and pays only 85% of the jointly fixed wages."],
+  [1,"These wages apply to feature films only, not web series or TV."],
+  [1,"Nothing is paid beyond these wages. All payment goes directly to the workers, not through the union. Daily-wage workers are paid day by day."],
+  [2,"Only the Chamber and Federation wages apply to all 24 unions; no union may announce its own."],
+  [2,"The dancer and fighter ratio ended on 31-08-2023; from 01-09-2023 no ratio is needed."],
+  [2,"Local call sheets: 7am-6pm (with 1 hour lunch); 2pm-10pm; 6pm-2am; 9pm-5am the next day. Outdoor: 6am-6pm. 30 minutes grace on all calls."],
+  [3,"A 9pm-5am call pays 1.5 call sheets, only to costumers, makeup and hair, women workers, production assistants, outdoor unit technicians, outdoor lightmen, junior artists, junior artist agents and cine and digital artists."],
+  [4,"Beyond the call time: the first 4 hours pay half a call sheet; beyond 4 hours a full call sheet. Not for small films."],
+  [4,"A sunrise scene pays one extra call sheet to those who worked on it; if shooting continues after it, half a call sheet more (not for the lighting call sheet)."],
+  [4,"Local meal allowance Rs 100 if pack-up is before 1pm; no tiffin if pack-up is before 6pm; night meal Rs 100 if pack-up is between 9 and 10pm; only when the producer provides no food."],
+  [4,"Abroad: two batas are given and call sheets are not counted (not for contract workers)."],
+  [5,"Producers in both Telugu states shooting in any regional language, or two languages, pay one call sheet. Other-state producers shooting a single language in both states pay one call sheet; two languages 1.5. Both-state producers with big-scale Hindi or English films pay 1.5."],
+  [5,"Sundays and declared holidays: one call sheet plus one more call sheet for daily-wage workers."],
+  [6,"Outdoor and abroad travel allowance goes only to lightmen, production assistants, women workers, outdoor unit technicians, junior artists, their agents and Telugu cine and digital artists. Abroad travel pays one call sheet."],
+  [7,"Overnight travel with no shoot the next day pays travelling allowance plus one call sheet (journey call sheet). Abroad shooting pays two call sheets per shooting day."],
+  [7,"Cancelled for natural calamity or beyond the producer's control: food and lodging only, no wages. Local cancellation within 2 hours of reaching location: half a call sheet; after 2 hours: a full call sheet."],
+  [7,"Each association must insure its members. Accident or death during travel for a shoot: hospital cost and compensation are shared by the producer and the union, only beyond the insurance."],
+  [8,"The producer is not liable if a technician dies of illness, or for accidents when a member is under alcohol or drugs."],
+  [8,"A producer may remove a worker for poor work or misbehaviour; the Chamber and Federation then resolve it."],
+  [9,"The producer may agree any rate with a craft worker by mutual consent; without an agreement these conditions apply. A breach cancels the worker's agreement."],
+  [9,"Strikes or work stoppage are not allowed without following the agreed procedure."]]],
+ ["Dubbing Artists Union",[
+  [11,"Wages are per film for main roles and per day for small roles, set out on pages 11 and 12."],
+  [12,"Low-budget and amateur films are not covered; the Chamber and Federation decide what counts as low-budget."],
+  [13,"Section D call is 12 hours (9am-9pm, 7am-7pm or 2pm-2am). Section E call is 8 hours (7am-1pm, 2pm-9pm, 9am-6pm, 6pm-2am; night dubbing 10pm-5am with a 30-minute tea break and a 1-hour meal)."],
+  [13,"Main and small roles are paid before crowd dubbing starts, or within 15 days after dubbing is complete, whichever is earlier."],
+  [13,"A daily-wage artist cancelled after 2 hours from the start gets travel costs and half a call sheet."],
+  [14,"Beyond one call by 4 hours: half a call sheet extra; beyond 4 hours: one call sheet extra."],
+  [14,"If the producer arranges no snacks or meal: snacks Rs 70, meal Rs 100. Dubbing past 9pm with no transport: Rs 60 travel."],
+  [14,"These wages do not apply to contract artists."]]],
+ ["Costumers Union",[
+  [18,"Contract wages for social films; mythological and historical films are agreed by mutual talks in writing."],
+  [19,"Daily wages are for costumers hired for a few scenes."],
+  [20,"A 9pm-5am call pays 1.5 call sheets. A Saturday-night call ending at 2am is one call sheet; after 2am it counts as Sunday."],
+  [20,"Outstation call is 6am-6pm; up to 4 hours beyond pays half a call sheet, beyond that a full one."],
+  [20,"Tiffin Rs 70 and meal Rs 100 if the producer provides none."],
+  [20,"Overnight travel then a shoot next day: 50% of a call sheet as travelling allowance within the Telugu states, 75% in other states; one call sheet for the journey if there is no shoot next day; abroad shooting two call sheets per day."],
+  [21,"If the producer arranges no vehicle from the union office to the set, the producer pays the costumer's and assistants' travel."],
+  [21,"If a costume is lost, the chief costumer pays its value; after wrap, check physically and return rented items with a no-objection certificate."],
+  [22,"If a costumer must work on another film at the same time, the substitute is paid by that member. Daily wages are paid the same day."],
+  [24,"Contract-basis people are not covered; their own agreement applies."]]],
+ ["Makeup Artists and Hair Stylists Union",[
+  [26,"Contract wages for social films; mythological and historical films are agreed in writing."],
+  [27,"Daily wages are for temporary makeup men, assistants and hair dressers. Outstation adds Rs 100 per person per day. Abroad shooting pays two call sheets per day."],
+  [28,"A 9pm-5am call pays 1.5 call sheets. A call past 6:30pm up to 9pm counts half; beyond 9pm full."],
+  [29,"Morning tiffin Rs 70, evening tiffin Rs 70, lunch Rs 100, night meal Rs 100 if the producer arranges none."],
+  [29,"Travel: 50% of a call sheet as allowance in the Telugu states and 75% in other states; journey call sheet when there is no shoot next day; abroad travel one call sheet."],
+  [30,"Sunday or holiday work by temporary members: one call sheet plus one more."]]],
+ ["Cine and Digital Artists Union",[
+  [36,"If no written agreement exists, these rates and rules are deemed accepted. Small character artists get Rs 1,710 per call sheet."],
+  [37,"Call times: 9am-6pm, 6pm-2am, 9pm-5am (1.5 call sheets). Artists reach the location 1 hour before the call for makeup and dressing."],
+  [37,"Local shooting is in a studio or on a real location where no overnight stay is needed; outdoor needs an overnight stay."],
+  [37,"Small characters are those in one or two scenes. Gym boys, hair boys, body builders, models, bouncers and special characters are negotiated before engaging."],
+  [39,"Overnight travel: 50% of a call sheet within the Telugu states, 75% in other states; journey call sheet if no shoot next day; abroad shooting two call sheets per day."]]],
+ ["Production Assistants Union",[
+  [43,"Rs 1,280 per call sheet, local or outstation; for film shooting only, not post-production."],
+  [44,"Special allowance Rs 40. Call times: local 7am-6pm, 2pm-10pm, 6pm-2am, 9pm-5am (1.5); outdoor 6am-6pm."],
+  [44,"Production assistants may also do catering, and set or location decoration work."],
+  [45,"A local shoot cancelled before any shot, after tiffin is arranged: half a call sheet."],
+  [45,"If no tiffin or meals are arranged: tiffin Rs 70, lunch and dinner Rs 100. If no conveyance is provided: Rs 70 (local)."],
+  [46,"Outstation: Rs 30 per day for washing and special expenses when the producer does not arrange it. Sunday or holiday: one call sheet plus one more."]]],
+ ["Junior Artists Agents Union",[
+  [50,"Agent Rs 1,190 per shooting day and agent's assistant Rs 680 for travel expenses."]]],
+ ["Production Women Workers Union",[
+  [58,"Rs 1,020 for a 12-hour call, local or outdoor."],
+  [59,"Cancelled before any shot after tiffin is arranged: half a call sheet. Tiffin Rs 70, lunch Rs 100, night meal Rs 100 if not provided."],
+  [60,"Conveyance Rs 60 if no vehicle (Ramoji Film City counts as within 50 km). Special allowance Rs 90. Women must be used only for the work assigned."],
+  [60,"A 9pm-5am call pays 1.5 call sheets; Sunday or holiday one call sheet plus one more."],
+  [61,"Overnight travel: 50% of a call sheet in the Telugu states, 75% in other states; journey call sheet when there is no shoot next day."]]],
+ ["Junior Artists Union",[
+  [65,"Grade rates apply only in Hyderabad and its surroundings; other places are agreed in writing."],
+  [66,"Call times: local 9am-6pm and 6pm-2am; local outdoor 7am-6pm; outdoor 6am-6pm; one hour meal break. Juniors reach location 1 hour before the call."],
+  [67,"Extra: Rs 120 per risk, powder, rain or group-song shot; Rs 60 for own silk saris, white-and-white or suits; Rs 550 for a chest bullet; Rs 60 bit dialogue; Rs 120 long dialogue. Mythological roles are negotiated."],
+  [68,"Producer gives a vehicle within 50 km of the union office, otherwise Rs 150. Between 50 and 100 km: vehicle plus Rs 120. Outstation journey allowance Rs 485 per 24 hours."],
+  [68,"Shooting beyond the regular call within 4 hours pays in proportion; beyond 4 hours one extra call sheet. A 9pm-5am call pays 1.5 call sheets."],
+  [69,"If no food is arranged: tiffin Rs 70, lunch Rs 100, evening tiffin Rs 70, dinner Rs 100. Transport to the union office is given when the shoot ends after 10pm in the city, or after 8pm outside it."],
+  [69,"Cancelled with no shot: travel allowance only. Cancelled within 2 hours of the start: half a call sheet."],
+  [70,"Producer may call juniors through union-appointed co-ordinators; wages are paid directly to the union."]]],
+ ["Studio Workers Union",[
+  [74,"Wages are for an 8-hour shift (excluding break) in local work."],
+  [75,"Outstation call is 6am-6pm and pays 1.5 times the local call sheet. Food Rs 100 if work continues beyond 9pm and no food is arranged."],
+  [75,"No wages if shooting is cancelled for natural calamity or other reasons beyond the producer's control."],
+  [76,"Workers use materials given by the producer or art director and do only studio-worker jobs. Sunday or holiday: one call sheet plus one more."],
+  [76,"Rates for jobs outside the studio are agreed before work starts; food allowance is not included. Travel: 50% in the Telugu states, 75% in other states; abroad one call sheet."],
+  [77,"Outstation: tiffin Rs 70 and meal Rs 100 if none is arranged; hill-station allowance Rs 85 if no special labour is arranged."]]],
+ ["Motion Picture and TV Drivers Union",[
+  [81,"Rs 1,195 per 12-hour call. Local grace up to 2 hours (3 at places like Ramoji Film City); beyond that half a call sheet (Rs 598) up to 4 hours, one full call sheet up to 8 hours."],
+  [82,"Outdoor travel: after the first 12 hours, one extra call sheet for every 8 hours, with no grace."],
+  [82,"Mileage (km per litre): Innova AC 10, Qualis AC 9, Qualis non-AC 10, Tata Sumo 9, Bedford 6, DCM 6. Tiffin Rs 70 and meal Rs 100 if not arranged."]]],
+ ["Outdoor Lightmen Union",[
+  [87,"Local and outstation rates for full and half call sheets, plus a daily special allowance (Rs 65 local, Rs 95 outdoor)."],
+  [88,"The producer decides how many lightmen are needed. Wages are paid the same day."],
+  [89,"First call 7am-6pm; extended to 9pm pays half a call sheet more, beyond 9pm a full one. A Saturday-night call ending at 2am is one call sheet."],
+  [89,"Weather cancellation of 1-2 days: no wages; beyond 2 days, mutual talks. If the producer cancels for personal reasons, that day's wage is payable."],
+  [90,"Lunch Rs 100 if pack-up is before 1pm; no tiffin if the shoot ends before 4pm; tiffin Rs 70 for pack-up between 4 and 6pm; dinner Rs 100 when food is not arranged."],
+  [91,"Travel allowance Rs 700 for shoots 50-100 km from Hyderabad. A 9pm-5am call pays 1.5 call sheets."],
+  [92,"Sunrise scene: one extra call sheet. Cancelled within 2 hours of the start: half a call sheet; after 2 hours: a full call sheet. Sunday or holiday: one call sheet plus one more."],
+  [93,"After floor pack-up, dismantling lights pays one extra call sheet, hired with the producer's written permission."],
+  [97,"Amendment of 18-07-2024: lightmen are only for lights and manual crane and trolley work. Where a machine is used for lights, the producer must use lightmen as needed with the DoP's advice for safety; they need not be hired when a machine is used for set work."]]],
+ ["Stunt Directors and Stunt Artists Union",[
+  [99,"Stunt scene pay is agreed in writing between the producer and the stunt directors. Without an agreement it is Rs 50,375 per scene, of which at least Rs 1,500 per day goes to the master. Rates are printed as valid to 30-03-2025."],
+  [100,"No extra pay for non-risky scenes such as horse riding, driving, running or swimming."],
+  [101,"Fire shots pay extra and fire safety must be ready. Doctor and ambulance must be on location for risky scenes. One assistant per stunt master; more only with the producer's permission."],
+  [101,"A call sheet is 12 hours (6am-6pm or 9am-9pm). Stunt artists arrive 20 minutes before the call for makeup and costume."],
+  [102,"Local (Hyderabad) producers pay daily wages on wrap; other-state producers agree payment in advance with the stunt director."],
+  [102,"Cancelled 2 hours after call time: dupe, assistant and stunt artists Rs 2,225, helpers Rs 1,115. Cancelled before any shot: Rs 423 special allowance."],
+  [102,"A stunt fight by one person is agreed with that artist and must not be less than the dupe's wage. A 24-hour journey pays Rs 820 for food and travel."],
+  [103,"If the producer hires other stunt directors or artists because the union's are unavailable, he must inform the union; no clearance is needed. A stunt artist who changes dress for another scene gets one extra day's wage; playing a stunt and a dupe for the same scene pays double."],
+  [104,"Fighting with animals or in animal costume: Rs 5,445 per artist; after two days, half of that for each extra day. Safety assistants Rs 770 per call sheet per fight scene; rope workers Rs 1,458 per fight."]]],
+ ["Outdoor Unit Technicians Union",[
+  [107,"Camera wages depend on the camera model used (Rs 9,250 for most cinema cameras; RED Epic and Dragon Rs 7,800; RED MX Rs 6,175), with first, second and third assistants paid beside."],
+  [108,"Sound recordist, boom assistant, electrician, driver and generator operator have local, outdoor and foreign rates."],
+  [108,"If the producer or cameraman brings his own focus puller, the regular focus assistant gets no bata; another person hired to work on the camera gets only the second assistant's bata. Extra equipment such as lenses brings the second assistant's bata; a monitor brings a monitor assistant's bata."],
+  [109,"Only two (driver or electrician) get bata for an extra generator beyond the regular one."],
+  [109,"A 9pm-5am call pays 1.5 call sheets. First call extended to 9pm: half a call sheet more; after 9pm a full one."],
+  [110,"Breaks: lunch 1.00-2.30 (1 hour), evening 6-7 (half hour), night 9-10.30 (1 hour). No tiffin if the shoot ends before 4pm."],
+  [111,"Travel allowance 75% of a call sheet in the Telugu states and in other states. Hill stations and islands: Rs 150 per day if no special labour is arranged."],
+  [112,"Sundays and declared holidays: one call sheet plus one more."]]]
+];
+
+/* ---------- Budget: template, spend tracker, Telugu union rate card and rules ---------- */
+/* [head name, TDS on fees?, standard lines]. The first twelve follow the Studio Fry template; the last two are added for common costs. */
+const BUD_TPL=[
+ ['PRE PRODUCTION',0,['Recce travel and food','Treatment note','Storyboard','Look test','Rehearsals']],
+ ['PRODUCTION CREW',1,['Director fee','DOP fee','Producer fee','Associate producer','1st assistant director','2nd assistant director','3rd assistant director','Line producer','Production manager','Local production crew','1st assistant cameraman','Focus puller','Camera and lens attendants','DIT','Gaffer','Best boy','Electricians','Lightmen','Makeup stylist','Hair stylist','Costumer','Spot boys and runners','Hospitality attendants','Production assistants','Driver','Night crew conveyance','Security']],
+ ['LOCATION EXPENSES',0,['Location rent','Permissions and police','Location manager','Crowd or wedding set','Local fixer']],
+ ['PROPS, CONSTRUCTION AND WARDROBES',0,['Art construction','Props','Production designer / art director','Art assistants','Action props and cars','Wardrobe: main cast','Additional costume rentals','Wardrobe stylist fee','Dress man wages','On-set tailor']],
+ ['EQUIPMENT',0,['Camera and accessories','Additional small camera','Lenses','Lighting rental','Drone','Crane / jib','Dolly and track','Gimbal / Steadicam','Sync sound','Walkie-talkies','Generator with diesel','Vanity van','Teleprompter','PA system']],
+ ['FILM STOCK AND MEDIA',0,['Hard drives','Cards and media','Backup storage']],
+ ['SPECIAL REQUIREMENTS',0,['Still photographer','Special lights','Special effects','Animals and vehicles for shots']],
+ ['TRANSPORTATION',0,['Crew vehicles','Equipment truck','Fuel','Night transport']],
+ ['CATERING AND MEALS',0,['Breakfast','Lunch','Snacks','Dinner','Craft service','Drinking water']],
+ ['TALENT',1,['Casting director','Lead cast','Supporting cast','Junior artists','Junior artists coordinator','Dubbing artists','Stunt artists','Dancers','Models']],
+ ['MISCELLANEOUS COST',0,['Production materials','Production supplies and consumables','Printing and stationery','Crew conveyance']],
+ ['POST PRODUCTION',1,['Offline editor','Roto / VFX','Online editor','Studio rental','Colour grading','Sound design and mix','Music','Animation','Post producer','Titles and subtitles','Deliverables']],
+ ['INSURANCE, PERMISSIONS AND LEGAL',0,['Production insurance','Union and Chamber fees','Legal and contracts','Censor certification']],
+ ['TRAVEL AND ACCOMMODATION',0,['Accommodation','Extras hotel','Travel and food','Outstation allowance']]];
+const BUD_COLS=[['n','Particulars'],['u','Unit'],['d','Days / shifts'],['q','Qty'],['r','Rate (₹)'],['p','Planned (₹)'],['a','Actual (₹)'],['v','Difference (₹)'],['t','Notes']];
+const num=v=>{v=String(v==null?'':v).replace(/[₹,\s]/g,'');const n=parseFloat(v);return isFinite(n)?n:0};
+const INR=n=>{n=Math.round(+n||0);return (n<0?'-':'')+'₹'+Math.abs(n).toLocaleString('en-IN')};
+function BUD(){if(!P.budget){P.budget={gst:18,tds:2,cont:0,cols:[],heads:BUD_TPL.map(([n,tds,lines],i)=>({id:uid(),n,gst:true,tds:!!tds,items:lines.map(l=>({id:uid(),n:l,u:'',d:'',q:'',r:'',a:'',t:'',c:{}}))}))}}
+  const B=P.budget;B.cols=B.cols||[];B.heads.forEach(h=>h.items.forEach(it=>{if(!it.c)it.c={}}));return B}
+function RATES(){if(!P.rates)P.rates=RATES0.map(([u,r,v,un,pg,n])=>({id:uid(),u,r,v,un,pg,n}));return P.rates}
+const blank=v=>v===''||v==null;
+const linePlan=it=>{const r=num(it.r);if(!r)return 0;return (blank(it.d)?1:num(it.d))*(blank(it.q)?1:num(it.q))*r};
+function budTotals(){const B=BUD();let P0=0,A0=0,gP=0,gA=0,tP=0,tA=0;const heads=B.heads.map(h=>{const p=h.items.reduce((s,i)=>s+linePlan(i),0),a=h.items.reduce((s,i)=>s+num(i.a),0);P0+=p;A0+=a;if(h.gst){gP+=p*num(B.gst)/100;gA+=a*num(B.gst)/100}if(h.tds){tP+=p*num(B.tds)/100;tA+=a*num(B.tds)/100}return {h,p,a}});
+  const cont=P0*num(B.cont)/100;const tot=P0+cont+gP,act=A0+gA;return {heads,P0,A0,gP,gA,tP,tA,cont,tot,act,left:tot-act}}
+function shootDays(){try{return SCH().days.filter(d=>d.type==='shoot').length}catch(e){return 0}}
+function budCell(attrs,val,cls,label){return ce(`data-pk="bud" ${attrs}`,val,cls,label)}
+function budSheetHtml(){const B=BUD(),T=budTotals(),cols=B.cols;
+  const kv=[['Planned, before GST',INR(T.P0)],['GST '+num(B.gst)+'% on the heads marked GST',INR(T.gP)],...(num(B.cont)?[['Contingency '+num(B.cont)+'%',INR(T.cont)]]:[]),['Planned total',INR(T.tot)],['Spent so far, before GST',INR(T.A0)],['Spent so far, with GST',INR(T.act)],['Left to spend',INR(T.left)+(T.left<0?' (over budget)':'')],['TDS '+num(B.tds)+'% to deduct on fee heads (planned)',INR(T.tP)]];
+  const sets=`<div class="sset-g gtarget"><label>GST %<input type="number" min="0" step="0.5" data-bset="gst" value="${esc(B.gst)}"></label><label>TDS %<input type="number" min="0" step="0.5" data-bset="tds" value="${esc(B.tds)}"></label><label>Contingency %<input type="number" min="0" step="0.5" data-bset="cont" value="${esc(B.cont)}"></label></div>`;
+  const sum=`<div class="tw"><table class="t rt bsum"><tbody>${kv.map(([k,v])=>`<tr><td class="left" data-l="Item"><b>${esc(k)}</b></td><td data-l="Amount">${esc(v)}</td></tr>`).join('')}</tbody></table></div>`;
+  const heads=T.heads.map(({h,p,a},hi)=>`<section class="bhead" data-bh="${h.id}"><div class="bhh"><b class="bno">${hi+1}</b>${budCell(`data-bh="${h.id}" data-bf="hname"`,h.n,'bhname','Head name')}<span class="grow"></span><span class="small muted">Planned ${INR(p)} · Spent ${INR(a)}</span><label class="small"><input type="checkbox" data-btog="gst" data-bh="${h.id}"${h.gst?' checked':''}> GST</label><label class="small"><input type="checkbox" data-btog="tds" data-bh="${h.id}"${h.tds?' checked':''}> TDS</label></div>
+   <div class="tw"><table class="t rt"><thead><tr><th>S.No</th><th>Particulars</th><th>Unit</th><th>Days / shifts</th><th>Qty</th><th>Rate (₹)</th><th>Planned (₹)</th><th>Actual (₹)</th><th>Difference (₹)</th><th>Notes</th>${cols.map(c=>`<th>${esc(c.name)}</th>`).join('')}<th></th></tr></thead><tbody>${h.items.map((it,ii)=>{const lp=linePlan(it),ac=num(it.a),df=lp-ac,fld=(f,l,c)=>budCell(`data-bh="${h.id}" data-bi="${it.id}" data-bf="${f}"`,it[f]||'',c||'',l);
+     return `<tr data-q="${esc((h.n+' '+it.n).toLowerCase())}"><td class="no" data-l="S.No">${hi+1}.${ii+1}</td><td class="left" data-l="Particulars">${fld('n','Particulars')}</td><td data-l="Unit">${fld('u','Unit')}</td><td data-l="Days / shifts">${fld('d','Days')}</td><td data-l="Qty">${fld('q','Qty')}</td><td data-l="Rate (₹)">${fld('r','Rate')}</td><td data-l="Planned (₹)">${lp?INR(lp):''}</td><td data-l="Actual (₹)">${fld('a','Actual')}</td><td data-l="Difference (₹)">${lp||ac?esc(INR(df))+(df<0?' over':''):''}</td><td class="left" data-l="Notes">${fld('t','Notes')}</td>${cols.map(c=>`<td class="left" data-l="${esc(c.name)}">${budCell(`data-bh="${h.id}" data-bi="${it.id}" data-bf="c:${c.id}"`,it.c[c.id]||'',''  ,c.name)}</td>`).join('')}<td><button class="btn sm ghost danger" data-bu="delItem" data-bh="${h.id}" data-bi="${it.id}" aria-label="Delete line">×</button></td></tr>`}).join('')}</tbody></table></div>
+   <div class="bacts"><button class="btn sm" data-bu="addItem" data-bh="${h.id}">+ Add line</button><button class="btn sm" data-bu="rate" data-bh="${h.id}">Add from rate card</button><button class="btn sm ghost danger" data-bu="delHead" data-bh="${h.id}">Delete this head</button></div></section>`).join('');
+  return `${sets}${sum}<h3 class="gk">Budget by head</h3>${heads}<div class="bacts"><button class="btn sm pri" data-bu="addHead">+ Add head</button><button class="btn sm" data-bu="addCol">+ Add column</button>${cols.map(c=>`<button class="btn sm ghost" data-bu="delCol" data-bc="${c.id}">Remove column "${esc(c.name)}"</button>`).join('')}<button class="btn sm" data-bu="days">Fill days from the shooting schedule</button></div>`}
+function budSheetExp(){const B=BUD(),T=budTotals(),cols=B.cols;const rows=[];T.heads.forEach(({h,p,a},hi)=>{rows.push({group:`${hi+1}  ${h.n}`});h.items.forEach((it,ii)=>{const lp=linePlan(it);rows.push([`${hi+1}.${ii+1}`,it.n,it.u,it.d,it.q,it.r===''?'':num(it.r),lp||'',blank(it.a)?'':num(it.a),lp||!blank(it.a)?lp-num(it.a):'',it.t,...cols.map(c=>it.c[c.id]||'')])});rows.push(['','Subtotal','','','','',p,a,p-a,'',...cols.map(()=>'')])});
+  rows.push({group:'SUMMARY'});[['Planned, before GST',T.P0,T.A0],['GST '+num(B.gst)+'%',T.gP,T.gA],['Contingency '+num(B.cont)+'%',T.cont,0],['Total with GST',T.tot,T.act],['TDS '+num(B.tds)+'% on fee heads',T.tP,T.tA]].forEach(([k,p,a])=>rows.push(['',k,'','','','',p,a,p-a,'',...cols.map(()=>'')]));
+  return {name:'Budget',cols:[{h:'S.No',w:7},{h:'Particulars',w:34},{h:'Unit',w:12},{h:'Days',w:7},{h:'Qty',w:7},{h:'Rate',w:11},{h:'Planned',w:13},{h:'Actual',w:13},{h:'Difference',w:13},{h:'Notes',w:24},...cols.map(c=>({h:c.name,w:16}))],rows}}
+function budTrackHtml(){const B=BUD(),T=budTotals();const mx=Math.max(1,...T.heads.map(x=>Math.max(x.p,x.a)));
+  const rows=T.heads.map(({h,p,a})=>{const pc=p?Math.round(a/p*100):(a?100:0),over=a>p&&(p||a);return `<tr data-q="${esc(h.n.toLowerCase())}"><td class="left" data-l="Head"><b>${esc(h.n)}</b></td><td data-l="Planned">${INR(p)}</td><td data-l="Spent">${INR(a)}</td><td data-l="Left">${p||a?esc(INR(p-a))+(over?' over':''):''}</td><td data-l="Spent of plan">${p||a?pc+'%':''}</td><td class="left" data-l="Where the money goes"><div class="bbar2" role="img" aria-label="Planned ${Math.round(p/mx*100)}% of the largest head, spent ${Math.round(a/mx*100)}%"><i class="pl" style="width:${(p/mx*100).toFixed(1)}%"></i><i class="ac${over?' ov':''}" style="width:${(a/mx*100).toFixed(1)}%"></i></div></td></tr>`}).join('');
+  const lines=[];T.heads.forEach(({h})=>h.items.forEach(it=>{const a=num(it.a);if(a)lines.push({h:h.n,n:it.n,a,p:linePlan(it)})}));lines.sort((x,y)=>y.a-x.a);
+  const share=T.A0?T.heads.filter(x=>x.a).sort((x,y)=>y.a-x.a).slice(0,5).map(x=>`${x.h.n.toLowerCase()} ${Math.round(x.a/T.A0*100)}%`).join(', '):'';
+  return `<p class="small muted">Dark bar: spent. Light bar: planned. All amounts are before GST. ${share?`Most of the spend so far: ${esc(share)}.`:'Type actual amounts in the Budget tab to see where the money goes.'}</p><div class="tw"><table class="t rt"><thead><tr><th>Head</th><th>Planned (₹)</th><th>Spent (₹)</th><th>Left (₹)</th><th>Spent of plan</th><th>Where the money goes</th></tr></thead><tbody>${rows}<tr><td class="left"><b>Total, before GST</b></td><td><b>${INR(T.P0)}</b></td><td><b>${INR(T.A0)}</b></td><td><b>${esc(INR(T.P0-T.A0))}</b></td><td>${T.P0?Math.round(T.A0/T.P0*100)+'%':''}</td><td></td></tr></tbody></table></div>
+  <h3 class="gk">Largest spends</h3>${lines.length?`<div class="tw"><table class="t rt"><thead><tr><th>Head</th><th>Line</th><th>Planned (₹)</th><th>Spent (₹)</th></tr></thead><tbody>${lines.slice(0,12).map(l=>`<tr><td class="left" data-l="Head">${esc(l.h)}</td><td class="left" data-l="Line">${esc(l.n)}</td><td data-l="Planned">${l.p?INR(l.p):''}</td><td data-l="Spent">${INR(l.a)}${l.p&&l.a>l.p?' (over)':''}</td></tr>`).join('')}</tbody></table></div>`:'<p class="small faint">No spending entered yet.</p>'}`}
+function budTrackExp(){const T=budTotals();return {name:'Spend tracker',cols:[{h:'Head',w:36},{h:'Planned',w:14},{h:'Spent',w:14},{h:'Left',w:14},{h:'Spent of plan %',w:12}],rows:[...T.heads.map(({h,p,a})=>[h.n,p,a,p-a,p?Math.round(a/p*100):'']),['TOTAL, before GST',T.P0,T.A0,T.P0-T.A0,T.P0?Math.round(T.A0/T.P0*100):'']]}}
+function ratesHtml(){const L=RATES(),unions=uniq(L.map(x=>x.u));
+  return `<div class="banner info small" style="display:block;line-height:1.55">${esc(RATES_NOTE_ALL)}</div><p class="small muted">Every rate shows the page of the agreement PDF it was read from. Type over any amount, add your own rows, or press the button to put a rate into the budget.</p>`+
+  unions.map(u=>`<h3 class="gk">${esc(u)}</h3><div class="tw"><table class="t rt"><thead><tr><th>Role / item</th><th>Rate (₹)</th><th>Unit</th><th>PDF page</th><th>Note</th><th></th></tr></thead><tbody>${L.filter(x=>x.u===u).map(x=>{const f=(k,l)=>ce(`data-pk="rate" data-rid="${x.id}" data-rf="${k}"`,x[k]==null?'':x[k],'',l);return `<tr data-q="${esc((u+' '+x.r).toLowerCase())}"><td class="left" data-l="Role / item">${f('r','Role')}</td><td data-l="Rate (₹)">${f('v','Rate')}</td><td data-l="Unit">${f('un','Unit')}</td><td data-l="PDF page">${f('pg','Page')}</td><td class="left" data-l="Note">${f('n','Note')}</td><td><button class="btn sm" data-bu="rateAdd" data-rid="${x.id}">Add to budget</button> <button class="btn sm ghost danger" data-bu="rateDel" data-rid="${x.id}" aria-label="Delete rate">×</button></td></tr>`}).join('')}</tbody></table></div><div class="bacts"><button class="btn sm" data-bu="rateNew" data-ru="${esc(u)}">+ Add a row to ${esc(u)}</button></div>`).join('')+
+  `<div class="bacts"><button class="btn sm pri" data-bu="rateNewU">+ Add another union or craft</button><button class="btn sm ghost" data-bu="rateReset">Reset to the PDF rates</button></div><p class="small faint">Source: ${esc(RATE_SRC)}. Crafts of the other unions are not in that PDF; add their rates above.</p>`}
+function ratesExp(){const L=RATES();return {name:'Telugu union rate card',cols:[{h:'Union / craft',w:28},{h:'Role / item',w:54},{h:'Rate (₹)',w:12},{h:'Unit',w:20},{h:'PDF page',w:9},{h:'Note',w:50}],rows:[...L.map(x=>[x.u,x.r,num(x.v),x.un,x.pg,x.n||'']),{group:'Valid 01-07-2022 to 30-06-2025 as printed. Check the current agreement.'}]}}
+function rulesHtml(){return `<div class="banner info small" style="display:block;line-height:1.55">${esc(RATES_NOTE_ALL)}</div>`+RULES0.map(([u,list],i)=>`<details class="sset"${i<2?' open':''}><summary>${esc(u)} (${list.length} rules)</summary><ul class="rules">${list.map(([pg,t])=>`<li data-q="${esc((u+' '+t).toLowerCase())}"><span class="pgn">p. ${pg}</span> ${esc(t)}</li>`).join('')}</ul></details>`).join('')+`<p class="small faint">Summarised in plain English from the Telugu-language agreement; the PDF page is shown for each rule. The Telugu text is the authority. Rules for the other unions are not in that PDF.</p>`}
+function rulesExp(){const rows=[];RULES0.forEach(([u,list])=>{rows.push({group:u});list.forEach(([pg,t])=>rows.push([u,pg,t]))});return {name:'Union rules',cols:[{h:'Union',w:26},{h:'PDF page',w:9},{h:'Rule',w:120}],rows}}
+R.budget=()=>{const mode=VIEW.bmode||'sheet';const tabs=segm('bmode',[['sheet','Budget'],['track','Where the money goes'],['rates','Telugu union rates'],['rules','Union rules']]);
+  const T=mode==='sheet'?null:null;const desc={sheet:'A blank template to fill in your own way: every amount is yours to edit, and you can add or delete lines, heads and columns. Planned = days × quantity × rate. Amounts are before GST; GST and TDS are worked out in the summary.',track:'Planned against what has actually been spent, so you can see where the money is going.',rates:'Telugu union wages for 13 crafts, read from the Chamber and Federation agreement. Editable.',rules:'Call sheet, travel, meal and cancellation rules for each union, with the PDF page.'}[mode];
+  const head=pageHead('Budget & rate card',desc,tabs);
+  if(mode==='track')return {html:head+budTrackHtml(),exp:{orient:'landscape',sheets:[budTrackExp()]}};
+  if(mode==='rates')return {html:head+ratesHtml(),exp:{orient:'landscape',sheets:[ratesExp()]}};
+  if(mode==='rules')return {html:head+rulesHtml(),exp:{orient:'landscape',sheets:[rulesExp()]}};
+  return {html:head+budSheetHtml(),exp:{orient:'landscape',sheets:[budSheetExp(),budTrackExp()]}}};
+function budCommit(el,v){const f=el.dataset.bf,B=BUD(),h=B.heads.find(x=>x.id===el.dataset.bh);if(!h)return null;
+  if(f==='hname'){v=v.trim();if(!v||v===h.n)return null;snapshot();h.n=v;needsRender=true;return {sids:[],desc:`Budget · head renamed to "${cut(v)}"`}}
+  const it=h.items.find(x=>x.id===el.dataset.bi);if(!it)return null;const key=f.startsWith('c:')?f.slice(2):f;const cur=f.startsWith('c:')?(it.c[key]||''):(it[key]==null?'':String(it[key]));if(cur===v)return null;
+  snapshot();if(f.startsWith('c:'))it.c[key]=v;else it[key]=['d','q','r','a'].includes(f)?v.replace(/[₹,\s]/g,''):v;needsRender=true;return {sids:[],desc:`Budget · ${h.n} · ${cut(it.n)} · ${f.startsWith('c:')?'column':({n:'name',u:'unit',d:'days',q:'qty',r:'rate',a:'actual',t:'notes'})[f]} → "${cut(v)||'—'}"`}}
+function rateCommit(el,v){const L=RATES(),x=L.find(y=>y.id===el.dataset.rid),f=el.dataset.rf;if(!x)return null;v=v.trim();if(String(x[f]==null?'':x[f])===v)return null;snapshot();x[f]=f==='v'?(v===''?'':num(v)):(f==='pg'?(v===''?'':(num(v)||v)):v);needsRender=true;return {sids:[],desc:`Rate card · ${cut(x.r)} · ${f==='v'?'rate':f} → "${cut(v)||'—'}"`}}
+function openRatePicker(hid){const L=RATES();openModal(`<div class="mh"><h2>Add from the Telugu union rate card</h2><button class="btn sm ghost" data-close>Close</button></div><input class="srch" id="rpq" placeholder="Search a craft, role or union" style="width:100%;margin:8px 0"><div id="rpl" style="max-height:55vh;overflow:auto"></div>`);
+  const draw=()=>{const q=U($('#rpq').value);$('#rpl').innerHTML=L.filter(x=>!q||U(x.u+' '+x.r).includes(q)).slice(0,80).map(x=>`<button class="btn" style="display:flex;width:100%;justify-content:space-between;gap:10px;text-align:left;margin:3px 0" data-bu="rateUse" data-rid="${x.id}" data-bh="${hid}"><span><b>${esc(x.r)}</b><br><small class="muted">${esc(x.u)} · page ${esc(x.pg)}</small></span><span>${num(x.v)?INR(num(x.v)):''}<br><small class="muted">${esc(x.un)}</small></span></button>`).join('')||'<p class="muted small">Nothing matches.</p>'};
+  $('#rpq').oninput=draw;draw();$('#rpq').focus()}
+function rateToLine(x){return {id:uid(),n:x.r,u:x.un,d:'',q:'',r:x.v===''?'':String(num(x.v)),a:'',t:`Union rate card, ${x.u}, page ${x.pg}`,c:{}}}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-bu]');if(!t||!P)return;const a=t.dataset.bu,B=BUD(),h=B.heads.find(x=>x.id===t.dataset.bh);
+  if(a==='addItem'&&h){snapshot();h.items.push({id:uid(),n:'New line',u:'',d:'',q:'',r:'',a:'',t:'',c:{}});prodSave(`Budget · line added to ${h.n}`)}
+  else if(a==='delItem'&&h){const it=h.items.find(x=>x.id===t.dataset.bi);if(!it)return;snapshot();h.items=h.items.filter(x=>x!==it);prodSave(`Budget · deleted "${cut(it.n)}" from ${h.n}`)}
+  else if(a==='addHead'){snapshot();B.heads.push({id:uid(),n:'NEW HEAD',gst:true,tds:false,items:[{id:uid(),n:'New line',u:'',d:'',q:'',r:'',a:'',t:'',c:{}}]});prodSave('Budget · head added')}
+  else if(a==='delHead'&&h){if(h.items.some(i=>num(i.r)||num(i.a))&&!confirm(`Delete "${h.n}" and its ${h.items.length} lines?`))return;snapshot();B.heads=B.heads.filter(x=>x!==h);prodSave(`Budget · head "${h.n}" deleted`)}
+  else if(a==='addCol'){askText('New column','Name of the column (for example Vendor, Paid on, Invoice no.)',nm=>{snapshot();B.cols.push({id:uid(),name:nm.slice(0,40)});prodSave(`Budget · column "${nm}" added`)})}
+  else if(a==='delCol'){const c=B.cols.find(x=>x.id===t.dataset.bc);if(!c)return;snapshot();B.cols=B.cols.filter(x=>x!==c);B.heads.forEach(hh=>hh.items.forEach(i=>delete i.c[c.id]));prodSave(`Budget · column "${c.name}" removed`)}
+  else if(a==='days'){const n=shootDays();if(!n){toast('Plan the shooting schedule first; there are no shoot days yet.');return}snapshot();let k=0;B.heads.forEach(hh=>{if(/CREW|EQUIPMENT|CATERING|TRANSPORT|TALENT/.test(hh.n))hh.items.forEach(i=>{if(blank(i.d)){i.d=String(n);k++}})});prodSave(`Budget · days set to ${n} on ${k} lines from the schedule`);toast(`${n} shoot days entered on ${k} empty lines. Change any of them.`)}
+  else if(a==='rate'&&h){openRatePicker(h.id)}
+  else if(a==='rateUse'&&h){const x=RATES().find(y=>y.id===t.dataset.rid);if(!x)return;snapshot();h.items.push(rateToLine(x));closeModal();prodSave(`Budget · "${cut(x.r)}" added to ${h.n} from the rate card`)}
+  else if(a==='rateAdd'){const x=RATES().find(y=>y.id===t.dataset.rid);if(!x)return;const hh=B.heads.find(y=>/CREW/.test(y.n)&&/^PRODUCTION/.test(y.n))||B.heads[0];if(!hh){toast('Add a budget head first.');return}snapshot();hh.items.push(rateToLine(x));prodSave(`Budget · "${cut(x.r)}" added to ${hh.n}`);toast(`Added to "${hh.n}" in the Budget tab.`)}
+  else if(a==='rateDel'){const L=RATES(),x=L.find(y=>y.id===t.dataset.rid);if(!x)return;snapshot();P.rates=L.filter(y=>y!==x);prodSave(`Rate card · deleted "${cut(x.r)}"`)}
+  else if(a==='rateNew'){snapshot();RATES().push({id:uid(),u:t.dataset.ru,r:'New role',v:'',un:'per call sheet',pg:'',n:''});prodSave(`Rate card · row added to ${t.dataset.ru}`)}
+  else if(a==='rateNewU'){askText('Add a union or craft','Name of the union or craft',nm=>{snapshot();RATES().push({id:uid(),u:nm.slice(0,60),r:'New role',v:'',un:'per call sheet',pg:'',n:''});prodSave(`Rate card · "${nm}" added`)})}
+  else if(a==='rateReset'){if(!confirm('Put back the rates read from the PDF? Your edits and added rows will be lost.'))return;snapshot();delete P.rates;RATES();prodSave('Rate card · reset to the PDF rates')}});
+document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset)return;
+  if(el.dataset.btog){const h=BUD().heads.find(x=>x.id===el.dataset.bh);if(!h)return;snapshot();h[el.dataset.btog]=el.checked;prodSave(`Budget · ${h.n} · ${el.dataset.btog.toUpperCase()} ${el.checked?'on':'off'}`)}
+  else if(el.dataset.bset){const B=BUD(),k=el.dataset.bset;snapshot();B[k]=Math.max(0,num(el.value));prodSave(`Budget · ${k.toUpperCase()} set to ${B[k]}%`)}});
+
+/* ---------- Table tools: add / delete columns and rows on every report sheet ---------- */
+function askText(title,label,cb,def){openModal(`<div class="mh"><h2>${esc(title)}</h2><button class="btn sm ghost" data-close>Close</button></div><label class="small muted" for="atx">${esc(label)}</label><input class="srch" id="atx" style="width:100%;margin:8px 0" value="${esc(def||'')}"><div class="bacts"><button class="btn pri" id="atok">OK</button></div>`);
+  const go=()=>{const v=$('#atx').value.trim();if(!v)return;closeModal();cb(v)};$('#atok').onclick=go;$('#atx').onkeydown=e=>{if(e.key==='Enter')go()};$('#atx').focus();$('#atx').select()}
+const TT_PAGES=['slo','sloLoc','sloArt','sloFight','locations','artists','locScenes','artScenes','special','costume','artprops','shots','order'];
+const ttOn=()=>P&&TT_PAGES.includes(page)&&!(page==='order'&&false);
+function XT(create){if(!P)return null;P.xt=P.xt||{};if(!P.xt[page]&&create)P.xt[page]={cols:[],rows:{},hideR:{},hideC:{},v:{}};return P.xt[page]||null}
+function ttTables(){return [...document.querySelectorAll('#content .tw>table.t')].filter(t=>!t.closest('.cs,[data-notools]'))}
+function ttKeys(tbl){const seen={};return [...tbl.tBodies].flatMap(b=>[...b.rows]).filter(tr=>!tr.classList.contains('tt-custom')).map(tr=>{const base=(tr.dataset.q||(tr.cells[0]?tr.cells[0].innerText:'')||'').trim().slice(0,90);seen[base]=(seen[base]||0)+1;return [tr,base+'#'+seen[base]]})}
+const isGroupRow=tr=>tr.cells.length===1&&tr.cells[0].colSpan>1;
+function decorateTables(){document.querySelectorAll('.tt-tb,.tt-add').forEach(x=>x.remove());if(!ttOn())return;const X=XT(false),edit=!!VIEW.tedit,tables=ttTables();if(!tables.length)return;
+  const acts=document.querySelector('#content .ph .acts');if(acts&&!acts.querySelector('[data-tt="toggle"]')){const b=document.createElement('button');b.className='btn sm';b.dataset.tt='toggle';b.textContent=edit?'Done editing table':'Edit table';b.setAttribute('aria-pressed',edit);acts.prepend(b)}
+  tables.forEach((tbl,ti)=>{const heads=[...tbl.tHead.rows[tbl.tHead.rows.length-1].cells],n0=heads.length;tbl.dataset.tt=ti;tbl.dataset.n0=n0;const keys=ttKeys(tbl);const cols=X?X.cols:[];
+    heads.forEach((th,ci)=>{th.dataset.th=th.textContent.trim();if(X&&X.hideC[ti+'|'+th.dataset.th]){th.classList.add('tt-hide');keys.forEach(([tr])=>{if(tr.cells[ci]&&!isGroupRow(tr))tr.cells[ci].classList.add('tt-hide')})}
+      if(edit&&th.dataset.th){const b=document.createElement('button');b.className='ttx';b.dataset.tt='hidecol';b.dataset.ti=ti;b.dataset.h=th.dataset.th;b.title='Hide this column';b.textContent='×';th.appendChild(b)}});
+    const hr=tbl.tHead.rows[tbl.tHead.rows.length-1];cols.forEach(c=>{const th=document.createElement('th');th.className='tt-cx';th.textContent=c.name;if(edit){const b=document.createElement('button');b.className='ttx';b.dataset.tt='delcol';b.dataset.cid=c.id;b.title='Delete this column';b.textContent='×';th.appendChild(b)}hr.appendChild(th)});
+    keys.forEach(([tr,k])=>{if(X&&X.hideR[ti+'|'+k]){tr.classList.add('tt-hide');return}
+      if(isGroupRow(tr)){tr.cells[0].colSpan+=cols.length;return}
+      tr.dataset.tk=k;cols.forEach(c=>{const td=document.createElement('td');td.className='left tt-cx';td.dataset.l=c.name;const key=ti+'|'+k+'|'+c.id;td.innerHTML=`<div contenteditable="true" spellcheck="false" data-xt="v" data-xk="${esc(key)}" aria-label="${esc(c.name)}">${esc(X.v[key]||'')}</div>`;tr.appendChild(td)});
+      if(edit&&tr.cells[0]){const b=document.createElement('button');b.className='ttx rowx';b.dataset.tt='hiderow';b.dataset.ti=ti;b.dataset.k=k;b.title='Delete this row';b.textContent='×';tr.cells[0].prepend(b)}});
+    const body=tbl.tBodies[0];((X&&X.rows[ti])||[]).forEach(r=>{const tr=document.createElement('tr');tr.className='tt-custom';const cells=[];for(let i=0;i<n0;i++)cells.push(['c'+i,heads[i].dataset.th,i]);cols.forEach(c=>cells.push(['x'+c.id,c.name,-1]));
+      tr.innerHTML=cells.map(([id,l,i])=>`<td class="left${i>=0&&X.hideC[ti+'|'+l]?' tt-hide':''}" data-l="${esc(l)}"><div contenteditable="true" spellcheck="false" data-xt="r" data-ti="${ti}" data-rid="${r.id}" data-cid="${esc(id)}" aria-label="${esc(l)}">${esc(r.cells[id]||'')}</div></td>`).join('')+(edit?`<td><button class="ttx" data-tt="delrow" data-ti="${ti}" data-rid="${r.id}" title="Delete this row">×</button></td>`:'');body.appendChild(tr)});
+    if(edit){const w=tbl.closest('.tw'),d=document.createElement('div');d.className='bacts tt-add';d.innerHTML=`<button class="btn sm" data-tt="addrow" data-ti="${ti}">+ Add a row</button>`;w.after(d)}});
+  if(edit||(X&&(X.cols.length||Object.values(X.hideR).length||Object.values(X.hideC).length))){const tb=document.createElement('div');tb.className='tt-tb';const hid=X?Object.keys(X.hideR).length+Object.keys(X.hideC).length:0;
+    tb.innerHTML=edit?`<span class="small muted">Edit table: add or delete rows and columns on this sheet. Deleting a row or column that came from the script hides it (nothing in the script changes).</span><button class="btn sm" data-tt="addcol">+ Add a column</button>${hid?`<button class="btn sm" data-tt="unhide">Show ${hid} hidden</button>`:''}`:(hid?`<span class="small muted">${hid} row or column hidden on this sheet.</span><button class="btn sm" data-tt="unhide">Show them</button>`:'');
+    const first=tables[0].closest('.tw');first.before(tb)}}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tt]');if(!t||!P)return;const a=t.dataset.tt;
+  if(a==='toggle'){VIEW.tedit=!VIEW.tedit;render(true);return}
+  if(a==='addcol'){askText('New column','Name of the column (for example Vendor, Remarks, Status)',nm=>{const X=XT(true);snapshot();X.cols.push({id:uid(),name:nm.slice(0,40)});logChange(`${PG[page].t} · column "${nm}" added`,'prod',true);touch([]);render(true)});return}
+  if(a==='delcol'){const X=XT(true),c=X.cols.find(x=>x.id===t.dataset.cid);if(!c)return;snapshot();X.cols=X.cols.filter(x=>x!==c);Object.keys(X.v).forEach(k=>{if(k.endsWith('|'+c.id))delete X.v[k]});Object.values(X.rows).forEach(L=>L.forEach(r=>delete r.cells['x'+c.id]));logChange(`${PG[page].t} · column "${c.name}" deleted`,'prod',true);touch([]);render(true);return}
+  if(a==='hidecol'){const X=XT(true);snapshot();X.hideC[t.dataset.ti+'|'+t.dataset.h]=1;logChange(`${PG[page].t} · column "${t.dataset.h}" hidden`,'prod',true);touch([]);render(true);return}
+  if(a==='hiderow'){const X=XT(true);snapshot();X.hideR[t.dataset.ti+'|'+t.dataset.k]=1;logChange(`${PG[page].t} · a row was deleted from the sheet`,'prod',true);touch([]);render(true);return}
+  if(a==='addrow'){const X=XT(true),ti=t.dataset.ti;snapshot();(X.rows[ti]=X.rows[ti]||[]).push({id:uid(),cells:{}});logChange(`${PG[page].t} · row added`,'prod',true);touch([]);render(true);return}
+  if(a==='delrow'){const X=XT(true),ti=t.dataset.ti;snapshot();X.rows[ti]=(X.rows[ti]||[]).filter(r=>r.id!==t.dataset.rid);logChange(`${PG[page].t} · row deleted`,'prod',true);touch([]);render(true);return}
+  if(a==='unhide'){const X=XT(true);snapshot();X.hideR={};X.hideC={};logChange(`${PG[page].t} · hidden rows and columns shown`,'prod',true);touch([]);render(true)}});
+document.addEventListener('focusout',e=>{const el=e.target;if(!P||!el.dataset||!el.dataset.xt)return;const v=el.innerText.replace(/ /g,' ').trim(),X=XT(true);
+  if(el.dataset.xt==='v'){const k=el.dataset.xk;if((X.v[k]||'')===v)return;snapshot();if(v)X.v[k]=v;else delete X.v[k]}
+  else{const L=X.rows[el.dataset.ti]||[],r=L.find(x=>x.id===el.dataset.rid);if(!r||(r.cells[el.dataset.cid]||'')===v)return;snapshot();if(v)r.cells[el.dataset.cid]=v;else delete r.cells[el.dataset.cid]}
+  logChange(`${PG[page].t} · extra cell edited`,'prod',true);touch([])});
+/* Excel / PDF of a sheet carries the extra columns and rows and leaves out hidden ones (when the sheet and the screen match) */
+function ttExport(exp){try{if(!exp||!ttOn()||!P.xt||!P.xt[page])return exp;const X=P.xt[page],tables=ttTables();if(tables.length!==exp.sheets.length)return exp;const out=JSON.parse(JSON.stringify(exp));
+  for(let ti=0;ti<tables.length;ti++){const tbl=tables[ti],sh=out.sheets[ti],n0=+tbl.dataset.n0;if(sh.cols.length!==n0)return exp;const heads=[...tbl.tHead.rows[tbl.tHead.rows.length-1].cells].slice(0,n0).map(th=>th.dataset.th||th.textContent.replace('×','').trim());
+    const keep=heads.map((h,i)=>X.hideC[ti+'|'+h]?-1:i).filter(i=>i>=0);const dom=ttKeys(tbl);let j=0;const rows=[];
+    for(const [tr,k] of dom){const er=sh.rows[j];if(!er)return exp;const grp=isGroupRow(tr);if(grp!==!Array.isArray(er))return exp;j++;
+      if(grp){rows.push(er);continue}if(X.hideR[ti+'|'+k])continue;rows.push([...keep.map(i=>er[i]),...X.cols.map(c=>X.v[ti+'|'+k+'|'+c.id]||'')])}
+    if(j!==sh.rows.length)return exp;
+    ((X.rows[ti])||[]).forEach(r=>rows.push([...keep.map(i=>r.cells['c'+i]||''),...X.cols.map(c=>r.cells['x'+c.id]||'')]));
+    sh.cols=[...keep.map(i=>sh.cols[i]),...X.cols.map(c=>({h:c.name,w:16}))];sh.rows=rows}
+  return out}catch(e){return exp}}
+
 let lastExp=null;
 function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTop();return}
   syncTop();
-  if(!P.scenes.length&&page!=='artists'&&page!=='write'){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
+  if(!P.scenes.length&&page!=='artists'&&page!=='write'&&page!=='budget'){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> This is an example script so you can see every report. Import your own script to start.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';
-  if(page==='write')wrMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}renderChecksBtn()}
+  if(page==='write')wrMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
@@ -2157,7 +2622,8 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}
   if(t.dataset.x){exportPage(t.dataset.x);return}
   if(t.dataset.delp){e.stopPropagation();if(t.dataset.armed){const id=t.dataset.delp;t.textContent='Deleting…';await deleteProject(id);if(P&&P.id===id)P=null;toast('Project deleted');render();return}t.dataset.armed=1;t.textContent='Confirm delete';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}
-  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp)await saveFile(`${(bp.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(bp));return}
+  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp&&SEC.on){await saveFile(DISK.safe(bp.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',await envMake(JSON.stringify(bp)));return}
+  if(bp)await saveFile(`${(bp.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(bp));return}
   if(t.dataset.open){await openProject(t.dataset.open);return}
   if(t.dataset.edit){VIEW.editScene=t.dataset.edit;render(true);const ta=$('#ed-'+t.dataset.edit);ta&&ta.focus();return}
   if(t.dataset.cancel!==undefined&&t.hasAttribute('data-cancel')){VIEW.editScene=null;render(true);return}
@@ -2226,8 +2692,8 @@ function closeModal(){$('#modalRoot').innerHTML='';if(pendingRename){const f=pen
 function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><button class="btn ghost" data-close>Close</button></div>
  <div class="modal-b">
   <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>
-  <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json). Any language or format.</span></label>
-  <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json" hidden>
+  <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json or encrypted .scriptdesk). Any language or format.</span></label>
+  <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json,.scriptdesk" hidden>
   <div class="fieldbox"><label for="iText">Or paste the script</label><textarea id="iText" placeholder="SCENE NO 1  EXT. VILLAGE - DAY&#10;&#10;..."></textarea></div>
   <p class="small muted" id="iInfo">After import you'll check the scene list before the AI breakdown starts.</p>
  </div>
@@ -2235,6 +2701,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   let scanned=null;const info=$('#iInfo');
   const handle=async f=>{if(!f)return;info.textContent='Reading '+f.name+'…';scanned=null;
     try{const r=await fileToText(f,m=>info.textContent=m);
+      if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
       if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
       if(r&&r.scanned){scanned=r.scanned;info.textContent=`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
       else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}`}
@@ -2263,7 +2730,7 @@ function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no loca
   <div class="modal-f"><span class="small muted" style="margin-right:auto">${AI.sample?'The breakdown takes a few minutes for a full script.':'AI is off in this view. Reports will fill in as you type.'}</span><button class="btn" data-close>${fresh?'Later':'Done'}</button>${AI.sample?`<button class="btn pri" data-act="startBreakdown">Start AI breakdown</button>`:''}</div>`)}
 
 /* ================= Export ================= */
-async function saveFile(filename,data){if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
+async function saveFile(filename,data){try{DISK.exportCopy(filename,data)}catch(e){}if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
   try{await dl.save({filename,data});toast('Saved '+filename)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited')toast('A save prompt is already open.');else if(c==='rejected_extension'||c==='extension_not_enabled')toast('This file type cannot be saved in this view.');else toast('The file could not be saved. Try again.')}}
 let _dl;async function capDownloads(){if(_dl!==undefined)return _dl;try{_dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){_dl=null}return _dl}
 function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_${rep.replace(/[^\w]+/g,'_')}.${ext}`}
@@ -2271,7 +2738,7 @@ async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');r
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
     else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
-  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move']];
+  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
     jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
   await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
@@ -2411,6 +2878,7 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
   async get(k){try{const d=await this.open();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result??null);q.onerror=()=>rej(q.error)})}catch(e){return null}},
   async set(k,v){try{const d=await this.open();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});return true}catch(e){return false}},
   async del(k){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}};
+{const g=IDB.get.bind(IDB),st=IDB.set.bind(IDB);IDB.get=async k=>{const v=await g(k);if(v&&v.__enc&&String(k).startsWith('p.')){if(!SEC.dek)return null;try{return JSON.parse(await aesDec(SEC.dek,v.__enc))}catch(e){return null}}return v};IDB.set=async(k,v)=>{if(SEC.on&&String(k).startsWith('p.')){if(!SEC.dek)return false;return st(k,{__enc:await aesEnc(SEC.dek,JSON.stringify(v))})}return st(k,v)}}
 /* ---- AI services: Claude (paid) or free options (Gemini, Groq, OpenRouter free models, Ollama on this computer, any OpenAI-compatible server) ---- */
 const PROVIDERS={
   ollama:{group:'local',name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
@@ -2547,6 +3015,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   openModal(`<div class="modal-h"><h2>Settings</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${note?`<div class="banner">${esc(note)}</div>`:''}
   <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+  <div class="fieldbox"><button class="btn" data-sec="open">Security &amp; saving: encryption and your hard disk</button></div>
   <div id="sBody"></div>
   <div class="pool-box"><h3>Your AI pool <span class="small muted">· several keys, switching automatically</span></h3>
     <p class="small muted" style="margin:0 0 8px;line-height:1.5">Fill in a service above, then press <b>Add to AI pool</b>. Add as many free keys as you like, even several for the same service. ScriptDesk uses the most accurate AI first, spreads work across equally good ones, and moves to the next one when a free limit is reached. Free allowances are never truly unlimited, but a pool of keys multiplies them.</p>
@@ -2623,6 +3092,8 @@ if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:
 
 /* ================= Boot ================= */
 (async function boot(){
+  if(SEC.on)await secGate();
+  try{await DISK.init();DISK.sched(true)}catch(e){}
   render();
   const lastId=lsGet('last');
   if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}
@@ -2631,7 +3102,7 @@ if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:
   if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;refreshAI();setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();return}
   const [smp,db,usr]=await Promise.all([window.claude.use('sample').catch(()=>null),window.claude.use('db').catch(()=>null),window.claude.use('user').catch(()=>null)]);
   AI.sample=smp;AI.checked=true;if(smp){try{AI.limits=await smp.limits()}catch(e){AI.limits=null}}
-  if(db&&usr){try{UID=await usr.id()}catch(e){UID=null}if(UID){DB=db;cloudOK=true}}
+  if(db&&usr&&!SEC.on){try{UID=await usr.id()}catch(e){UID=null}if(UID){DB=db;cloudOK=true}}
   setSync('ok',cloudOK?'Saved to your account':'Saved on this device');
   if(cloudOK){const cloud=await cloudIndex();const want=lsGet('last')||(cloud[0]&&cloud[0].id);
     if(want&&(!P||P.sample||P.id===want)){const p=await loadProject(want);if(p){P=p}}

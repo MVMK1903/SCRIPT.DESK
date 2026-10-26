@@ -40,6 +40,7 @@ A **Shooting** section in the menu (new in v1.7.0). Nothing in the other reports
 Every page exports to Excel and PDF and is included in "Download all".
 
 - **Camera & equipment** (v1.8.0): researched suggestions of cameras, lenses and lights used on recent Indian and international films (RRR, Baahubali, Kalki 2898 AD, Pushpa 2, Mission: Impossible 7, Civil War and 2025–26 festival surveys), grouped by need: day exteriors, night and low light, action and stunts, slow motion, aerial, handheld and tight spaces, VFX, songs, lower budget. Each item has its source. "For each scene" suggests camera, lenses and lights per scene (rules without AI, or "Suggest with AI"), and "Our equipment list" holds your own kit, starting from a standard kit.
+- **For this script** (v1.9.0): the camera package this script needs (main, second and high-speed cameras, drone, lenses, lights, camera support and grip), worked out from its scenes, or "Recommend with AI". Choose the release: theatrical, Netflix original, Amazon Prime Video original or other OTT. For Netflix the main cameras come from the 2026 Netflix approved list (shown in full, with the 90% rule); for Prime Video it explains the native 4K delivery rule. Grip and support now include gimbal, Steadicam, track and trolley, slider, Jimmy Jib, Technocrane, Russian Arm, rope camera (cable cam), car rigs and hi-hat.
 
 ## AI: works with any AI, including all open-source models
 

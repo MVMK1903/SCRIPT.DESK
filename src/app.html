@@ -97,6 +97,13 @@ a{color:var(--accent)}
 .btn.pri:hover{filter:brightness(1.07);color:var(--accent-ink)}
 .btn.pri:active:not(:disabled){box-shadow:inset 0 2px 8px rgba(0,0,0,.28)}
 .btn.sm{padding:7px 13px;font-size:12.5px}
+.pool-box{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-inset-sm);padding:14px 16px;margin:6px 0 14px}
+.pool-box h3{margin:0 0 6px;font:700 14px/1.3 var(--f-ui)}
+.pool-row{display:flex;gap:8px;align-items:center;padding:8px 10px;margin-bottom:8px;border-radius:14px;box-shadow:var(--sh-raise-sm);background:var(--bg)}
+.pool-row.off{opacity:.55}.pool-main{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.pool-main b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.pool-opt{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.pool-opt select{width:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--fg)}
+@media (max-width:560px){.pool-row{flex-wrap:wrap}.pool-main{flex-basis:100%}}
 .btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
 .btn.ghost:hover{box-shadow:var(--sh-raise-sm);color:var(--fg)}
 .btn.warn{color:var(--warn)}
@@ -687,7 +694,7 @@ function sceneSpeakers(s){return uniq((s.cues&&s.cues.length?s.cues:extractCues(
 function sceneMentionIds(s){const act=classify(String(s.text||'').split('\n')).filter(([k])=>k==='act').map(([,t])=>t).join('\n');return P.artists.filter(a=>[a.name,...(a.aliases||[])].some(n=>String(n).length>=3&&nameHit(act,n)>=0)).map(a=>a.id)}
 function byAppearance(s,ids){const pos=id=>{const a=A(id);if(!a)return 1e9;const hits=[a.name,...(a.aliases||[])].map(n=>nameHit(s.text,n)).filter(i=>i>=0);return hits.length?Math.min(...hits):1e9};return uniq(ids).map(id=>[id,pos(id)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0])}
 function sureCast(s){return [...namesToIds(sceneSpeakers(s),'Found in dialogue'),...sceneMentionIds(s)]}
-function thorough(){if(!STANDALONE)return false;const c=aiCfg();return c.thorough!=null?!!c.thorough:c.provider!=='claude'}
+function thorough(){if(!STANDALONE)return false;const c=aiCfg();if(c.thorough!=null)return !!c.thorough;if(poolOn(c))return !poolEntries(c).every(e=>e.provider==='claude');return c.provider!=='claude'}
 function checkPrompt(s){const cur={desc:s.desc,artists:s.artists.map(aName),costumes:s.costumes.map(c=>(c.a?aName(c.a):c.n)+' – '+c.c)};LK.forEach(k=>cur[k]=s[k]);
   return `You are double-checking a SCRIPT BREAKDOWN for an Indian film. Read the scene below slowly, line by line (it may be in English, Telugu, Tinglish or Hindi), and list everything the CURRENT BREAKDOWN MISSED. Write values in English.
 Check especially: every character who appears, speaks or is described as present (including non-speaking ones); every object an actor touches or uses; vehicles; animals; crowd and junior artistes; costume or look changes (wet, blood, uniform, period); special effects; weapons; anything needing VFX.
@@ -734,7 +741,7 @@ Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"",
 SCENES:
 ${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}${sceneSpeakers(s).length?`\nSpeaking characters (must be in artists): ${sceneSpeakers(s).join(', ')}`:''}
 ${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`).join('\n\n')}`}
-function batchMax(){if(!STANDALONE)return 4;const c=aiCfg(),p=PROVIDERS[c.provider]||{};return p.batchMax||(c.provider==='ollama'?1:2)}
+function batchMax(){if(!STANDALONE)return 4;const c=aiCfg(),bm=e=>{const p=PROVIDERS[e.provider]||{};return p.batchMax||(e.provider==='ollama'?1:2)};if(poolOn(c))return Math.min(...poolEntries(c).map(bm));return bm(c)}
 function makeBatches(list){const out=[];let b=[],n=0;const mx=batchMax();list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=Math.min(mx,aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
 function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
   const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
@@ -800,7 +807,7 @@ ${scr}`,{modelTier:'complex'});
 
 async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
   if(!AI.sample){noAI('AI needs ScriptDesk to be opened inside Claude. You can still edit every report by hand.');return}
-  if(STANDALONE&&!navigator.onLine&&aiCfg().provider!=='ollama'&&!/localhost|127\.0\.0\.1|\/\/(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(aiCfg().base[aiCfg().provider]||'')){toast(ERRS.offline,5000);return}
+  if(STANDALONE&&!navigator.onLine&&!poolOn(aiCfg())&&aiCfg().provider!=='ollama'&&!/localhost|127\.0\.0\.1|\/\/(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(aiCfg().base[aiCfg().provider]||'')){toast(ERRS.offline,5000);return}
   if(P.sample){P.sample=false}
   if(opts.recheck){return recheckAll(opts.only)}
   const pending=P.scenes.filter(s=>opts.only?opts.only.includes(s.id):s.status!=='done');
@@ -1712,9 +1719,40 @@ const PGROUPS={local:'On this computer · offline',free:'Free keys',paid:'Paid k
 function aiCfg(){let c=lsGet('ai');if(!c){c={provider:'claude',keys:{},base:{},model:{}};const old=lsGet('apikey');if(old){c.keys.claude=old;const m=lsGet('models')||{};c.model.claude={default:m.default||'',complex:m.complex||''}}else c.provider='ollama'}
   c.keys=c.keys||{};c.base=c.base||{};c.model=c.model||{};return c}
 const apiKey=()=>{const c=aiCfg();return c.keys[c.provider]||''};
-function aiReady(){const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)return false;const model=(c.model[c.provider]||{}).default||(c.provider==='ollama'?'':p.models.default);if(!model)return false;return !p.key||c.provider==='custom'||!!c.keys[c.provider]}
-function aiBudget(){if(!STANDALONE)return 150000;const p=PROVIDERS[aiCfg().provider];return p?p.budget:30000}
-function aiWorkers(){if(!STANDALONE)return 2;const p=PROVIDERS[aiCfg().provider];return p?p.workers:1}
+/* AI pool: several saved keys/services; the best-scoring ready one is used, others take over on limits or errors */
+const COOL={};let POOLRR=0,POOLLAST='';
+function accScore(e){const m=String(e.model||(PROVIDERS[e.provider]||{models:{}}).models.default||'').toLowerCase(),pv=e.provider;
+  if(pv==='claude')return /opus/.test(m)?98:/sonnet/.test(m)?95:/haiku/.test(m)?80:90;
+  if(/gemini/.test(m))return /pro/.test(m)?93:/lite/.test(m)?70:/flash/.test(m)?84:80;
+  if(/gpt-5|\bo[34]\b|gpt-4\.1|gpt-4o(?!-mini)|fable|mythos/.test(m))return 92;
+  if(/deepseek.*(v4|v3\.|r1|pro|chat|reasoner)/.test(m))return /flash|lite|distill/.test(m)?80:90;
+  if(/kimi|k2|glm-[45]|qwen3?.*(235|480|max|397)|llama.*405|gpt-oss.*120|mistral-large|nemotron.*(ultra|253|340)|minimax/.test(m))return 86;
+  const b=m.match(/(\d+(?:\.\d+)?)\s*b\b/);if(b){const n=parseFloat(b[1]);return n>=100?82:n>=60?76:n>=30?70:n>=14?62:n>=7?52:42}
+  return pv==='gemini'?84:60}
+const poolOn=c=>c.usePool!==false&&(c.pool||[]).some(e=>e.on!==false);
+function entryReady(e){const p=PROVIDERS[e.provider];if(!p)return false;if(!(e.model||p.models.default))return false;return !p.key||e.provider==='custom'||!!e.key}
+function poolEntries(c){c=c||aiCfg();const all=(c.pool||[]).filter(e=>e.on!==false&&entryReady(e)),min=c.minAcc==null?75:c.minAcc,ok=all.filter(e=>accScore(e)>=min);return ok.length?ok:all}
+function entryCfg(e){return {provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{[e.provider]:{default:e.model||'',complex:e.complex||''}}}}
+function poolPick(list,tried){const now=Date.now(),av=list.filter(e=>!tried.has(e.id)&&!(COOL[e.id]&&COOL[e.id].until>now));if(!av.length)return null;
+  av.sort((a,b)=>accScore(b)-accScore(a));const top=accScore(av[0]),tier=av.filter(e=>accScore(e)>=top-6);return tier[POOLRR++%tier.length]}
+function coolFor(e,x){const code=x&&x.code,now=Date.now();let ms=15e3;
+  if(code==='rate_limited')ms=Math.max(30e3,(x.wait||0)*1000);else if(code==='no_credit')ms=36e5;
+  else if(code==='bad_key'||code==='bad_model'||code==='no_model')ms=36e5;
+  else if(code==='cors_blocked'||code==='ollama_down'||code==='ollama_origin')ms=6e5;
+  COOL[e.id]={until:now+ms,why:code}}
+async function poolCall(prompt,opts,c){const list=poolEntries(c);let last=null;
+  for(let round=0;round<6;round++){const tried=new Set();
+    for(;;){const e=poolPick(list,tried);if(!e)break;tried.add(e.id);let o=opts;
+      for(let a=0;a<2;a++){try{const r=await callOnce(prompt,o,entryCfg(e),PROVIDERS[e.provider]);POOLLAST=e.id;delete COOL[e.id];return r}
+        catch(x){if(x&&x.code==='max_tokens'&&!o._small){o=Object.assign({},o,{maxOut:4096,_small:1});continue}
+          if(x&&x.code==='cancelled')throw x;if(opts.signal&&opts.signal.aborted)throw {code:'cancelled'};last=x;coolFor(e,x);break}}}
+    const now=Date.now(),ts=list.map(e=>COOL[e.id]&&COOL[e.id].until).filter(t=>t>now);if(!ts.length)break;
+    const wait=Math.ceil((Math.min(...ts)-now)/1000);if(wait>120)break;
+    if(JOB){const old=JOB.label;JOB.label=`All your AIs are busy, trying again in ${wait}s`;renderJob();await sleepAbort(wait*1000,opts.signal);JOB.label=old;renderJob()}else await sleepAbort(wait*1000,opts.signal)}
+  throw last||{code:'no_key'}}
+function aiReady(){const c0=aiCfg();if(poolOn(c0))return poolEntries(c0).length>0;const c=c0,p=PROVIDERS[c.provider];if(!p)return false;const model=(c.model[c.provider]||{}).default||(c.provider==='ollama'?'':p.models.default);if(!model)return false;return !p.key||c.provider==='custom'||!!c.keys[c.provider]}
+function aiBudget(){if(!STANDALONE)return 150000;const c=aiCfg();if(poolOn(c))return Math.min(...poolEntries(c).map(e=>(PROVIDERS[e.provider]||{budget:30000}).budget));const p=PROVIDERS[c.provider];return p?p.budget:30000}
+function aiWorkers(){if(!STANDALONE)return 2;const c=aiCfg();if(poolOn(c))return Math.max(1,Math.min(3,poolEntries(c).length));const p=PROVIDERS[c.provider];return p?p.workers:1}
 function noAI(msg){if(STANDALONE)openSettings('Choose an AI service to use the AI features. Free options are available, and everything else works without AI, even offline.');else toast(msg)}
 function blobB64(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(r.error);r.readAsDataURL(b)})}
 const sleepAbort=(ms,signal)=>new Promise((res,rej)=>{const t=setTimeout(res,ms);if(signal)signal.addEventListener('abort',()=>{clearTimeout(t);rej({code:'cancelled'})},{once:true})});
@@ -1748,7 +1786,7 @@ async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[
   else if(prov==='ollama'||prov==='ollamacloud'){if(j.error)throw {code:'upstream_error',message:String(j.error)};text=(j.message||{}).content||'';trunc=j.done_reason==='length'}
   else{const ch=(j.choices||[])[0]||{};text=(ch.message||{}).content||'';trunc=ch.finish_reason==='length';if(j.error)throw {code:'upstream_error',message:String(j.error.message||j.error)}}
   text=text.replace(/<think>[\s\S]*?<\/think>/g,'');if(!text.trim())throw {code:'empty_completion'};return {text,truncated:trunc,modelTierApplied:tier}}
-async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg(),p=PROVIDERS[c.provider];if(!p)throw {code:'no_key'};
+async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg();if(poolOn(c)){if(!poolEntries(c).length)throw {code:'no_key'};return poolCall(prompt,opts,c)}const p=PROVIDERS[c.provider];if(!p)throw {code:'no_key'};
   if(p.key&&c.provider!=='custom'&&!c.keys[c.provider])throw {code:'no_key'};
   if(c.provider!=='ollama'&&!/localhost|127\.0\.0\.1/.test(c.base[c.provider]||p.base)&&navigator.onLine===false)throw {code:'offline'};
   for(let attempt=0;;attempt++){try{return await callOnce(prompt,opts,c,p)}catch(e){
@@ -1780,8 +1818,13 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   ${note?`<div class="banner">${esc(note)}</div>`:''}
   <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
   <div id="sBody"></div>
+  <div class="pool-box"><h3>Your AI pool <span class="small muted">· several keys, switching automatically</span></h3>
+    <p class="small muted" style="margin:0 0 8px;line-height:1.5">Fill in a service above, then press <b>Add to AI pool</b>. Add as many free keys as you like, even several for the same service. ScriptDesk uses the most accurate AI first, spreads work across equally good ones, and moves to the next one when a free limit is reached. Free allowances are never truly unlimited, but a pool of keys multiplies them.</p>
+    <div id="sPool"></div>
+    <div class="pool-opt"><label for="sMin" class="small">Only use AIs rated at least</label><select id="sMin"><option value="0">Any</option><option value="60">Decent · 60</option><option value="75">Good · 75</option><option value="85">High · 85</option><option value="90">Top only · 90</option></select><button class="btn sm" id="sTestAll">Test all</button></div>
+    <p class="small muted" style="margin:6px 0 0">Ratings are an estimate from the model's size and family. If none of your AIs reaches the minimum, the best one you have is used.</p></div>
   <label class="small" style="display:flex;gap:10px;align-items:flex-start;line-height:1.5"><input type="checkbox" id="sThorough" ${thorough()?'checked':''} style="margin-top:3px"><span><b>Double-check every scene</b> (recommended for free and open-source AI). The AI reads each scene a second time and adds characters, props and details it missed. Takes about twice as long and uses more of a free allowance.</span></label>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sAdd">Add to AI pool</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
   <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
   <div class="banner info small" style="display:block;line-height:1.55"><b>Have a Claude subscription?</b> Apps outside Claude can only reach Claude with an API key. To use your subscription instead, open ScriptDesk inside Claude: <a href="https://claude.ai/artifact/E9UvNpxLmvFjyudnWrKGs6" target="_blank" rel="noopener">Open ScriptDesk in Claude</a> (sign in with your Claude account).</div>
   ${installed?'':`<div class="banner info" style="margin-top:6px">${isIOS?'To install on iPhone or iPad: tap Share, then "Add to Home Screen".':'To install: use "Install app" at the top, or your browser menu → Install ScriptDesk / Add to Home screen.'}</div>`}
@@ -1796,7 +1839,23 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>`;
     $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found. Click the Model box to pick one.`:'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0]}catch(e){$('#sLoadMsg').textContent=errMsg(e)}}};
   const collect=()=>{const th=$('#sThorough');if(th)c.thorough=th.checked;c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
-  body();
+  const TST={};
+  const poolUI=()=>{const L=c.pool||[],now=Date.now();$('#sMin').value=String(c.minAcc==null?75:c.minAcc);
+    $('#sPool').innerHTML=L.length?L.map(e=>{const p=PROVIDERS[e.provider]||{name:e.provider},cl=COOL[e.id],rest=cl&&cl.until>now,sc=accScore(e),
+      st=TST[e.id]||(!entryReady(e)?'needs a key or model':e.on===false?'off':rest?`resting ${Math.ceil((cl.until-now)/1000)}s`:POOLLAST===e.id?'last used':'ready');
+      return `<div class="pool-row${e.on===false?' off':''}" data-id="${esc(e.id)}"><div class="pool-main"><b>${esc(p.name.split(' · ')[0])} · ${esc(e.model||p.models.default||'?')}</b><span class="small muted">${e.key?'key …'+esc(e.key.slice(-4))+' · ':''}<span class="pool-sc">rating ${sc}</span> · ${esc(st)}</span></div>
+        <button class="btn sm" data-act="tog">${e.on===false?'Turn on':'Turn off'}</button><button class="btn sm" data-act="del" aria-label="Remove">Remove</button></div>`}).join(''):'<p class="small muted" style="margin:0 0 8px">Nothing in the pool yet. Until you add one, the service chosen above is used on its own.</p>'};
+  const savePool=()=>{lsSet('ai',c);refreshAI();poolUI()};
+  $('#sPool').onclick=ev=>{const b=ev.target.closest('button[data-act]');if(!b)return;const id=b.closest('.pool-row').dataset.id,i=(c.pool||[]).findIndex(x=>x.id===id);if(i<0)return;
+    if(b.dataset.act==='del'){c.pool.splice(i,1);delete COOL[id]}else c.pool[i].on=c.pool[i].on===false;savePool()};
+  $('#sMin').onchange=()=>{c.minAcc=+$('#sMin').value;savePool()};
+  $('#sAdd').onclick=()=>{collect();const p=PROVIDERS[cur],mc=c.model[cur]||{},e={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),provider:cur,key:c.keys[cur]||'',base:c.base[cur]||'',model:mc.default||p.models.default||'',complex:mc.complex||'',on:true};
+    if(!entryReady(e)){msg(p.key&&cur!=='custom'&&!e.key?'Paste a key first.':'Pick a model first (press "Load models").');return}
+    c.pool=c.pool||[];if(c.pool.some(x=>x.provider===e.provider&&x.key===e.key&&x.model===e.model&&x.base===e.base)){msg('That one is already in the pool.');return}
+    c.pool.push(e);c.usePool=true;savePool();if(p.key&&$('#sKey')){$('#sKey').value='';c.keys[cur]=''}msg(`Added. ${poolEntries(c).length} AI${poolEntries(c).length>1?'s':''} ready in the pool.`+(p.key?' You can paste another key now.':''))};
+  $('#sTestAll').onclick=async()=>{const L=c.pool||[];if(!L.length){msg('Add an AI to the pool first.');return}msg('Testing…');
+    await Promise.all(L.map(async e=>{TST[e.id]='testing…';poolUI();try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e),PROVIDERS[e.provider]);TST[e.id]='✓ works'}catch(x){TST[e.id]='✗ '+errMsg(x)}poolUI()}));msg('Done.');setTimeout(()=>{for(const k in TST)delete TST[k];if($('#sPool'))poolUI()},20000)};
+  body();poolUI();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
   $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))};
   $('#sTest').onclick=async()=>{collect();lsSet('ai',c);refreshAI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.')}catch(e){msg(errMsg(e))}}}

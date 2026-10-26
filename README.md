@@ -33,6 +33,16 @@ ScriptDesk is not tied to one AI company. Only the AI steps (finding scenes, sce
 
 **Open-source models it can run:** any model your chosen service offers. That includes DeepSeek, Qwen, Llama, Mistral, Gemma, gpt-oss, Kimi, GLM, MiniMax, Nemotron, Phi and others, at any size.
 
+### Use many AIs at once (AI pool)
+
+In **Settings** you can press **Add to AI pool** after filling in a service, as many times as you like, including several free keys for the same service. ScriptDesk then:
+
+- uses the most accurate AI you have first and shares the work between equally good ones;
+- moves to the next AI automatically when a free limit, bad key or outage hits, and waits only if all of them are resting;
+- ignores AIs rated below the minimum you set (ratings are an estimate from model family and size), and double-checks scenes with the rotating pool.
+
+Free allowances are never truly unlimited, but a pool of keys multiplies them.
+
 ### On your own computer (free, offline, private)
 
 | Tool | How to connect |

@@ -52,8 +52,8 @@
    "file": "underwater/underwater_rig.svg",
    "name": "Underwater rig",
    "alt": "Conceptual illustration of an underwater rig",
-   "match": "underwater rig|\\bdiver",
-   "source": "ScriptDesk original drawing"
+   "match": "underwater rig|underwater housing (and|&) rig|\\bdiver",
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "underwater_housing",
@@ -350,7 +350,7 @@
    "name": "Cable cam",
    "alt": "Conceptual illustration of a cable cam",
    "match": "cable(?!s)|rope|spidercam",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "russian_arm",
@@ -359,7 +359,7 @@
    "name": "Russian Arm",
    "alt": "Conceptual illustration of a Russian Arm",
    "match": "russian arm|u-crane",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "remote_head",
@@ -368,7 +368,7 @@
    "name": "Remote head",
    "alt": "Conceptual illustration of a remote head",
    "match": "^remote|^motori[sz]ed.*(head|pan)",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "camera_crane_jib",
@@ -377,7 +377,7 @@
    "name": "Camera crane / jib",
    "alt": "Conceptual illustration of a camera crane / jib",
    "match": "crane|\\bjib\\b|jimmy|technocrane",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "motion_control_rig",
@@ -386,7 +386,7 @@
    "name": "Motion-control rig",
    "alt": "Conceptual illustration of a motion-control rig",
    "match": "motion.?control|robotic|turntable",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "slider",
@@ -395,7 +395,7 @@
    "name": "Camera slider",
    "alt": "Conceptual illustration of a camera slider",
    "match": "slider",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "dolly",
@@ -404,7 +404,7 @@
    "name": "Dolly and track",
    "alt": "Conceptual illustration of a dolly and track",
    "match": "dolly|trolley|\\btrack\\b",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "steadicam_rig",
@@ -413,7 +413,7 @@
    "name": "Steadicam rig",
    "alt": "Conceptual illustration of a steadicam rig",
    "match": "steadicam",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "gimbal",
@@ -422,7 +422,7 @@
    "name": "Gimbal stabiliser",
    "alt": "Conceptual illustration of a gimbal stabiliser",
    "match": "gimbal|ronin|movi\\b|\\brs ?[34]\\b",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "vehicle_rig",
@@ -431,7 +431,7 @@
    "name": "Vehicle rig",
    "alt": "Conceptual illustration of a vehicle rig",
    "match": "vehicle|car rig|car mount|camera car|hostess|suction|magnetic|\\bhood\\b|\\broof\\b|side mount",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "drone_aerial_rig",
@@ -440,7 +440,7 @@
    "name": "Drone / aerial rig",
    "alt": "Conceptual illustration of a drone / aerial rig",
    "match": "drone|\\bfpv\\b|inspire|aerial",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "helmet_rig",
@@ -449,7 +449,7 @@
    "name": "Helmet rig",
    "alt": "Conceptual illustration of a helmet rig",
    "match": "helmet",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "body_rig",
@@ -458,7 +458,7 @@
    "name": "Body-worn rig",
    "alt": "Conceptual illustration of a body-worn rig",
    "match": "easyrig|body.?(mounted|worn)|snorri|vest",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "shoulder_rig",
@@ -467,7 +467,7 @@
    "name": "Shoulder rig",
    "alt": "Conceptual illustration of a shoulder rig",
    "match": "shoulder|handheld rig",
-   "source": "ScriptDesk original drawing"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "quick_release_plate",
@@ -503,7 +503,7 @@
    "name": "Tripod with fluid head",
    "alt": "Conceptual illustration of a tripod with fluid head",
    "match": "tripod|fluid head|hi-?hat|low-?mode rig",
-   "source": "Supplied pack (first set)"
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   },
   {
    "id": "director_monitor",
@@ -675,6 +675,24 @@
    "alt": "Conceptual illustration of a light panel on a stand",
    "match": "\\bled\\b|skypanel|nanlux|nanlite|panel|\\bhmi\\b|pavotube|\\blights?\\b",
    "source": "Supplied pack (individual set)"
+  },
+  {
+   "id": "cage_rig",
+   "category": "support-rigs",
+   "file": "support-rigs/cage_rig.svg",
+   "name": "Cage rig",
+   "alt": "Conceptual illustration of a modular camera cage with top handle and accessory mounts",
+   "match": "^cage|camera cage|cage rig",
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
+  },
+  {
+   "id": "handheld_rig",
+   "category": "support-rigs",
+   "file": "support-rigs/handheld_rig.svg",
+   "name": "Handheld rig",
+   "alt": "Conceptual illustration of a flexible handheld camera rig with a top handle",
+   "match": "handheld rig|hand-?held (rig|setup)",
+   "source": "Supplied reference sheet (Camera Movement & Support), cropped"
   }
  ],
  "categoryInfo": {

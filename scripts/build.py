@@ -60,7 +60,8 @@ def load_illustrations():
         try: root = ET.fromstring(raw)
         except ET.ParseError as e: problems.append(it['file'] + ': invalid SVG ' + str(e)); continue
         if not root.tag.endswith('svg') or not root.get('viewBox'): problems.append(it['file'] + ': no svg/viewBox')
-        if re.search(r'<script|<image|href=|onload|url\(\s*[\'"]?https?:', raw): problems.append(it['file'] + ': contains script or external reference')
+        chk = re.sub(r'<image [^>]*?href="data:image/webp;base64,[A-Za-z0-9+/=]+"[^>]*/>', '', raw)
+        if re.search(r'<script|<image|href=|onload|url\(\s*[\'"]?https?:|https?://(?!www\.w3\.org)', chk): problems.append(it['file'] + ': contains script or external reference (only embedded webp data allowed)')
         svgs[i] = ' '.join(raw.split())
         items.append({k: it[k] for k in ('id', 'category', 'name', 'alt', 'match')})
         if not it.get('source'): problems.append(i + ': no source recorded')

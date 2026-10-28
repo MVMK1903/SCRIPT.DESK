@@ -44,7 +44,15 @@ def main():
         for u in LIBS:
             name = u.rsplit('/', 1)[1]
             print('downloading', name)
-            urllib.request.urlretrieve(u, os.path.join(WWW, 'vendor', name))
+            for attempt in range(5):  # a stalled download must not hang the build
+                try:
+                    with urllib.request.urlopen(u, timeout=30) as r, open(os.path.join(WWW, 'vendor', name), 'wb') as f:
+                        f.write(r.read())
+                    break
+                except Exception as e:
+                    print('retry', name, attempt + 1, e)
+                    if attempt == 4:
+                        raise
             files.append(name)
         json.dump(files, open(os.path.join(WWW, 'vendor', 'manifest.json'), 'w'))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'

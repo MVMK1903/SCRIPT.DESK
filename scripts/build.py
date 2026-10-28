@@ -43,7 +43,7 @@ def load_illustrations():
     idir = os.path.join(os.path.dirname(SRC), 'illustrations')
     man = json.load(open(os.path.join(idir, 'manifest.json'), encoding='utf-8'))
     problems, svgs, items, ids = [], {}, [], set()
-    on_disk = {os.path.relpath(os.path.join(r, f), idir).replace(os.sep, '/') for r, _, fs in os.walk(idir) for f in fs if f.endswith('.svg')}
+    on_disk = {os.path.relpath(os.path.join(r, f), idir).replace(os.sep, '/') for r, _, fs in os.walk(idir) for f in fs if f.endswith('.svg') and not os.path.relpath(r, idir).startswith('scenes')}
     for it in man['items']:
         i = it['id']
         if i in ids: problems.append('duplicate id ' + i)
@@ -85,7 +85,8 @@ def load_illustrations():
         if k not in needs: problems.append('scene ' + k + ': not a need id')
         if not os.path.isfile(fp): problems.append('scene ' + k + ': missing file ' + v['file']); continue
         if not v.get('alt') or not v.get('source'): problems.append('scene ' + k + ': alt and source required')
-        scenes[k] = {'name': v['name'], 'alt': v['alt'], 'src': 'data:image/webp;base64,' + base64.b64encode(open(fp, 'rb').read()).decode()}
+        if re.search(r'<script|href=|onload|https?://(?!www\.w3\.org)', open(fp, encoding='utf-8').read()): problems.append('scene ' + k + ': script or external reference')
+        scenes[k] = {'name': v['name'], 'alt': v['alt'], 'src': 'data:image/svg+xml;base64,' + base64.b64encode(open(fp, 'rb').read()).decode()}
     for f in sorted({os.path.relpath(os.path.join(r, f), idir).replace(os.sep, '/') for r, _, fs in os.walk(os.path.join(idir, 'scenes')) for f in fs} - {v['file'] for v in man.get('scenes', {}).values()}): problems.append('no manifest entry for ' + f)
     if problems:
         print('ILLUSTRATION CHECK FAILED:\n  ' + '\n  '.join(problems)); sys.exit(1)

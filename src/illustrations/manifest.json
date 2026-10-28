@@ -747,52 +747,52 @@
  },
  "scenes": {
   "day": {
-   "file": "scenes/day.webp",
+   "file": "scenes/day.svg",
    "name": "Day exteriors",
-   "alt": "Scene image: a hiker on a mountain trail in bright daylight",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a hiker on a mountain lake shore in bright daylight",
+   "source": "ScriptDesk original vector drawing"
   },
   "night": {
-   "file": "scenes/night.webp",
+   "file": "scenes/night.svg",
    "name": "Night / low light",
-   "alt": "Scene image: a car on a city street at night",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a car with headlights on a city street at night",
+   "source": "ScriptDesk original vector drawing"
   },
   "action": {
-   "file": "scenes/action.webp",
+   "file": "scenes/action.svg",
    "name": "Action & stunts",
-   "alt": "Scene image: a stunt performer leaping from an explosion",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a stunt performer leaping in front of an explosion",
+   "source": "ScriptDesk original vector drawing"
   },
   "aerial": {
-   "file": "scenes/aerial.webp",
+   "file": "scenes/aerial.svg",
    "name": "Aerial",
-   "alt": "Scene image: a drone flying over snowy mountains",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a drone flying over snowy mountains",
+   "source": "ScriptDesk original vector drawing"
   },
   "vfx": {
-   "file": "scenes/vfx.webp",
+   "file": "scenes/vfx.svg",
    "name": "VFX & green screen",
-   "alt": "Scene image: a green-screen studio set",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a green-screen studio with a camera and light",
+   "source": "ScriptDesk original vector drawing"
   },
   "tight": {
-   "file": "scenes/tight.webp",
+   "file": "scenes/tight.svg",
    "name": "Handheld & tight spaces",
-   "alt": "Scene image: a camera operator shooting handheld in a small room",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a camera operator shooting handheld in a small room",
+   "source": "ScriptDesk original vector drawing"
   },
   "slowmo": {
-   "file": "scenes/slowmo.webp",
+   "file": "scenes/slowmo.svg",
    "name": "Slow motion",
-   "alt": "Scene image: a water splash frozen in slow motion",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of a water splash around a sphere, frozen in slow motion",
+   "source": "ScriptDesk original vector drawing"
   },
   "song": {
-   "file": "scenes/song.webp",
+   "file": "scenes/song.svg",
    "name": "Songs & dance",
-   "alt": "Scene image: dancers under stage lights",
-   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+   "alt": "Illustration of dancers under coloured stage lights",
+   "source": "ScriptDesk original vector drawing"
   }
  }
 }

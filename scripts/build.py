@@ -55,6 +55,14 @@ def main():
                         raise
             files.append(name)
         json.dump(files, open(os.path.join(WWW, 'vendor', 'manifest.json'), 'w'))
+    # Inline the local SVG illustrations so the single-file app needs no image files
+    ill = {}
+    idir = os.path.join(os.path.dirname(SRC), 'illustrations')
+    for f in sorted(os.listdir(idir)):
+        if f.endswith('.svg'):
+            ill[f[:-4]] = ' '.join(open(os.path.join(idir, f), encoding='utf-8').read().replace('#20272A', 'currentColor').split())
+    assert '/*ILLUS*/{}' in app
+    app = app.replace('/*ILLUS*/{}', json.dumps(ill))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:

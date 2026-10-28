@@ -107,7 +107,7 @@
    "name": "Action / crash camera",
    "alt": "Conceptual illustration of an action / crash camera",
    "match": "crash cam|z cam|action cam|gopro",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "high_speed_camera",
@@ -116,7 +116,7 @@
    "name": "High-speed camera",
    "alt": "Conceptual illustration of a high-speed camera",
    "match": "phantom|high.?speed|ember|\\bveo\\b|flex4k",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "large_format_camera",
@@ -125,7 +125,7 @@
    "name": "Large-format camera",
    "alt": "Conceptual illustration of a large-format camera",
    "match": "alexa lf|alexa 65|large.?format|mini lf",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "broadcast_camera",
@@ -179,7 +179,7 @@
    "name": "Cinema camera with cage",
    "alt": "Conceptual illustration of a cinema camera with cage",
    "match": "camera cage|\\bcage\\b",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "compact_cinema_camera",
@@ -188,7 +188,7 @@
    "name": "Compact cinema camera",
    "alt": "Conceptual illustration of a compact cinema camera",
    "match": "komodo|\\bfx6\\b|burano|compact cinema|\\bc70\\b|\\bc300|ronin 4d",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "modular_cinema_camera",
@@ -197,7 +197,7 @@
    "name": "Modular cinema camera",
    "alt": "Conceptual illustration of a modular cinema camera",
    "match": "modular|v-?raptor|\\bred\\b",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "mirrorless_cinema_camera",
@@ -206,7 +206,7 @@
    "name": "Mirrorless cinema camera",
    "alt": "Conceptual illustration of a mirrorless cinema camera",
    "match": "mirrorless|\\ba7|\\bfx3\\b|bmpcc|lumix",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "digital_cinema_camera",
@@ -215,7 +215,7 @@
    "name": "Digital cinema camera",
    "alt": "Conceptual illustration of a digital cinema camera",
    "match": "alexa|venice|digital cinema|camera body",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "anamorphic_lens",
@@ -224,7 +224,7 @@
    "name": "Anamorphic lens",
    "alt": "Conceptual illustration of an anamorphic lens",
    "match": "anamorphic",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "macro_lens",
@@ -233,7 +233,7 @@
    "name": "Macro / probe lens",
    "alt": "Conceptual illustration of a macro / probe lens",
    "match": "macro|probe|periscope",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "telephoto_lens",
@@ -242,7 +242,7 @@
    "name": "Telephoto lens",
    "alt": "Conceptual illustration of a telephoto lens",
    "match": "\\btele(photo)?\\b|long lens",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "wide_angle_lens",
@@ -251,7 +251,7 @@
    "name": "Wide-angle lens",
    "alt": "Conceptual illustration of a wide-angle lens",
    "match": "wide.?angle|fisheye",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "zoom_lens",
@@ -260,7 +260,7 @@
    "name": "Zoom lens",
    "alt": "Conceptual illustration of a zoom lens",
    "match": "zoom|optimo",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "prime_lens",
@@ -269,7 +269,7 @@
    "name": "Prime lens",
    "alt": "Conceptual illustration of a prime lens",
    "match": "prime|super speed",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "lens_support",
@@ -287,7 +287,7 @@
    "name": "Cine lens set",
    "alt": "Conceptual illustration of a cine lens set",
    "match": "lens set|lenses",
-   "source": "Supplied reference sheet (Cinema cameras & lenses library), cropped"
+   "source": "ScriptDesk original vector drawing (v1.16, replaces cropped raster)"
   },
   {
    "id": "variable_nd_filter",

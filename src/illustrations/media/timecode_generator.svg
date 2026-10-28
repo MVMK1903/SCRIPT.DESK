@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Timecode generator illustration">
+<title>Timecode generator — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="80" y="60" width="80" height="52" rx="8" fill="#D7D8D2"/><path d="M136 60V34" fill="none"/><circle cx="136" cy="31" r="4" fill="#147D83"/><rect x="90" y="70" width="60" height="20" rx="3" fill="#20272A"/><path d="M98 80h8M112 80h8M126 80h8" stroke="#147D83" stroke-width="3"/><circle cx="98" cy="102" r="3" fill="#147D83" stroke="none"/><circle cx="112" cy="102" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

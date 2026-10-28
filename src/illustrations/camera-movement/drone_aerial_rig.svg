@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Drone / aerial rig illustration">
+<title>Drone / aerial rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M92 65L56 38M148 65l36-27M92 83l-36 27M148 83l36 27M43 30q13-9 26 0M171 30q13-9 26 0M43 118q13 9 26 0M171 118q13 9 26 0"/><rect x="83" y="55" width="74" height="39" rx="14"/><path d="M102 94l-4 15h44l-4-15M111 109v10M133 109v10"/><rect x="105" y="91" width="30" height="20" rx="4"/><circle cx="120" cy="101" r="7"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

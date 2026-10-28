@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Underwater housing illustration">
+<title>Underwater housing — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="46" y="37" width="148" height="84" rx="18"/><rect x="62" y="50" width="90" height="57" rx="8"/><circle cx="169" cy="78" r="23"/><circle cx="169" cy="78" r="14"/><circle cx="169" cy="78" r="6"/><path d="M83 50V37M102 50V37M121 50V37M62 68H46M62 88H46M83 107v14M105 107v14M127 107v14M46 64l-10-7M46 95l-10 7M194 60l12-8M194 96l12 8M73 121v10h94v-10"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

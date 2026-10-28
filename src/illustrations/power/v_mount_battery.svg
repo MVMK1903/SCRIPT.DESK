@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="V-mount battery illustration">
+<title>V-mount battery — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="66" y="50" width="108" height="58" rx="8" fill="#D7D8D2"/><rect x="66" y="38" width="108" height="14" rx="4" fill="#20272A"/><rect x="88" y="108" width="16" height="9" rx="2" fill="#20272A"/><rect x="136" y="108" width="16" height="9" rx="2" fill="#20272A"/><path d="M86 82H154" stroke="#147D83" stroke-width="3"/><circle cx="84" cy="66" r="3" fill="#147D83" stroke="none"/><circle cx="100" cy="66" r="3" fill="#147D83" stroke="none"/><circle cx="116" cy="66" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

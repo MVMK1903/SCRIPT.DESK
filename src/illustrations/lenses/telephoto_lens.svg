@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Telephoto lens illustration">
+<title>Telephoto lens — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="28" y="64.0" width="10" height="32" rx="3" fill="#20272A"/><rect x="38" y="58.0" width="128" height="44" rx="6" fill="#D7D8D2"/><path d="M62 61.0V99.0" fill="none"/><path d="M78 61.0V99.0" fill="none"/><ellipse cx="166" cy="80" rx="7" ry="18.0" fill="#20272A"/><ellipse cx="166" cy="80" rx="4" ry="12.0" fill="#147D83" stroke="none"/><path d="M166 58L190 46V114L166 102" fill="#D7D8D2"/></g>
+</svg>

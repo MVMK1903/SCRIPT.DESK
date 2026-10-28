@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Steadicam rig illustration">
+<title>Steadicam rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M120 52V116" fill="none"/><rect x="96" y="34" width="48" height="22" rx="5" fill="#D7D8D2"/><circle cx="130" cy="45" r="6" fill="#147D83"/><rect x="98" y="116" width="44" height="14" rx="4" fill="#20272A"/><path d="M120 74L164 60L194 76" fill="none"/><rect x="190" y="56" width="12" height="48" rx="5" fill="#D7D8D2"/><rect x="60" y="106" width="28" height="14" rx="4" fill="#B9C1C0"/><path d="M88 112H98" fill="none"/></g>
+</svg>

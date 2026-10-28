@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Wireless video transmitter illustration">
+<title>Wireless video transmitter — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="78" y="78" width="84" height="40" rx="8" fill="#D7D8D2"/><path d="M100 78V46M140 78V46" fill="none"/><path d="M84 36a22 22 0 0 1 16-10M156 36a22 22 0 0 0-16-10" stroke="#147D83" stroke-width="3"/><path d="M70 44a34 34 0 0 1 28-22M170 44a34 34 0 0 0-28-22" stroke="#147D83" stroke-width="2.5"/><circle cx="98" cy="98" r="3" fill="#147D83" stroke="none"/><circle cx="120" cy="98" r="3" fill="#147D83" stroke="none"/><circle cx="142" cy="98" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

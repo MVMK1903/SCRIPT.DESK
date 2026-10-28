@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Quick-release plate illustration">
+<title>Quick-release plate — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="52" y="88" width="136" height="20" rx="5" fill="#D7D8D2"/><path d="M74 88l10-18h72l10 18" fill="#D7D8D2"/><path d="M96 98h48" stroke="#147D83" stroke-width="3"/><circle cx="176" cy="98" r="6" fill="#20272A"/><circle cx="176" cy="98" r="2.5" fill="#147D83"/><path d="M70 108v12M170 108v12" fill="none"/></g>
+</svg>

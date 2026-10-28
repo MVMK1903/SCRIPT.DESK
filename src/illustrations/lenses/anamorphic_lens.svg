@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Anamorphic lens illustration">
+<title>Anamorphic lens — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="50" y="58.0" width="10" height="44" rx="3" fill="#20272A"/><rect x="60" y="52.0" width="86" height="56" rx="6" fill="#D7D8D2"/><path d="M82 55.0V105.0" fill="none"/><path d="M96 55.0V105.0" fill="none"/><path d="M110 55.0V105.0" fill="none"/><ellipse cx="146" cy="80" rx="13" ry="24" fill="#20272A"/><ellipse cx="146" cy="80" rx="10" ry="18" fill="#147D83" stroke="none"/><path d="M152 74v12" stroke="#147D83" stroke-width="2.5"/></g>
+</svg>

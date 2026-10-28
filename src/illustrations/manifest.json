@@ -1,0 +1,730 @@
+{
+ "about": "Central manifest for the local equipment illustrations. Conceptual drawings of a kind of equipment, never an exact branded model. \"match\" is a case-insensitive regex tested against the equipment name, in list order; \"fallback\" maps a gear kind or department to an asset id.",
+ "categories": [
+  "cameras",
+  "lenses",
+  "filters",
+  "camera-movement",
+  "support-rigs",
+  "monitors",
+  "focus-systems",
+  "power",
+  "media",
+  "weather-protection",
+  "underwater",
+  "lighting"
+ ],
+ "fallback": {
+  "Camera": "digital_cinema_camera",
+  "High-speed camera": "high_speed_camera",
+  "Lenses": "cine_lens_set",
+  "Lights": "light_panel",
+  "Drone": "drone_aerial_rig",
+  "Camera support & grip": "tripod_fluid_head",
+  "Camera support": "tripod_fluid_head",
+  "Robotic & motion control": "motion_control_rig",
+  "Specialty rigs": "helmet_rig",
+  "Filters": "matte_box",
+  "Focus & monitoring": "on_camera_monitor"
+ },
+ "items": [
+  {
+   "id": "underwater_light",
+   "category": "underwater",
+   "file": "underwater/underwater_light.svg",
+   "name": "Underwater light",
+   "alt": "Conceptual illustration of an underwater light",
+   "match": "underwater.*(light|lamp)",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "underwater_lens_port",
+   "category": "underwater",
+   "file": "underwater/underwater_lens_port.svg",
+   "name": "Underwater lens port",
+   "alt": "Conceptual illustration of an underwater lens port",
+   "match": "underwater.*(port|dome)",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "underwater_rig",
+   "category": "underwater",
+   "file": "underwater/underwater_rig.svg",
+   "name": "Underwater rig",
+   "alt": "Conceptual illustration of an underwater rig",
+   "match": "underwater rig|\\bdiver",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "underwater_housing",
+   "category": "underwater",
+   "file": "underwater/underwater_housing.svg",
+   "name": "Underwater housing",
+   "alt": "Conceptual illustration of an underwater housing",
+   "match": "underwater|housing",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "camera_vacuum_rain_cover",
+   "category": "weather-protection",
+   "file": "weather-protection/camera_vacuum_rain_cover.svg",
+   "name": "Vacuum rain cover",
+   "alt": "Conceptual illustration of a vacuum rain cover",
+   "match": "vacuum",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "lens_rain_cover",
+   "category": "weather-protection",
+   "file": "weather-protection/lens_rain_cover.svg",
+   "name": "Lens rain cover",
+   "alt": "Conceptual illustration of a lens rain cover",
+   "match": "lens.*rain|rain.*lens",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "camera_rain_cover",
+   "category": "weather-protection",
+   "file": "weather-protection/camera_rain_cover.svg",
+   "name": "Camera rain cover",
+   "alt": "Conceptual illustration of a camera rain cover",
+   "match": "rain",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "weather_shield",
+   "category": "weather-protection",
+   "file": "weather-protection/weather_shield.svg",
+   "name": "Weather shield",
+   "alt": "Conceptual illustration of a weather shield",
+   "match": "weather|umbrella|wind ?shield",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "action_camera",
+   "category": "cameras",
+   "file": "cameras/action_camera.svg",
+   "name": "Action / crash camera",
+   "alt": "Conceptual illustration of an action / crash camera",
+   "match": "crash cam|z cam|action cam|gopro",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "high_speed_camera",
+   "category": "cameras",
+   "file": "cameras/high_speed_camera.svg",
+   "name": "High-speed camera",
+   "alt": "Conceptual illustration of a high-speed camera",
+   "match": "phantom|high.?speed|ember|\\bveo\\b|flex4k",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "large_format_camera",
+   "category": "cameras",
+   "file": "cameras/large_format_camera.svg",
+   "name": "Large-format camera",
+   "alt": "Conceptual illustration of a large-format camera",
+   "match": "alexa lf|alexa 65|large.?format|mini lf",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "broadcast_camera",
+   "category": "cameras",
+   "file": "cameras/broadcast_camera.svg",
+   "name": "Broadcast camera",
+   "alt": "Conceptual illustration of a broadcast camera",
+   "match": "broadcast|studio camera",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "film_camera_reflex",
+   "category": "cameras",
+   "file": "cameras/film_camera_reflex.svg",
+   "name": "Reflex film camera",
+   "alt": "Conceptual illustration of a reflex film camera",
+   "match": "reflex|bolex",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "film_camera_compact",
+   "category": "cameras",
+   "file": "cameras/film_camera_compact.svg",
+   "name": "Compact film camera",
+   "alt": "Conceptual illustration of a compact film camera",
+   "match": "super ?8|16 ?mm film|compact film",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "film_camera_handheld",
+   "category": "cameras",
+   "file": "cameras/film_camera_handheld.svg",
+   "name": "Handheld film camera",
+   "alt": "Conceptual illustration of a handheld film camera",
+   "match": "handheld film",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "film_camera_35mm",
+   "category": "cameras",
+   "file": "cameras/film_camera_35mm.svg",
+   "name": "35 mm film camera",
+   "alt": "Conceptual illustration of a 35 mm film camera",
+   "match": "35 ?mm film|film camera|arricam|panaflex",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "cinema_camera_cage",
+   "category": "cameras",
+   "file": "cameras/cinema_camera_cage.svg",
+   "name": "Cinema camera with cage",
+   "alt": "Conceptual illustration of a cinema camera with cage",
+   "match": "camera cage|\\bcage\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "compact_cinema_camera",
+   "category": "cameras",
+   "file": "cameras/compact_cinema_camera.svg",
+   "name": "Compact cinema camera",
+   "alt": "Conceptual illustration of a compact cinema camera",
+   "match": "komodo|\\bfx6\\b|burano|compact cinema|\\bc70\\b|\\bc300|ronin 4d",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "modular_cinema_camera",
+   "category": "cameras",
+   "file": "cameras/modular_cinema_camera.svg",
+   "name": "Modular cinema camera",
+   "alt": "Conceptual illustration of a modular cinema camera",
+   "match": "modular|v-?raptor|\\bred\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "mirrorless_cinema_camera",
+   "category": "cameras",
+   "file": "cameras/mirrorless_cinema_camera.svg",
+   "name": "Mirrorless cinema camera",
+   "alt": "Conceptual illustration of a mirrorless cinema camera",
+   "match": "mirrorless|\\ba7|\\bfx3\\b|bmpcc|lumix",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "digital_cinema_camera",
+   "category": "cameras",
+   "file": "cameras/digital_cinema_camera.svg",
+   "name": "Digital cinema camera",
+   "alt": "Conceptual illustration of a digital cinema camera",
+   "match": "alexa|venice|digital cinema|camera body",
+   "source": "Supplied pack (individual set)"
+  },
+  {
+   "id": "anamorphic_lens",
+   "category": "lenses",
+   "file": "lenses/anamorphic_lens.svg",
+   "name": "Anamorphic lens",
+   "alt": "Conceptual illustration of an anamorphic lens",
+   "match": "anamorphic",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "macro_lens",
+   "category": "lenses",
+   "file": "lenses/macro_lens.svg",
+   "name": "Macro / probe lens",
+   "alt": "Conceptual illustration of a macro / probe lens",
+   "match": "macro|probe|periscope",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "telephoto_lens",
+   "category": "lenses",
+   "file": "lenses/telephoto_lens.svg",
+   "name": "Telephoto lens",
+   "alt": "Conceptual illustration of a telephoto lens",
+   "match": "\\btele(photo)?\\b|long lens",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "wide_angle_lens",
+   "category": "lenses",
+   "file": "lenses/wide_angle_lens.svg",
+   "name": "Wide-angle lens",
+   "alt": "Conceptual illustration of a wide-angle lens",
+   "match": "wide.?angle|fisheye",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "zoom_lens",
+   "category": "lenses",
+   "file": "lenses/zoom_lens.svg",
+   "name": "Zoom lens",
+   "alt": "Conceptual illustration of a zoom lens",
+   "match": "zoom|optimo",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "prime_lens",
+   "category": "lenses",
+   "file": "lenses/prime_lens.svg",
+   "name": "Prime lens",
+   "alt": "Conceptual illustration of a prime lens",
+   "match": "prime|super speed",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "lens_support",
+   "category": "lenses",
+   "file": "lenses/lens_support.svg",
+   "name": "Lens support",
+   "alt": "Conceptual illustration of a lens support",
+   "match": "lens support|lens whip",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "cine_lens_set",
+   "category": "lenses",
+   "file": "lenses/cine_lens_set.svg",
+   "name": "Cine lens set",
+   "alt": "Conceptual illustration of a cine lens set",
+   "match": "lens set|lenses",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "variable_nd_filter",
+   "category": "filters",
+   "file": "filters/variable_nd_filter.svg",
+   "name": "Variable ND filter",
+   "alt": "Conceptual illustration of a variable ND filter",
+   "match": "variable nd|\\bvnd\\b|\\bnd\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "circular_polarizer",
+   "category": "filters",
+   "file": "filters/circular_polarizer.svg",
+   "name": "Circular polariser",
+   "alt": "Conceptual illustration of a circular polariser",
+   "match": "polari[sz]",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "diffusion_filter",
+   "category": "filters",
+   "file": "filters/diffusion_filter.svg",
+   "name": "Diffusion filter",
+   "alt": "Conceptual illustration of a diffusion filter",
+   "match": "diffusion|pro-?mist|black mist",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "creative_filter",
+   "category": "filters",
+   "file": "filters/creative_filter.svg",
+   "name": "Creative filter",
+   "alt": "Conceptual illustration of a creative filter",
+   "match": "creative filter|effect filter|star filter",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "filter_tray",
+   "category": "filters",
+   "file": "filters/filter_tray.svg",
+   "name": "Filter tray",
+   "alt": "Conceptual illustration of a filter tray",
+   "match": "filter tray",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "matte_box",
+   "category": "filters",
+   "file": "filters/matte_box.svg",
+   "name": "Matte box",
+   "alt": "Conceptual illustration of a matte box",
+   "match": "matte|filters?\\b",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "cable_cam",
+   "category": "camera-movement",
+   "file": "camera-movement/cable_cam.svg",
+   "name": "Cable cam",
+   "alt": "Conceptual illustration of a cable cam",
+   "match": "cable(?!s)|rope|spidercam",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "russian_arm",
+   "category": "camera-movement",
+   "file": "camera-movement/russian_arm.svg",
+   "name": "Russian Arm",
+   "alt": "Conceptual illustration of a Russian Arm",
+   "match": "russian arm|u-crane",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "remote_head",
+   "category": "camera-movement",
+   "file": "camera-movement/remote_head.svg",
+   "name": "Remote head",
+   "alt": "Conceptual illustration of a remote head",
+   "match": "^remote|^motori[sz]ed.*(head|pan)",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "camera_crane_jib",
+   "category": "camera-movement",
+   "file": "camera-movement/camera_crane_jib.svg",
+   "name": "Camera crane / jib",
+   "alt": "Conceptual illustration of a camera crane / jib",
+   "match": "crane|\\bjib\\b|jimmy|technocrane",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "motion_control_rig",
+   "category": "camera-movement",
+   "file": "camera-movement/motion_control_rig.svg",
+   "name": "Motion-control rig",
+   "alt": "Conceptual illustration of a motion-control rig",
+   "match": "motion.?control|robotic|turntable",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "slider",
+   "category": "camera-movement",
+   "file": "camera-movement/slider.svg",
+   "name": "Camera slider",
+   "alt": "Conceptual illustration of a camera slider",
+   "match": "slider",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "dolly",
+   "category": "camera-movement",
+   "file": "camera-movement/dolly.svg",
+   "name": "Dolly and track",
+   "alt": "Conceptual illustration of a dolly and track",
+   "match": "dolly|trolley|\\btrack\\b",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "steadicam_rig",
+   "category": "camera-movement",
+   "file": "camera-movement/steadicam_rig.svg",
+   "name": "Steadicam rig",
+   "alt": "Conceptual illustration of a steadicam rig",
+   "match": "steadicam",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "gimbal",
+   "category": "camera-movement",
+   "file": "camera-movement/gimbal.svg",
+   "name": "Gimbal stabiliser",
+   "alt": "Conceptual illustration of a gimbal stabiliser",
+   "match": "gimbal|ronin|movi\\b|\\brs ?[34]\\b",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "vehicle_rig",
+   "category": "camera-movement",
+   "file": "camera-movement/vehicle_rig.svg",
+   "name": "Vehicle rig",
+   "alt": "Conceptual illustration of a vehicle rig",
+   "match": "vehicle|car rig|car mount|camera car|hostess|suction|magnetic|\\bhood\\b|\\broof\\b|side mount",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "drone_aerial_rig",
+   "category": "camera-movement",
+   "file": "camera-movement/drone_aerial_rig.svg",
+   "name": "Drone / aerial rig",
+   "alt": "Conceptual illustration of a drone / aerial rig",
+   "match": "drone|\\bfpv\\b|inspire|aerial",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "helmet_rig",
+   "category": "support-rigs",
+   "file": "support-rigs/helmet_rig.svg",
+   "name": "Helmet rig",
+   "alt": "Conceptual illustration of a helmet rig",
+   "match": "helmet",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "body_rig",
+   "category": "support-rigs",
+   "file": "support-rigs/body_rig.svg",
+   "name": "Body-worn rig",
+   "alt": "Conceptual illustration of a body-worn rig",
+   "match": "easyrig|body.?(mounted|worn)|snorri|vest",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "shoulder_rig",
+   "category": "support-rigs",
+   "file": "support-rigs/shoulder_rig.svg",
+   "name": "Shoulder rig",
+   "alt": "Conceptual illustration of a shoulder rig",
+   "match": "shoulder|handheld rig",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "quick_release_plate",
+   "category": "support-rigs",
+   "file": "support-rigs/quick_release_plate.svg",
+   "name": "Quick-release plate",
+   "alt": "Conceptual illustration of a quick-release plate",
+   "match": "quick.?release|base ?plate",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "top_handle",
+   "category": "support-rigs",
+   "file": "support-rigs/top_handle.svg",
+   "name": "Top handle",
+   "alt": "Conceptual illustration of a top handle",
+   "match": "top handle",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "hand_grip_controller",
+   "category": "support-rigs",
+   "file": "support-rigs/hand_grip_controller.svg",
+   "name": "Hand grip controller",
+   "alt": "Conceptual illustration of a hand grip controller",
+   "match": "hand grip|grip controller",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "tripod_fluid_head",
+   "category": "support-rigs",
+   "file": "support-rigs/tripod_fluid_head.svg",
+   "name": "Tripod with fluid head",
+   "alt": "Conceptual illustration of a tripod with fluid head",
+   "match": "tripod|fluid head|hi-?hat|low-?mode rig",
+   "source": "Supplied pack (first set)"
+  },
+  {
+   "id": "director_monitor",
+   "category": "monitors",
+   "file": "monitors/director_monitor.svg",
+   "name": "Director's monitor",
+   "alt": "Conceptual illustration of a Director's monitor",
+   "match": "director'?s? monitor",
+   "source": "Supplied pack (individual set)"
+  },
+  {
+   "id": "video_village_monitor",
+   "category": "monitors",
+   "file": "monitors/video_village_monitor.svg",
+   "name": "Video village monitor",
+   "alt": "Conceptual illustration of a video village monitor",
+   "match": "video village",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "on_camera_monitor",
+   "category": "monitors",
+   "file": "monitors/on_camera_monitor.svg",
+   "name": "On-camera monitor",
+   "alt": "Conceptual illustration of an on-camera monitor",
+   "match": "on.camera monitor|focus puller monitor|\\bmonitor\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "wireless_video_receiver",
+   "category": "monitors",
+   "file": "monitors/wireless_video_receiver.svg",
+   "name": "Wireless video receiver",
+   "alt": "Conceptual illustration of a wireless video receiver",
+   "match": "receiver",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "wireless_video_transmitter",
+   "category": "monitors",
+   "file": "monitors/wireless_video_transmitter.svg",
+   "name": "Wireless video transmitter",
+   "alt": "Conceptual illustration of a wireless video transmitter",
+   "match": "transmitter|wireless video",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "wireless_follow_focus",
+   "category": "focus-systems",
+   "file": "focus-systems/wireless_follow_focus.svg",
+   "name": "Wireless follow focus",
+   "alt": "Conceptual illustration of a wireless follow focus",
+   "match": "follow focus|wireless focus",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "focus_motor",
+   "category": "focus-systems",
+   "file": "focus-systems/focus_motor.svg",
+   "name": "Focus motor",
+   "alt": "Conceptual illustration of a focus motor",
+   "match": "focus motor|lens motor",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "lens_control_unit",
+   "category": "focus-systems",
+   "file": "focus-systems/lens_control_unit.svg",
+   "name": "Lens control unit",
+   "alt": "Conceptual illustration of a lens control unit",
+   "match": "lens control|hand unit",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "v_mount_battery",
+   "category": "power",
+   "file": "power/v_mount_battery.svg",
+   "name": "V-mount battery",
+   "alt": "Conceptual illustration of a V-mount battery",
+   "match": "v-?mount",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "gold_mount_battery",
+   "category": "power",
+   "file": "power/gold_mount_battery.svg",
+   "name": "Gold-mount battery",
+   "alt": "Conceptual illustration of a gold-mount battery",
+   "match": "gold.?mount|anton",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "camera_battery_charger",
+   "category": "power",
+   "file": "power/camera_battery_charger.svg",
+   "name": "Battery charger",
+   "alt": "Conceptual illustration of a battery charger",
+   "match": "charger|batter",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "power_distribution",
+   "category": "power",
+   "file": "power/power_distribution.svg",
+   "name": "Power distribution",
+   "alt": "Conceptual illustration of a power distribution",
+   "match": "power distribution|\\bdistro\\b|power box",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "camera_cables",
+   "category": "power",
+   "file": "power/camera_cables.svg",
+   "name": "Camera cables",
+   "alt": "Conceptual illustration of a camera cables",
+   "match": "\\bcables\\b|\\bbnc\\b|\\bsdi\\b|\\bhdmi\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "ssd_recorder",
+   "category": "media",
+   "file": "media/ssd_recorder.svg",
+   "name": "SSD recorder",
+   "alt": "Conceptual illustration of a SSD recorder",
+   "match": "\\bssd\\b",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "external_recorder",
+   "category": "media",
+   "file": "media/external_recorder.svg",
+   "name": "External recorder",
+   "alt": "Conceptual illustration of an external recorder",
+   "match": "recorder|ninja|atomos",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "card_reader",
+   "category": "media",
+   "file": "media/card_reader.svg",
+   "name": "Card reader",
+   "alt": "Conceptual illustration of a card reader",
+   "match": "card reader|dit cart|offload",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "media_card",
+   "category": "media",
+   "file": "media/media_card.svg",
+   "name": "Media card",
+   "alt": "Conceptual illustration of a media card",
+   "match": "\\bcards?\\b|cfexpress",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "timecode_generator",
+   "category": "media",
+   "file": "media/timecode_generator.svg",
+   "name": "Timecode generator",
+   "alt": "Conceptual illustration of a timecode generator",
+   "match": "timecode|time code|tentacle",
+   "source": "ScriptDesk original drawing"
+  },
+  {
+   "id": "light_panel",
+   "category": "lighting",
+   "file": "lighting/light_panel.svg",
+   "name": "Light panel on a stand",
+   "alt": "Conceptual illustration of a light panel on a stand",
+   "match": "\\bled\\b|skypanel|nanlux|nanlite|panel|\\bhmi\\b|pavotube|\\blights?\\b",
+   "source": "Supplied pack (individual set)"
+  }
+ ],
+ "categoryInfo": {
+  "cameras": {
+   "title": "Cameras",
+   "dept": "Camera"
+  },
+  "lenses": {
+   "title": "Lenses",
+   "dept": "Lenses"
+  },
+  "filters": {
+   "title": "Filters",
+   "dept": "Filters"
+  },
+  "camera-movement": {
+   "title": "Camera movement",
+   "dept": "Grip"
+  },
+  "support-rigs": {
+   "title": "Support rigs",
+   "dept": "Camera support"
+  },
+  "monitors": {
+   "title": "Monitors",
+   "dept": "Focus & monitoring"
+  },
+  "focus-systems": {
+   "title": "Focus systems",
+   "dept": "Focus & monitoring"
+  },
+  "power": {
+   "title": "Power",
+   "dept": "Power"
+  },
+  "media": {
+   "title": "Media",
+   "dept": "Media"
+  },
+  "weather-protection": {
+   "title": "Weather protection",
+   "dept": "Protection"
+  },
+  "underwater": {
+   "title": "Underwater equipment",
+   "dept": "Specialty"
+  },
+  "lighting": {
+   "title": "Lighting",
+   "dept": "Lights"
+  }
+ }
+}

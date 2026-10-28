@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Wide-angle lens illustration">
+<title>Wide-angle lens — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="72" y="49.0" width="10" height="62" rx="3" fill="#20272A"/><rect x="82" y="43.0" width="58" height="74" rx="6" fill="#D7D8D2"/><path d="M98 46.0V114.0" fill="none"/><path d="M112 46.0V114.0" fill="none"/><ellipse cx="140" cy="80" rx="9" ry="33.0" fill="#20272A"/><ellipse cx="140" cy="80" rx="6" ry="27.0" fill="#147D83" stroke="none"/></g>
+</svg>

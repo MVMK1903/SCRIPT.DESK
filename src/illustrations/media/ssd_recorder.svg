@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="SSD recorder illustration">
+<title>SSD recorder — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="58" y="52" width="124" height="58" rx="8" fill="#D7D8D2"/><rect x="68" y="62" width="60" height="26" rx="4" fill="#20272A"/><path d="M74 76h48" stroke="#147D83" stroke-width="3"/><rect x="138" y="62" width="32" height="10" rx="3" fill="#B9C1C0"/><circle cx="150" cy="92" r="3" fill="#147D83" stroke="none"/><circle cx="164" cy="92" r="3" fill="#147D83" stroke="none"/><path d="M182 74h12M182 88h12" fill="none"/></g>
+</svg>

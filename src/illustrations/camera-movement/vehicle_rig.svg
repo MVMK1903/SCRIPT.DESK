@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Vehicle rig illustration">
+<title>Vehicle rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M34 99l13-29h106l29 29v25H34zM56 70l14-20h61l17 20M76 55h48l13 15H65z"/><circle cx="63" cy="125" r="13"/><circle cx="158" cy="125" r="13"/><path d="M100 49V32h27v17"/><rect x="91" y="18" width="45" height="16" rx="3"/><circle cx="113" cy="26" r="5"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

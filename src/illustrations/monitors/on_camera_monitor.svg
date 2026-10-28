@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="On-camera monitor illustration">
+<title>On-camera monitor — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="66" y="36" width="108" height="64" rx="8" fill="#D7D8D2"/><rect x="75" y="45" width="90" height="46" rx="4" fill="#20272A"/><path d="M84 58h40M84 68h28" stroke="#147D83" stroke-width="3"/><path d="M120 100v14" fill="none"/><rect x="98" y="114" width="44" height="10" rx="4" fill="#B9C1C0"/><circle cx="152" cy="80" r="3.5" fill="#147D83" stroke="none"/></g>
+</svg>

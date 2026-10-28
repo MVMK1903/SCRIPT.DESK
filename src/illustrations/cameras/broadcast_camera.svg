@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Broadcast camera illustration">
+<title>Broadcast camera — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="46" y="66" width="92" height="50" rx="8" fill="#D7D8D2"/><rect x="138" y="60" width="52" height="62" rx="6" fill="#20272A"/><circle cx="164" cy="91" r="16" fill="#D7D8D2"/><circle cx="164" cy="91" r="7" fill="#147D83"/><rect x="60" y="42" width="52" height="24" rx="5" fill="#B9C1C0"/><path d="M70 116v10M118 116v10" fill="none"/><path d="M60 54H44" fill="none"/></g>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Camera slider illustration">
+<title>Camera slider — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="36" y="100" width="168" height="12" rx="6" fill="#D7D8D2"/><rect x="96" y="86" width="48" height="14" rx="4" fill="#20272A"/><rect x="88" y="52" width="64" height="34" rx="7" fill="#D7D8D2"/><circle cx="136" cy="69.0" r="12" fill="#20272A"/><circle cx="136" cy="69.0" r="6" fill="#147D83"/><path d="M56 112v14M184 112v14" fill="none"/><path d="M60 124h-16M180 124h16" stroke="#147D83" stroke-width="3"/><circle cx="120" cy="93" r="2.5" fill="#147D83" stroke="none"/></g>
+</svg>

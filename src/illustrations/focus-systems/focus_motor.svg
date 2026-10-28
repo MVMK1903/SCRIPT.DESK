@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Focus motor illustration">
+<title>Focus motor — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M44 116H196" fill="none"/><rect x="60" y="60" width="84" height="44" rx="9" fill="#D7D8D2"/><circle cx="168" cy="82" r="20" fill="#B9C1C0"/><path d="M168 56v8M168 100v8M142 82h8M186 82h8" fill="none"/><circle cx="168" cy="82" r="6" fill="#147D83"/><path d="M144 82h12" stroke="#147D83" stroke-width="3"/></g>
+</svg>

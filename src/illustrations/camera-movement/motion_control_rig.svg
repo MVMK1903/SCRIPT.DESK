@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Motion-control rig illustration">
+<title>Motion-control rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M40 134H140" fill="none"/><rect x="58" y="120" width="64" height="14" rx="4" fill="#20272A"/><path d="M90 120V96L134 56" fill="none"/><circle cx="90" cy="96" r="8" fill="#D7D8D2"/><circle cx="134" cy="56" r="8" fill="#D7D8D2"/><path d="M134 56L172 74" fill="none"/><rect x="160" y="66" width="36" height="24" rx="5" fill="#D7D8D2"/><circle cx="190" cy="79" r="7" fill="#20272A"/><circle cx="190" cy="79" r="3" fill="#147D83"/><circle cx="90" cy="96" r="2.5" fill="#147D83" stroke="none"/><circle cx="134" cy="56" r="2.5" fill="#147D83" stroke="none"/></g>
+</svg>

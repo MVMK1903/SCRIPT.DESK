@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Shoulder rig illustration">
+<title>Shoulder rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="36" y="66" width="24" height="56" rx="10" fill="#D7D8D2"/><path d="M60 82H176M60 100H176" fill="none"/><rect x="88" y="48" width="60" height="40" rx="7" fill="#D7D8D2"/><circle cx="134" cy="68" r="11" fill="#20272A"/><circle cx="134" cy="68" r="5" fill="#147D83"/><path d="M164 100v22" fill="none"/><rect x="158" y="118" width="12" height="8" rx="3" fill="#20272A"/></g>
+</svg>

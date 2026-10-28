@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Lens support illustration">
+<title>Lens support — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="42" y="66.0" width="10" height="28" rx="3" fill="#20272A"/><rect x="52" y="60.0" width="104" height="40" rx="6" fill="#D7D8D2"/><path d="M76 63.0V97.0" fill="none"/><path d="M102 63.0V97.0" fill="none"/><ellipse cx="156" cy="80" rx="7" ry="16.0" fill="#20272A"/><ellipse cx="156" cy="80" rx="4" ry="10.0" fill="#147D83" stroke="none"/><rect x="96" y="100" width="36" height="10" rx="4" fill="#20272A"/><path d="M114 100V92M70 126H160M114 110V126" fill="none"/><circle cx="114" cy="126" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

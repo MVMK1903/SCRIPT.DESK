@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Light panel illustration">
+<title>Light panel — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="60" y="30" width="120" height="70" rx="9" fill="#D9D8D1"/><path d="M78 48h84M78 65h84M78 82h84M120 100v26M94 138l26-8 26 8M88 18l-7-9M120 16V7M152 18l7-9"/></g>
+<g fill="#147D83"><circle cx="92" cy="48" r="2.8"/><circle cx="120" cy="65" r="2.8"/><circle cx="148" cy="82" r="2.8"/></g>
+</svg>

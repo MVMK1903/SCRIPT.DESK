@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Underwater light illustration">
+<title>Underwater light — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="54" y="62" width="66" height="40" rx="9" fill="#D7D8D2"/><path d="M120 58L170 36V126L120 106Z" fill="#D7D8D2"/><circle cx="166" cy="82" r="16" fill="#F7F5EF"/><circle cx="166" cy="82" r="8" fill="#147D83"/><path d="M74 102v18M100 102v18" fill="none"/><path d="M184 56l10-8M188 82h14M184 108l10 8" fill="none"/></g>
+</svg>

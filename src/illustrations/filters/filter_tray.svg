@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Filter tray illustration">
+<title>Filter tray — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="60" y="40" width="120" height="80" rx="9" fill="#D7D8D2"/><rect x="74" y="54" width="92" height="52" rx="4" fill="#F7F5EF"/><path d="M82 62h76M82 98h76" stroke="#147D83" stroke-width="3"/><rect x="180" y="70" width="16" height="20" rx="4" fill="#B9C1C0"/><path d="M60 116h-8M60 44h-8" fill="none"/></g>
+</svg>

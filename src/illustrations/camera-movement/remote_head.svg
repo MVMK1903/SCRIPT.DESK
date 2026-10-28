@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Remote head illustration">
+<title>Remote head — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="94" y="110" width="52" height="14" rx="5" fill="#20272A"/><rect x="112" y="94" width="16" height="16" rx="3" fill="#B9C1C0"/><path d="M82 52v42h76V52" fill="none"/><rect x="96" y="40" width="48" height="32" rx="7" fill="#D7D8D2"/><circle cx="130" cy="56" r="10" fill="#20272A"/><circle cx="130" cy="56" r="5" fill="#147D83"/><path d="M58 112a64 22 0 0 0 124 0" stroke="#147D83" stroke-width="2.5"/></g>
+</svg>

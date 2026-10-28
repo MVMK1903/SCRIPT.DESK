@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Top handle illustration">
+<title>Top handle — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M66 106V78C66 40 174 40 174 78V106" fill="none"/><rect x="54" y="104" width="132" height="16" rx="5" fill="#20272A"/><circle cx="80" cy="112" r="3" fill="#147D83"/><circle cx="160" cy="112" r="3" fill="#147D83"/><path d="M96 62q24-10 48 0" stroke="#147D83" stroke-width="2.5"/></g>
+</svg>

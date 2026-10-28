@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Zoom lens illustration">
+<title>Zoom lens — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="30" y="60.0" width="10" height="40" rx="3" fill="#20272A"/><rect x="40" y="54.0" width="140" height="52" rx="6" fill="#D7D8D2"/><path d="M60 57.0V103.0" fill="none"/><path d="M76 57.0V103.0" fill="none"/><path d="M92 57.0V103.0" fill="none"/><path d="M140 57.0V103.0" fill="none"/><ellipse cx="180" cy="80" rx="7" ry="22.0" fill="#20272A"/><ellipse cx="180" cy="80" rx="4" ry="16.0" fill="#147D83" stroke="none"/><path d="M92 54V44h22V54" fill="none"/><path d="M60 80h40" stroke="#147D83" stroke-width="3"/></g>
+</svg>

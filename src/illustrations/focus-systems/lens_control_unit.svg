@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Lens control unit illustration">
+<title>Lens control unit — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="72" y="36" width="62" height="88" rx="14" fill="#D7D8D2"/><circle cx="103" cy="66" r="15" fill="#20272A"/><circle cx="103" cy="66" r="6" fill="#147D83"/><rect x="88" y="92" width="30" height="10" rx="4" fill="#B9C1C0"/><circle cx="94" cy="112" r="2.5" fill="#147D83" stroke="none"/><circle cx="112" cy="112" r="2.5" fill="#147D83" stroke="none"/><path d="M134 94C160 94 168 110 196 108" fill="none"/></g>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Gimbal stabiliser illustration">
+<title>Gimbal stabiliser — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M82 38V24q0-6 7-6h35q7 0 7 6v14M69 38h75l8 10v36l-8 10H69l-8-10V48z"/><rect x="78" y="46" width="48" height="34" rx="5"/><circle cx="102" cy="63" r="11"/><path d="M152 58h18q10 0 10 10v15l-9 10h-18l-11 14v15h-28M80 94v17l-9 9v12H49M88 18v-7h29v7"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

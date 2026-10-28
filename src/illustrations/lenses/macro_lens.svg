@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Macro / probe lens illustration">
+<title>Macro / probe lens — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="50" y="62.0" width="10" height="36" rx="3" fill="#20272A"/><rect x="60" y="56.0" width="68" height="48" rx="6" fill="#D7D8D2"/><path d="M78 59.0V101.0" fill="none"/><path d="M94 59.0V101.0" fill="none"/><ellipse cx="128" cy="80" rx="7" ry="20.0" fill="#20272A"/><ellipse cx="128" cy="80" rx="4" ry="14.0" fill="#147D83" stroke="none"/><rect x="128" y="66" width="36" height="28" rx="3" fill="#B9C1C0"/><path d="M138 66V94M150 66V94" fill="none"/></g>
+</svg>

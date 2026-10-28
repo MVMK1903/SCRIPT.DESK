@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Tripod with fluid head illustration">
+<title>Tripod with fluid head — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="91" y="24" width="58" height="24" rx="4"/><circle cx="120" cy="36" r="8"/><path d="M105 48v14h30V48M120 62v15L69 140M120 77l51 63M120 77v63M58 140h22M160 140h22M109 140h22M94 61h52"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

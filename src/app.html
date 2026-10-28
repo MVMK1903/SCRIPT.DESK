@@ -156,7 +156,7 @@ a{color:var(--accent)}
 .gst-s{padding:clamp(56px,9vw,120px) clamp(20px,6vw,80px);text-align:center}.gst-s.tint{background:var(--gt)}.gst-s.dark{background:#111113;color:#f5f2ec}.gst-s.dark .gst-p{color:#a9a49c}.gst-s.end{padding-bottom:clamp(72px,11vw,140px)}
 .gst-script{max-width:640px;margin:30px auto 0;text-align:left;background:var(--gc);border-radius:20px;padding:clamp(18px,3vw,30px);box-shadow:0 1px 2px rgba(0,0,0,.06),0 18px 40px -22px rgba(0,0,0,.25);font-family:var(--f-script)}
 .gst-script b{display:block;font-size:14px;letter-spacing:.02em}.gst-script p{margin:.9em 0 0;font-size:15px;line-height:1.7}.gst-meta{margin-top:18px;font-size:13px;color:var(--gm)}
-.gst-art-wrap svg{width:min(480px,82%);height:auto;margin:22px auto 0;display:block;background:#fff;border-radius:28px;padding:16px;box-sizing:content-box;transition:transform .5s cubic-bezier(.2,.7,.2,1)}.gst-art-wrap:hover svg{transform:scale(1.02)}
+.gst-art-wrap svg{width:min(480px,82%);height:auto;margin:22px auto 0;display:block;background:#F7F5EF;border-radius:28px;padding:0;box-sizing:content-box;transition:transform .5s cubic-bezier(.2,.7,.2,1)}.gst-art-wrap:hover svg{transform:scale(1.02)}
 .gst-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1120px;margin:38px auto 0}
 .gst-tile{background:var(--gt);border-radius:26px;padding:14px 14px 22px;text-align:left;transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}.gst-tile:hover{transform:translateY(-4px);box-shadow:0 22px 40px -26px rgba(0,0,0,.4)}
 .gst-prod{width:100%;height:auto;display:block;background:#fff;border-radius:18px;padding:8px;box-sizing:border-box}
@@ -195,13 +195,13 @@ a{color:var(--accent)}
 .nd-row{display:flex;gap:14px;overflow-x:auto;padding:4px 4px 16px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}.nd-row .nd-card{flex:0 0 min(270px,78vw);scroll-snap-align:start}
 @media(max-width:700px){.nd-card.big{grid-template-columns:1fr}.nd-tiles{grid-template-columns:repeat(2,1fr)}}
 .il{display:block;width:100%;height:auto;color:#20272A}
-.gst-tile .il{background:#fff;border-radius:18px;padding:10px;box-sizing:border-box}
-.gst-thumb{flex:0 0 84px;width:84px;background:#fff;border-radius:16px;padding:6px;box-sizing:border-box}
+.gst-tile .il{background:#F7F5EF;border-radius:18px;padding:10px;box-sizing:border-box}
+.gst-thumb{flex:0 0 84px;width:84px;background:#F7F5EF;border-radius:12px;padding:0;box-sizing:border-box}
 .gst-alts li>div{flex:1 1 200px;min-width:0}
-.nd-ic{width:100%!important;height:auto!important;aspect-ratio:3/2;display:block!important;background:#fff!important;border-radius:14px!important;padding:6px;box-sizing:border-box;margin-bottom:8px}.nd-ic .il{width:100%;height:100%;object-fit:contain}
+.nd-ic{width:100%!important;height:auto!important;aspect-ratio:3/2;display:block!important;background:#F7F5EF!important;border-radius:12px!important;padding:0;box-sizing:border-box;margin-bottom:8px}.nd-ic .il{width:100%;height:100%;object-fit:contain}
 .nd-tile[aria-pressed=true] .nd-ic{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
-.nd-art .il{max-width:230px;margin:0 auto}.nd-card.big .nd-art .il{max-width:340px}.nd-art{background:#fff!important}
-.mv-pic{width:112px}.mv-pic .il{width:96px;background:#fff;border-radius:12px;padding:4px;box-sizing:border-box}
+.nd-art .il{max-width:230px;margin:0 auto}.nd-card.big .nd-art .il{max-width:340px}.nd-art{background:#F7F5EF!important}
+.mv-pic{width:112px}.mv-pic .il{width:96px;background:#F7F5EF;border-radius:10px;padding:0;box-sizing:border-box}
 @media(max-width:700px){
  .nd-h{font-size:26px;margin-bottom:12px}.nd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px}
  .nd-tile{padding:10px 10px 12px;min-height:44px}.nd-tile b{font-size:14px;line-height:1.25}.nd-tile small{font-size:12.5px}.nd-tile em{font-size:12px}
@@ -215,6 +215,12 @@ a{color:var(--accent)}
  .gst-thumb{flex-basis:64px;width:64px;border-radius:12px}.gst-alts li{gap:12px;padding:18px 0}.gst-alts li>div{flex-basis:calc(100% - 80px)}.gst-alts .gst-l{min-height:44px}
  .gst-art-wrap svg{width:min(360px,88%)}
 }
+.ty-chips{overflow-x:auto;margin:0 0 6px;-webkit-overflow-scrolling:touch;padding-bottom:6px}.ty-chips .seg{display:inline-flex;flex-wrap:nowrap;width:max-content}.ty-chips .seg button{flex:none;white-space:nowrap}
+.ty-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.ty-card{display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:10px 10px 14px}
+.ty-art{background:#F7F5EF;border-radius:14px;overflow:hidden}.ty-art .il{width:100%}
+.ty-card h4{margin:2px 4px 0;font:700 15px/1.25 var(--f-display);flex:1}.ty-card .btn{margin:0 4px;min-height:40px;justify-content:center}
+@media(max-width:700px){.ty-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ty-card h4{font-size:14px}.ty-card .btn{min-height:44px;font-size:13px}}
 .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .gcard{background:var(--bg);border-radius:var(--r-lg);box-shadow:var(--sh-raise-sm);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
 .gcard p{margin:0;line-height:1.5}.gc-h{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}.gc-h b{font-size:14px}
@@ -511,6 +517,7 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-order{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M4 12h10 M4 18h10 M18 5v14 M15 16l3 3 3-3'/%3E%3C/svg%3E")}
 .i-dood{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16v16H4z M4 10h16 M4 15h16 M10 4v16 M15 4v16'/%3E%3C/svg%3E")}
 .i-callsheet{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6v3H9z M7 5H5v16h14V5h-2 M8 11h8 M8 15h6'/%3E%3C/svg%3E")}
+.i-scenic{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16M4 9h16M4 13h10M4 17h16M4 21h8'/%3E%3C/svg%3E")}
 .i-budget{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='18' height='12' rx='2'/%3E%3Cpath d='M12 9v6M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.3-2.5 1.5-2.5.6-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5'/%3E%3C/svg%3E")}
 .i-gear{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8'/%3E%3C/svg%3E")}
 .i-run{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.200 6.300L20.500 11.500l-6.300 2.200L12 20l-2.200-6.300L3.500 11.500l6.300-2.200z M19 3v4 M17 5h4'/%3E%3C/svg%3E")}
@@ -1927,21 +1934,13 @@ R.callsheet=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),shoo
     ...(nx?[{name:'Advance schedule',cols:cols2,rows:[[dayLabel(nx,nums,dates),dayScenes(nx).map(s=>'Sc '+s.no+' ('+eff(s)+', '+s.loc+')').join('; ')]]}]:[])]}}};
 
 /* ---------- Page: Camera & equipment (researched suggestions, per-scene picks, own list) ---------- */
-/* Local SVG illustrations (src/illustrations, inlined by scripts/build.py). Conceptual drawings of a kind of equipment, never a specific model. */
+/* Local SVG illustrations: src/illustrations/<category>/*.svg, listed in manifest.json and inlined by scripts/build.py.
+   They are conceptual drawings of a kind of equipment, never an exact branded model. */
 const ILLUS=/*ILLUS*/{};
-const ILL_ALT={gimbal:'a handheld camera gimbal stabilizer',camera_crane:'a camera crane or jib arm',dolly:'a camera dolly on a track',drone:'a cinema drone',tripod:'a tripod with a fluid head',vehicle_rig:'a camera rig mounted on a vehicle',underwater_housing:'an underwater camera housing',lens_set:'a set of cinema lenses',matte_box:'a matte box with filters',monitor_focus:'a monitor and focus controller',rain_cover:'a rain cover protecting a camera',camera_body:'a cinema camera',light_panel:'a film light panel on a stand',motion_control:'a robotic motion-control camera arm'};
-function illus(key,alt,cls){const k=ILLUS[key]?key:'camera_body';const a=esc(alt||('Conceptual illustration of '+ILL_ALT[k]));return ILLUS[k].replace(/<svg [^>]*>/,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" class="il${cls?' '+cls:''}" role="img" aria-label="${a}" focusable="false">`)}
-function illusKey(g){const k=g.k||'',t=(g.n||'').toLowerCase();
-  if(k==='Lenses')return 'lens_set';if(k==='Lights')return 'light_panel';if(k==='Drone')return 'drone';if(k==='Camera'||k==='High-speed camera')return 'camera_body';
-  if(/underwater|housing/.test(t))return 'underwater_housing';
-  if(/russian arm|camera car|tracking vehicle|car rig|hostess|suction|magnetic|hood|roof|side mount/.test(t))return 'vehicle_rig';
-  if(/motion.control|robotic|motori[sz]ed|turntable/.test(t))return 'motion_control';
-  if(/crane|jib|cable|spidercam|rope/.test(t))return 'camera_crane';
-  if(/dolly|track|slider|skateboard/.test(t))return 'dolly';
-  if(/gimbal|steadicam|easyrig|shoulder|handheld|helmet|body-mounted|snorri/.test(t))return 'gimbal';
-  if(/periscope|probe/.test(t))return 'lens_set';
-  if(/tripod|fluid|hi-hat|low-mode/.test(t))return 'tripod';
-  return k==='Robotic & motion control'?'motion_control':k==='Specialty rigs'?'gimbal':'tripod'}
+const ILL_BY=Object.fromEntries(ILLUS.items.map(x=>[x.id,x])),ILL_RULES=ILLUS.items.filter(x=>x.match).map(x=>({id:x.id,re:new RegExp(x.match,'i')}));
+function illus(id,alt,cls){const it=ILL_BY[id]||ILL_BY.digital_cinema_camera;const a=esc(alt||it.alt);return ILLUS.svgs[it.id].replace(/<svg [^>]*>/,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" class="il${cls?' '+cls:''}" role="img" aria-label="${a}" focusable="false">`).replace(/<title>[^<]*<\/title>/,'')}
+/* Which illustration fits an equipment name (and kind or department)? Returns an asset id, or '' when nothing fits. */
+function illusKey(g){const n=String(g.n||g.item||''),k=g.k||g.dept||'';for(const r of ILL_RULES)if(r.re.test(n))return r.id;return ILLUS.fallback[k]||''}
 const ILL_NOTE='Illustrations are conceptual drawings of each kind of equipment, not the exact model.';
 const NEEDS=[['day','Day exteriors'],['night','Night / low light'],['action','Action & stunts'],['slowmo','Slow motion'],['aerial','Aerial'],['tight','Handheld & tight spaces'],['vfx','VFX & green screen'],['song','Songs & dance'],['budget','Lower budget']];
 const GEAR=[
@@ -2148,8 +2147,9 @@ function storyHtml(tabs){const sc=P.scenes;
   let s=scById(VIEW.gscene)||sc.find(x=>sceneNeeds(x).length>1)||sc.find(x=>isNight(x))||sc[0];VIEW.gscene=s.id;const D=storyData(s),[head,sub]=storyHead(s,D.needs),idx=sc.indexOf(s);
   const kind=D.needs.includes('night')?'night':/INT/.test(U(s.ie))?'int':'day';const num=String(s.no).padStart(3,'0');
   const body=cut(s.desc||s.text,460);
-  const TK={lens:'lens_set',light:'light_panel',shield:'rain_cover',control:'monitor_focus'};
-  const tile=(art,title,line,pick)=>`<div class="gst-tile">${illus(TK[art]||'camera_body')}<h3>${esc(title)}</h3><p>${esc(line)}</p><small>${esc(pick)}</small></div>`;
+  const TK={lens:'cine_lens_set',light:'light_panel',shield:'weather_shield',control:'on_camera_monitor'};
+  const camArt=illusKey(D.cam||{k:'Camera',n:D.camTxt||''})||'digital_cinema_camera';
+  const tile=(art,title,line,pick)=>`<div class="gst-tile">${illus(TK[art])}<h3>${esc(title)}</h3><p>${esc(line)}</p><small>${esc(pick)}</small></div>`;
   const html=`<div class="gst">
   <div class="gst-top">${tabs}<div class="gst-pick"><button class="gst-ar" data-pa="gscn" data-d="-1" aria-label="Previous scene"${idx<1?' disabled':''}>‹</button><select data-gscene aria-label="Choose a scene">${sc.map(x=>`<option value="${esc(x.id)}"${x.id===s.id?' selected':''}>Scene ${esc(x.no)} · ${esc(cut(x.loc,26))}${isNight(x)?' · night':''}</option>`).join('')}</select><button class="gst-ar" data-pa="gscn" data-d="1" aria-label="Next scene"${idx>=sc.length-1?' disabled':''}>›</button></div></div>
   <header class="gst-hero"><p class="gst-eye">SCENE ${esc(num)} · CINEMATOGRAPHY</p><h2 class="gst-big">${esc(head)}</h2><p class="gst-lead">${esc(sub)}</p><div class="gst-cta"><button class="gst-b dark" data-pa="gstGo">Explore the setup</button><button class="gst-b" data-x="xlsx">Download equipment list</button></div></header>
@@ -2157,14 +2157,14 @@ function storyHtml(tabs){const sc=P.scenes;
   <section class="gst-s"><p class="gst-eye">YOUR SCENE. YOUR VISION.</p><h2 class="gst-h">The scene.</h2>
     <div class="gst-script"><b>${esc(s.no)}&nbsp; ${esc(U(s.ie))}. ${esc(U(s.loc))} - ${esc(U(s.time))}</b><p>${esc(body)}</p></div>
     <div class="gst-meta">${D.needs.map(n=>esc((NEEDS.find(x=>x[0]===n)||[0,n])[1])).join(' · ')||'Dialogue scene'}</div></section>
-  <section class="gst-s tint" id="gst-cam"><p class="gst-eye">THE CAMERA</p><div class="gst-art-wrap">${illus('camera_body','Conceptual illustration of a cinema camera. The recommended camera is named below.')}</div>
+  <section class="gst-s tint" id="gst-cam"><p class="gst-eye">THE CAMERA</p><div class="gst-art-wrap">${illus(camArt,ILL_BY[camArt].alt+'. The recommended camera is named below; the drawing is not that exact model.')}</div>
     <h2 class="gst-big sm">${esc(D.cam?D.camTxt:D.g.camera||D.camTxt)}</h2><p class="gst-lead">${esc(D.why)}</p><p class="gst-fine">Proposed selection · confirm availability with your rental house</p></section>
   <section class="gst-s"><h2 class="gst-h">A complete system.</h2><p class="gst-p">Every part chosen to work with the shot, and with one another.</p>
     <div class="gst-tiles">${tile('lens','The optics.','Lens character and framing.',D.lensTxt)}${tile('light','The light.','Shape and colour on the scene.',D.lightTxt)}${tile('shield','The protection.',D.prot[1],D.prot[0])}${tile('control','The control.','Focus, monitoring and movement.',D.ctl)}</div>
     <p class="gst-fine">${ILL_NOTE}</p>
     <p class="gst-fine">Change any choice in <button class="gst-l" data-seg="gmode" data-v="scenes">For each scene</button>.</p></section>
   <section class="gst-s tint"><h2 class="gst-h">Other ways to shoot it.</h2><p class="gst-p">Alternatives that fit the same needs.</p>
-    <ol class="gst-alts">${D.alts.map(x=>`<li>${illus(illusKey(findGear(null,x.n)||{k:'Camera',n:x.n}),'Conceptual illustration of a cinema camera','gst-thumb')}<div><h3>${esc(x.n.replace(/\s*\(.*$/,''))}</h3><p>${esc(x.w)}${D.tg==='netflix'&&NF_OK.has(x.n)?' It is on Netflix\'s approved list.':''}</p></div><button class="gst-l" data-pa="gstUse" data-gn="${esc(x.n)}">Use this instead</button></li>`).join('')||'<li><div><p>No other camera in the list fits these needs better.</p></div></li>'}</ol></section>
+    <ol class="gst-alts">${D.alts.map(x=>`<li>${illus(illusKey(findGear(null,x.n)||{k:'Camera',n:x.n})||'digital_cinema_camera',null,'gst-thumb')}<div><h3>${esc(x.n.replace(/\s*\(.*$/,''))}</h3><p>${esc(x.w)}${D.tg==='netflix'&&NF_OK.has(x.n)?' It is on Netflix\'s approved list.':''}</p></div><button class="gst-l" data-pa="gstUse" data-gn="${esc(x.n)}">Use this instead</button></li>`).join('')||'<li><div><p>No other camera in the list fits these needs better.</p></div></li>'}</ol></section>
   <section class="gst-s dark"><h2 class="gst-h">Beautifully chosen.<br>Technically checked.</h2><p class="gst-p">See why each choice belongs in the kit and what to confirm before you book it.</p>
     <ul class="gst-checks">${D.checks.map(c=>`<li><span class="gst-ck ${c.ok===true?'ok':c.ok===false?'no':'q'}" aria-hidden="true">${c.ok===true?'✓':c.ok===false?'!':'?'}</span><div><h3>${esc(c.t)}</h3><p>${esc(c.d)}</p></div></li>`).join('')}</ul>
     <label class="gst-rel">Release<select data-gtarget>${Object.entries(OTT).map(([k,l])=>`<option value="${k}"${k===D.tg?' selected':''}>${esc(l)}</option>`).join('')}</select></label></section>
@@ -2179,7 +2179,7 @@ function storyHtml(tabs){const sc=P.scenes;
     {name:'Sources',cols:[{h:'Source',w:40},{h:'Link',w:80}],rows:D.src.map(([t,u])=>[t,u])}]};
   return {html,exp}}
 R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Object.fromEntries(NEEDS);
-  const tabs=segm('gmode',[['story','Scene view'],['script','For this script'],['needs','Suggestions by need'],['move','By camera movement'],['scenes','For each scene'],['list','Our equipment list']]);
+  const tabs=segm('gmode',[['story','Scene view'],['script','For this script'],['needs','Suggestions by need'],['move','By camera movement'],['types','Equipment types'],['scenes','For each scene'],['list','Our equipment list']]);
   if(mode==='story')return storyHtml(tabs);
   if(mode==='script'){const tg=P.gearTarget||'theatrical',c=scriptNeeds(),rec=P.gearRec&&P.gearRec.tg===tg?P.gearRec:null,rows=rec?rec.rows:rulePackage(tg);
     const cell=(i,f,l)=>ce(`data-pk="grec" data-ri="${i}" data-gf="${f}"`,rows[i][f]||'','',l);
@@ -2193,8 +2193,13 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
     exp:{orient:'landscape',sheets:[{name:'Camera package',cols:[{h:'For',w:20},{h:'Recommendation',w:50},{h:'Why',w:60}],rows:[{group:'RELEASE: '+U(OTT[tg])},...rows.map(r=>[r.role,r.pick,r.why])]},...(tg==='netflix'||tg==='prime'?[{name:'Netflix approved cameras',cols:[{h:'Camera',w:60}],rows:NF_CAMS.map(x=>[x])}]:[])]}}}
   if(mode==='move'){
     return {html:pageHead('Camera & equipment','Which equipment gives which camera movement. Pick the movement the scene needs, then see the matching gear in "Suggestions by need".',tabs)+
-    `<div class="tw"><table class="t rt"><thead><tr><th>Picture</th><th>Desired movement</th><th>Equipment</th></tr></thead><tbody>${MOVES.map(([m,q])=>`<tr><td data-l="Picture" class="mv-pic">${illus(illusKey({k:'Camera support & grip',n:q.split(',')[0]}))}</td><td data-l="Desired movement"><b>${esc(m)}</b></td><td data-l="Equipment" class="left">${esc(q)}</td></tr>`).join('')}</tbody></table></div><div class="banner info small" style="display:block;line-height:1.55">${esc(MOVE_NOTE)} ${esc(ILL_NOTE)}</div>`,
+    `<div class="tw"><table class="t rt"><thead><tr><th>Picture</th><th>Desired movement</th><th>Equipment</th></tr></thead><tbody>${MOVES.map(([m,q])=>`<tr><td data-l="Picture" class="mv-pic">${illus(illusKey({k:'',n:q.split(',')[0]})||'camera_crane_jib')}</td><td data-l="Desired movement"><b>${esc(m)}</b></td><td data-l="Equipment" class="left">${esc(q)}</td></tr>`).join('')}</tbody></table></div><div class="banner info small" style="display:block;line-height:1.55">${esc(MOVE_NOTE)} ${esc(ILL_NOTE)}</div>`,
     exp:{orient:'portrait',sheets:[{name:'Camera movement',cols:[{h:'Desired movement',w:32},{h:'Equipment',w:60}],rows:MOVES.map(([m,q])=>[m,q]).concat([['Note',MOVE_NOTE]])}]}}}
+  if(mode==='types'){const ct=VIEW.gtype||'all',cats=ILLUS.cats,shown=cats.filter(c=>ct==='all'||c.id===ct),catT=id=>(cats.find(c=>c.id===id)||{}).title||'';
+    const chips=`<div class="ty-chips">${segm('gtype',[['all','All · '+ILLUS.items.length],...cats.map(c=>[c.id,c.title])])}</div>`;
+    const body=shown.map(c=>{const L=ILLUS.items.filter(x=>x.category===c.id);return `<h3 class="nd-k">${esc(c.title)} <span class="small faint">· ${L.length}</span></h3><div class="ty-grid">${L.map(x=>`<article class="ty-card"><div class="ty-art">${illus(x.id)}</div><h4>${esc(x.name)}</h4><button class="btn sm" data-pa="gearType" data-id="${x.id}">+ Add to my list</button></article>`).join('')}</div>`}).join('');
+    return {html:pageHead('Camera & equipment','Every kind of equipment as a simple drawing, grouped by what it does. Add any type to your equipment list, then type the model you will use.',tabs)+`<div class="nd">${chips}${body}<p class="small faint" style="margin-top:18px">${ILL_NOTE}</p></div>`,
+    exp:{orient:'portrait',sheets:[{name:'Equipment types',cols:[{h:'Category',w:26},{h:'Type',w:38}],rows:ILLUS.items.filter(x=>ct==='all'||x.category===ct).map(x=>[catT(x.category),x.name])}]}}}
   if(mode==='scenes'){const sc=P.scenes;
     return {html:pageHead('Camera & equipment','Suggested camera, lenses and lights for every scene. Without AI the page picks from the researched list by day/night, action, slow motion, songs and VFX; "Suggest with AI" reads each scene. Type over anything.',tabs+searchBox('Find a scene')+'<button class="btn sm pri" data-pa="gearAI">Suggest with AI</button>')+
     `<div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Needs</th><th>Camera</th><th>Lenses</th><th>Lights</th><th>Support &amp; grip</th><th>Notes</th></tr></thead><tbody>${sc.map(s=>{const g=sceneGear(s);const c=f=>ce(`data-pk="gear" data-sid="${s.id}" data-gf="${f}"`,g[f]||'','',f);
@@ -2202,17 +2207,17 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
     exp:{orient:'landscape',sheets:[{name:'Camera per scene',cols:[{h:'Sc No',w:7},{h:'Effect / Time',w:12},{h:'Location',w:18},{h:'Needs',w:16},{h:'Camera',w:22},{h:'Lenses',w:20},{h:'Lights',w:20},{h:'Support & grip',w:22},{h:'Notes',w:20}],rows:sc.map(s=>{const g=sceneGear(s);return [s.no,eff(s),s.loc,(g.needs||[]).map(n=>NL[n]||n).join(', '),g.camera,g.lens,g.light,g.support,g.notes]})}]}}}
   if(mode==='list'){const L=P.gearList||[];
     return {html:pageHead('Camera & equipment','Your own equipment list for this film. Start from the standard kit or add items from the suggestions, then type models and quantities.',tabs+'<button class="btn sm" data-pa="gearTpl">Start from a standard kit</button><button class="btn sm" data-pa="gearAdd">Add item</button>')+
-    (L.length?`<div class="tw"><table class="t rt"><thead><tr><th>Department</th><th>Item</th><th>Qty</th><th>Notes</th><th></th></tr></thead><tbody>${L.map((g,i)=>`<tr>${[['dept','Department'],['item','Item'],['qty','Qty'],['notes','Notes']].map(([f,l])=>`<td data-l="${l}"${f==='item'||f==='notes'?' class="left"':''}>${ce(`data-pk="glist" data-gi="${i}" data-gf="${f}"`,g[f]==null?'':String(g[f]),'',l)}</td>`).join('')}<td><button class="btn sm ghost danger" data-pa="gearDel" data-gi="${i}" aria-label="Remove">✕</button></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty"><b>No equipment list yet</b>Start from the standard kit, add items from "Suggestions by need", or add your own.</div>`),
+    (L.length?`<div class="tw"><table class="t rt"><thead><tr><th>Picture</th><th>Department</th><th>Item</th><th>Qty</th><th>Notes</th><th></th></tr></thead><tbody>${L.map((g,i)=>`<tr><td data-l="Picture" class="mv-pic">${(k=>k?illus(k):'')(illusKey({n:g.item,k:g.dept}))}</td>${[['dept','Department'],['item','Item'],['qty','Qty'],['notes','Notes']].map(([f,l])=>`<td data-l="${l}"${f==='item'||f==='notes'?' class="left"':''}>${ce(`data-pk="glist" data-gi="${i}" data-gf="${f}"`,g[f]==null?'':String(g[f]),'',l)}</td>`).join('')}<td><button class="btn sm ghost danger" data-pa="gearDel" data-gi="${i}" aria-label="Remove">✕</button></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty"><b>No equipment list yet</b>Start from the standard kit, add items from "Suggestions by need", or add your own.</div>`)+(L.length?`<p class="small faint">${ILL_NOTE}</p>`:''),
     exp:{orient:'portrait',sheets:[{name:'Equipment list',cols:[{h:'Department',w:18},{h:'Item',w:44},{h:'Qty',w:6},{h:'Notes',w:32}],rows:L.map(g=>[g.dept,g.item,g.qty,g.notes])}]}}}
   const sn=scriptNeeds(),topNeed=NEEDS.map(([k])=>k).sort((x,y)=>(sn[y]||0)-(sn[x]||0))[0]||'day';const nd=VIEW.gneed||(sn[topNeed]?topNeed:'day');
   const items=GEAR.filter(g=>nd==='all'||(nd==='netflix'?NF_OK.has(g.n):g.t.includes(nd))).sort((a,b)=>nd==='all'||nd==='netflix'?0:(a.t.indexOf(nd)-b.t.indexOf(nd)));const kinds=uniq(items.map(g=>g.k));
-  const NTK={day:'matte_box',night:'light_panel',action:'vehicle_rig',slowmo:'camera_body',aerial:'drone',tight:'gimbal',vfx:'monitor_focus',song:'dolly',budget:'tripod',netflix:'camera_body',all:'lens_set'};
+  const NTK={day:'matte_box',night:'light_panel',action:'vehicle_rig',slowmo:'high_speed_camera',aerial:'drone_aerial_rig',tight:'shoulder_rig',vfx:'motion_control_rig',song:'camera_crane_jib',budget:'compact_cinema_camera',netflix:'digital_cinema_camera',all:'cine_lens_set'};
   const NSUB={day:'Bright, wide, outdoors',night:'Dark scenes, clean image',action:'Fights, chases, stunts',slowmo:'High frame rates',aerial:'Drone and heights',tight:'Handheld, small rooms',vfx:'Green screen, plates',song:'Movement and colour',budget:'Smart and lighter',netflix:'Cleared for streaming',all:'The whole catalogue'};
   const tileList=[...NEEDS,['netflix','Netflix approved'],['all','Everything']];
   const cnt=k=>k==='all'?GEAR.length:k==='netflix'?GEAR.filter(g=>NF_OK.has(g.n)).length:GEAR.filter(g=>g.t.includes(k)).length;
   const tiles=`<div class="nd-tiles" role="group" aria-label="What does the shot need?">${tileList.map(([k,l])=>`<button class="nd-tile" data-gneed="${k}" aria-pressed="${nd===k}"><span class="nd-ic">${illus(NTK[k])}</span><b>${esc(l)}</b><small>${esc(NSUB[k])}</small><em>${sn[k]?sn[k]+' scene'+(sn[k]===1?'':'s')+' in your script':cnt(k)+' options'}</em></button>`).join('')}</div>`;
     const links=g=>(g.src?`<a href="${esc(g.src)}" target="_blank" rel="noopener">Source</a>`:'<span class="faint">From your equipment list</span>')+(g.src2?` · <a href="${esc(g.src2)}" target="_blank" rel="noopener">Source 2</a>`:'');
-  const card=(g,big)=>`<article class="nd-card${big?' big':''}"><div class="nd-art">${illus(illusKey(g))}</div><div class="nd-b"><small>${esc(g.k)}${NF_OK.has(g.n)?' · Netflix approved':''}</small><h3>${esc(g.n)}</h3><p class="nd-w">${esc(big?g.w:cut(g.w,120))}</p>${big?`<p class="nd-u">${esc(g.u)}</p>`:''}<details><summary>Specs and sources</summary><p class="small">${esc(g.sp)}</p>${big?'':`<p class="small muted">${esc(g.u)}</p>`}<p class="small">${links(g)}</p></details><div class="nd-act"><button class="btn sm pri" data-pa="gearPick" data-gn="${esc(g.n)}">+ Add to my list</button></div></div></article>`;
+  const card=(g,big)=>`<article class="nd-card${big?' big':''}"><div class="nd-art">${illus(illusKey(g)||'digital_cinema_camera')}</div><div class="nd-b"><small>${esc(g.k)}${NF_OK.has(g.n)?' · Netflix approved':''}</small><h3>${esc(g.n)}</h3><p class="nd-w">${esc(big?g.w:cut(g.w,120))}</p>${big?`<p class="nd-u">${esc(g.u)}</p>`:''}<details><summary>Specs and sources</summary><p class="small">${esc(g.sp)}</p>${big?'':`<p class="small muted">${esc(g.u)}</p>`}<p class="small">${links(g)}</p></details><div class="nd-act"><button class="btn sm pri" data-pa="gearPick" data-gn="${esc(g.n)}">+ Add to my list</button></div></div></article>`;
   const lab=(tileList.find(x=>x[0]===nd)||[0,''])[1];const best=items.find(g=>/Camera/.test(g.k))||items[0];
   let body='';
   if(!items.length)body='<div class="empty"><b>Nothing listed for this yet</b>Pick another need above.</div>';
@@ -2273,6 +2278,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-
   if(a==='gstKit'){const sc=scById(VIEW.gscene);if(!sc)return;const D=storyData(sc);const want=[['Camera',D.camTxt],['Lenses',D.lensTxt],['Lights',D.lightTxt],...D.sups.map(x=>['Camera support & grip',x])];P.gearList=P.gearList||[];const add=want.filter(([d,i])=>i&&!P.gearList.some(x=>x.item===i));if(!add.length){toast('Everything is already in your equipment list.');return}snapshot();add.forEach(([d,i])=>P.gearList.push({dept:d,item:i,qty:'1',notes:`Sc ${sc.no}`}));prodSave(`Sc ${sc.no} kit added to the equipment list (${add.length} items)`);toast(add.length+' items added to "Our equipment list".')}
   if(a==='gearAdd'){snapshot();P.gearList=P.gearList||[];P.gearList.push({dept:'',item:'',qty:'1',notes:''});prodSave('Equipment item added')}
   if(a==='gearDel'){snapshot();(P.gearList||[]).splice(+t.dataset.gi,1);prodSave('Equipment item removed')}
+  if(a==='gearType'){const it=ILL_BY[t.dataset.id];if(!it)return;const dept=(ILLUS.cats.find(c=>c.id===it.category)||{}).dept||'Other';P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===it.name)){toast(it.name+' is already in your list.');return}snapshot();P.gearList.push({dept,item:it.name,qty:'1',notes:''});prodSave(`${it.name} added to the equipment list`);toast(it.name+' added to "Our equipment list".');return}
   if(a==='gearPick'){const g=GEAR.find(x=>x.n===t.dataset.gn);if(!g)return;P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===g.n)){toast(g.n+' is already in your list.');return}snapshot();P.gearList.push({dept:g.k,item:g.n,qty:'1',notes:''});prodSave(`${g.n} added to the equipment list`);toast(g.n+' added to "Our equipment list".')}
   if(a==='crewAdd'){snapshot();P.crew=P.crew||[];P.crew.push({dept:'',role:'',name:'',phone:''});prodSave('Crew member added')}
   if(a==='crewDel'){snapshot();(P.crew||[]).splice(+t.dataset.ci,1);prodSave('Crew member removed')}});

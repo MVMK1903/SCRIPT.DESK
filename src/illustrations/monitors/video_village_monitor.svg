@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Video village monitor illustration">
+<title>Video village monitor — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="40" y="50" width="48" height="34" rx="4" fill="#20272A"/><rect x="96" y="40" width="48" height="44" rx="4" fill="#20272A"/><rect x="152" y="50" width="48" height="34" rx="4" fill="#20272A"/><path d="M64 84v14M120 84v14M176 84v14M44 100h152" fill="none"/><path d="M104 54h32M104 64h20" stroke="#147D83" stroke-width="3"/><circle cx="184" cy="60" r="3" fill="#147D83" stroke="none"/><rect x="50" y="108" width="140" height="12" rx="4" fill="#B9C1C0"/></g>
+</svg>

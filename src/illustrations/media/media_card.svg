@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Media card illustration">
+<title>Media card — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M86 46a8 8 0 0 1 8-8h38l22 22v60a8 8 0 0 1-8 8H94a8 8 0 0 1-8-8Z" fill="#D7D8D2"/><path d="M100 106v12M112 106v12M124 106v12M136 106v12" fill="none"/><rect x="98" y="66" width="44" height="24" rx="3" fill="#F7F5EF"/><path d="M104 78h32" stroke="#147D83" stroke-width="3"/></g>
+</svg>

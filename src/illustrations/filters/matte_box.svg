@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Matte box illustration">
+<title>Matte box — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+
+<g fill="none" stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M73 53h68l15 14v43H73zM73 53l-24-18h90l22 18M49 35v58l24 17M141 53l15 14"/><rect x="156" y="70" width="34" height="22" rx="3"/><circle cx="190" cy="81" r="15"/><circle cx="190" cy="81" r="8"/><path d="M91 110v14M128 110v14M81 124h57M62 44h68M62 51h68"/></g>
+<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
+
+</svg>

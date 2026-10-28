@@ -1,4 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="rain cover illustration">
-<g fill="none" stroke="#20272A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M48 54q12-22 35-13 16-27 39-8 27-7 38 18l19 9v40l-19 17H64l-16-15zM62 59l18-11 18 8 21-9 22 13 22-2M64 60v43l18 12h72l14-12V60"/><rect x="87" y="64" width="54" height="32" rx="5"/><circle cx="114" cy="80" r="10"/><path d="M80 116l-8 15M103 116l-4 15M147 116l5 15M170 108l12 10M190 32l-6 11M208 46l-8 11M35 35l-5 10"/></g>
-<g fill="#147D83"><circle cx="120" cy="80" r="2.5"/><path d="M108 96h24v4h-24z"/></g>
-</svg>

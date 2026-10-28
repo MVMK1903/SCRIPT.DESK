@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Helmet rig illustration">
+<title>Helmet rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M66 104a54 54 0 0 1 108 0Z" fill="#D7D8D2"/><path d="M58 106H182" fill="none"/><rect x="104" y="48" width="34" height="20" rx="5" fill="#D7D8D2"/><circle cx="130" cy="58" r="6" fill="#20272A"/><path d="M92 106v14M148 106v14" fill="none"/><path d="M104 80h32" stroke="#147D83" stroke-width="3"/></g>
+</svg>

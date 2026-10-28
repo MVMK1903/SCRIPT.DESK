@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Director monitor illustration">
+<title>Director monitor — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <g>
+          <rect x="45" y="32" width="150" height="86" rx="8" fill="#D7D8D2"/>
+          <rect x="56" y="42" width="128" height="63" rx="4" fill="#20272A"/>
+          <path d="M67 53H130 M67 62H160 M67 71H118" stroke="#147D83" stroke-width="3"/>
+          <circle cx="174" cy="111" r="4" fill="#147D83"/>
+          <path d="M92 119V132 M148 119V132 M78 132H162"/>
+        </g></g>
+</svg>

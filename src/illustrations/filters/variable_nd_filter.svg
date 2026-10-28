@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Variable ND filter illustration">
+<title>Variable ND filter — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="120" cy="80" r="44" fill="#D7D8D2"/><path d="M120 36a44 44 0 0 1 0 88Z" fill="#20272A"/><path d="M120 36v88" fill="none"/><path d="M120 28v8M120 124v8M76 80h-8M172 80h8" stroke="#147D83" stroke-width="2.5"/><circle cx="120" cy="80" r="12" fill="#147D83"/></g>
+</svg>

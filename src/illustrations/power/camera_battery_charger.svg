@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Battery charger illustration">
+<title>Battery charger — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="52" y="92" width="136" height="28" rx="7" fill="#D7D8D2"/><rect x="70" y="56" width="40" height="40" rx="5" fill="#B9C1C0"/><rect x="130" y="56" width="40" height="40" rx="5" fill="#B9C1C0"/><path d="M82 56V46h16v10M142 56V46h16v10" fill="none"/><circle cx="74" cy="106" r="3" fill="#147D83" stroke="none"/><circle cx="96" cy="106" r="3" fill="#147D83" stroke="none"/><circle cx="144" cy="106" r="3" fill="#147D83" stroke="none"/><circle cx="166" cy="106" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Weather shield illustration">
+<title>Weather shield — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M50 86a70 52 0 0 1 140 0Z" fill="#D7D8D2"/><path d="M120 86v34a8 8 0 0 0 16 0" fill="none"/><path d="M72 106l-6 14M96 104l-6 14M150 104l-6 14M174 106l-6 14" stroke="#147D83" stroke-width="2.5"/><circle cx="120" cy="52" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

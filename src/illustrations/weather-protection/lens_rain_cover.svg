@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Lens rain cover illustration">
+<title>Lens rain cover — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="56" y="62" width="84" height="44" rx="8" fill="#D7D8D2"/><path d="M140 56h34a6 6 0 0 1 6 6v44a6 6 0 0 1-6 6h-34" fill="none"/><circle cx="180" cy="84" r="12" fill="#20272A"/><path d="M70 62V50M96 62V46M122 62V50" stroke="#147D83" stroke-width="2.5"/><circle cx="70" cy="84" r="3" fill="#147D83" stroke="none"/></g>
+</svg>

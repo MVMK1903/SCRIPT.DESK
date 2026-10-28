@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Body-worn rig illustration">
+<title>Body-worn rig — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="48" y="44" width="38" height="78" rx="12" fill="#D7D8D2"/><path d="M86 52V30H152V64" fill="none"/><circle cx="152" cy="30" r="4" fill="#147D83"/><rect x="130" y="64" width="44" height="30" rx="6" fill="#D7D8D2"/><circle cx="166" cy="79" r="8" fill="#20272A"/><path d="M86 70H112M86 96H112" fill="none"/></g>
+</svg>

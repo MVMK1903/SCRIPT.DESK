@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Diffusion filter illustration">
+<title>Diffusion filter — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="120" cy="80" r="44" fill="#D7D8D2"/><circle cx="120" cy="80" r="30" stroke-dasharray="3 6"/><circle cx="120" cy="80" r="16" stroke-dasharray="2 5"/><circle cx="120" cy="80" r="44" stroke="#147D83" stroke-width="2" stroke-dasharray="1 0" fill="none" opacity="0"/><circle cx="104" cy="68" r="2.5" fill="#147D83" stroke="none"/><circle cx="138" cy="92" r="2.5" fill="#147D83" stroke="none"/><circle cx="126" cy="64" r="2.5" fill="#147D83" stroke="none"/></g>
+</svg>

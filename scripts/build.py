@@ -35,6 +35,49 @@ HEAD = '''<!doctype html>
 </head>
 <body>
 '''
+
+def load_illustrations():
+    """Validate every illustration against the central manifest and return what the app needs. Fails the build on any problem."""
+    import re
+    import xml.etree.ElementTree as ET
+    idir = os.path.join(os.path.dirname(SRC), 'illustrations')
+    man = json.load(open(os.path.join(idir, 'manifest.json'), encoding='utf-8'))
+    problems, svgs, items, ids = [], {}, [], set()
+    on_disk = {os.path.relpath(os.path.join(r, f), idir).replace(os.sep, '/') for r, _, fs in os.walk(idir) for f in fs if f.endswith('.svg')}
+    for it in man['items']:
+        i = it['id']
+        if i in ids: problems.append('duplicate id ' + i)
+        ids.add(i)
+        if it['category'] not in man['categories']: problems.append(i + ': unknown category ' + it['category'])
+        if not it.get('alt') or not it['alt'].startswith('Conceptual illustration'): problems.append(i + ': alt text must start with "Conceptual illustration"')
+        if it.get('match'):
+            try: re.compile(it['match'])
+            except re.error as e: problems.append(i + ': bad match regex ' + str(e))
+        path = os.path.join(idir, it['file'])
+        if not os.path.isfile(path):
+            problems.append(i + ': missing file ' + it['file']); continue
+        raw = open(path, encoding='utf-8').read()
+        try: root = ET.fromstring(raw)
+        except ET.ParseError as e: problems.append(it['file'] + ': invalid SVG ' + str(e)); continue
+        if not root.tag.endswith('svg') or not root.get('viewBox'): problems.append(it['file'] + ': no svg/viewBox')
+        if re.search(r'<script|<image|href=|onload|url\(\s*[\'"]?https?:', raw): problems.append(it['file'] + ': contains script or external reference')
+        svgs[i] = ' '.join(raw.split())
+        items.append({k: it[k] for k in ('id', 'category', 'name', 'alt', 'match')})
+        if not it.get('source'): problems.append(i + ': no source recorded')
+    for f in sorted(on_disk - {it['file'] for it in man['items']}): problems.append('no manifest entry for ' + f)
+    for k, v in man['fallback'].items():
+        if v not in ids: problems.append('fallback ' + k + ' -> unknown asset ' + v)
+    if problems:
+        print('ILLUSTRATION CHECK FAILED:\n  ' + '\n  '.join(problems)); sys.exit(1)
+    by = {}
+    for it in items: by[it['category']] = by.get(it['category'], 0) + 1
+    print('illustrations OK:', len(items), 'files,', ', '.join(k + ' ' + str(v) for k, v in by.items()))
+    for c in man['categories']:
+        if c not in man.get('categoryInfo', {}): problems.append('no categoryInfo for ' + c)
+    if problems:
+        print('ILLUSTRATION CHECK FAILED:\n  ' + '\n  '.join(problems)); sys.exit(1)
+    return {'svgs': svgs, 'items': items, 'fallback': man['fallback'], 'cats': [dict(id=c, **man['categoryInfo'][c]) for c in man['categories']]}
+
 def main():
     vendor = '--vendor' in sys.argv
     app = open(SRC, encoding='utf-8').read()
@@ -55,14 +98,8 @@ def main():
                         raise
             files.append(name)
         json.dump(files, open(os.path.join(WWW, 'vendor', 'manifest.json'), 'w'))
-    # Inline the local SVG illustrations so the single-file app needs no image files
-    ill = {}
-    idir = os.path.join(os.path.dirname(SRC), 'illustrations')
-    for f in sorted(os.listdir(idir)):
-        if f.endswith('.svg'):
-            ill[f[:-4]] = ' '.join(open(os.path.join(idir, f), encoding='utf-8').read().replace('#20272A', 'currentColor').split())
-    assert '/*ILLUS*/{}' in app
-    app = app.replace('/*ILLUS*/{}', json.dumps(ill))
+    # Inline the local SVG illustrations (src/illustrations + manifest.json) so the single-file app needs no image files.
+    app = app.replace('/*ILLUS*/{}', json.dumps(load_illustrations(), ensure_ascii=False, separators=(',', ':')))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:

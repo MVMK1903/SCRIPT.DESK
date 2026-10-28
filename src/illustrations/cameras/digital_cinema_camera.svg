@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Digital cinema camera illustration">
+<title>Digital cinema camera — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <g>
+          <path d="M48 48L64 34H155L177 49V108L159 123H63L48 108Z" fill="#D7D8D2"/>
+          <path d="M48 48H177V108H48Z"/>
+          <rect x="62" y="54" width="50" height="46" rx="4" fill="#20272A"/>
+          <circle cx="139" cy="77" r="24" fill="#20272A"/><circle cx="139" cy="77" r="14" fill="#147D83"/><circle cx="139" cy="77" r="6" fill="#20272A"/>
+          <path d="M74 45V35 M88 45V35 M102 45V35 M119 108V123" stroke="#147D83"/>
+          <circle cx="70" cy="113" r="4" fill="#147D83"/><circle cx="156" cy="113" r="4" fill="#147D83"/>
+        </g></g>
+</svg>

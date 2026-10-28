@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="High-speed camera illustration">
+<title>High-speed camera — conceptual illustration</title>
+<rect width="240" height="160" rx="10" fill="#F7F5EF"/>
+<g stroke="#20272A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="54" y="52" width="92" height="58" rx="8" fill="#D7D8D2"/><path d="M66 60v42M78 60v42M90 60v42" fill="none"/><circle cx="166" cy="80" r="22" fill="#20272A"/><circle cx="166" cy="80" r="11" fill="#147D83"/><path d="M170 50h20M176 36h14M178 122h14" stroke="#147D83" stroke-width="2.5"/></g>
+</svg>

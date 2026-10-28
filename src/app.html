@@ -200,6 +200,7 @@ a{color:var(--accent)}
 .gst-alts li>div{flex:1 1 200px;min-width:0}
 .nd-ic{width:100%!important;height:auto!important;aspect-ratio:3/2;display:block!important;background:#F7F5EF!important;border-radius:12px!important;padding:0;box-sizing:border-box;margin-bottom:8px}.nd-ic .il{width:100%;height:100%;object-fit:contain}
 .nd-tile[aria-pressed=true] .nd-ic{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+.nd-ic.ph{overflow:hidden;background:var(--accent-soft)!important}.nd-ic.ph img{width:100%;height:100%;object-fit:cover;display:block}
 .nd-art .il{max-width:230px;margin:0 auto}.nd-card.big .nd-art .il{max-width:340px}.nd-art{background:#F7F5EF!important}
 .mv-pic{width:112px}.mv-pic .il{width:96px;background:#F7F5EF;border-radius:10px;padding:0;box-sizing:border-box}
 @media(max-width:700px){
@@ -2215,7 +2216,7 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
   const NSUB={day:'Bright, wide, outdoors',night:'Dark scenes, clean image',action:'Fights, chases, stunts',slowmo:'High frame rates',aerial:'Drone and heights',tight:'Handheld, small rooms',vfx:'Green screen, plates',song:'Movement and colour',budget:'Smart and lighter',netflix:'Cleared for streaming',all:'The whole catalogue'};
   const tileList=[...NEEDS,['netflix','Netflix approved'],['all','Everything']];
   const cnt=k=>k==='all'?GEAR.length:k==='netflix'?GEAR.filter(g=>NF_OK.has(g.n)).length:GEAR.filter(g=>g.t.includes(k)).length;
-  const tiles=`<div class="nd-tiles" role="group" aria-label="What does the shot need?">${tileList.map(([k,l])=>`<button class="nd-tile" data-gneed="${k}" aria-pressed="${nd===k}"><span class="nd-ic">${illus(NTK[k])}</span><b>${esc(l)}</b><small>${esc(NSUB[k])}</small><em>${sn[k]?sn[k]+' scene'+(sn[k]===1?'':'s')+' in your script':cnt(k)+' options'}</em></button>`).join('')}</div>`;
+  const tiles=`<div class="nd-tiles" role="group" aria-label="What does the shot need?">${tileList.map(([k,l])=>`<button class="nd-tile" data-gneed="${k}" aria-pressed="${nd===k}"><span class="nd-ic${ILLUS.scenes[k]?' ph':''}">${ILLUS.scenes[k]?`<img src="${ILLUS.scenes[k].src}" alt="${esc(ILLUS.scenes[k].alt)}" loading="lazy" decoding="async">`:illus(NTK[k])}</span><b>${esc(l)}</b><small>${esc(NSUB[k])}</small><em>${sn[k]?sn[k]+' scene'+(sn[k]===1?'':'s')+' in your script':cnt(k)+' options'}</em></button>`).join('')}</div>`;
     const links=g=>(g.src?`<a href="${esc(g.src)}" target="_blank" rel="noopener">Source</a>`:'<span class="faint">From your equipment list</span>')+(g.src2?` · <a href="${esc(g.src2)}" target="_blank" rel="noopener">Source 2</a>`:'');
   const card=(g,big)=>`<article class="nd-card${big?' big':''}"><div class="nd-art">${illus(illusKey(g)||'digital_cinema_camera')}</div><div class="nd-b"><small>${esc(g.k)}${NF_OK.has(g.n)?' · Netflix approved':''}</small><h3>${esc(g.n)}</h3><p class="nd-w">${esc(big?g.w:cut(g.w,120))}</p>${big?`<p class="nd-u">${esc(g.u)}</p>`:''}<details><summary>Specs and sources</summary><p class="small">${esc(g.sp)}</p>${big?'':`<p class="small muted">${esc(g.u)}</p>`}<p class="small">${links(g)}</p></details><div class="nd-act"><button class="btn sm pri" data-pa="gearPick" data-gn="${esc(g.n)}">+ Add to my list</button></div></div></article>`;
   const lab=(tileList.find(x=>x[0]===nd)||[0,''])[1];const best=items.find(g=>/Camera/.test(g.k))||items[0];

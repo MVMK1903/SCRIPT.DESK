@@ -77,7 +77,20 @@ def load_illustrations():
         if c not in man.get('categoryInfo', {}): problems.append('no categoryInfo for ' + c)
     if problems:
         print('ILLUSTRATION CHECK FAILED:\n  ' + '\n  '.join(problems)); sys.exit(1)
-    return {'svgs': svgs, 'items': items, 'fallback': man['fallback'], 'cats': [dict(id=c, **man['categoryInfo'][c]) for c in man['categories']]}
+    import base64
+    needs = set(re.findall(r"\['(\w+)','", open(SRC, encoding='utf-8').read().split('const NEEDS=[')[1].split('];')[0]))
+    scenes = {}
+    for k, v in man.get('scenes', {}).items():
+        fp = os.path.join(idir, v['file'])
+        if k not in needs: problems.append('scene ' + k + ': not a need id')
+        if not os.path.isfile(fp): problems.append('scene ' + k + ': missing file ' + v['file']); continue
+        if not v.get('alt') or not v.get('source'): problems.append('scene ' + k + ': alt and source required')
+        scenes[k] = {'name': v['name'], 'alt': v['alt'], 'src': 'data:image/webp;base64,' + base64.b64encode(open(fp, 'rb').read()).decode()}
+    for f in sorted({os.path.relpath(os.path.join(r, f), idir).replace(os.sep, '/') for r, _, fs in os.walk(os.path.join(idir, 'scenes')) for f in fs} - {v['file'] for v in man.get('scenes', {}).values()}): problems.append('no manifest entry for ' + f)
+    if problems:
+        print('ILLUSTRATION CHECK FAILED:\n  ' + '\n  '.join(problems)); sys.exit(1)
+    print('scene images OK:', len(scenes))
+    return {'scenes': scenes, 'svgs': svgs, 'items': items, 'fallback': man['fallback'], 'cats': [dict(id=c, **man['categoryInfo'][c]) for c in man['categories']]}
 
 def main():
     vendor = '--vendor' in sys.argv

@@ -744,5 +744,55 @@
    "title": "Lighting",
    "dept": "Lights"
   }
+ },
+ "scenes": {
+  "day": {
+   "file": "scenes/day.webp",
+   "name": "Day exteriors",
+   "alt": "Scene image: a hiker on a mountain trail in bright daylight",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "night": {
+   "file": "scenes/night.webp",
+   "name": "Night / low light",
+   "alt": "Scene image: a car on a city street at night",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "action": {
+   "file": "scenes/action.webp",
+   "name": "Action & stunts",
+   "alt": "Scene image: a stunt performer leaping from an explosion",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "aerial": {
+   "file": "scenes/aerial.webp",
+   "name": "Aerial",
+   "alt": "Scene image: a drone flying over snowy mountains",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "vfx": {
+   "file": "scenes/vfx.webp",
+   "name": "VFX & green screen",
+   "alt": "Scene image: a green-screen studio set",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "tight": {
+   "file": "scenes/tight.webp",
+   "name": "Handheld & tight spaces",
+   "alt": "Scene image: a camera operator shooting handheld in a small room",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "slowmo": {
+   "file": "scenes/slowmo.webp",
+   "name": "Slow motion",
+   "alt": "Scene image: a water splash frozen in slow motion",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  },
+  "song": {
+   "file": "scenes/song.webp",
+   "name": "Songs & dance",
+   "alt": "Scene image: dancers under stage lights",
+   "source": "Supplied reference sheet (Scene-based recommendations), cropped"
+  }
  }
 }

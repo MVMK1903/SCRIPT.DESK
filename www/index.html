@@ -589,6 +589,7 @@ const PAGES=[
  {g:'Script',id:'structure',nav:'Story structure',t:'Story structure'},
  {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
  {g:'Single line order',id:'slo',nav:'Single line order',t:'Single line order'},
+ {g:'Single line order',id:'scenic',nav:'Scenic order',t:'Scenic order'},
  {g:'Single line order',id:'sloLoc',nav:'Location-wise',t:'Location-wise single line order'},
  {g:'Single line order',id:'sloArt',nav:'Artist-wise',t:'Artist-wise single line order'},
  {g:'Single line order',id:'sloFight',nav:'Stunt / fight',t:'Stunt / fight single line order'},
@@ -2208,6 +2209,7 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
 
 /* ---------- Editing, moving, buttons ---------- */
 function prodCommit(el,v){const k=el.dataset.pk;v=String(v).replace(/ /g,' ').trim();
+  if(k==='scp'){const sc=scById(el.dataset.sid);if(!sc||(sc.scenic||'')===v)return null;snapshot();sc.scenic=v;return {sids:[sc.id],desc:`Sc ${sc.no} · Scenic paragraph edited`}}
   if(k==='bud')return budCommit(el,v);if(k==='rate')return rateCommit(el,v);
   if(k==='shot'){const s=scById(el.dataset.sid),h=s&&shotsOf(s).find(x=>x.id===el.dataset.shot),f=el.dataset.sf;if(!h||(h[f]||'')===v)return null;snapshot();const o=h[f]||'';h[f]=['size','cast'].includes(f)?U(v):v;return {sids:[s.id],desc:`Sc ${s.no} · Shot ${h.no} · ${(SHOT_F.find(x=>x[0]===f)||[,f])[1]}: "${cut(o)||'—'}" → "${cut(v)||'—'}"`}}
   if(k==='pg'){const s=scById(el.dataset.sid);if(!s)return null;const e=parsePg(v);if(!e||e===pgE(s)){el.innerText=fmtPg(pgE(s));return null}snapshot();s.pages8=e;needsRender=true;return {sids:[s.id],desc:`Sc ${s.no} · Length set to ${fmtPg(e)} pages`}}
@@ -2228,6 +2230,8 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-
   const a=t.dataset.pa,S=SCH(),s=t.dataset.sid?scById(t.dataset.sid):null,d=t.dataset.day?dayById(t.dataset.day):null,idx=d?S.days.indexOf(d):-1;
   const armed=msg=>{if(t.dataset.armed)return true;t.dataset.armed=1;const o=t.textContent;t.textContent=msg;setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent=o}},3500);return false};
   if(a==='shotsAI')shotJob();
+  if(a==='scenicAI')scenicJob();if(a==='scenicAll')scenicJob(null,true);if(a==='scenicOne')scenicJob(t.dataset.sid,true);
+  if(a==='scenicQuick'){const L=P.scenes.filter(x=>!x.scenic);if(!L.length&&!armed('Every scene has one. Click again to replace all with a quick draft'))return;snapshot();(L.length?L:P.scenes).forEach(x=>x.scenic=scenicQuickText(x));logChange('Scenic order quick draft','prod',true);touch((L.length?L:P.scenes).map(x=>x.id));render(true)}
   if(a==='shotAI1'&&s){if(shotsOf(s).length&&!armed('Replace these shots?'))return;shotJob(s.id)}
   if(a==='shotAdd'&&s){snapshot();shotsOf(s).push(newShot(s));prodSave(`Sc ${s.no} · shot added`,[s.id])}
   if((a==='shotDel'||a==='shotUp')&&s){const L=shotsOf(s),i=L.findIndex(h=>h.id===t.dataset.shot);if(i<0)return;snapshot();if(a==='shotDel'){const n=L[i].no;L.splice(i,1);prodSave(`Sc ${s.no} · shot ${n} deleted`,[s.id])}else if(i>0){[L[i-1],L[i]]=[L[i],L[i-1]];prodSave(`Sc ${s.no} · shot ${L[i-1].no} moved up`,[s.id])}}
@@ -2593,7 +2597,7 @@ document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset)retu
 /* ---------- Table tools: add / delete columns and rows on every report sheet ---------- */
 function askText(title,label,cb,def){openModal(`<div class="mh"><h2>${esc(title)}</h2><button class="btn sm ghost" data-close>Close</button></div><label class="small muted" for="atx">${esc(label)}</label><input class="srch" id="atx" style="width:100%;margin:8px 0" value="${esc(def||'')}"><div class="bacts"><button class="btn pri" id="atok">OK</button></div>`);
   const go=()=>{const v=$('#atx').value.trim();if(!v)return;closeModal();cb(v)};$('#atok').onclick=go;$('#atx').onkeydown=e=>{if(e.key==='Enter')go()};$('#atx').focus();$('#atx').select()}
-const TT_PAGES=['slo','sloLoc','sloArt','sloFight','locations','artists','locScenes','artScenes','special','costume','artprops','shots','order','sched','structure','breakdown','dood'];
+const TT_PAGES=['scenic','slo','sloLoc','sloArt','sloFight','locations','artists','locScenes','artScenes','special','costume','artprops','shots','order','sched','structure','breakdown','dood','scenic'];
 const ttOn=()=>P&&TT_PAGES.includes(page)&&!(page==='order'&&false);
 function XT(create){if(!P)return null;P.xt=P.xt||{};if(!P.xt[page]&&create)P.xt[page]={cols:[],rows:{},hideR:{},hideC:{},v:{}};return P.xt[page]||null}
 function ttTables(){return [...document.querySelectorAll('#content .tw>table.t')].filter(t=>!t.closest('.cs,[data-notools]'))}
@@ -2646,6 +2650,31 @@ function ttExport(exp){try{if(!exp||!ttOn()||!P.xt||!P.xt[page])return exp;const
     sh.cols=[...keep.map(i=>sh.cols[i]),...X.cols.map(c=>({h:c.name,w:16}))];sh.rows=rows}
   return out}catch(e){return exp}}
 
+/* ---------- Scenic order: every scene told as one paragraph ---------- */
+function scenicQuickText(s){const d=(s.desc||s.title||'').trim();const cast=s.artists.map(aName).filter(Boolean);return (d?d.replace(/\s+/g,' '):`Scene at ${s.loc||'the location'}.`)+(cast.length&&!cast.every(n=>d.toUpperCase().includes(String(n).toUpperCase()))?` Characters: ${cast.join(', ')}.`:'')}
+async function aiScenicBatch(b){const per=Math.max(3000,Math.floor(Math.min(aiBudget()*0.7,60000)/b.length));
+  const r=await ask(`You are a script supervisor on an Indian feature film. For each scene below write its SCENIC ORDER entry: the whole scene told as ONE flowing paragraph of 3 to 6 sentences, in English, present tense. Say who is there, where and when (day or night), what happens in the order it happens, the key emotion or turn, and how the scene ends. The script may be in Telugu, Tinglish, English or another language; translate the meaning, but keep character names and place names as in the script. No dialogue in quotation marks unless one line is essential, no camera directions, no scene numbers or bullet points, and do not invent events that are not in the scene.
+Reply with only JSON: {"scenes":[{"k":"s0","p":"the paragraph"}]}
+
+${b.map((s,i)=>`=== s${i} · SCENE ${s.no} · ${eff(s)} · ${s.loc}\nCast: ${s.artists.map(aName).join(', ')||'-'}\n${cutBytes(s.text,per)}`).join('\n\n')}`);
+  const out=(r&&r.scenes)||[];if(!out.length)throw {code:'invalid_json'};let got=0;
+  out.forEach(o=>{const m=String(o.k||'').match(/s(\d+)/),s=m&&b[+m[1]],p=o.p||o.paragraph||o.text;if(s&&typeof p==='string'&&p.trim()){s.scenic=p.replace(/\s+/g,' ').trim();got++}});
+  if(!got)throw {code:'invalid_json'}}
+async function scenicJob(only,redo){if(JOB)return;if(!AI.sample){noAI('AI needs a connected AI service. Use "Quick draft (no AI)", or type the paragraphs yourself.');return}
+  const list=only?[scById(only)].filter(Boolean):P.scenes.filter(s=>redo||!s.scenic);
+  if(!list.length){toast('Every scene already has a paragraph. Use "Rewrite all with AI" to redo them.');return}
+  snapshot();startJob(only?'Writing the scene paragraph':'Writing scene paragraphs',list.length);const done=[];let fails=0;
+  const per=Math.max(1,Math.min(4,batchMax()));const batches=[];for(let i=0;i<list.length;i+=per)batches.push(list.slice(i,i+per));
+  const work=async()=>{while(batches.length&&JOB&&!JOB.ctl.signal.aborted){const b=batches.shift();try{await aiScenicBatch(b);done.push(...b.filter(s=>s.scenic).map(s=>s.id))}catch(e){if(e&&e.code==='cancelled')return;fails++;if(['no_key','bad_key','not_granted'].includes(e&&e.code)){JOB.fatal=e;batches.length=0}}if(JOB){JOB.done+=b.length;renderJob()}}};
+  try{await Promise.all(Array.from({length:Math.max(1,Math.min(aiWorkers(),batches.length))},work));
+    if(JOB&&JOB.fatal&&!done.length)toast(errMsg(JOB.fatal),5000);else if(JOB&&JOB.ctl.signal.aborted)toast('Stopped.');else toast(`Paragraphs written for ${done.length} scene${done.length===1?'':'s'}${fails?`. ${fails} part${fails===1?'':'s'} failed; press the button again to retry`:''}. Edit anything you like.`,5000);
+    if(done.length){logChange(`Scenic order written by AI for ${done.length} scene${done.length===1?'':'s'}`,'prod',true);touch(done)}}
+  finally{endJob();render(true)}}
+R.scenic=()=>{const sc=P.scenes,have=sc.filter(s=>s.scenic).length;
+  return {html:pageHead('Scenic order','Every scene told as one paragraph, in script order. AI writes them from the script; click any paragraph to edit it, or type your own.',searchBox('Search scenes')+`<button class="btn sm pri" data-pa="scenicAI">${have?(have<sc.length?'Write the rest with AI':'Rewrite missing with AI'):'Write with AI'}</button>${have?'<button class="btn sm" data-pa="scenicAll">Rewrite all with AI</button>':''}<button class="btn sm ghost" data-pa="scenicQuick">Quick draft (no AI)</button>`)+
+  `<div class="stats"><div class="stat"><b>${have}/${sc.length}</b><span>Scenes with a paragraph</span></div></div>`+
+  `<div class="tw"><table class="t rt scenic"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Scenic paragraph</th></tr></thead><tbody>${sc.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+eff(s)+' '+(s.scenic||'')+' '+s.desc).toLowerCase())}"><td data-l="Sc No" class="nol"><b>${esc(s.no)}</b> <button class="btn sm ghost" data-pa="scenicOne" data-sid="${s.id}" aria-label="Rewrite scene ${esc(s.no)} with AI" title="Rewrite this scene with AI">↻</button></td><td data-l="Effect / Time">${effHtml(s)}</td><td data-l="Location" class="left">${esc(s.loc)}</td><td data-l="Scenic paragraph" class="left" style="min-width:340px">${ce(`data-pk="scp" data-sid="${s.id}"`,s.scenic||'','',`Scenic paragraph for scene ${s.no}`)}</td></tr>`).join('')}</tbody></table></div>`,
+  exp:{orient:'landscape',sheets:[{name:'Scenic order',cols:[{h:'Sc No',w:8},{h:'Effect / Time',w:13},{h:'Location',w:24},{h:'Scenic paragraph',w:110}],rows:sc.map(s=>[s.no,eff(s),s.loc,s.scenic||''])}]}}};
 let lastExp=null;
 function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();
@@ -2788,7 +2817,7 @@ async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');r
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
     else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
-  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
+  const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['scenic'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
     jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
   await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
@@ -2936,17 +2965,17 @@ const PROVIDERS={
   ollamacloud:{group:'free',probe:1,name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
     help:'Large open models (gpt-oss 120B, DeepSeek, Gemma, Qwen and more) run by Ollama on its servers, so nothing to install and no powerful computer needed. Free key: sign up at ollama.com (email only, no card) → Settings → API keys → Create, paste it here, press "Load models" and pick one (gpt-oss:120b is a good start). Free use has hourly and weekly limits; ScriptDesk waits and retries when it hits them. Your script is sent to Ollama\'s servers. Works in the ScriptDesk desktop and Android apps. If the web app version says the connection was blocked, use the desktop app, or use "Ollama · on this computer" signed in to your Ollama account (see its help).'},
   gemini:{group:'free',name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
-    help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. Good with Telugu and Tinglish. Free use has daily limits. Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
+    help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. The Gemini 3 Flash models are the best free choice for Telugu and Tinglish; free use has daily limits set per project (see AI Studio). Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
   groq:{group:'free',jsonMode:1,maxOut:4096,name:'Groq',tag:'Free tier',key:true,keyHint:'gsk_…',base:'https://api.groq.com/openai/v1',budget:20000,workers:1,models:{default:'openai/gpt-oss-120b'},keyUrl:'https://console.groq.com/keys',
-    help:'Free key: console.groq.com/keys → Create API Key. Very fast, but small per-minute limits, so ScriptDesk sends smaller pieces and waits when needed. Character profiles and story structure see less of the script than with Gemini or Claude.'},
-  openrouter:{group:'free',name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://openrouter.ai/settings/keys',
-    help:'Free key: openrouter.ai/settings/keys. Press "Load models" and pick one ending in ":free" (no cost). Free models allow about 50 requests a day, enough for roughly one feature script. Free models may log what you send.'},
+    help:'Free key: console.groq.com/keys → Create API Key. Very fast. Free models in October 2026: gpt-oss-120b (best start), gpt-oss-20b and Qwen3.8-27b; the older Llama models are no longer free. Limits are small (about 30 requests a minute, 1,000 a day), so ScriptDesk sends smaller pieces and waits when needed. Character profiles and story structure see less of the script than with Gemini or Claude.'},
+  openrouter:{group:'free',name:'OpenRouter · free models',tag:'Free models',key:true,keyHint:'sk-or-…',base:'https://openrouter.ai/api/v1',budget:60000,workers:1,models:{default:'openrouter/free'},keyUrl:'https://openrouter.ai/settings/keys',
+    help:'Free key: openrouter.ai/settings/keys. The default "openrouter/free" picks an available free model for you; or press "Load models" and pick one ending in ":free" (for example Nemotron 3 Super 120B or Gemma 4 31B). Free use is about 20 requests a minute and 50 a day (1,000 a day after you buy $10 of credit), enough for roughly one feature script. Free models may log what you send.'},
   claude:{group:'paid',batchMax:4,name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
     help:'Best quality for Telugu and Tinglish scripts. Billed per use to your Anthropic account (console.anthropic.com).'},
-  nvidia:{group:'free',name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:''},keyUrl:'https://build.nvidia.com/',
-    help:'Free key for 100+ open models (DeepSeek, Qwen, Llama, Mistral, Nemotron, Kimi and more) running on NVIDIA servers. Sign in at build.nvidia.com, open any model and press "Get API Key" (starts with nvapi-). Paste it here, press "Load models" and pick one; large ones such as DeepSeek or Qwen are the most accurate. Free use allows about 40 requests a minute and is meant for testing; ScriptDesk waits and retries when it hits the limit. Your script is sent to NVIDIA.'},
+  nvidia:{group:'free',name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:'nvidia/nemotron-3-super-120b-a12b'},keyUrl:'https://build.nvidia.com/',
+    help:'Free key for 100+ open models (DeepSeek V4, Kimi, MiniMax, Nemotron 3, gpt-oss and more) running on NVIDIA servers. Sign in at build.nvidia.com, open any model and press "Get API Key" (starts with nvapi-). Paste it here, press "Load models" and pick one; large ones such as DeepSeek or Qwen are the most accurate. Free use allows about 40 requests a minute and is meant for testing; ScriptDesk waits and retries when it hits the limit. Your script is sent to NVIDIA.'},
   cloudflare:{group:'free',name:'Cloudflare Workers AI',tag:'Free daily allowance',key:true,keyHint:'Cloudflare API token',base:'https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/v1',editBase:1,budget:20000,maxOut:4096,workers:1,models:{default:'@cf/openai/gpt-oss-120b'},keyUrl:'https://dash.cloudflare.com/profile/api-tokens',
-    help:'Free daily allowance with a Cloudflare account. Create an API token with "Workers AI" permission, paste it here, and replace YOUR_ACCOUNT_ID in the Address with your account ID (shown in the Cloudflare dashboard). Some large models need a paid plan.'},
+    help:'Free daily allowance with a Cloudflare account. Create an API token with "Workers AI" permission, paste it here, and replace YOUR_ACCOUNT_ID in the Address with your account ID (shown in the Cloudflare dashboard). Free allowance is 10,000 "neurons" a day, shared by all models; gpt-oss-120b, Llama 3.3 70B and Nemotron 3 are good starts. Some large models need a paid plan.'},
   openai:{group:'paid',jsonMode:1,name:'OpenAI',tag:'Paid',key:true,keyHint:'sk-…',base:'https://api.openai.com/v1',budget:120000,workers:2,models:{default:''},keyUrl:'https://platform.openai.com/api-keys',
     help:'Billed per use to your OpenAI account. Press "Load models" and pick one.'},
   deepseek:{group:'paid',jsonMode:1,name:'DeepSeek',tag:'Paid · low cost',key:true,keyHint:'sk-…',base:'https://api.deepseek.com/v1',budget:120000,maxOut:8000,workers:2,models:{default:'deepseek-chat'},keyUrl:'https://platform.deepseek.com/api_keys',
@@ -2955,8 +2984,8 @@ const PROVIDERS={
     help:'Key from console.mistral.ai. Includes a small free monthly allowance on some plans.'},
   together:{group:'paid',jsonMode:1,name:'Together AI',tag:'Paid',key:true,keyHint:'API key',base:'https://api.together.xyz/v1',budget:80000,workers:2,models:{default:''},keyUrl:'https://api.together.xyz/settings/api-keys',
     help:'Many open-source models, billed per use. Press "Load models" and pick one.'},
-  cerebras:{group:'paid',jsonMode:1,name:'Cerebras',tag:'Trial credits',key:true,keyHint:'csk-…',base:'https://api.cerebras.ai/v1',budget:30000,maxOut:8000,workers:1,models:{default:''},keyUrl:'https://cloud.cerebras.ai/',
-    help:'Very fast open models. New accounts get trial credits. Press "Load models" and pick one.'},
+  cerebras:{group:'paid',jsonMode:1,name:'Cerebras',tag:'Trial · card needed',key:true,keyHint:'csk-…',base:'https://api.cerebras.ai/v1',budget:30000,maxOut:8000,workers:1,models:{default:''},keyUrl:'https://cloud.cerebras.ai/',
+    help:'Very fast open models. Since July 2026 there is no permanent free plan: new accounts get a short trial that needs a verified payment method. Press "Load models" and pick one.'},
   huggingface:{group:'paid',name:'Hugging Face',tag:'Credits / PRO',key:true,keyHint:'hf_…',base:'https://router.huggingface.co/v1',budget:60000,workers:1,models:{default:''},keyUrl:'https://huggingface.co/settings/tokens',
     help:'Thousands of open models through Hugging Face Inference Providers. Needs purchased credits or a PRO account. Press "Load models" and pick one.'},
   custom:{group:'any',name:'Any other AI · OpenAI-compatible',tag:'Any address',key:true,keyHint:'if the service needs one',base:'http://localhost:1234/v1',budget:30000,workers:1,models:{default:''},keyUrl:'',

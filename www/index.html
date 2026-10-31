@@ -966,7 +966,7 @@ body.wr-mid .wr-doc .el.rv{filter:brightness(1.6)}
     <main class="content" id="content"></main>
   </div>
 </div>
-<nav class="bbar" aria-label="Main"><button class="tab" data-tab="write" aria-current="false"><i class="ic i-write" aria-hidden="true"></i><span>Script</span></button><button class="tab" data-tab="breakdown" aria-current="false"><i class="ic i-breakdown" aria-hidden="true"></i><span>Breakdown</span></button><button class="tab" data-tab="sched" aria-current="false"><i class="ic i-sched" aria-hidden="true"></i><span>Schedule</span></button><button class="tab" data-tab="gear" aria-current="false"><i class="ic i-gear" aria-hidden="true"></i><span>Equipment</span></button><button class="tab" id="bMenu" aria-current="false"><i class="ic i-menu" aria-hidden="true"></i><span>More</span></button><span class="cur" id="bCur" hidden></span></nav>
+<nav class="bbar" aria-label="Main"><button class="tab" data-tab="write" aria-current="false"><i class="ic i-write" aria-hidden="true"></i><span>Write</span></button><button class="tab" data-tab="script" aria-current="false"><i class="ic i-script" aria-hidden="true"></i><span>Full script</span></button><button class="tab" data-tab="slo" aria-current="false"><i class="ic i-slo" aria-hidden="true"></i><span>Single line</span></button><button class="tab" data-tab="structure" aria-current="false"><i class="ic i-structure" aria-hidden="true"></i><span>Structure</span></button><button class="tab" id="bMenu" aria-current="false"><i class="ic i-menu" aria-hidden="true"></i><span>More</span></button><span class="cur" id="bCur" hidden></span></nav>
 <div class="msheet" id="msheet"><nav class="nav" id="nav2" aria-label="Reports"></nav></div>
 <div id="modalRoot"></div>
 <div class="savebar" id="savebar" hidden><span id="sbLabel">Editing</span><button class="btn sm" id="sbCancel">Cancel</button><button class="btn sm pri" id="sbSave">Save</button></div>
@@ -994,15 +994,15 @@ const SCN_RE=/^\s*(?:SCENE|SCN|SC)\s*\.?\s*(?:NO|NUMBER|NUM|#)?\s*[.:#\-]*\s*(\d
 const SCN_IN_RE=/^\s*(?:సీన్|సీను|దృశ్యం|సన్నివేశం|दृश्य|सीन|காட்சி|രംഗം|ದೃಶ್ಯ)\s*(?:నెం|నంబర్|నెంబర్|सं|संख्या|எண்)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)\s*[.:)\-–]*\s*(.*)$/i;
 const NOT_CHAR=/^(CUT TO|FADE|DISSOLVE|INTERCUT|INTER CUT|CONTINUED|CONT'?D|THE END|BLACK|SONG|MONTAGE|SUPER|TITLE|FLASH ?BACK|BACK TO|END OF|INTERVAL|LATER|MORNING|NIGHT|DAY|EXT|INT|SCENE|SMASH CUT|MATCH CUT|V\.?O\.?|O\.?S\.?)\b/;
 const PAGES=[
- {g:'Script',id:'write',nav:'Write script',t:'Write script'},
- {g:'Script',id:'script',nav:'Full script',t:'Full script'},
+ {g:'Main',id:'write',nav:'Write script',t:'Write script'},
+ {g:'Main',id:'script',nav:'Full script',t:'Full script'},
+ {g:'Main',id:'slo',nav:'Single line order',t:'Single line order'},
+ {g:'Main',id:'structure',nav:'Story structure',t:'Story structure'},
  {g:'Script',id:'beats',nav:'Beat Board',t:'Beat Board'},
  {g:'Script',id:'outline',nav:'Outline',t:'Outline'},
- {g:'Script',id:'structure',nav:'Story structure',t:'Story structure'},
  {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
  {g:'Script',id:'characters',nav:'Characters',t:'Characters'},
  {g:'Script',id:'av',nav:'AV script',t:'AV script'},
- {g:'Single line order',id:'slo',nav:'Single line order',t:'Single line order'},
  {g:'Single line order',id:'scenic',nav:'Scenic order',t:'Scenic order'},
  {g:'Single line order',id:'sloLoc',nav:'Location-wise',t:'Location-wise single line order'},
  {g:'Single line order',id:'sloArt',nav:'Artist-wise',t:'Artist-wise single line order'},
@@ -3746,8 +3746,7 @@ document.addEventListener('click',e=>{const c=e.target.closest('[data-catopen]')
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest&&e.target.closest('[data-catopen]');if(c&&P)catEdit(c.dataset.catopen)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&WXV.focus&&page==='write'&&!$('#ov')){WXV.focus=false;wxSaveView();wxApplyView()}});
 document.querySelectorAll('.bbar .tab[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));
-const TABMAP={write:['Script'],breakdown:['Single line order','Lists','Breakdown'],sched:['Shooting'],gear:[]};
-function syncTabs(){const g=(PG[page]||{}).g;let cur='more';if(page==='gear')cur='gear';else if(g==='Script')cur='write';else if(TABMAP.breakdown.includes(g))cur='breakdown';else if(g==='Shooting')cur='sched';document.querySelectorAll('.bbar .tab').forEach(b=>b.setAttribute('aria-current',String((b.dataset.tab||'more')===cur)))}
+function syncTabs(){const cur=['write','script','slo','structure'].includes(page)?page:'more';document.querySelectorAll('.bbar .tab').forEach(b=>b.setAttribute('aria-current',String((b.dataset.tab||'more')===cur)))}
 $('#msheet').onclick=e=>{if(e.target.id==='msheet')$('#msheet').classList.remove('open')};
 $('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>page==='write'&&P?wrDownload():exportPage('pdf');
 $('#fTitle').addEventListener('change',e=>{if(!P)return;P.title=e.target.value.trim()||'Untitled film';logChange(`Film title set to ${P.title}`,'x',true);touch([])});

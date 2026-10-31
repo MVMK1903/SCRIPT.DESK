@@ -3822,18 +3822,21 @@ async function saveFile(filename,data){if(data==null)return;try{DISK.exportCopy(
 let _dl;async function capDownloads(){if(_dl!==undefined)return _dl;try{_dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){_dl=null}return _dl}
 function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_${rep.replace(/[^\w]+/g,'_')}.${ext}`}
 async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');return}const name=PG[page]?PG[page].t:'Report';
-  try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
-    else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),await pdfOut(pdf))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
+  try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name,DOC_CLASSIC.includes(page)));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
+    else{const pdf=await buildPdf(name,lastExp,DOC_CLASSIC.includes(page));await saveFile(fname(name,'pdf'),await pdfOut(pdf))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
   const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['scenic'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
-  try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
-    jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
+  try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history',false);
+    jobs.forEach(([id,k,v])=>{if(k)VIEW[k]=v;const r=R[id]();((r&&r.exp)?r.exp.sheets:[]).forEach(sh=>addSheet(wb,(k==='cmode'&&v==='artist')?Object.assign({},sh,{name:'Costume - artist-wise'}):sh,PG[id].t,DOC_CLASSIC.includes(id)))})}finally{Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,saved)}
   await saveFile(fname('All reports','xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 let XLSX_STYLED=false;
 async function loadXlsx(){if(window.XLSX)return;try{await loadScript(CDN.xlsxStyle);XLSX_STYLED=true}catch(e){await loadScript(CDN.xlsx);XLSX_STYLED=false}}
 const XL_FILL={eff:'9DC3E6',loc:'FFE699',desc:'DDEBF7','':'D9D9D9'};
 function xlBorder(){const b={style:'thin',color:{rgb:'000000'}};return {top:b,bottom:b,left:b,right:b}}
-function addSheet(wb,sh,title){const n=sh.cols.length;const aoa=[];const kinds=[];const merges=[];
+const DOC_CLASSIC=['slo','sloLoc','sloArt'];
+function docStats(){if(!P||!P.scenes||!P.scenes.length)return [];const S=P.scenes;const e8=S.reduce((a,s)=>a+pgE(s),0);const night=S.filter(s=>/NIGHT|DUSK|EVENING/i.test(s.time||'')).length;const ext=S.filter(s=>/EXT/.test(s.ie||'')).length;
+  return [['Scenes',S.length],['Pages',fmtPg(e8)],['Day / Night',`${S.length-night} / ${night}`],['Int / Ext',`${S.length-ext} / ${ext}`],['Locations',new Set(S.map(s=>U(s.loc||'').trim()).filter(Boolean)).size],['Artists',(P.artists||[]).length]]}
+function addSheet(wb,sh,title,classic){if(classic===false||(classic===undefined&&!DOC_CLASSIC.includes(page)))return addSheetPro(wb,sh,title);const n=sh.cols.length;const aoa=[];const kinds=[];const merges=[];
   const pad=a=>{while(a.length<n)a.push('');return a};
   aoa.push(pad([P.production||'']));kinds.push('t1');aoa.push(pad([P.title||'']));kinds.push('t2');aoa.push(pad([title+'   ·   '+today()]));kinds.push('t3');
   for(let r=0;r<3;r++)merges.push({s:{r,c:0},e:{r,c:n-1}});
@@ -3853,7 +3856,67 @@ function addSheet(wb,sh,title){const n=sh.cols.length;const aoa=[];const kinds=[
       ws[ref].s=st}
     ws['!rows']=[{hpt:20},{hpt:24},{hpt:18},{hpt:22}]}
   let nm=String(sh.name).replace(/[\\\/?*\[\]:]/g,'-').slice(0,31);let i=2;while(wb.SheetNames.includes(nm)){nm=String(sh.name).slice(0,27)+' '+i++}XLSX.utils.book_append_sheet(wb,ws,nm)}
-async function buildPdf(title,exp){await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;
+
+/* ---- Advanced document style for Excel (all documents except the three single line orders) ---- */
+function addSheetPro(wb,sh,title){const n=Math.max(1,sh.cols.length);const aoa=[];const kinds=[];const merges=[];const pad=a=>{while(a.length<n)a.push('');return a};
+  const st=docStats();const body=sh.rows.filter(r=>!(r&&r.group)).length;
+  aoa.push(pad([U(P.title||'Untitled')]));kinds.push('t1');
+  aoa.push(pad([`${title}${P.production?'   ·   '+P.production:''}   ·   ${today()}`]));kinds.push('t2');
+  aoa.push(pad([st.length?st.map(([k,v])=>`${k}: ${v}`).join('     '):`${body} rows`]));kinds.push('t3');
+  aoa.push(pad(['']));kinds.push('sp');for(let r=0;r<4;r++)merges.push({s:{r,c:0},e:{r,c:n-1}});
+  const hr=aoa.length;aoa.push(pad(sh.cols.map(c=>c.h)));kinds.push('h');let zebra=0;
+  sh.rows.forEach(r=>{if(r&&r.group){merges.push({s:{r:aoa.length,c:0},e:{r:aoa.length,c:n-1}});aoa.push(pad([r.group]));kinds.push('g');zebra=0}else{aoa.push(pad(r.map(v=>v==null?'':v)));kinds.push(zebra++%2?'z':'b')}});
+  aoa.push(pad([`${body} row${body===1?'':'s'}  ·  ${P.title||''}  ·  ScriptDesk`]));kinds.push('f');merges.push({s:{r:aoa.length-1,c:0},e:{r:aoa.length-1,c:n-1}});
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=sh.cols.map(c=>({wch:Math.max(8,c.w||14)}));ws['!merges']=merges;
+  ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:hr,c:0},e:{r:aoa.length-2,c:n-1}})};ws['!views']=[{state:'frozen',ySplit:hr+1,topLeftCell:'A'+(hr+2)}];
+  ws['!margins']={left:0.4,right:0.4,top:0.5,bottom:0.5,header:0.2,footer:0.2};
+  if(XLSX_STYLED){const hk=sh.cols.map(c=>hdrKind(c.h));const F={name:'Calibri',sz:10.5,color:{rgb:'1D1D1F'}};const line={style:'thin',color:{rgb:'E3E3E8'}};const bd={top:line,bottom:line,left:line,right:line};
+    for(let r=0;r<aoa.length;r++)for(let c=0;c<n;c++){const ref=XLSX.utils.encode_cell({r,c});if(!ws[ref])ws[ref]={t:'s',v:''};const k=kinds[r];let x;
+      if(k==='t1')x={font:{name:'Calibri',sz:18,bold:true,color:{rgb:'FFFFFF'}},fill:{patternType:'solid',fgColor:{rgb:'1D1D1F'}},alignment:{horizontal:'left',vertical:'center',indent:1}};
+      else if(k==='t2')x={font:{name:'Calibri',sz:11.5,bold:true,color:{rgb:'FFFFFF'}},fill:{patternType:'solid',fgColor:{rgb:'0071E3'}},alignment:{horizontal:'left',vertical:'center',indent:1}};
+      else if(k==='t3')x={font:{name:'Calibri',sz:10,color:{rgb:'3A3A3C'}},fill:{patternType:'solid',fgColor:{rgb:'F2F2F7'}},alignment:{horizontal:'left',vertical:'center',indent:1}};
+      else if(k==='sp')x={};
+      else if(k==='h')x={font:{name:'Calibri',sz:10,bold:true,color:{rgb:'FFFFFF'}},fill:{patternType:'solid',fgColor:{rgb:'3A3A3C'}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:{bottom:{style:'medium',color:{rgb:'0071E3'}}}};
+      else if(k==='g')x={font:{name:'Calibri',sz:10.5,bold:true,color:{rgb:'0050C8'}},fill:{patternType:'solid',fgColor:{rgb:'E8F0FE'}},alignment:{horizontal:'left',vertical:'center',wrapText:true,indent:1},border:bd};
+      else if(k==='f')x={font:{name:'Calibri',sz:9,italic:true,color:{rgb:'8E8E93'}},alignment:{horizontal:'right'}};
+      else{const v=String(ws[ref].v||'');x={font:F,alignment:{horizontal:c===0||typeof ws[ref].v==='number'?'center':(String(v).length>28?'left':'center'),vertical:'center',wrapText:true},border:bd};if(k==='z')x.fill={patternType:'solid',fgColor:{rgb:'F7F7F9'}};
+        if(hk[c]==='eff'&&v)x.fill={patternType:'solid',fgColor:{rgb:/NIGHT|DUSK|EVENING/i.test(v)?'E4E6FF':'FFF4D6'}};if(c===0||hk[c]==='loc')x.font=Object.assign({},F,{bold:true})}
+      ws[ref].s=x}
+    ws['!rows']=[{hpt:30},{hpt:21},{hpt:18},{hpt:6},{hpt:24}]}
+  let nm=String(sh.name).replace(/[\\\/?*\[\]:]/g,'-').slice(0,31);let i=2;while(wb.SheetNames.includes(nm)){nm=String(sh.name).slice(0,27)+' '+i++}XLSX.utils.book_append_sheet(wb,ws,nm)}
+/* ---- Advanced document style for PDF ---- */
+async function buildPdfPro(title,exp){await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:exp.orient||'landscape',unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=36;const nonLatin=/[\u0900-\u0DFF]/.test(JSON.stringify(exp.sheets));
+  const ACC=[0,113,227],INK=[29,29,31],MUT=[110,110,115];
+  const cover=()=>{doc.setFillColor(...INK);doc.rect(0,0,W,96,'F');doc.setFillColor(...ACC);doc.rect(0,96,W,3,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(170,170,176);doc.text(U(P.production||'ScriptDesk').slice(0,80),M,30);
+    doc.setFontSize(21);doc.setTextColor(255,255,255);doc.text(U(P.title||'Untitled').slice(0,60),M,58);
+    doc.setFontSize(11);doc.setTextColor(120,180,255);doc.text(title,M,80);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(200,200,205);doc.text(today(),W-M,30,{align:'right'});doc.text('Prepared with ScriptDesk',W-M,80,{align:'right'});
+    const st=docStats();let y=112;if(st.length){const bw=(W-2*M-(st.length-1)*8)/st.length;st.forEach(([k,v],i)=>{const x=M+i*(bw+8);doc.setFillColor(242,242,247);doc.roundedRect(x,y,bw,40,6,6,'F');doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(...INK);doc.text(String(v),x+10,y+19);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...MUT);doc.text(k.toUpperCase(),x+10,y+32)});y+=56}else y+=12;return y};
+  const hdone=new Set([1]);const headT=()=>{const pn=doc.internal.getCurrentPageInfo().pageNumber;if(hdone.has(pn))return;hdone.add(pn);doc.setFillColor(...ACC);doc.rect(0,0,W,3,'F');doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...INK);const t1=U(P.title||'').slice(0,60);doc.text(t1,M,24);const w1=doc.getTextWidth(t1);doc.setFont('helvetica','normal');doc.setTextColor(...MUT);doc.text('  ·  '+title,M+w1,24);doc.text(today(),W-M,24,{align:'right'});doc.setDrawColor(225,225,230);doc.setLineWidth(.5);doc.line(M,32,W-M,32)};
+  const foot=()=>{const n=doc.internal.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setDrawColor(225,225,230);doc.setLineWidth(.5);doc.line(M,H-30,W-M,H-30);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...MUT);
+    doc.text(`${P.production?P.production+'  ·  ':''}${P.title||''}  ·  ${title}  ·  Confidential`.slice(0,140),M,H-18);doc.setFont('helvetica','bold');doc.text(`${i} / ${n}`,W-M,H-18,{align:'right'})}};
+  const onPage=()=>headT();
+  const startY=cover();const sh=exp.sheets[0];
+  if(exp.script){let y=startY+6;doc.setFont('courier','normal');doc.setFontSize(10);doc.setTextColor(20);
+    P.scenes.forEach(s=>{const lines=[headingLine(s).toUpperCase(),'',...String(s.text||'').split('\n')];lines.forEach((ln,j)=>{doc.setFont('courier',j===0?'bold':'normal');if(j===0){if(y>H-80){doc.addPage();headT();y=52}doc.setFillColor(242,242,247);doc.rect(M,y-10,W-2*M,15,'F')}const wrapped=doc.splitTextToSize(ln||' ',W-2*M-20);wrapped.forEach(w=>{if(y>H-44){doc.addPage();headT();y=52;doc.setFont('courier','normal');doc.setFontSize(10)}doc.text(w,M+8,y);y+=12.5})});y+=14});foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+  const T={theme:'grid',styles:{font:'helvetica',fontSize:8,cellPadding:{top:4,bottom:4,left:5,right:5},lineColor:[225,225,230],lineWidth:.4,textColor:INK,overflow:'linebreak',valign:'middle'},headStyles:{fillColor:[58,58,60],textColor:255,fontStyle:'bold',fontSize:7.8,halign:'center',lineColor:[58,58,60]},alternateRowStyles:{fillColor:[247,247,249]}};
+  if(sh.cards&&sh.cards.length){let y=startY;sh.cards.forEach((c,ci)=>{
+    doc.autoTable(Object.assign({},T,{startY:y,margin:{top:44,left:M,right:M,bottom:40},head:[[{content:c.head,colSpan:2,styles:{halign:'left',fillColor:INK,textColor:255,fontStyle:'bold',fontSize:9.5}}]],
+      body:[...(c.sub?[[{content:c.sub,colSpan:2,styles:{fontStyle:'italic',textColor:MUT,fillColor:[242,242,247]}}]]:[]),...c.rows.map(([k,v])=>[k,v||''])],columnStyles:{0:{cellWidth:118,textColor:MUT,fontStyle:'bold',fillColor:[247,247,249]}},alternateRowStyles:{},didDrawPage:onPage,pageBreak:'auto',rowPageBreak:'avoid'}));
+    y=doc.lastAutoTable.finalY+14;if(y>H-120&&ci<sh.cards.length-1){doc.addPage();headT();y=48}});foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+  const avail=W-2*M;
+  exp.sheets.forEach((s,si)=>{let y0=si?48:startY;const tw=s.cols.reduce((a,c)=>a+(c.w||14),0)||1;
+    if(exp.flow||exp.sheets.length>1){if(si&&!exp.flow){doc.addPage();headT();y0=48}else if(si){y0=doc.lastAutoTable.finalY+30;if(y0>H-100){doc.addPage();headT();y0=56}}
+      doc.setFillColor(...ACC);doc.rect(M,y0+2,3,12,'F');doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(...INK);doc.text(String(s.name),M+9,y0+12);y0+=22}
+    doc.autoTable(Object.assign({},T,{startY:y0,margin:{top:44,left:M,right:M,bottom:40},head:[s.cols.map(c=>c.h)],
+      body:s.rows.map(r=>r&&r.group?[{content:r.group,colSpan:s.cols.length,styles:{fillColor:[232,240,254],fontStyle:'bold',textColor:[0,80,200],halign:'left'}}]:r.map(v=>v==null?'':String(v))),
+      columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/tw,halign:(c.w||14)>=30?'left':'center'}])),
+      didParseCell:d=>{if(d.section!=='body')return;const k=hdrKind(s.cols[d.column.index]?s.cols[d.column.index].h:'');if(d.column.index===0||k==='loc')d.cell.styles.fontStyle='bold';
+        if(k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string'&&d.cell.raw.trim())d.cell.styles.fillColor=/NIGHT|DUSK|EVENING/i.test(d.cell.raw)?[228,230,255]:[255,244,214]},
+      didDrawPage:onPage}))});
+  foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
+async function buildPdf(title,exp,classic){if(classic===false||(classic===undefined&&!DOC_CLASSIC.includes(page)))return buildPdfPro(title,exp);await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:exp.orient||'landscape',unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
   const nonLatin=/[ऀ-෿]/.test(JSON.stringify(exp.sheets));
   const head=()=>{doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(110);doc.text(U(P.production||''),36,26);doc.setFontSize(14);doc.setTextColor(20);doc.text(U(P.title||'')+'  —  '+title,36,44);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(110);doc.text(today(),W-36,26,{align:'right'});doc.setDrawColor(180);doc.line(36,52,W-36,52)};

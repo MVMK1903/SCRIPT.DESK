@@ -865,6 +865,60 @@ body.wr-mid .wr-doc .el.rv{filter:brightness(1.6)}
 .ch-mh{display:flex;align-items:flex-end;justify-content:center;height:90px}.ch-mh em{writing-mode:vertical-rl;transform:rotate(180deg);font:600 11px var(--f-ui);font-style:normal;white-space:nowrap;color:var(--muted)}
 .ch-mr{font:600 11.5px var(--f-ui);display:flex;align-items:center;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .i-characters{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8' r='3.2'/%3E%3Cpath d='M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5'/%3E%3Cpath d='M15.5 5.2a3 3 0 0 1 0 5.6 M17.5 14.3c1.6.6 2.6 2.2 3 4.7'/%3E%3C/svg%3E")}
+/* ---- v2.4 Celtx extras ---- */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sb-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.sb-nav select{max-width:260px}
+.sb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.sb-f{background:var(--bg);border-radius:16px;box-shadow:var(--sh-raise-sm);overflow:hidden;display:flex;flex-direction:column}
+.sb-img{position:relative;aspect-ratio:16/9;background:#f2f2f5}.sb-img img{width:100%;height:100%;object-fit:cover;display:block}
+.sb-ph{position:absolute;inset:10px;border:1.5px dashed #c7c7cc;border-radius:10px;display:grid;place-items:center;color:#8e8e93;font-size:12px}
+.sb-no{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:#fff;font:700 11px/1 var(--f-ui);padding:5px 8px;border-radius:999px}
+.sb-meta{display:flex;gap:4px;flex-wrap:wrap;padding:10px 12px 0}.sb-cap{margin:6px 12px 0;font-size:13px;line-height:1.45;outline:none;min-height:2.9em;border-radius:6px}.sb-cap:focus{box-shadow:0 0 0 2px var(--accent-line)}
+.sb-cap:empty::before{content:attr(data-ph);color:var(--faint)}.sb-act{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px 12px;margin-top:auto}
+.sk-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.sk-tools [aria-pressed=true]{background:var(--accent-soft);color:var(--accent)}
+.sk-c{width:100%;aspect-ratio:16/9;border-radius:12px;box-shadow:0 0 0 1px var(--line);touch-action:none;cursor:crosshair;background:#fff}
+.ov .modal:has(.sk-c){width:min(1000px,100%)}
+.sd-pick{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.sd-scenes,.sd-cast{display:flex;flex-wrap:wrap;gap:6px}
+.sd-scenes label,.sd-cast label{display:inline-flex;align-items:center;gap:6px;background:var(--fill);padding:6px 10px;border-radius:9px;font-size:13px;cursor:pointer}.sd-scenes input,.sd-cast input{accent-color:var(--accent)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.cat-card{background:var(--bg);border-radius:16px;box-shadow:var(--sh-raise-sm);overflow:hidden;cursor:pointer;transition:transform .25s var(--spring),box-shadow .2s;outline:none}
+.cat-card:hover,.cat-card:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-raise)}
+.cat-img{position:relative;aspect-ratio:4/3;background:var(--fill);display:grid;place-items:center;color:var(--faint)}.cat-img img{width:100%;height:100%;object-fit:cover}.cat-img .ic{width:36px;height:36px}
+.cat-img span{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.6);color:#fff;font:600 11px var(--f-ui);padding:3px 7px;border-radius:999px}
+.cat-b{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px}.cat-b h4{margin:0;font:600 14.5px/1.25 var(--f-ui)}.cat-b p{margin:0;font-size:12.5px;color:var(--muted)}.cat-b small{font-size:11.5px;color:var(--muted)}
+.cat-ph{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.cat-ph figure{position:relative;margin:0}.cat-ph img{width:110px;height:82px;object-fit:cover;border-radius:10px;display:block}.cat-ph figure button{position:absolute;top:2px;right:2px;background:rgba(255,255,255,.85)}
+.tk-add{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tk-add input[type=text]{flex:1 1 260px;background:var(--fill);border:0;border-radius:10px;padding:9px 12px}.tk-add input[type=date]{background:var(--fill);border:0;border-radius:10px;padding:7px 10px}
+.tk-board{display:grid;grid-template-columns:repeat(3,minmax(240px,1fr));gap:14px;align-items:start;overflow-x:auto}
+.tk-col{background:var(--fill);border-radius:16px;padding:10px;min-height:160px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s}.tk-col.over{box-shadow:inset 0 0 0 2px var(--accent)}
+.tk-col h3{margin:2px 4px 4px;font:600 13px var(--f-ui);color:var(--muted);display:flex;justify-content:space-between}.tk-col h3 span{background:var(--bg);border-radius:999px;padding:1px 8px;font-size:11.5px}
+.tk-card{background:var(--bg);border-radius:12px;padding:10px 12px;box-shadow:var(--sh-raise-sm);display:flex;flex-direction:column;gap:6px;cursor:grab}.tk-card.dragging{opacity:.45}.tk-card.late{box-shadow:inset 3px 0 0 var(--bad),var(--sh-raise-sm)}
+.tk-card b{font:600 13.5px/1.35 var(--f-ui);outline:none}.tk-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}.tk-owner{font-size:12px;color:var(--muted);outline:none;min-width:40px}.tk-owner:empty::before{content:attr(data-ph);color:var(--faint)}
+.tk-btn{display:flex;gap:2px}.tk-empty{margin:6px 4px}
+@media (max-width:820px){.tk-board{grid-template-columns:repeat(3,minmax(78vw,1fr));margin:0 -16px;padding:0 16px;scroll-snap-type:x mandatory}.tk-col{scroll-snap-align:start}}
+.av{background:var(--bg);border-radius:16px;box-shadow:var(--sh-raise-sm);overflow:hidden}
+.av-h,.av-row{display:grid;grid-template-columns:36px 1fr 1fr 70px 34px;gap:0;align-items:stretch}
+.av-h{background:var(--fill);font:600 11px var(--f-ui);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}.av-h span{padding:9px 10px}
+.av-row{border-top:.5px solid var(--line)}.av-row>div{padding:10px 12px;outline:none;font:13px/1.5 var(--f-script);white-space:pre-wrap;min-height:3em;border-left:.5px solid var(--line)}
+.av-row>div:focus{background:var(--accent-soft)}.av-row [contenteditable]:empty::before{content:attr(data-ph);color:var(--faint)}
+.av-n{padding:10px 8px;color:var(--faint);font:600 12px var(--f-ui)}.av-t{display:flex;flex-direction:column;gap:2px;padding:10px 8px;border-left:.5px solid var(--line)}.av-t span{outline:none;font:600 13px var(--f-ui)}.av-t small{color:var(--faint);font-size:11px}
+.av-sc{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:color-mix(in srgb,var(--accent) 8%,var(--bg));border-top:.5px solid var(--line)}.av-sc b{outline:none;text-transform:uppercase;font:700 13px var(--f-ui);letter-spacing:.04em}
+@media (max-width:700px){.av-h{display:none}.av-row{grid-template-columns:28px 1fr 30px}.av-row>div{grid-column:2;border-left:0}.av-row>div[data-avf=audio]{border-top:.5px dashed var(--line)}.av-t{grid-column:2;flex-direction:row;gap:10px;border-left:0}.av-row>button{grid-column:3;grid-row:1}}
+.wx-fmt select{max-width:170px}
+/* script formats in the writer */
+.fmt-tv .el-s{text-align:center;text-decoration:underline;font-weight:700;text-transform:uppercase}
+.fmt-stage .el-a{margin-left:calc(var(--u) * 3);width:calc(var(--u) * 3.6);font-style:italic}
+.fmt-stage .el-c{margin-left:calc(var(--u) * 3.5);text-align:left}.fmt-stage .el-d{margin-left:calc(var(--u) * 1.5);width:calc(var(--u) * 5)}
+.fmt-stage .el-s{margin-left:calc(var(--u) * 3);font-weight:700;text-transform:uppercase}
+.fmt-audio .el-c{margin-left:calc(var(--u) * 1.5);width:calc(var(--u) * 1.4)}.fmt-audio .el-d{margin-left:calc(var(--u) * 3);width:calc(var(--u) * 4.5);margin-top:calc(var(--u) / -6)}.fmt-audio .el-p{margin-left:calc(var(--u) * 3)}
+.fmt-audio .el-s{font-weight:700;text-decoration:underline;text-transform:uppercase}
+.fmt-comic .wr-doc{counter-reset:panel}.fmt-comic .el-h{counter-reset:panel;font-weight:700;text-decoration:underline}.fmt-comic .el-s{counter-increment:panel;font-weight:700;text-transform:uppercase}
+.fmt-comic .el-s::before{content:"PANEL " counter(panel) "  ";color:#8e8e93}.fmt-comic .el-c{margin-left:calc(var(--u) * 2.5)}.fmt-comic .el-d{margin-left:calc(var(--u) * 2.5);width:calc(var(--u) * 5)}
+.fmt-comic .el-t{text-align:left;text-transform:none;font-style:italic}
+.i-storyboard{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='8' height='6' rx='1'/%3E%3Crect x='13' y='4' width='8' height='6' rx='1'/%3E%3Cpath d='M3 14h8 M3 17h6 M13 14h8 M13 17h6'/%3E%3C/svg%3E")}
+.i-sides{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3h8l4 4v14H7z M15 3v4h4'/%3E%3Cpath d='M10 12h6' stroke-width='3' stroke-opacity='.35'/%3E%3Cpath d='M10 16h5'/%3E%3C/svg%3E")}
+.i-catalog{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M21 16l-5-5-8 8'/%3E%3C/svg%3E")}
+.i-tasks{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l1.5 1.5L8 5 M4 12l1.5 1.5L8 11 M4 18l1.5 1.5L8 17 M11 6h9 M11 12h9 M11 18h9'/%3E%3C/svg%3E")}
+.i-av{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M12 4v16 M5.5 8h4 M5.5 11h4 M14.5 8h4 M14.5 11h4 M14.5 14h3'/%3E%3C/svg%3E")}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -934,6 +988,7 @@ const PAGES=[
  {g:'Script',id:'structure',nav:'Story structure',t:'Story structure'},
  {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
  {g:'Script',id:'characters',nav:'Characters',t:'Characters'},
+ {g:'Script',id:'av',nav:'AV script',t:'AV script'},
  {g:'Single line order',id:'slo',nav:'Single line order',t:'Single line order'},
  {g:'Single line order',id:'scenic',nav:'Scenic order',t:'Scenic order'},
  {g:'Single line order',id:'sloLoc',nav:'Location-wise',t:'Location-wise single line order'},
@@ -943,17 +998,21 @@ const PAGES=[
  {g:'Lists',id:'artists',nav:'No. of artists',t:'No. of artists'},
  {g:'Lists',id:'locScenes',nav:'Location-wise scenes',t:'Location-wise scene list'},
  {g:'Lists',id:'artScenes',nav:'Artist-wise scenes',t:'Artist-wise scene list'},
+ {g:'Lists',id:'catalog',nav:'Catalog',t:'Catalog'},
  {g:'Breakdown',id:'breakdown',nav:'Script breakdown',t:'Script breakdown'},
  {g:'Breakdown',id:'special',nav:'Special identification',t:'Special identification'},
  {g:'Breakdown',id:'costume',nav:'Costume continuity',t:'Costume continuity'},
  {g:'Breakdown',id:'artprops',nav:'Art / props',t:'Art / props breakdown'},
  {g:'Shooting',id:'shots',nav:'Shot division',t:'Shot division'},
+ {g:'Shooting',id:'storyboard',nav:'Storyboard',t:'Storyboard'},
  {g:'Shooting',id:'sched',nav:'Shooting schedule',t:'Shooting schedule'},
  {g:'Shooting',id:'order',nav:'Shoot order',t:'Shoot order'},
  {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
  {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'},
+ {g:'Shooting',id:'sides',nav:'Actor sides',t:'Actor sides'},
  {g:'Shooting',id:'gear',nav:'Camera & equipment',t:'Camera & equipment'},
- {g:'Budget',id:'budget',nav:'Budget & rates',t:'Budget & rate card'}];
+ {g:'Budget',id:'budget',nav:'Budget & rates',t:'Budget & rate card'},
+ {g:'Budget',id:'tasks',nav:'Tasks',t:'Tasks'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
 const LSKEY='scriptdesk.v2.';
 
@@ -1921,7 +1980,7 @@ function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipbo
   nodes.forEach(revMark);placeCaret(nodes[nodes.length-1]);wrTouch(true);toast(`Pasted ${blocks.length} lines${r.scenes.length?` (${r.scenes.length} scenes)`:''}. Check the element types.`)}
 
 /* ---- Page ---- */
-R.write=()=>{const D=draft();const hasScript=P.scenes.length>0;
+R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   const fresh=!D.els.length;
   const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>Screenplay editor in Celtx layout. It saves on this device as you type. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
     <div class="acts"><button class="btn sm" data-act="wrTitle">Title page</button><button class="btn sm" data-act="wrOpen">Open file</button><button class="btn sm" data-act="wrDownload">Download</button><button class="btn sm pri" data-act="wrApply">Update breakdown</button></div></div>`;
@@ -1930,8 +1989,8 @@ R.write=()=>{const D=draft();const hasScript=P.scenes.length>0;
   return {html:head+(unsynced?`<div class="banner small"><span>The reports still use the earlier version of the script. Press <b>Update breakdown</b> when you are ready.</span></div>`:'')+
   `<div class="wr"><aside class="wr-side"><div class="seg wx-side-tabs" role="tablist"><button type="button" data-wrside="scenes" aria-pressed="true">Scenes</button><button type="button" data-wrside="notes" aria-pressed="false">Notes</button></div><div id="wrScenes"></div><div id="wrNotes" hidden></div></aside>
    <div class="wr-main" id="wrMain">${wxToolsHtml()}<div class="wr-bar"><div class="wr-types" role="toolbar" aria-label="Element type">${WKEYS.map((k,i)=>`<button type="button" data-wrt="${k}" aria-pressed="false" title="${WT[k]} (Ctrl+${i+1})">${WT_SHORT[k]}</button>`).join('')}</div>
-     <span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
-     <div class="wr-paper" id="wrPaper"><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
+     ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
+     <div class="wr-paper fmt-${fmtOf()}" id="wrPaper"><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
      <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div></div>`,exp:null}};
 function wrMount(){const d=wrDoc();if(!d)return;const D=draft();WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
@@ -1943,7 +2002,7 @@ function wrMount(){const d=wrDoc();if(!d)return;const D=draft();WR.hist=[];WR.re
   document.querySelectorAll('[data-wrx]').forEach(x=>{x.addEventListener('mousedown',e=>e.preventDefault());x.addEventListener('click',()=>wxTool(x.dataset.wrx))});
   $('#wrNotes').addEventListener('click',e=>{const g=e.target.closest('[data-wrgo]');if(!g)return;const el=d.children[+g.dataset.wrgo];if(el){el.scrollIntoView({block:'center'});placeCaret(el);wxNote(el)}});
   document.querySelectorAll('[data-wrside]').forEach(x=>x.addEventListener('click',()=>{const k=x.dataset.wrside;document.querySelectorAll('[data-wrside]').forEach(y=>y.setAttribute('aria-pressed',y===x?'true':'false'));$('#wrScenes').hidden=k!=='scenes';$('#wrNotes').hidden=k!=='notes'}));
-  wxApplyView();wxRevChip();wrDecorate();wrSavedLabel();if(!D.els.length)setTimeout(()=>placeCaret(d.firstElementChild),50)}
+  fmtMount();wxApplyView();wxRevChip();wrDecorate();wrSavedLabel();if(!D.els.length)setTimeout(()=>placeCaret(d.firstElementChild),50)}
 document.addEventListener('selectionchange',()=>{if(page==='write'&&wrDoc()){clearTimeout(WR.selT);WR.selT=setTimeout(()=>{wrBarSync();wxMarkCur();const side=$('#wrScenes');if(side){const d=wrDoc(),cur=wrCur();let idx=-1;[...d.children].some((el,i)=>{if(el.dataset.t==='h')idx=i;return el===cur});side.querySelectorAll('[data-wrgo]').forEach(x=>x.setAttribute('aria-current',+x.dataset.wrgo===idx?'true':'false'))}},120)}});
 
 /* ---- Actions ---- */
@@ -2028,20 +2087,20 @@ function wrFdx(){const T={h:'Scene Heading',a:'Action',c:'Character',p:'Parenthe
   if(tp.title){for(let i=0;i<14;i++)add('');add(U(tp.title));add('');if(tp.credit)add(tp.credit);if(tp.author)add(tp.author);if(tp.source){add('');add(tp.source)}for(let i=0;i<14;i++)add('');(tp.contact||'').split('\n').forEach(l=>add(l,'Left'));if(tp.draft||tp.date)add([tp.draft,tp.date].filter(Boolean).join(' · '),'Right')}
   return `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n  <Content>\n${paras}\n  </Content>\n  <TitlePage>\n    <Content>\n${tpP.join('\n')}\n    </Content>\n  </TitlePage>\n${RV.sets.length?`  <Revisions ActiveSet="${rvI(RV.cur)||RV.sets.length}" Location="7.75" RevisionMode="${RV.mode?'Yes':'No'}" RevisionsShown="All" ShowAllMarks="Yes" ShowAllSets="Yes">\n${RV.sets.map((z,i)=>`    <Revision Color="${z.color}" FullRevision="No" ID="${i+1}" Mark="*" Name="${X(z.name)} Revision" Style=""/>`).join('\n')}\n  </Revisions>\n`:''}</FinalDraft>\n`}
 async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'letter'});
-  const all0=wrEls(),nums0=wrNumbers(all0),sk0=omSkip(all0);const els=all0.map((e,i)=>Object.assign({},e,e.t==='h'?{no:nums0[i]}:{})).filter((e,i)=>!sk0[i]&&String(e.x||'').trim());
+  const all0=opts.els||wrEls(),nums0=wrNumbers(all0),sk0=omSkip(all0);const els=all0.map((e,i)=>Object.assign({},e,e.t==='h'?{no:nums0[i]}:{})).filter((e,i)=>!sk0[i]&&String(e.x||'').trim());
   const RV=REVS(),rvS={};RV.sets.forEach((z,i)=>rvS[z.id]=Object.assign({i},z));const marksOn=opts.marks!==false;let curRev='';const pageRev={};const labels=[];const lps=draft().lock?lockPages(els):null;let lockNo=1,suf=-1;
-  const tp=draft().tp;const LH=12,TOP=72,BOT=720;const X={h:108,a:108,s:108,c:252,d:180,p:216,t:540};const WD={h:432,a:432,s:432,c:288,d:252,p:180,t:432};
+  const tp=draft().tp;const LH=12,TOP=72,BOT=720;const X={h:108,a:108,s:108,c:252,d:180,p:216,t:540};const WD={h:432,a:432,s:432,c:288,d:252,p:180,t:432};const FM=opts.els?{}:(FMTS[fmtOf()]||{});Object.assign(X,FM.X||{});Object.assign(WD,FM.WD||{});let curHL=false;
   doc.setFont('courier','normal');doc.setFontSize(12);doc.setTextColor(0);let pg=1,y=TOP;
-  if(tp.title){let ty=270;doc.text(U(tp.title),306,ty,{align:'center'});ty+=36;if(tp.credit){doc.text(tp.credit,306,ty,{align:'center'});ty+=24}if(tp.author){doc.splitTextToSize(tp.author,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
+  if(tp.title&&!opts.noTitle){let ty=270;doc.text(U(tp.title),306,ty,{align:'center'});ty+=36;if(tp.credit){doc.text(tp.credit,306,ty,{align:'center'});ty+=24}if(tp.author){doc.splitTextToSize(tp.author,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     if(tp.source){ty+=24;doc.splitTextToSize(tp.source,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     let cy=660;(tp.contact||'').split('\n').forEach(l=>{doc.text(l,108,cy);cy+=LH});const dr=[tp.draft,tp.date].filter(Boolean);let dy=660;dr.forEach(l=>{doc.text(l,540,dy,{align:'right'});dy+=LH});doc.addPage()}
   const newPage=lab=>{doc.addPage();pg++;y=TOP;if(lab==null)lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(pg);labels.push([doc.getNumberOfPages(),lab])};
   const star=yy=>{if(!curRev)return;const n=doc.getNumberOfPages();(pageRev[n]=pageRev[n]||new Set()).add(curRev);if(marksOn&&rvS[curRev])doc.text('*',560,yy)};
-  const put=(l,t)=>{if(t==='t')doc.text(l,X.t,y,{align:'right'});else doc.text(l,X[t],y);star(y);y+=LH};
+  const put=(l,t)=>{if(curHL&&(t==='d'||t==='p'||t==='c')){doc.setFillColor(255,233,130);doc.rect(X[t]-3,y-9.5,(t==='c'?doc.getTextWidth(l):WD[t])+6,12,'F')}if(t==='t')doc.text(l,X.t,y,{align:'right'});else doc.text(l,X[t],y);star(y);y+=LH};
   const room=()=>Math.floor((BOT-y)/LH)+1;
   for(let i=0;i<els.length;i++){const e=els[i];const x=String(e.x).trim();
     if(lps&&lps[i]>lockNo){const jp=lps[i];if(jp-lockNo>1&&labels.length)labels[labels.length-1][1]+='-'+(jp-1);lockNo=jp;suf=-1;if(y===TOP&&labels.length)labels[labels.length-1][1]=String(jp);else newPage(String(jp))}
-    curRev=e.rev||'';
+    curRev=e.rev||'';curHL=!!(opts.hl&&e.t==='c'&&opts.hl.has(chNorm(x)));
     if(e.t==='c'){{let q=i+1;while(q<els.length&&(els[q].t==='d'||els[q].t==='p')){if(els[q].rev)curRev=curRev||els[q].rev;q++}}const grp=[{t:'c',l:[U(x)]}];let j=i+1;while(j<els.length&&(els[j].t==='d'||els[j].t==='p')){const v=els[j].t==='p'?parenOf(els[j].x):String(els[j].x).trim();grp.push({t:els[j].t,l:v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[els[j].t]))});j++}
       if(j<els.length&&els[j].t==='c'&&els[j].dual){let k=j+1;while(k<els.length&&(els[k].t==='d'||els[k].t==='p'))k++;
         const col=(a,b)=>{const L2=[['c',U(String(els[a].x).trim())]];for(let q=a+1;q<b;q++){const tq=els[q].t;const v=tq==='p'?parenOf(els[q].x):String(els[q].x).trim();v.split('\n').forEach(pp=>doc.splitTextToSize(pp,tq==='p'?150:200).forEach(l=>L2.push([tq,l])))}return L2};
@@ -2057,6 +2116,7 @@ async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPD
     if(t==='h'){const nxt=els[i+1];const keep=1+(nxt?2:0);if(room()<gap+keep+lines.length-1)newPage();else y+=gap*LH;doc.text(String(e.no||''),66,y);lines.forEach(l=>put(l,'h'));continue}
     if(room()<gap+Math.min(2,lines.length))newPage();else y+=gap*LH;
     lines.forEach(l=>{if(y>BOT)newPage();put(l,t)})}
+  if(opts.header){for(let n=1;n<=doc.getNumberOfPages();n++){doc.setPage(n);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(String(opts.header).slice(0,110),72,36);doc.setFont('courier','normal')}}
   doc.setFontSize(12);labels.forEach(([n,lab])=>{doc.setPage(n);doc.text(lab+'.',540,36,{align:'right'})});
   const hex=h=>{h=String(h||'#ffffff').replace('#','');return [0,2,4].map(k=>parseInt(h.slice(k,k+2),16)/255)};
   const total=doc.getNumberOfPages();for(let n=1;n<=total;n++){const set=pageRev[n];if(!set||!set.size)continue;const latest=[...set].map(id=>rvS[id]).filter(Boolean).sort((a,b)=>b.i-a.i)[0];if(!latest)continue;
@@ -2297,6 +2357,138 @@ function chMount(){const c=$('#content');if(!c.querySelector('[data-chrate]')&&!
   c.querySelectorAll('[data-chtest]').forEach(b=>b.addEventListener('click',()=>{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const n=b.dataset.chtest;const u=new SpeechSynthesisUtterance(`Hello, I am ${n.toLowerCase()}.`);const vp=chVoiceFor(n);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+V.rate||1;speechSynthesis.speak(u)}));
   c.querySelectorAll('[data-chren]').forEach(b=>b.addEventListener('click',()=>chRename(b.dataset.chren)))}
 if('speechSynthesis' in window){try{speechSynthesis.onvoiceschanged=()=>{if(page==='characters'&&P&&!document.activeElement.closest('#content select'))render(true)}}catch(e){}}
+
+
+/* ================= Celtx production extras (v2.4): storyboard, actor sides, catalog, tasks, script formats, AV script ================= */
+/* ---- shared: image picking and compressing (stays on the device) ---- */
+function pickImages(multi){return new Promise(res=>{const i=document.createElement('input');i.type='file';i.accept='image/*';if(multi)i.multiple=true;i.onchange=()=>res([...(i.files||[])]);i.click()})}
+function shrinkImage(file,max){max=max||720;return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+/* ---- Storyboard: a frame per shot, photo or sketch ---- */
+R.storyboard=()=>{const sc=P.scenes;const cur=sc.find(s=>s.id===VIEW.sbScene)||sc[0];VIEW.sbScene=cur.id;const sh=shotsOf(cur);const i=sc.indexOf(cur);
+  const head=`<div class="ph"><div class="grow"><h1>Storyboard</h1><p>A frame for every shot, like Celtx storyboards. Add a photo or sketch one, and the shot details come from Shot division.</p></div><div class="acts"><button class="btn sm" data-act="sbPdf">Storyboard PDF</button><button class="btn sm" data-x="xlsx">Excel</button></div></div>`;
+  const nav=`<div class="sb-nav"><button class="btn sm" data-sbgo="${sc[i-1]?sc[i-1].id:''}" ${i?'':'disabled'} aria-label="Previous scene">‹</button><select class="mini" data-sbsel>${sc.map(s=>`<option value="${s.id}"${s===cur?' selected':''}>Scene ${esc(s.no)} · ${esc(s.loc||'')}</option>`).join('')}</select><button class="btn sm" data-sbgo="${sc[i+1]?sc[i+1].id:''}" ${sc[i+1]?'':'disabled'} aria-label="Next scene">›</button><span class="small muted">${sh.length} shot${sh.length===1?'':'s'} · ${sh.filter(x=>x.img).length} with a picture</span><span style="flex:1"></span><button class="btn sm pri" data-sbadd="${cur.id}">+ Frame</button></div>`;
+  const frames=sh.map((x,k)=>`<article class="sb-f"><div class="sb-img">${x.img?`<img src="${x.img}" alt="Frame for shot ${esc(x.no)}">`:`<div class="sb-ph"><span>No picture yet</span></div>`}<span class="sb-no">${esc(x.no||String(k+1))}</span></div>
+    <div class="sb-meta">${[x.size,x.angle,x.move,x.lens].filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+    <p class="sb-cap" contenteditable="true" data-sbcap="${cur.id}|${x.id}" data-ph="What we see">${esc(x.desc||'')}</p>
+    <div class="sb-act"><button class="btn sm" data-sbup="${cur.id}|${x.id}">Photo</button><button class="btn sm" data-sbdraw="${cur.id}|${x.id}">Sketch</button>${x.img?`<button class="btn sm ghost danger" data-sbclr="${cur.id}|${x.id}">Remove picture</button>`:''}<button class="btn sm ghost danger" data-sbdel="${cur.id}|${x.id}" aria-label="Delete frame">Delete</button></div></article>`).join('');
+  return {html:head+nav+`<p class="small muted" style="margin:-4px 0 14px">${esc(sceneHeadText(cur))}${cur.desc?' — '+esc(cur.desc):''}</p>`+(sh.length?`<div class="sb-grid">${frames}</div>`:`<div class="empty"><b>No frames for this scene</b>Press “+ Frame”, or plan shots in Shot division first.</div>`),
+    exp:{orient:'landscape',sheets:[{name:'Storyboard',cols:[{h:'Scene',w:8},{h:'Shot',w:8},{h:'Size',w:10},{h:'Angle',w:10},{h:'Movement',w:12},{h:'Lens',w:8},{h:'What we see',w:60},{h:'Picture',w:9}],rows:sc.flatMap(s=>shotsOf(s).map(x=>[s.no,x.no,x.size,x.angle,x.move,x.lens,x.desc,x.img?'Yes':'']))}]}}};
+function sbFind(key){const [sid,id]=String(key).split('|');const s=scById(sid);return s?[s,shotsOf(s).find(x=>x.id===id)]:[null,null]}
+async function sbClick(t){if(t.dataset.sbgo!==undefined){if(t.dataset.sbgo){VIEW.sbScene=t.dataset.sbgo;render()}return true}
+  if(t.dataset.sbadd){const s=scById(t.dataset.sbadd);snapshot();shotsOf(s).push(newShot(s));touch([s.id]);render(true);return true}
+  const k=t.dataset.sbup||t.dataset.sbdraw||t.dataset.sbclr||t.dataset.sbdel;if(!k)return false;const [s,x]=sbFind(k);if(!x)return true;
+  if(t.dataset.sbup){const f=(await pickImages(false))[0];if(!f)return true;try{const d=await shrinkImage(f,720);snapshot();x.img=d;touch([s.id]);render(true)}catch(e){toast('That picture could not be read.')}return true}
+  if(t.dataset.sbdraw){sketchModal(x.img,d=>{snapshot();x.img=d;touch([s.id]);render(true)});return true}
+  if(t.dataset.sbclr){snapshot();delete x.img;touch([s.id]);render(true);return true}
+  if(t.dataset.sbdel){if(t.dataset.armed){snapshot();s.shots=shotsOf(s).filter(y=>y!==x);touch([s.id]);render(true)}else{t.dataset.armed=1;t.textContent='Confirm'}return true}return false}
+function sbMount(){const c=$('#content');const sel=c.querySelector('[data-sbsel]');if(!sel)return;sel.addEventListener('change',()=>{VIEW.sbScene=sel.value;render()});
+  c.querySelectorAll('[data-sbcap]').forEach(p=>p.addEventListener('blur',()=>{const [s,x]=sbFind(p.dataset.sbcap);const v=p.innerText.trim();if(x&&v!==(x.desc||'')){x.desc=v;touch([s.id])}}))}
+function sketchModal(bg,done){openModal(`<div class="modal-h"><h2>Sketch a frame</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+  <div class="sk-tools"><button class="btn sm" data-skc="#1d1d1f" aria-pressed="true">Pencil</button><button class="btn sm" data-skc="#0a84ff">Blue</button><button class="btn sm" data-skc="#ff453a">Red</button><button class="btn sm" data-skc="erase">Eraser</button><label class="small">Size <input type="range" min="1" max="14" value="3" id="skW"></label><span style="flex:1"></span><button class="btn sm" id="skUndo">Undo</button><button class="btn sm ghost danger" id="skClr">Clear</button></div>
+  <canvas id="sk" width="960" height="540" class="sk-c" aria-label="Drawing area"></canvas>
+  <div style="display:flex;justify-content:flex-end;gap:10px"><button class="btn" data-close>Cancel</button><button class="btn pri" id="skOk">Use sketch</button></div></div>`);
+  const cv=$('#sk'),g=cv.getContext('2d');let col='#1d1d1f',drawing=false,last=null;const hist=[];g.fillStyle='#fff';g.fillRect(0,0,960,540);g.lineCap='round';g.lineJoin='round';
+  g.strokeStyle='#e5e5ea';g.lineWidth=1;g.strokeRect(0.5,0.5,959,539);
+  if(bg){const im=new Image();im.onload=()=>g.drawImage(im,0,0,960,540);im.src=bg}
+  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*960/r.width,(e.clientY-r.top)*540/r.height]};
+  cv.addEventListener('pointerdown',e=>{drawing=true;cv.setPointerCapture(e.pointerId);hist.push(g.getImageData(0,0,960,540));if(hist.length>30)hist.shift();last=pos(e);e.preventDefault()});
+  cv.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);g.strokeStyle=col==='erase'?'#fff':col;g.lineWidth=(+$('#skW').value)*(col==='erase'?4:1)*(e.pressure&&e.pointerType==='pen'?0.5+e.pressure:1);g.beginPath();g.moveTo(last[0],last[1]);g.lineTo(p[0],p[1]);g.stroke();last=p});
+  const end=()=>{drawing=false};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+  document.querySelectorAll('[data-skc]').forEach(b=>b.onclick=()=>{col=b.dataset.skc;document.querySelectorAll('[data-skc]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+  $('#skUndo').onclick=()=>{const h=hist.pop();if(h)g.putImageData(h,0,0)};$('#skClr').onclick=()=>{hist.push(g.getImageData(0,0,960,540));g.fillStyle='#fff';g.fillRect(0,0,960,540)};
+  $('#skOk').onclick=()=>{const d=cv.toDataURL('image/jpeg',0.75);closeModal();done(d)}}
+async function sbPdf(){await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4',orientation:'landscape'});const W=842,H=595,M=36;
+  const items=P.scenes.flatMap(s=>shotsOf(s).map(x=>[s,x]));if(!items.length){toast('Add frames first.');return}
+  const cols=3,rows=2,gw=(W-2*M-(cols-1)*18)/cols,ih=gw*9/16;let n=0;
+  const header=()=>{doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(`${P.title||'Storyboard'} · Storyboard`,M,M-6);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(new Date().toLocaleDateString('en-GB'),W-M,M-6,{align:'right'})};header();
+  for(const [s,x] of items){if(n&&n%(cols*rows)===0){doc.addPage();header()}const k=n%(cols*rows),cx=M+(k%cols)*(gw+18),cy=M+12+Math.floor(k/cols)*((H-2*M-12)/rows);
+    doc.setDrawColor(200);doc.setLineWidth(0.6);doc.rect(cx,cy,gw,ih);if(x.img){try{doc.addImage(x.img,'JPEG',cx,cy,gw,ih,undefined,'FAST')}catch(e){}}
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(`Sc ${s.no} · Shot ${x.no||''}`,cx,cy+ih+13);doc.setFont('helvetica','normal');doc.setFontSize(8);const meta=[x.size,x.angle,x.move,x.lens].filter(Boolean).join(' · ');if(meta)doc.text(meta,cx+gw,cy+ih+13,{align:'right'});
+    doc.splitTextToSize(x.desc||'',gw).slice(0,5).forEach((l,li)=>doc.text(l,cx,cy+ih+26+li*10));n++}
+  await saveFile((P.title||'Storyboard').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Storyboard.pdf',doc.output('arraybuffer'))}
+/* ---- Actor sides: the day's scenes in script format, a highlighted character ---- */
+function sidesEls(sceneNos){const D=P.draft;let els;if(D&&Array.isArray(D.els)&&D.els.some(e=>e.t==='h'))els=D.els;else els=scenesToEls(P.scenes,true);const nums=wrNumbers(els);const want=new Set(sceneNos.map(U));const out=[];let on=false;
+  els.forEach((e,i)=>{if(e.t==='h'){on=want.has(U(nums[i]));if(on)out.push(Object.assign({},e,{n:nums[i]}))}else if(on)out.push(Object.assign({},e))});return out}
+R.sides=()=>{const S=SCH(),nums=dayNums(),dates=dayDates();const days=S.days.filter(d=>d.type==='shoot'&&d.items.length);const V=VIEW.sides||(VIEW.sides={day:days[0]?days[0].id:'',pick:[],cast:[]});
+  const day=days.find(d=>d.id===V.day);const sc=day?dayScenes(day):P.scenes.filter(s=>V.pick.includes(s.id));const cast=uniq(sc.flatMap(s=>s.artists.map(aName))).filter(Boolean);
+  const head=`<div class="ph"><div class="grow"><h1>Actor sides</h1><p>The script pages for one shoot day, like Celtx sides. Pick a day or scenes, tick the actors, and their dialogue is highlighted in the PDF.</p></div></div>`;
+  const pick=`<div class="sd-pick"><label class="small">Shoot day <select class="mini" data-sdday><option value="">Pick scenes myself</option>${days.map(d=>`<option value="${d.id}"${d.id===V.day?' selected':''}>${esc(dayLabel(d,nums,dates))}</option>`).join('')}</select></label>${days.length?'':'<span class="small muted">No shoot days yet. Make a shooting schedule, or pick scenes below.</span>'}</div>`;
+  const scs=!day?`<div class="sd-scenes">${P.scenes.map(s=>`<label><input type="checkbox" data-sdsc="${s.id}"${V.pick.includes(s.id)?' checked':''}> <b>${esc(s.no)}</b> ${esc(s.loc||'')}</label>`).join('')}</div>`:'';
+  const castH=`<h3 class="nd-k">Highlight dialogue for</h3><div class="sd-cast">${cast.length?cast.map(n=>`<label><input type="checkbox" data-sdcast="${esc(chNorm(n))}"${V.cast.includes(chNorm(n))?' checked':''}> ${esc(n)}</label>`).join(''):'<span class="small muted">Pick scenes first.</span>'}</div>`;
+  const list=sc.length?`<div class="tw"><table class="t"><thead><tr><th>Sc</th><th>Location</th><th>Effect</th><th>Pages</th><th>Cast</th></tr></thead><tbody>${sc.map(s=>`<tr><td class="no">${esc(s.no)}</td><td class="loc">${esc(s.loc||'')}</td><td class="eff">${esc([s.ie,s.time].filter(Boolean).join(' / '))}</td><td class="num">${fmtPg(pgE(s))}</td><td>${esc(s.artists.map(aName).join(', '))}</td></tr>`).join('')}</tbody></table></div>`:'';
+  return {html:head+pick+scs+castH+`<div style="display:flex;gap:10px;margin:16px 0;flex-wrap:wrap"><button class="btn pri" data-act="sidesPdf" ${sc.length?'':'disabled'}>Download sides PDF</button><span class="small muted" style="align-self:center">${sc.length} scene${sc.length===1?'':'s'} · ${fmtPg(sc.reduce((a,s)=>a+pgE(s),0))} pages</span></div>`+list,exp:null}};
+function sidesMount(){const c=$('#content');const V=VIEW.sides;if(!V||!c.querySelector('.sd-pick'))return;
+  const d=c.querySelector('[data-sdday]');d&&d.addEventListener('change',()=>{V.day=d.value;render(true)});
+  c.querySelectorAll('[data-sdsc]').forEach(x=>x.addEventListener('change',()=>{const id=x.dataset.sdsc;V.pick=x.checked?[...V.pick,id]:V.pick.filter(y=>y!==id);x.blur();render(true)}));
+  c.querySelectorAll('[data-sdcast]').forEach(x=>x.addEventListener('change',()=>{const n=x.dataset.sdcast;V.cast=x.checked?[...V.cast,n]:V.cast.filter(y=>y!==n)}))}
+async function sidesPdf(){const V=VIEW.sides;const S=SCH();const day=S.days.find(d=>d.id===V.day);const sc=day?dayScenes(day):P.scenes.filter(s=>V.pick.includes(s.id));if(!sc.length)return;
+  const els=sidesEls(sc.map(s=>s.no));const lab=day?dayLabel(day):'Selected scenes';const hdr=`SIDES · ${lab} · Sc ${sc.map(s=>s.no).join(', ')}`;
+  const doc=await wrPdf({els,hl:new Set(V.cast),header:hdr,noTitle:true,marks:false});const nm=(P.title||'Script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Sides'+(day?'_Day'+(dayNums()[day.id]||''):'')+'.pdf';await saveFile(nm,doc.output('arraybuffer'))}
+/* ---- Catalog: locations, props, wardrobe and more, with photos ---- */
+const CAT_T=[['location','Location'],['prop','Prop'],['wardrobe','Wardrobe'],['set','Set dressing'],['vehicle','Vehicle'],['animal','Animal'],['sfx','Special effect'],['other','Other']];
+const CAT_SRC={prop:['props','spl_props'],set:['art','spl_sets'],vehicle:['vehicles'],animal:['animals'],sfx:['sfx','vfx']};
+function CAT(){if(!Array.isArray(P.catalog))P.catalog=[];return P.catalog}
+function catScenes(it){const n=U(it.name).trim();if(!n)return [];return P.scenes.filter(s=>{if(it.type==='location')return U(s.loc).trim()===n;if(it.type==='wardrobe')return (s.costumes||[]).some(c=>U(c.c).includes(n));const ks=CAT_SRC[it.type]||LK;return ks.some(k=>(s[k]||[]).some(v=>U(v).trim()===n))}).map(s=>s.no)}
+R.catalog=()=>{const L=CAT();const f=VIEW.catT||'all';const shown=L.filter(x=>f==='all'||x.type===f);const cnt=t=>L.filter(x=>x.type===t).length;
+  const head=`<div class="ph"><div class="grow"><h1>Catalog</h1><p>Every location, prop, costume and vehicle with photos and notes, like the Celtx catalog. Scenes are linked by name from the breakdown.</p></div><div class="acts"><button class="btn sm" data-act="catFill">Add from breakdown</button><button class="btn sm pri" data-act="catNew">+ Item</button><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
+  const chips=`<div class="ty-chips" style="margin-bottom:14px">${segm('catT',[['all','All · '+L.length],...CAT_T.filter(([k])=>cnt(k)).map(([k,l])=>[k,l+' · '+cnt(k)])])}</div>`;
+  const cards=shown.map(it=>{const scn=catScenes(it);return `<article class="cat-card" data-catopen="${it.id}" tabindex="0"><div class="cat-img">${it.photos&&it.photos[0]?`<img src="${it.photos[0]}" alt="${esc(it.name)}">`:`<i class="ic i-${it.type==='location'?'sloLoc':'artprops'}" aria-hidden="true"></i>`}${it.photos&&it.photos.length>1?`<span>${it.photos.length}</span>`:''}</div><div class="cat-b"><small>${esc((CAT_T.find(t=>t[0]===it.type)||['','Other'])[1])}${it.status?' · '+esc(it.status):''}</small><h4>${esc(it.name||'Untitled')}</h4>${it.desc?`<p>${esc(it.desc.slice(0,90))}</p>`:''}<small class="muted">${scn.length?'Scenes '+esc(scn.join(', ')):'Not in any scene yet'}</small></div></article>`}).join('');
+  return {html:head+chips+(shown.length?`<div class="cat-grid">${cards}</div>`:`<div class="empty"><b>The catalog is empty</b>Press “Add from breakdown” to bring in every location, prop, costume and vehicle, or add items one by one.</div>`),
+    exp:{orient:'landscape',sheets:[{name:'Catalog',cols:[{h:'Type',w:14},{h:'Name',w:28},{h:'Status',w:12},{h:'Description',w:44},{h:'Scenes',w:24},{h:'Photos',w:8},{h:'Notes',w:34}],rows:shown.map(it=>[(CAT_T.find(t=>t[0]===it.type)||['','Other'])[1],it.name,it.status||'',it.desc||'',catScenes(it).join(', '),(it.photos||[]).length,it.notes||''])}]}}};
+function catFill(){const L=CAT();const have=new Set(L.map(x=>x.type+'|'+U(x.name).trim()));const add=(type,name)=>{name=String(name||'').trim();if(!name)return;const k=type+'|'+U(name);if(have.has(k))return;have.add(k);L.push({id:uid(),type,name,desc:'',notes:'',status:'',photos:[]});n++};let n=0;snapshot();
+  P.scenes.forEach(s=>{add('location',s.loc);Object.entries(CAT_SRC).forEach(([t,ks])=>ks.forEach(k=>(s[k]||[]).forEach(v=>add(t,v))));(s.costumes||[]).forEach(c=>add('wardrobe',c.c))});
+  logChange(`${n} item${n===1?'':'s'} added to the catalog from the breakdown`,'x',true);touch([]);render(true);toast(n?`${n} items added.`:'The catalog already has everything from the breakdown.')}
+function catEdit(id){const L=CAT();let it=L.find(x=>x.id===id);const isNew=!it;if(!it)it={id:uid(),type:VIEW.catT&&VIEW.catT!=='all'?VIEW.catT:'prop',name:'',desc:'',notes:'',status:'',photos:[]};const ph=[...(it.photos||[])];
+  const draw=()=>{openModal(`<div class="modal-h"><h2>${isNew?'New catalog item':esc(it.name||'Item')}</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+    <div class="sset-g" style="margin:0"><label>Type<select id="ctT">${CAT_T.map(([k,l])=>`<option value="${k}"${k===it.type?' selected':''}>${l}</option>`).join('')}</select></label><label>Name<input type="text" id="ctN" value="${esc(it.name)}"></label><label>Status<select id="ctS">${['','To find','Shortlisted','Confirmed','Ready','Returned'].map(x=>`<option${x===it.status?' selected':''}>${x}</option>`).join('')}</select></label></div>
+    <div class="fieldbox"><label for="ctD">Description</label><textarea id="ctD" rows="2">${esc(it.desc||'')}</textarea></div><div class="fieldbox"><label for="ctO">Notes (contact, cost, address)</label><textarea id="ctO" rows="2">${esc(it.notes||'')}</textarea></div>
+    <div class="cat-ph">${ph.map((p,i)=>`<figure><img src="${p}" alt="Photo ${i+1}"><button class="btn sm ghost danger" data-ctdel="${i}" aria-label="Remove photo">×</button></figure>`).join('')}<button class="btn" id="ctAdd">+ Photos</button></div>
+    ${isNew?'':`<p class="small muted">Scenes: ${esc(catScenes(it).join(', ')||'none')}</p>`}
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">${isNew?'':'<button class="btn danger" id="ctRm">Delete item</button>'}<button class="btn pri" id="ctOk">Save</button></div></div>`);
+    const keep=()=>{it.type=$('#ctT').value;it.name=$('#ctN').value.trim();it.status=$('#ctS').value;it.desc=$('#ctD').value.trim();it.notes=$('#ctO').value.trim()};
+    document.querySelectorAll('[data-ctdel]').forEach(b=>b.onclick=()=>{keep();ph.splice(+b.dataset.ctdel,1);draw()});
+    $('#ctAdd').onclick=async()=>{keep();const fs=await pickImages(true);for(const f of fs.slice(0,12)){try{ph.push(await shrinkImage(f,900))}catch(e){}}draw()};
+    $('#ctOk').onclick=()=>{keep();if(!it.name){toast('Give it a name.');return}snapshot();it.photos=ph;if(isNew)L.push(it);logChange(`Catalog: ${it.name} ${isNew?'added':'updated'}`,'x',true);closeModal();touch([]);render(true)};
+    const rm=$('#ctRm');if(rm)rm.onclick=()=>{if(!confirm('Delete '+it.name+'?'))return;snapshot();P.catalog=L.filter(x=>x!==it);closeModal();touch([]);render(true)}};draw()}
+/* ---- Tasks: to do / doing / done ---- */
+const TK_COL=[['todo','To do'],['doing','In progress'],['done','Done']];
+function TASKS(){if(!Array.isArray(P.tasks))P.tasks=[];return P.tasks}
+R.tasks=()=>{const T=TASKS();const today=isoD(new Date());
+  const head=`<div class="ph"><div class="grow"><h1>Tasks</h1><p>Everything the team has to do before and during the shoot, like Celtx tasks. Drag a card to another column, or use the arrows.</p></div><div class="acts"><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
+  const add=`<form class="tk-add" data-tkadd><input type="text" id="tkT" placeholder="New task, e.g. Book the harbour location" aria-label="New task" required><select id="tkD" class="mini" aria-label="Department"><option value="">Department</option>${DEPTS.map(d=>`<option>${d}</option>`).join('')}</select><input type="date" id="tkDue" aria-label="Due date"><button class="btn pri">Add task</button></form>`;
+  const col=([k,l],ci)=>{const L=T.filter(t=>(t.status||'todo')===k);return `<section class="tk-col" data-tkcol="${k}"><h3>${l} <span>${L.length}</span></h3>${L.map(t=>`<article class="tk-card${t.due&&t.due<today&&k!=='done'?' late':''}" draggable="true" data-tk="${t.id}"><b contenteditable="true" data-tkf="title">${esc(t.title)}</b>
+    <div class="tk-meta">${t.dept?`<span class="tag">${esc(t.dept)}</span>`:''}${t.due?`<span class="tag${t.due<today&&k!=='done'?' bad':''}">${fmtD(t.due)}</span>`:''}<span class="tk-owner" contenteditable="true" data-tkf="owner" data-ph="Owner">${esc(t.owner||'')}</span></div>
+    <div class="tk-btn">${ci?`<button class="btn sm ghost" data-tkmv="${t.id}" data-to="${TK_COL[ci-1][0]}" aria-label="Move left">←</button>`:''}${ci<2?`<button class="btn sm ghost" data-tkmv="${t.id}" data-to="${TK_COL[ci+1][0]}" aria-label="Move right">→</button>`:''}<span style="flex:1"></span><button class="btn sm ghost danger" data-tkdel="${t.id}" aria-label="Delete task">×</button></div></article>`).join('')||'<p class="small muted tk-empty">Nothing here.</p>'}</section>`};
+  return {html:head+add+`<div class="tk-board">${TK_COL.map(col).join('')}</div>`,exp:{orient:'portrait',sheets:[{name:'Tasks',cols:[{h:'Task',w:46},{h:'Department',w:16},{h:'Owner',w:16},{h:'Due',w:12},{h:'Status',w:12}],rows:T.map(t=>[t.title,t.dept||'',t.owner||'',t.due?fmtD(t.due,1):'',(TK_COL.find(c=>c[0]===(t.status||'todo'))||['','To do'])[1]])}]}}};
+function tkMount(){const c=$('#content');const f=c.querySelector('[data-tkadd]');if(!f)return;const T=TASKS();
+  f.addEventListener('submit',e=>{e.preventDefault();const t=$('#tkT').value.trim();if(!t)return;snapshot();T.push({id:uid(),title:t,dept:$('#tkD').value,due:$('#tkDue').value,owner:'',status:'todo'});touch([]);render(true);setTimeout(()=>$('#tkT')&&$('#tkT').focus(),30)});
+  c.querySelectorAll('[data-tkf]').forEach(x=>x.addEventListener('blur',()=>{const t=T.find(y=>y.id===x.closest('[data-tk]').dataset.tk);const v=x.innerText.trim();if(t&&v!==(t[x.dataset.tkf]||'')){if(x.dataset.tkf==='title'&&!v){x.textContent=t.title;return}t[x.dataset.tkf]=v;touch([])}}));
+  c.querySelectorAll('[data-tk]').forEach(x=>x.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',x.dataset.tk);x.classList.add('dragging')}));
+  c.querySelectorAll('[data-tkcol]').forEach(col=>{col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('over')});col.addEventListener('dragleave',()=>col.classList.remove('over'));
+    col.addEventListener('drop',e=>{e.preventDefault();col.classList.remove('over');const t=T.find(y=>y.id===e.dataTransfer.getData('text/plain'));if(t&&t.status!==col.dataset.tkcol){snapshot();t.status=col.dataset.tkcol;touch([]);render(true)}})})}
+function tkClick(t){const T=TASKS();if(t.dataset.tkmv){const k=T.find(x=>x.id===t.dataset.tkmv);if(k){snapshot();k.status=t.dataset.to;touch([]);render(true)}return true}if(t.dataset.tkdel){snapshot();P.tasks=T.filter(x=>x.id!==t.dataset.tkdel);touch([]);render(true);return true}return false}
+/* ---- Script formats (templates) for the writer ---- */
+const WT0=Object.assign({},WT),WS0=Object.assign({},WT_SHORT),WP0=Object.assign({},W_PH);
+const FMTS={
+  screen:{name:'Screenplay'},
+  tv:{name:'TV / teleplay',wt:{s:'Act break'},ws:{s:'Act'},ph:{s:'ACT ONE / END OF ACT ONE'}},
+  stage:{name:'Stage play',wt:{h:'Act / scene',a:'Stage direction',t:'Transition',s:'Sound / music cue'},ws:{h:'Scene',a:'Direction',s:'Cue'},ph:{h:'ACT ONE, SCENE 1',a:'(She crosses to the window.)',t:'BLACKOUT.',s:'SOUND: A train passes.'},X:{a:252,c:252,d:144,p:216,h:108,s:252},WD:{a:288,d:360,p:216,s:288}},
+  audio:{name:'Audio drama',wt:{a:'Description',p:'Direction',s:'Sound effect / music'},ws:{a:'Description',p:'Direction',s:'SFX'},ph:{a:'Where we are, what we hear',p:'(whispering)',s:'SFX: A DOOR SLAMS'},X:{c:108,d:216,p:216,s:108},WD:{d:324,s:432}},
+  comic:{name:'Comic / graphic novel',wt:{h:'Page',a:'Panel description',p:'Balloon note',d:'Balloon text',t:'Caption',s:'Panel'},ws:{h:'Page',a:'Panel desc.',p:'Note',d:'Balloon',t:'Caption',s:'Panel'},ph:{h:'PAGE ONE',a:'Wide shot. The ferry in the fog.',c:'NINA',p:'(whisper)',d:'Not again.',t:'CAPTION: Dawn.',s:'PANEL 1'},X:{c:144,d:216,p:216,t:108,s:108},WD:{d:360,t:432}}};
+function fmtOf(){return (P&&P.draft&&FMTS[P.draft.fmt])?P.draft.fmt:'screen'}
+function fmtApply(){const f=FMTS[fmtOf()];Object.assign(WT,WT0,f.wt||{});Object.assign(WT_SHORT,WS0,f.ws||{});Object.assign(W_PH,WP0,f.ph||{})}
+function fmtSel(){return `<label class="wx-fmt"><span class="sr-only">Script format</span><select class="mini" data-wrfmt aria-label="Script format">${Object.entries(FMTS).map(([k,v])=>`<option value="${k}"${k===fmtOf()?' selected':''}>${v.name}</option>`).join('')}</select></label>`}
+function fmtMount(){const s=document.querySelector('[data-wrfmt]');if(!s)return;s.addEventListener('change',()=>{wrSave();const D=draft();snapshot();D.fmt=s.value;dirty.draft=true;logChange(`Script format set to ${FMTS[s.value].name}`,'script',true);touch([]);render(true);toast(`${FMTS[s.value].name} format. The element buttons and PDF layout follow it.`)})}
+/* ---- AV two-column script (Celtx AV) ---- */
+function AVD(){if(!P.av||!Array.isArray(P.av.rows))P.av={rows:[]};return P.av}
+R.av=()=>{const A=AVD();let t=0;const secs=s=>{const m=String(s||'').match(/^(\d+):(\d{1,2})$/);return m?(+m[1])*60+(+m[2]):(parseFloat(s)||0)};
+  const head=`<div class="ph"><div class="grow"><h1>AV script</h1><p>Two-column script for ads, promos, documentaries and music videos, like Celtx AV: what we see on the left, what we hear on the right, with a running time.</p></div><div class="acts"><button class="btn sm pri" data-act="avAdd">+ Row</button><button class="btn sm" data-act="avScene">+ Scene</button><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
+  const rows=A.rows.map((r,i)=>{if(r.scene)return `<div class="av-sc" data-av="${i}"><b contenteditable="true" data-avf="scene" data-ph="SCENE / SEGMENT">${esc(r.scene)}</b><button class="btn sm ghost danger" data-avdel="${i}" aria-label="Delete">×</button></div>`;t+=secs(r.dur);
+    return `<div class="av-row" data-av="${i}"><span class="av-n">${i+1}</span><div contenteditable="true" data-avf="video" data-ph="VIDEO: what we see">${esc(r.video||'')}</div><div contenteditable="true" data-avf="audio" data-ph="AUDIO: voice-over, dialogue, music, SFX">${esc(r.audio||'')}</div><div class="av-t"><span contenteditable="true" data-avf="dur" data-ph="0:05" aria-label="Duration">${esc(r.dur||'')}</span><small>${Math.floor(t/60)}:${String(Math.round(t%60)).padStart(2,'0')}</small></div><button class="btn sm ghost danger" data-avdel="${i}" aria-label="Delete row">×</button></div>`}).join('');
+  return {html:head+`<div class="av"><div class="av-h"><span>#</span><span>Video</span><span>Audio</span><span>Time</span><span></span></div>${rows||'<p class="small muted" style="padding:16px">Press “+ Row” to start.</p>'}</div>`,
+    exp:{orient:'landscape',sheets:[{name:'AV script',cols:[{h:'#',w:5},{h:'Video',w:60},{h:'Audio',w:60},{h:'Time',w:8}],rows:A.rows.map((r,i)=>r.scene?['',r.scene.toUpperCase(),'','']:[i+1,r.video||'',r.audio||'',r.dur||''])}]}}};
+function avMount(){const c=$('#content');if(!c.querySelector('.av'))return;const A=AVD();c.querySelectorAll('[data-avf]').forEach(x=>x.addEventListener('blur',()=>{const r=A.rows[+x.closest('[data-av]').dataset.av];const v=x.innerText.trim();if(r&&v!==(r[x.dataset.avf]||'')){r[x.dataset.avf]=v;touch([]);if(x.dataset.avf==='dur')render(true)}}))}
+function avClick(t){const A=AVD();if(t.dataset.avdel!==undefined&&t.dataset.avdel!==''){snapshot();A.rows.splice(+t.dataset.avdel,1);touch([]);render(true);return true}return false}
 
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];
@@ -3363,11 +3555,11 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();wxApplyView();
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
   syncTop();
-  if(!P.scenes.length&&page!=='artists'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
+  if(!P.scenes.length&&page!=='artists'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> This is an example script so you can see every report. Import your own script to start.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}renderChecksBtn()}
+  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap')}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
@@ -3395,10 +3587,11 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.delart){if(t.dataset.armed){snapshot();const id=t.dataset.delart;const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(id)){s.artists=s.artists.filter(x=>x!==id);ids.push(s.id)}s.costumes=s.costumes.filter(c=>c.a!==id)});const dn=aName(id);P.artists=P.artists.filter(a=>a.id!==id);delete P.profiles[id];logChange(`Artist ${dn} deleted`,'artistName');touch(ids);render(true);return}t.dataset.armed=1;t.textContent='Confirm';return}
   if(t.dataset.rerun){runAll({only:[t.dataset.rerun]});return}
   if(t.dataset.prof){profileJob(t.dataset.prof);return}
-  if(page==='outline'&&olClick(t))return;
+  if(page==='outline'&&olClick(t))return;if(page==='storyboard'&&await sbClick(t))return;if(page==='tasks'&&tkClick(t))return;if(page==='av'&&avClick(t))return;
   const act=t.dataset.act;
   if(act==='import')openImport();
-  if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();
+  if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();if(act==='sbPdf')sbPdf();if(act==='sidesPdf')sidesPdf();if(act==='catFill')catFill();if(act==='catNew')catEdit();
+  if(act==='avAdd'||act==='avScene'){const A=AVD();snapshot();A.rows.push(act==='avScene'?{scene:'SCENE '+(A.rows.filter(r=>r.scene).length+1)}:{video:'',audio:'',dur:''});touch([]);render(true)}
   if(act==='wrNew')wrNewProject();if(act==='wrTitle')wrTitle();if(act==='wrOpen')wrOpen();if(act==='wrDownload')wrDownload();if(act==='wrApply')wrApply();if(act==='wrFromProject')wrFromProject();if(act==='wrBlank')wrBlank();if(act==='wrRenumber')wrRenumber();
   if(act==='addArtist'){snapshot();const a=addArtist('NEW CHARACTER '+(P.artists.length+1),'Secondary','');logChange(`Artist ${a.name} added`,'artistInfo',true);touch([]);render(true);toast('Artist added. Click the name to rename.')}
   if(act==='desig')desigJob();
@@ -3424,6 +3617,8 @@ $('#bUndo').onclick=undo;
 $('#bChecks').onclick=openChecks;
 $('#bAll').onclick=()=>exportAll();
 $('#bMenu').onclick=()=>$('#msheet').classList.add('open');
+document.addEventListener('click',e=>{const c=e.target.closest('[data-catopen]');if(c&&P)catEdit(c.dataset.catopen)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest&&e.target.closest('[data-catopen]');if(c&&P)catEdit(c.dataset.catopen)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&WXV.focus&&page==='write'&&!$('#ov')){WXV.focus=false;wxSaveView();wxApplyView()}});
 document.querySelectorAll('.bbar .tab[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));
 const TABMAP={write:['Script'],breakdown:['Single line order','Lists','Breakdown'],sched:['Shooting'],gear:[]};

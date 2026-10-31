@@ -1012,6 +1012,34 @@ input:focus,select:focus,textarea:focus{transition:box-shadow .2s var(--ease)}
 .sa-note textarea{width:100%;border:0;background:var(--fill);border-radius:12px;padding:10px 12px;font:13.5px/1.5 var(--f-ui);color:var(--fg);resize:vertical}
 @media (max-width:760px){.sa-hero{padding:20px 18px;border-radius:18px}.sa-track{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:82%;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 14px}.sa-card{scroll-snap-align:center}.sa-notes{grid-template-columns:1fr}.sa-arcw{padding:12px 10px 4px}}
 @media (prefers-reduced-motion:reduce){.sa-aur i,.sa-line,.sa-area,.sa-band,.sa-pt circle,.sa-pt text,.sa-card,.sa-bar i,.sa-chips span,.sa-main{animation:none!important;stroke-dashoffset:0;opacity:1;transform:none}}
+/* ---- Camera & equipment: modern look ---- */
+.gx-tabs{position:relative;display:flex;gap:2px;padding:4px;margin:0 0 16px;border-radius:16px;background:var(--fill);overflow-x:auto;scrollbar-width:none;width:100%;isolation:isolate}
+.gx-tabs::-webkit-scrollbar{display:none}
+.gx-tabs button{position:relative;z-index:1;flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:7px;border:0;background:transparent;padding:9px 14px;border-radius:12px;font:600 12.5px var(--f-ui);color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .25s}
+.gx-tabs button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--spring)}
+.gx-tabs button:hover svg{transform:translateY(-1px) scale(1.08)}.gx-tabs button[aria-pressed="true"]{color:#fff}.gx-tabs button[aria-pressed="true"] svg{transform:scale(1.1)}
+.gx-ind{position:absolute;z-index:0;left:0;top:4px;bottom:4px;border-radius:12px;background:var(--grad);box-shadow:var(--glow);transition:transform .45s var(--spring),width .45s var(--spring)}
+.gst-top .gx-tabs{margin:0;width:auto;max-width:100%;background:color-mix(in srgb,var(--fill) 85%,transparent);backdrop-filter:blur(10px)}
+.gx-hero{position:relative;overflow:hidden;isolation:isolate;display:grid;grid-template-columns:1fr minmax(160px,280px);gap:18px;align-items:center;border-radius:22px;padding:22px 24px;margin-bottom:20px;background:#0b0b12;color:#fff;box-shadow:0 22px 50px -26px rgba(10,132,255,.6);animation:riseIn .6s var(--ease) both}
+.gx-aur{position:absolute;inset:-40%;z-index:-1;filter:blur(46px);opacity:.7}.gx-aur i{position:absolute;width:55%;height:60%;border-radius:50%;animation:aur 16s ease-in-out infinite alternate}
+.gx-aur i:first-child{background:#0a84ff;left:4%;top:18%}.gx-aur i:last-child{background:#30d158;left:48%;top:30%;opacity:.55;animation-duration:20s;animation-delay:-6s}
+body[data-gx=needs] .gx-aur i:last-child{background:#ff9f0a}body[data-gx=move] .gx-aur i:last-child{background:#bf5af2}body[data-gx=types] .gx-aur i:last-child{background:#64d2ff}body[data-gx=list] .gx-aur i:last-child{background:#ff375f}
+.gx-copy small{font:700 11px var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65)}.gx-copy h2{margin:4px 0 6px;font:700 clamp(24px,3.6vw,36px)/1.08 var(--f-display);letter-spacing:-.03em}.gx-copy p{margin:0;color:rgba(255,255,255,.78);font-size:14px;max-width:52ch}
+.gx-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.gx-stats span{display:flex;flex-direction:column;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);font-size:11px;color:rgba(255,255,255,.7);animation:riseIn .5s var(--ease) both;animation-delay:var(--d)}
+.gx-stats b{font:700 20px/1.1 var(--f-display);color:#fff}
+.gx-art{position:relative;display:grid;place-items:center;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,.75) 70%,transparent);border-radius:24px;aspect-ratio:3/2;animation:floaty 6s ease-in-out infinite}.gx-art .il{width:100%;height:auto;filter:drop-shadow(0 14px 18px rgba(0,0,0,.35))}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-.4deg)}50%{transform:translateY(-8px) rotate(.4deg)}}
+body[data-page=gear] .tw{border-radius:18px}body[data-page=gear] .tw tbody tr{transition:background .2s}body[data-page=gear] .tw tbody tr:hover td{background:var(--accent-soft)}
+body[data-page=gear] .mv-pic .il,body[data-page=gear] td .il{transition:transform .35s var(--spring)}body[data-page=gear] tr:hover .il{transform:scale(1.12) rotate(-2deg)}
+.ty-card,.nd-card{position:relative;isolation:isolate}
+.ty-card::after,.nd-card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
+.ty-card:hover::after,.nd-card:hover::after{opacity:1}
+.ty-art,.nd-art{overflow:hidden}.ty-art .il,.nd-art .il{transition:transform .5s var(--spring)}.ty-card:hover .ty-art .il,.nd-card:hover .nd-art .il{transform:scale(1.08) translateY(-3px)}
+.nd-tile{transition:transform .35s var(--spring),box-shadow .3s}.nd-tile:hover{transform:translateY(-3px) scale(1.01)}.nd-tile .nd-ic img,.nd-tile .nd-ic .il{transition:transform .6s var(--ease)}.nd-tile:hover .nd-ic img{transform:scale(1.07)}
+.nd-tile[aria-pressed=true]{background:var(--grad)!important;box-shadow:var(--glow)!important}
+.ty-card .btn{transition:transform .2s var(--spring),background .2s}.ty-card .btn.added{background:#30d158;color:#fff}
+@media (max-width:760px){.gx-hero{grid-template-columns:1fr;padding:18px}.gx-art{order:-1;width:70%;margin:0 auto}.gx-tabs button span{font-size:12px}.gx-tabs button{padding:9px 11px}}
+@media (prefers-reduced-motion:reduce){.gx-aur i,.gx-art,.gx-stats span,.gx-hero{animation:none!important}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -2726,6 +2754,27 @@ function riseIn(root){if(!MOTION_OK||!root)return;if(riseIO)riseIO.disconnect();
 function tabInd(){const bar=document.querySelector('.bbar');if(!bar)return;let ind=bar.querySelector('.tab-ind');if(!ind){ind=document.createElement('span');ind.className='tab-ind';bar.appendChild(ind)}const cur=bar.querySelector('.tab[aria-current="true"]');if(!cur){ind.style.width='0';return}const br=bar.getBoundingClientRect(),r=cur.getBoundingClientRect();const w=Math.min(36,r.width*0.5);ind.style.width=w+'px';ind.style.transform=`translateX(${r.left-br.left+r.width/2-w/2}px)`}
 addEventListener('resize',()=>tabInd());
 
+/* ================= Camera & equipment: modern shell (icon tabs, mode heroes, motion) ================= */
+const GX_MODES=[['story','Scene view','M3 6h18v12H3z M8 6v12 M16 6v12'],['script','For this script','M6 3h9l4 4v14H6z M15 3v4h4 M9 12h7 M9 16h5'],['needs','By need','M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z'],['move','By movement','M4 12h16 M16 8l4 4-4 4 M8 8l-4 4 4 4'],['types','Equipment types','M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z'],['scenes','For each scene','M4 6h16 M4 12h16 M4 18h10 M18 16l2 2-2 2'],['list','Our list','M9 6h11 M9 12h11 M9 18h11 M4 6l1 1 2-2 M4 12l1 1 2-2 M4 18l1 1 2-2']];
+function gxIcon(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`}
+function gxTabs(){const cur=VIEW.gmode||'story';return `<nav class="gx-tabs" aria-label="Camera and equipment views">${GX_MODES.map(([k,l,d])=>`<button data-seg="gmode" data-v="${k}" aria-pressed="${cur===k}">${gxIcon(d)}<span>${l}</span></button>`).join('')}<i class="gx-ind" aria-hidden="true"></i></nav>`}
+const GX_HERO={script:['Camera package','The kit this script needs, worked out from every scene and your release platform.','digital_cinema_camera'],needs:['Suggestions by need','Pick what a shot needs and see the cameras, lenses, lights and rigs that do it best.','cine_lens_set'],
+  move:['Camera movement','Every kind of move the story asks for, and the rig that delivers it.','camera_crane_jib'],types:['Equipment library','Browse every kind of camera, lens, rig and accessory. Add any type to your list.','drone_aerial_rig'],
+  scenes:['Scene by scene','Camera, lens, light and support for each scene, ready for the shot list.','steadicam_rig'],list:['Our equipment list','Everything you are taking to the shoot, grouped by department.','tripod_fluid_head']};
+function gxStats(mode){const S=P.scenes||[];const n=scriptNeeds();const top=NEEDS.map(([k,l])=>[l,n[k]||0]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,3);const L=P.gearList||[];
+  if(mode==='list')return [['Items',L.length],['Departments',new Set(L.map(x=>x.dept)).size],['Scenes',S.length]];
+  if(mode==='types')return [['Types',ILLUS.items.length],['Categories',ILLUS.cats.length],['In your list',L.length]];
+  if(mode==='move')return [['Movements',MOVES.length],['Scenes',S.length],...top.slice(0,1)];
+  return [['Scenes',S.length],...top]}
+function gxMount(){const c=$('#content');if(page!=='gear'||!P)return;const mode=VIEW.gmode||'story';document.body.dataset.gx=mode;
+  const tabs=c.querySelector('.gx-tabs');const ph=c.querySelector('.ph');if(tabs&&ph&&mode!=='story'&&tabs.parentElement!==c){ph.after(tabs)}
+  if(mode!=='story'&&GX_HERO[mode]&&!c.querySelector('.gx-hero')){const [t,d,ic]=GX_HERO[mode];const h=document.createElement('section');h.className='gx-hero';
+    h.innerHTML=`<div class="gx-aur" aria-hidden="true"><i></i><i></i></div><div class="gx-copy"><small>Camera & equipment</small><h2>${esc(t)}</h2><p>${esc(d)}</p><div class="gx-stats">${gxStats(mode).map(([k,v],i)=>`<span style="--d:${200+i*90}ms"><b>${esc(String(v))}</b>${esc(k)}</span>`).join('')}</div></div><div class="gx-art">${illus(ic)}</div>`;
+    (tabs&&tabs.parentElement===c?tabs:ph).after(h)}
+  requestAnimationFrame(gxInd)}
+function gxInd(){const t=document.querySelector('.gx-tabs');if(!t)return;const on=t.querySelector('[aria-pressed="true"]');const ind=t.querySelector('.gx-ind');if(!on||!ind)return;ind.style.width=on.offsetWidth+'px';ind.style.transform=`translateX(${on.offsetLeft}px)`;if(on.offsetLeft<t.scrollLeft||on.offsetLeft+on.offsetWidth>t.scrollLeft+t.clientWidth)t.scrollTo({left:on.offsetLeft-24,behavior:'smooth'})}
+addEventListener('resize',()=>{if(page==='gear')gxInd()});
+
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];
 function BBD(){if(!P.beats||!Array.isArray(P.beats.cards))P.beats={cards:[],zoom:1};return P.beats}
@@ -3270,7 +3319,7 @@ function storyHtml(tabs){const sc=P.scenes;
     {name:'Sources',cols:[{h:'Source',w:40},{h:'Link',w:80}],rows:D.src.map(([t,u])=>[t,u])}]};
   return {html,exp}}
 R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Object.fromEntries(NEEDS);
-  const tabs=segm('gmode',[['story','Scene view'],['script','For this script'],['needs','Suggestions by need'],['move','By camera movement'],['types','Equipment types'],['scenes','For each scene'],['list','Our equipment list']]);
+  const tabs=gxTabs();
   if(mode==='story')return storyHtml(tabs);
   if(mode==='script'){const tg=P.gearTarget||'theatrical',c=scriptNeeds(),rec=P.gearRec&&P.gearRec.tg===tg?P.gearRec:null,rows=rec?rec.rows:rulePackage(tg);
     const cell=(i,f,l)=>ce(`data-pk="grec" data-ri="${i}" data-gf="${f}"`,rows[i][f]||'','',l);
@@ -3288,7 +3337,7 @@ R.gear=()=>{const mode=VIEW.gmode||'story',need=VIEW.gneed||'all';const NL=Objec
     exp:{orient:'portrait',sheets:[{name:'Camera movement',cols:[{h:'Desired movement',w:32},{h:'Equipment',w:60}],rows:MOVES.map(([m,q])=>[m,q]).concat([['Note',MOVE_NOTE]])}]}}}
   if(mode==='types'){const ct=VIEW.gtype||'all',cats=ILLUS.cats,shown=cats.filter(c=>ct==='all'||c.id===ct),catT=id=>(cats.find(c=>c.id===id)||{}).title||'';
     const chips=`<div class="ty-chips">${segm('gtype',[['all','All · '+ILLUS.items.length],...cats.map(c=>[c.id,c.title])])}</div>`;
-    const body=shown.map(c=>{const L=ILLUS.items.filter(x=>x.category===c.id);return `<h3 class="nd-k">${esc(c.title)} <span class="small faint">· ${L.length}</span></h3><div class="ty-grid">${L.map(x=>`<article class="ty-card"><div class="ty-art">${illus(x.id)}</div><h4>${esc(x.name)}</h4><button class="btn sm" data-pa="gearType" data-id="${x.id}">+ Add to my list</button></article>`).join('')}</div>`}).join('');
+    const body=shown.map(c=>{const L=ILLUS.items.filter(x=>x.category===c.id);return `<h3 class="nd-k">${esc(c.title)} <span class="small faint">· ${L.length}</span></h3><div class="ty-grid">${L.map(x=>`<article class="ty-card"><div class="ty-art">${illus(x.id)}</div><h4>${esc(x.name)}</h4>${(P.gearList||[]).some(g=>g.item===x.name)?`<button class="btn sm added" data-pa="gearType" data-id="${x.id}">✓ In my list</button>`:`<button class="btn sm" data-pa="gearType" data-id="${x.id}">+ Add to my list</button>`}</article>`).join('')}</div>`}).join('');
     return {html:pageHead('Camera & equipment','Every kind of equipment as a simple drawing, grouped by what it does. Add any type to your equipment list, then type the model you will use.',tabs)+`<div class="nd">${chips}${body}<p class="small faint" style="margin-top:18px">${ILL_NOTE}</p></div>`,
     exp:{orient:'portrait',sheets:[{name:'Equipment types',cols:[{h:'Category',w:26},{h:'Type',w:38}],rows:ILLUS.items.filter(x=>ct==='all'||x.category===ct).map(x=>[catT(x.category),x.name])}]}}}
   if(mode==='scenes'){const sc=P.scenes;
@@ -3369,7 +3418,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-pa],[data-
   if(a==='gstKit'){const sc=scById(VIEW.gscene);if(!sc)return;const D=storyData(sc);const want=[['Camera',D.camTxt],['Lenses',D.lensTxt],['Lights',D.lightTxt],...D.sups.map(x=>['Camera support & grip',x])];P.gearList=P.gearList||[];const add=want.filter(([d,i])=>i&&!P.gearList.some(x=>x.item===i));if(!add.length){toast('Everything is already in your equipment list.');return}snapshot();add.forEach(([d,i])=>P.gearList.push({dept:d,item:i,qty:'1',notes:`Sc ${sc.no}`}));prodSave(`Sc ${sc.no} kit added to the equipment list (${add.length} items)`);toast(add.length+' items added to "Our equipment list".')}
   if(a==='gearAdd'){snapshot();P.gearList=P.gearList||[];P.gearList.push({dept:'',item:'',qty:'1',notes:''});prodSave('Equipment item added')}
   if(a==='gearDel'){snapshot();(P.gearList||[]).splice(+t.dataset.gi,1);prodSave('Equipment item removed')}
-  if(a==='gearType'){const it=ILL_BY[t.dataset.id];if(!it)return;const dept=(ILLUS.cats.find(c=>c.id===it.category)||{}).dept||'Other';P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===it.name)){toast(it.name+' is already in your list.');return}snapshot();P.gearList.push({dept,item:it.name,qty:'1',notes:''});prodSave(`${it.name} added to the equipment list`);toast(it.name+' added to "Our equipment list".');return}
+  if(a==='gearType'){const it=ILL_BY[t.dataset.id];if(!it)return;const dept=(ILLUS.cats.find(c=>c.id===it.category)||{}).dept||'Other';P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===it.name)){toast(it.name+' is already in your list.');return}snapshot();P.gearList.push({dept,item:it.name,qty:'1',notes:''});t.classList.add('added');t.textContent='✓ Added';prodSave(`${it.name} added to the equipment list`);toast(it.name+' added to "Our equipment list".');return}
   if(a==='gearPick'){const g=GEAR.find(x=>x.n===t.dataset.gn);if(!g)return;P.gearList=P.gearList||[];if(P.gearList.some(x=>x.item===g.n)){toast(g.n+' is already in your list.');return}snapshot();P.gearList.push({dept:g.k,item:g.n,qty:'1',notes:''});prodSave(`${g.n} added to the equipment list`);toast(g.n+' added to "Our equipment list".')}
   if(a==='crewAdd'){snapshot();P.crew=P.crew||[];P.crew.push({dept:'',role:'',name:'',phone:''});prodSave('Crew member added')}
   if(a==='crewDel'){snapshot();(P.crew||[]).splice(+t.dataset.ci,1);prodSave('Crew member removed')}});
@@ -3795,7 +3844,7 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> This is an example script so you can see every report. Import your own script to start.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;

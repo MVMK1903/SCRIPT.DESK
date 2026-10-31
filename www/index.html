@@ -841,6 +841,17 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
   .wx-tools{margin:0 -16px 8px;padding:2px 16px}.wr-doc .el-c[data-dual]::before{left:-38px}.wr-doc .el[data-altn]:not(.wr-empty)::after{right:-6px;top:-12px}}
 .i-beats{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='8' height='6' rx='1.5'/%3E%3Crect x='13' y='4' width='8' height='6' rx='1.5'/%3E%3Crect x='3' y='14' width='8' height='6' rx='1.5'/%3E%3Crect x='13' y='14' width='8' height='6' rx='1.5'/%3E%3C/svg%3E")}
 .i-outline{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5v14 M8 6h12 M11 10h9 M11 14h9 M8 18h12'/%3E%3C/svg%3E")}
+/* ---- v2.2 revisions ---- */
+.wr-doc .el.rv{color:var(--rc)}
+.wr-star{position:absolute;right:calc(var(--u) * 0.45);font:700 calc(var(--u) / 6)/1 "Courier Prime","Courier New",monospace;pointer-events:none}
+.wr-doc .el.om-hide{opacity:.32;text-decoration:line-through}
+.wr-doc .el-h[data-om]{color:#8e8e93}.wr-doc .el-h[data-om]:not(.wr-empty)::after{content:"OMITTED";position:absolute;right:0;top:0;font:700 10px/1.6 var(--f-ui);letter-spacing:.08em;color:#fff;background:#8e8e93;border-radius:4px;padding:0 6px}
+.wx-revchip{flex:none;font:700 11.5px/1 var(--f-ui);color:var(--rc);background:var(--rb);border-radius:999px;padding:6px 10px;margin-right:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.wx-switch{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}.wx-switch input{width:18px;height:18px;accent-color:var(--accent)}
+.rv-list{display:flex;flex-direction:column;gap:6px}.rv-row{display:grid;grid-template-columns:18px auto 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--fill)}
+.rv-row.on{box-shadow:inset 0 0 0 1.5px var(--accent)}.rv-row i{width:18px;height:18px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}.rv-row small{color:var(--muted)}.rv-row span{display:flex;gap:6px}
+@media (max-width:600px){.rv-row{grid-template-columns:18px 1fr}.rv-row small,.rv-row span{grid-column:2}}
+body.wr-mid .wr-doc .el.rv{filter:brightness(1.6)}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1784,8 +1795,8 @@ function elsToScript(els){const L=[];const nums=wrNumbers(els);els.forEach((e,i)
 
 /* ---- DOM helpers ---- */
 const wrDoc=()=>document.getElementById('wrDoc');
-function wrBlockHtml(e){const t=WKEYS.includes(e.t)?e.t:'a';const xa=(e.note?` data-note="${esc(e.note)}"`:'')+(Array.isArray(e.alt)&&e.alt.length?` data-alt="${esc(JSON.stringify(e.alt))}"`:'')+(e.dual?' data-dual="1"':'')+(e.rev?` data-rev="${esc(e.rev)}"`:'')+(e.om?' data-om="1"':'');return `<div class="el el-${t}" data-t="${t}"${e.n?` data-no="${esc(e.n)}"`:''}${xa} data-ph="${esc(W_PH[t])}">${e.x?esc(e.x):'<br>'}</div>`}
-function wrRead(){const d=wrDoc();if(!d)return draft().els;return [...d.children].map(el=>{const o={t:el.dataset.t||'a',x:el.textContent.replace(/ /g,' ')};if(el.dataset.no)o.n=el.dataset.no;if(el.dataset.note)o.note=el.dataset.note;if(el.dataset.alt){try{const a=JSON.parse(el.dataset.alt);if(Array.isArray(a)&&a.length)o.alt=a}catch(e){}}if(el.dataset.dual)o.dual=1;if(el.dataset.rev)o.rev=el.dataset.rev;if(el.dataset.om)o.om=1;return o})}
+function wrBlockHtml(e){const t=WKEYS.includes(e.t)?e.t:'a';const xa=(e.note?` data-note="${esc(e.note)}"`:'')+(Array.isArray(e.alt)&&e.alt.length?` data-alt="${esc(JSON.stringify(e.alt))}"`:'')+(e.dual?' data-dual="1"':'')+(e.rev?` data-rev="${esc(e.rev)}"`:'')+(e.om?' data-om="1"':'')+(e.id?` data-id="${esc(e.id)}"`:'');return `<div class="el el-${t}" data-t="${t}"${e.n?` data-no="${esc(e.n)}"`:''}${xa} data-ph="${esc(W_PH[t])}">${e.x?esc(e.x):'<br>'}</div>`}
+function wrRead(){const d=wrDoc();if(!d)return draft().els;return [...d.children].map(el=>{const o={t:el.dataset.t||'a',x:el.textContent.replace(/ /g,' ')};if(el.dataset.no)o.n=el.dataset.no;if(el.dataset.note)o.note=el.dataset.note;if(el.dataset.alt){try{const a=JSON.parse(el.dataset.alt);if(Array.isArray(a)&&a.length)o.alt=a}catch(e){}}if(el.dataset.dual)o.dual=1;if(el.dataset.rev)o.rev=el.dataset.rev;if(el.dataset.om)o.om=1;if(el.dataset.id)o.id=el.dataset.id;return o})}
 function wrEls(){return wrDoc()?wrRead():draft().els}
 function wrCur(){const s=getSelection();const d=wrDoc();if(!d||!s.rangeCount)return null;let n=s.anchorNode;if(!d.contains(n))return null;while(n&&n.parentNode!==d)n=n.parentNode;return n&&n.nodeType===1?n:null}
 function caretOff(el){const s=getSelection();if(!s.rangeCount)return 0;const r=s.getRangeAt(0).cloneRange();r.selectNodeContents(el);r.setEnd(s.anchorNode,s.anchorOffset);return r.toString().length}
@@ -1795,7 +1806,7 @@ function placeCaret(el,pos){const d=wrDoc();if(!el||!d)return;if(document.active
 function wrEnsureVisible(el){const c=$('#content');if(!c||!el||WXV.tw)return;const r=el.getBoundingClientRect(),cr=c.getBoundingClientRect();const top=Math.max(cr.top,0)+90,bot=Math.min(cr.bottom,innerHeight)-40;if(r.top<top||r.bottom>bot)el.scrollIntoView({block:'center'})}
 function setText(el,x){el.textContent=x;if(!x)el.innerHTML='<br>'}
 function mkBlock(t,x,n){const tmp=document.createElement('div');tmp.innerHTML=wrBlockHtml({t,x,n});return tmp.firstChild}
-function setType(el,t){el.dataset.t=t;el.className='el el-'+t;el.dataset.ph=W_PH[t];if(t!=='h')delete el.dataset.no;
+function setType(el,t){revMark(el);el.dataset.t=t;el.className='el el-'+t;el.dataset.ph=W_PH[t];if(t!=='h')delete el.dataset.no;
   if(t==='p'&&!el.textContent.trim()){setText(el,'()');placeCaret(el,1)}wrTouch(true)}
 
 /* ---- History (own undo, since the editor rebuilds blocks) ---- */
@@ -1814,15 +1825,18 @@ function wrSavedLabel(){const st=$('#wrSaved');if(!st)return;const at=draft().at
 function wrDecorate(){const d=wrDoc();if(!d)return;
   if(!d.children.length){d.innerHTML=wrBlockHtml({t:draft().els.length?'a':'h',x:''})}
   [...d.childNodes].forEach(n=>{if(n.nodeType===3){if(n.textContent.trim()){const b=mkBlock('a',n.textContent);d.replaceChild(b,n)}else n.remove()}else if(n.nodeType===1&&(n.nodeName==='BR'||n.nodeName==='STYLE')){n.remove()}else if(n.nodeType===1&&!n.dataset.t){n.dataset.t='a';n.className='el el-a';n.dataset.ph=W_PH.a}});
-  const kids=[...d.children];const els=kids.map(el=>({t:el.dataset.t,x:el.textContent,n:el.dataset.no}));const nums=wrNumbers(els);
-  let line=0,page=1;const LP=54;const marks=[];const cur=wrCur();
+  wxEnsureIds();const kids=[...d.children];const els=kids.map(el=>({t:el.dataset.t,x:el.textContent,n:el.dataset.no}));const nums=wrNumbers(els);
+  let line=0,page=1;const LP=54;const marks=[];const cur=wrCur();const lps=lockPages(kids.map(el=>({id:el.dataset.id})));let lockNo=1,suf=-1;
   kids.forEach((el,i)=>{const t=el.dataset.t;if(t==='h')el.dataset.n=nums[i];else delete el.dataset.n;
     el.classList.toggle('wr-empty',!el.textContent.length);
     const txt=el.textContent||' ';const lines=txt.split('\n').reduce((a,p)=>a+Math.max(1,Math.ceil(p.length/W_CPL[t])),0);
     const gap=line===0?0:(t==='h'?2:(t==='d'||t==='p')?0:1);
     let need=gap+lines+(t==='h'?2:t==='c'?1:0);
-    if(line+need>LP&&line>0){page++;line=0;el.classList.add('pb');marks.push([el,page]);line=lines}else{el.classList.remove('pb');line+=gap+lines}});
-  const mk=$('#wrMarks');if(mk)mk.innerHTML=marks.map(([el,pg])=>`<div class="wr-pg" style="top:${el.offsetTop-Math.round(el.offsetHeight>0?parseFloat(getComputedStyle(el).marginTop)/2:12)}px">${pg}.</div>`).join('');
+    let lab=null;if(lps&&lps[i]>lockNo){if(lps[i]-lockNo>1&&marks.length)marks[marks.length-1][1]+='-'+(lps[i]-1);lockNo=lps[i];suf=-1;lab=String(lockNo);if(i===0){line+=gap+lines;return}}
+    else if(line+need>LP&&line>0){lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(page+1)}
+    if(lab!==null){page++;line=0;el.classList.add('pb');el.dataset.pg=String(page);marks.push([el,lab]);line=lines}else{el.classList.remove('pb');delete el.dataset.pg;line+=gap+lines}});
+  const stars=revDecorate(kids);
+  const mk=$('#wrMarks');if(mk)mk.innerHTML=marks.map(([el,pg])=>`<div class="wr-pg" style="top:${el.offsetTop-Math.round(el.offsetHeight>0?parseFloat(getComputedStyle(el).marginTop)/2:12)}px">${pg}.</div>`).join('')+(REVS().show!==false?stars.map(([el,st])=>el.offsetHeight?`<div class="wr-star" style="top:${el.offsetTop}px;height:${el.offsetHeight}px;color:${st.ink||'#1f5fd1'}">*</div>`:'').join(''):'');
   const olc=olColors();kids.forEach(el=>{const sl=el.dataset.t==='h'&&olc?olc[U(el.dataset.n||'')]:null;if(sl){el.style.setProperty('--sl',sl);el.dataset.sl='1'}else if(el.dataset.sl){el.style.removeProperty('--sl');delete el.dataset.sl}if(el.dataset.alt)el.dataset.altn=wxAlts(el).length+1;else delete el.dataset.altn});
   const side=$('#wrScenes');if(side){const hs=kids.map((el,i)=>[el,i]).filter(([el])=>el.dataset.t==='h');const curH=(()=>{let h=null;for(const el of kids){if(el.dataset.t==='h')h=el;if(el===cur)break}return h})();
     side.innerHTML=hs.length?hs.map(([el,i])=>`<button data-wrgo="${i}" aria-current="${el===curH}"${olc&&olc[U(nums[i])]?` style="--sl:${olc[U(nums[i])]}" data-sl="1"`:''}><b>${esc(nums[i])}</b><span>${esc(U(el.textContent.trim())||'(new scene)')}</span></button>`).join(''):'<p class="small muted" style="margin:6px">Scene headings appear here.</p>'}
@@ -1855,7 +1869,7 @@ function wrSuggest(){const b=wrCur();hideAC();if(!b)return;const t=b.dataset.t;c
   box.addEventListener('mousedown',e=>{e.preventDefault();const k=e.target.closest('[data-i]');if(k){WR.ac.i=+k.dataset.i;acceptAC()}})}
 function hideAC(){const a=$('#wrAc');if(a)a.remove();WR.ac=null}
 function moveAC(d){const a=WR.ac;if(!a)return;a.i=(a.i+d+a.list.length)%a.list.length;document.querySelectorAll('#wrAc [data-i]').forEach(x=>x.setAttribute('aria-selected',+x.dataset.i===a.i?'true':'false'))}
-function acceptAC(){const a=WR.ac;if(!a)return;wrPush();const u=U(a.b.textContent);const nx=u.slice(0,a.rep)+a.list[a.i]+a.after;setText(a.b,nx);placeCaret(a.b);hideAC();wrTouch(false);if(a.after)setTimeout(wrSuggest,0)}
+function acceptAC(){const a=WR.ac;if(!a)return;wrPush();const u=U(a.b.textContent);const nx=u.slice(0,a.rep)+a.list[a.i]+a.after;setText(a.b,nx);revMark(a.b);placeCaret(a.b);hideAC();wrTouch(false);if(a.after)setTimeout(wrSuggest,0)}
 
 /* ---- Keys ---- */
 function wrKey(e){const b=wrCur();if(!b)return;const mod=e.ctrlKey||e.metaKey;
@@ -1868,7 +1882,7 @@ function wrKey(e){const b=wrCur();if(!b)return;const mod=e.ctrlKey||e.metaKey;
   if(mod&&(e.key==='y'||e.key==='Y')){e.preventDefault();wrRedo();return}
   if(mod&&(e.key==='s'||e.key==='S')){e.preventDefault();clearTimeout(WR.saveT);wrSave();toast('Saved on this device');return}
   if(e.key==='Tab'){e.preventDefault();wrPush();const t=b.dataset.t;
-    if(!e.shiftKey&&(t==='c'||t==='d')&&b.textContent.trim()&&caretOff(b)>=b.textContent.length){const nb=mkBlock('p','');b.after(nb);setText(nb,'()');placeCaret(nb,1);wrTouch(true);wrBarSync();return}
+    if(!e.shiftKey&&(t==='c'||t==='d')&&b.textContent.trim()&&caretOff(b)>=b.textContent.length){const nb=mkBlock('p','');b.after(nb);revMark(nb);setText(nb,'()');placeCaret(nb,1);wrTouch(true);wrBarSync();return}
     let nt=(e.shiftKey?W_STAB:W_TAB)[t];setType(b,nt);
     if(nt==='p'&&b.textContent.trim()==='()')placeCaret(b,1);else placeCaret(b);wrBarSync();return}
   if(e.key==='Enter'&&e.shiftKey){e.preventDefault();document.execCommand('insertText',false,'\n');return}
@@ -1878,10 +1892,10 @@ function wrKey(e){const b=wrCur();if(!b)return;const mod=e.ctrlKey||e.metaKey;
     if(t==='a'&&/^[A-Z][A-Z .']*TO:$/.test(txt.trim())){setType(b,'t');t='t'}
     let before=txt.slice(0,off),after=txt.slice(off);if(t==='p'&&after.trim()===')'){before+=')';after=''}
     const atEnd=!after.length;const nt=atEnd?W_NEXT[t]:(t==='c'?'d':t);
-    setText(b,before);const nb=mkBlock(nt,after);b.after(nb);if(nt==='p'&&!after){setText(nb,'()');placeCaret(nb,1)}else placeCaret(nb,0);wrTouch(true);wrBarSync();return}
-  if(e.key==='Backspace'&&!b.textContent.length&&b.previousElementSibling&&getSelection().isCollapsed){e.preventDefault();wrPush();const pv=b.previousElementSibling;b.remove();placeCaret(pv);wrTouch(true);return}
+    setText(b,before);const nb=mkBlock(nt,after);b.after(nb);revMark(b);revMark(nb);if(nt==='p'&&!after){setText(nb,'()');placeCaret(nb,1)}else placeCaret(nb,0);wrTouch(true);wrBarSync();return}
+  if(e.key==='Backspace'&&!b.textContent.length&&b.previousElementSibling&&getSelection().isCollapsed){e.preventDefault();wrPush();const pv=b.previousElementSibling;b.remove();revMark(pv);placeCaret(pv);wrTouch(true);return}
   if(e.key==='Escape'){hideAC()}}
-function wrInput(){const b=wrCur();if(!WR.typing){wrPush()}clearTimeout(WR.typing);WR.typing=setTimeout(()=>{WR.typing=0},900);
+function wrInput(){const b=wrCur();if(!WR.typing){wrPush()}revMark(b);clearTimeout(WR.typing);WR.typing=setTimeout(()=>{WR.typing=0},900);
   if(b&&b.dataset.t==='a'){const t=b.textContent;if(/^(INT|EXT|I\/E|EST)[.\/]/i.test(t)||/^(INT|EXT) /.test(t)){const o=caretOff(b);setType(b,'h');placeCaret(b,o)}}
   if(b)b.classList.toggle('wr-empty',!b.textContent.length);
   wxActive();wrTouch(false);wrSuggest()}
@@ -1890,7 +1904,7 @@ function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipbo
   const r=detectScenes(text);let blocks=r.scenes.length?[...textToBlocks(r.front),...scenesToEls(r.scenes,false)]:textToBlocks(text);if(!blocks.length)return;
   const b=wrCur();const d=wrDoc();const frag=document.createElement('div');frag.innerHTML=blocks.map(wrBlockHtml).join('');const nodes=[...frag.children];
   let ref=b;if(b&&!b.textContent.trim()){b.replaceWith(...nodes)}else if(ref){ref.after(...nodes)}else d.append(...nodes);
-  placeCaret(nodes[nodes.length-1]);wrTouch(true);toast(`Pasted ${blocks.length} lines${r.scenes.length?` (${r.scenes.length} scenes)`:''}. Check the element types.`)}
+  nodes.forEach(revMark);placeCaret(nodes[nodes.length-1]);wrTouch(true);toast(`Pasted ${blocks.length} lines${r.scenes.length?` (${r.scenes.length} scenes)`:''}. Check the element types.`)}
 
 /* ---- Page ---- */
 R.write=()=>{const D=draft();const hasScript=P.scenes.length>0;
@@ -1915,7 +1929,7 @@ function wrMount(){const d=wrDoc();if(!d)return;const D=draft();WR.hist=[];WR.re
   document.querySelectorAll('[data-wrx]').forEach(x=>{x.addEventListener('mousedown',e=>e.preventDefault());x.addEventListener('click',()=>wxTool(x.dataset.wrx))});
   $('#wrNotes').addEventListener('click',e=>{const g=e.target.closest('[data-wrgo]');if(!g)return;const el=d.children[+g.dataset.wrgo];if(el){el.scrollIntoView({block:'center'});placeCaret(el);wxNote(el)}});
   document.querySelectorAll('[data-wrside]').forEach(x=>x.addEventListener('click',()=>{const k=x.dataset.wrside;document.querySelectorAll('[data-wrside]').forEach(y=>y.setAttribute('aria-pressed',y===x?'true':'false'));$('#wrScenes').hidden=k!=='scenes';$('#wrNotes').hidden=k!=='notes'}));
-  wxApplyView();wrDecorate();wrSavedLabel();if(!D.els.length)setTimeout(()=>placeCaret(d.firstElementChild),50)}
+  wxApplyView();wxRevChip();wrDecorate();wrSavedLabel();if(!D.els.length)setTimeout(()=>placeCaret(d.firstElementChild),50)}
 document.addEventListener('selectionchange',()=>{if(page==='write'&&wrDoc()){clearTimeout(WR.selT);WR.selT=setTimeout(()=>{wrBarSync();wxMarkCur();const side=$('#wrScenes');if(side){const d=wrDoc(),cur=wrCur();let idx=-1;[...d.children].some((el,i)=>{if(el.dataset.t==='h')idx=i;return el===cur});side.querySelectorAll('[data-wrgo]').forEach(x=>x.setAttribute('aria-current',+x.dataset.wrgo===idx?'true':'false'))}},120)}});
 
 /* ---- Actions ---- */
@@ -1939,18 +1953,23 @@ function wrOpen(){const inp=document.createElement('input');inp.type='file';inp.
   catch(e){toast((e&&e.message)||errMsg(e),6000)}};inp.click()}
 function wrDownload(){openModal(`<div class="modal-h"><h2>Download script</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   <p class="small muted">Standard screenplay layout (US Letter, Courier 12 pt) with scene numbers and page numbers, like your shooting draft.</p>
+  <details class="sset" open><summary>PDF options</summary><div class="sset-g">
+    <label>Watermark (e.g. a name or CONFIDENTIAL)<input type="text" id="pdWm" maxlength="40" placeholder="None"></label>
+    <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdMarks" checked> Revision marks (*)</label>
+    <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdColor"> Revised pages in their revision colour</label>
+    <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdOnly"> Only revised pages</label></div></details>
   <div style="display:grid;gap:10px">
   <button class="btn" data-wrdl="pdf">PDF · to print or share</button>
   <button class="btn" data-wrdl="fdx">Final Draft (.fdx) · opens in Celtx, Final Draft, WriterDuet, Fade In</button>
   <button class="btn" data-wrdl="fountain">Fountain (.fountain) · plain-text screenplay format</button>
   <button class="btn" data-wrdl="txt">Text (.txt)</button></div></div>`);
   document.querySelectorAll('[data-wrdl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.wrdl;wrSave();const nm=(draft().tp.title||P.title||'script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')||'script';
-    try{if(k==='pdf'){const doc=await wrPdf();await saveFile(nm+'.pdf',doc.output('arraybuffer'))}
+    try{if(k==='pdf'){const doc=await wrPdf({wm:($('#pdWm')||{}).value||'',marks:!$('#pdMarks')||$('#pdMarks').checked,color:!!($('#pdColor')&&$('#pdColor').checked),onlyRev:!!($('#pdOnly')&&$('#pdOnly').checked)});await saveFile(nm+'.pdf',doc.output('arraybuffer'))}
       else if(k==='fdx')await saveFile(nm+'.fdx',new TextEncoder().encode(wrFdx()));
       else if(k==='fountain')await saveFile(nm+'.fountain',new TextEncoder().encode(wrFountain()));
       else await saveFile(nm+'.txt',new TextEncoder().encode(wrPlain()));closeModal()}catch(e){toast((e&&e.message)||'Download failed. Try again.')}})}
 async function wrApply(){wrSave();const els=draft().els;if(!els.some(e=>e.t==='h'&&String(e.x||'').trim())){toast('Add at least one scene heading first, e.g. INT. HOUSE - DAY.',5000);return}
-  const r=detectScenes(elsToScript(els));if(!r.scenes.length){toast('No scenes found. Check the scene headings.',5000);return}
+  const r=detectScenes(elsToScript(wxLive(els)));if(!r.scenes.length){toast('No scenes found. Check the scene headings.',5000);return}
   snapshot();const flat=t=>String(t||'').replace(/\s+/g,' ').trim();const old=new Map(P.scenes.map(s=>[U(s.no),s]));const keep=new Set(),changed=[],added=[];
   const next=r.scenes.map(n=>{const o=old.get(U(n.no));if(o&&!keep.has(o.id)){keep.add(o.id);
       if(flat(o.text)!==flat(n.text)||U(o.loc)!==U(n.loc)||o.ie!==n.ie||o.time!==n.time){const oc=(o.cues||[]).slice();Object.assign(o,{ie:n.ie,time:n.time,loc:n.loc,heading:n.heading,text:n.text,cues:n.cues,status:'stale'});syncSceneCast(o,oc);changed.push(o.id)}
@@ -1969,54 +1988,68 @@ async function wrApply(){wrSave();const els=draft().els;if(!els.some(e=>e.t==='h
 function wrRenumber(){if(!confirm('Renumber every scene 1, 2, 3…? Scene numbers in the reports change after "Update breakdown", so breakdown details follow the new numbers.'))return;snapshot();draft().els.forEach(e=>{delete e.n});draft().at=Date.now();dirty.draft=true;touch([]);render()}
 
 /* ---- Exports ---- */
-function wrPlain(){const els=wrEls(),nums=wrNumbers(els);const L=[];const wrap=(s,w)=>{const out=[];String(s).split('\n').forEach(p=>{let line='';p.split(/\s+/).forEach(wd=>{if(!wd)return;if((line+' '+wd).trim().length>w&&line){out.push(line);line=wd}else line=(line+' '+wd).trim()});out.push(line)});return out};
+function wrPlain(){const els=wrEls(),nums=wrNumbers(els);const L=[];const skF=omSkip(els);const wrap=(s,w)=>{const out=[];String(s).split('\n').forEach(p=>{let line='';p.split(/\s+/).forEach(wd=>{if(!wd)return;if((line+' '+wd).trim().length>w&&line){out.push(line);line=wd}else line=(line+' '+wd).trim()});out.push(line)});return out};
   const tp=draft().tp;if(tp.title){L.push('',' '.repeat(20)+U(tp.title),'',tp.credit?' '.repeat(20)+tp.credit:'',tp.author?' '.repeat(20)+tp.author:'','','')}
-  els.forEach((e,i)=>{const x=String(e.x||'').trim();if(!x)return;
-    if(e.t==='h')L.push('','',(nums[i]+'').padEnd(6)+U(x),'');else if(e.t==='c')L.push('',' '.repeat(20)+U(x));else if(e.t==='p')wrap(parenOf(x),25).forEach(l=>L.push(' '.repeat(15)+l));
+  els.forEach((e,i)=>{if(skF[i])return;const x=String(e.x||'').trim();if(!x)return;
+    if(e.t==='h')L.push('','',(nums[i]+'').padEnd(6)+(e.om?'OMITTED':U(x)),'');else if(e.t==='c')L.push('',' '.repeat(20)+U(x));else if(e.t==='p')wrap(parenOf(x),25).forEach(l=>L.push(' '.repeat(15)+l));
     else if(e.t==='d')wrap(x,35).forEach(l=>L.push(' '.repeat(10)+l));else if(e.t==='t')L.push('',U(x).padStart(60),'');else{L.push('');wrap(e.t==='s'?U(x):x,60).forEach(l=>L.push(l))}});
   return L.join('\n').replace(/\n{4,}/g,'\n\n\n').trim()+'\n'}
-function wrFountain(){const els=wrEls(),nums=wrNumbers(els),tp=draft().tp;const L=[];
+function wrFountain(){const els=wrEls(),nums=wrNumbers(els),tp=draft().tp;const L=[];const skF=omSkip(els);
   if(tp.title){L.push('Title: '+tp.title);if(tp.credit)L.push('Credit: '+tp.credit);if(tp.author)L.push('Author: '+tp.author);if(tp.source)L.push('Source: '+tp.source);if(tp.draft||tp.date)L.push('Draft date: '+[tp.draft,tp.date].filter(Boolean).join(', '));if(tp.contact)L.push('Contact:',...tp.contact.split('\n').map(x=>'    '+x));L.push('')}
-  els.forEach((e,i)=>{const x=String(e.x||'').trim();if(!x)return;const u=U(x);
+  els.forEach((e,i)=>{if(skF[i])return;const x=String(e.x||'').trim();if(!x)return;const u=U(x);
+    if(e.t==='h'&&e.om){L.push('','.OMITTED #'+nums[i]+'#','');return}
     if(e.t==='h')L.push('',(/^(INT|EXT|EST|INT\.?\/EXT|EXT\.?\/INT|I\/E)[. \/]/.test(u)?'':'.')+u+' #'+nums[i]+'#','');
     else if(e.t==='c')L.push('',u+(e.dual?' ^':''));else if(e.t==='p')L.push(parenOf(x));else if(e.t==='d')L.push(x);
     else if(e.t==='t')L.push('',/TO:$/.test(u)?u:'> '+u,'');else if(e.t==='s')L.push('','!'+u,'');else L.push('',(x===u&&/[A-Z]/.test(x)?'!':'')+x)});
   return L.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n'}
 function wrFdx(){const T={h:'Scene Heading',a:'Action',c:'Character',p:'Parenthetical',d:'Dialogue',t:'Transition',s:'Shot'};const els=wrEls(),nums=wrNumbers(els),tp=draft().tp;
   const X=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const paraArr=els.map((e,i)=>{const x=String(e.x||'').trim();if(!x)return '';const v=e.t==='h'||e.t==='c'||e.t==='t'||e.t==='s'?U(x):e.t==='p'?parenOf(x):x;
-    return `    <Paragraph Type="${T[e.t]||'Action'}"${e.t==='h'?` Number="${X(nums[i])}"`:''}>\n      <Text>${X(v)}</Text>\n    </Paragraph>`});
+  const skF=omSkip(els),RV=REVS(),rvI=id=>RV.sets.findIndex(z=>z.id===id)+1;
+  const paraArr=els.map((e,i)=>{if(skF[i])return '';const x=String(e.x||'').trim();if(!x)return '';const v=e.t==='h'&&e.om?'OMITTED':e.t==='h'||e.t==='c'||e.t==='t'||e.t==='s'?U(x):e.t==='p'?parenOf(x):x;
+    return `    <Paragraph Type="${T[e.t]||'Action'}"${e.t==='h'?` Number="${X(nums[i])}"`:''}>\n      <Text${e.rev&&rvI(e.rev)?` Revision="${rvI(e.rev)}"`:''}>${X(v)}</Text>\n    </Paragraph>`});
   els.forEach((e,i)=>{if(e.t!=='c'||!e.dual||!paraArr[i])return;let ps=i-1;while(ps>=0&&(els[ps].t==='d'||els[ps].t==='p'||!String(els[ps].x||'').trim()))ps--;if(ps<0||els[ps].t!=='c')return;let ke=i+1;while(ke<els.length&&(els[ke].t==='d'||els[ke].t==='p'))ke++;
     paraArr[ps]='    <Paragraph>\n    <DualDialogue>\n'+paraArr[ps];let last=ke-1;while(last>i&&!paraArr[last])last--;paraArr[last]+='\n    </DualDialogue>\n    </Paragraph>'});
   const paras=paraArr.filter(Boolean).join('\n');
   const tpP=[];const add=(t,al)=>tpP.push(`    <Paragraph Alignment="${al||'Center'}" Type="Text"><Text>${X(t)}</Text></Paragraph>`);
   if(tp.title){for(let i=0;i<14;i++)add('');add(U(tp.title));add('');if(tp.credit)add(tp.credit);if(tp.author)add(tp.author);if(tp.source){add('');add(tp.source)}for(let i=0;i<14;i++)add('');(tp.contact||'').split('\n').forEach(l=>add(l,'Left'));if(tp.draft||tp.date)add([tp.draft,tp.date].filter(Boolean).join(' · '),'Right')}
-  return `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n  <Content>\n${paras}\n  </Content>\n  <TitlePage>\n    <Content>\n${tpP.join('\n')}\n    </Content>\n  </TitlePage>\n</FinalDraft>\n`}
-async function wrPdf(){await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'letter'});
-  const els=wrEls().filter(e=>String(e.x||'').trim()).map(e=>Object.assign({},e));const all=wrEls();const numsAll=wrNumbers(all);let k=0;all.forEach((e,i)=>{if(String(e.x||'').trim()){if(e.t==='h')els[k].no=numsAll[i];k++}});
+  return `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n  <Content>\n${paras}\n  </Content>\n  <TitlePage>\n    <Content>\n${tpP.join('\n')}\n    </Content>\n  </TitlePage>\n${RV.sets.length?`  <Revisions ActiveSet="${rvI(RV.cur)||RV.sets.length}" Location="7.75" RevisionMode="${RV.mode?'Yes':'No'}" RevisionsShown="All" ShowAllMarks="Yes" ShowAllSets="Yes">\n${RV.sets.map((z,i)=>`    <Revision Color="${z.color}" FullRevision="No" ID="${i+1}" Mark="*" Name="${X(z.name)} Revision" Style=""/>`).join('\n')}\n  </Revisions>\n`:''}</FinalDraft>\n`}
+async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'letter'});
+  const all0=wrEls(),nums0=wrNumbers(all0),sk0=omSkip(all0);const els=all0.map((e,i)=>Object.assign({},e,e.t==='h'?{no:nums0[i]}:{})).filter((e,i)=>!sk0[i]&&String(e.x||'').trim());
+  const RV=REVS(),rvS={};RV.sets.forEach((z,i)=>rvS[z.id]=Object.assign({i},z));const marksOn=opts.marks!==false;let curRev='';const pageRev={};const labels=[];const lps=draft().lock?lockPages(els):null;let lockNo=1,suf=-1;
   const tp=draft().tp;const LH=12,TOP=72,BOT=720;const X={h:108,a:108,s:108,c:252,d:180,p:216,t:540};const WD={h:432,a:432,s:432,c:288,d:252,p:180,t:432};
   doc.setFont('courier','normal');doc.setFontSize(12);doc.setTextColor(0);let pg=1,y=TOP;
   if(tp.title){let ty=270;doc.text(U(tp.title),306,ty,{align:'center'});ty+=36;if(tp.credit){doc.text(tp.credit,306,ty,{align:'center'});ty+=24}if(tp.author){doc.splitTextToSize(tp.author,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     if(tp.source){ty+=24;doc.splitTextToSize(tp.source,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     let cy=660;(tp.contact||'').split('\n').forEach(l=>{doc.text(l,108,cy);cy+=LH});const dr=[tp.draft,tp.date].filter(Boolean);let dy=660;dr.forEach(l=>{doc.text(l,540,dy,{align:'right'});dy+=LH});doc.addPage()}
-  const newPage=()=>{doc.addPage();pg++;y=TOP;doc.text(pg+'.',540,36,{align:'right'})};
-  const put=(l,t)=>{if(t==='t')doc.text(l,X.t,y,{align:'right'});else doc.text(l,X[t],y);y+=LH};
+  const newPage=lab=>{doc.addPage();pg++;y=TOP;if(lab==null)lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(pg);labels.push([doc.getNumberOfPages(),lab])};
+  const star=yy=>{if(!curRev)return;const n=doc.getNumberOfPages();(pageRev[n]=pageRev[n]||new Set()).add(curRev);if(marksOn&&rvS[curRev])doc.text('*',560,yy)};
+  const put=(l,t)=>{if(t==='t')doc.text(l,X.t,y,{align:'right'});else doc.text(l,X[t],y);star(y);y+=LH};
   const room=()=>Math.floor((BOT-y)/LH)+1;
   for(let i=0;i<els.length;i++){const e=els[i];const x=String(e.x).trim();
-    if(e.t==='c'){const grp=[{t:'c',l:[U(x)]}];let j=i+1;while(j<els.length&&(els[j].t==='d'||els[j].t==='p')){const v=els[j].t==='p'?parenOf(els[j].x):String(els[j].x).trim();grp.push({t:els[j].t,l:v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[els[j].t]))});j++}
+    if(lps&&lps[i]>lockNo){const jp=lps[i];if(jp-lockNo>1&&labels.length)labels[labels.length-1][1]+='-'+(jp-1);lockNo=jp;suf=-1;if(y===TOP&&labels.length)labels[labels.length-1][1]=String(jp);else newPage(String(jp))}
+    curRev=e.rev||'';
+    if(e.t==='c'){{let q=i+1;while(q<els.length&&(els[q].t==='d'||els[q].t==='p')){if(els[q].rev)curRev=curRev||els[q].rev;q++}}const grp=[{t:'c',l:[U(x)]}];let j=i+1;while(j<els.length&&(els[j].t==='d'||els[j].t==='p')){const v=els[j].t==='p'?parenOf(els[j].x):String(els[j].x).trim();grp.push({t:els[j].t,l:v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[els[j].t]))});j++}
       if(j<els.length&&els[j].t==='c'&&els[j].dual){let k=j+1;while(k<els.length&&(els[k].t==='d'||els[k].t==='p'))k++;
         const col=(a,b)=>{const L2=[['c',U(String(els[a].x).trim())]];for(let q=a+1;q<b;q++){const tq=els[q].t;const v=tq==='p'?parenOf(els[q].x):String(els[q].x).trim();v.split('\n').forEach(pp=>doc.splitTextToSize(pp,tq==='p'?150:200).forEach(l=>L2.push([tq,l])))}return L2};
         const A=col(i,j),B2=col(j,k),nn=Math.max(A.length,B2.length);if(y>TOP)y+=LH;if(nn>room())newPage();const XA={c:160,d:96,p:116},XB={c:376,d:318,p:338},y0=y;
-        A.forEach(([tq,l],r)=>doc.text(l,XA[tq],y0+r*LH));B2.forEach(([tq,l],r)=>doc.text(l,XB[tq],y0+r*LH));y=y0+nn*LH;i=k-1;continue}
+        for(let q=j;q<k;q++)if(els[q].rev)curRev=curRev||els[q].rev;
+        A.forEach(([tq,l],r)=>doc.text(l,XA[tq],y0+r*LH));B2.forEach(([tq,l],r)=>doc.text(l,XB[tq],y0+r*LH));for(let r=0;r<nn;r++)star(y0+r*LH);y=y0+nn*LH;i=k-1;continue}
       i=j-1;const lines=grp.flatMap(g=>g.l.map(l=>[g.t,l]));if(y>TOP)y+=LH;
       if(lines.length>room()){if(room()>=4&&lines.length>1){const fit=room()-1;lines.slice(0,fit).forEach(([t,l])=>put(l,t));put('(MORE)','c');newPage();put(U(x)+" (CONT'D)",'c');lines.slice(fit).forEach(([t,l])=>{if(y>BOT){put('(MORE)','c');newPage();put(U(x)+" (CONT'D)",'c')}put(l,t)})}
         else{newPage();lines.forEach(([t,l])=>{if(y>BOT){put('(MORE)','c');newPage();put(U(x)+" (CONT'D)",'c')}put(l,t)})}}
       else lines.forEach(([t,l])=>put(l,t));continue}
-    const t=e.t==='d'||e.t==='p'?'a':e.t;const v=t==='h'||t==='s'||t==='t'?U(x):x;const lines=v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[t]));
+    const t=e.t==='d'||e.t==='p'?'a':e.t;const v=t==='h'&&e.om?'OMITTED':t==='h'||t==='s'||t==='t'?U(x):x;const lines=v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[t]));
     const gap=y===TOP?0:(t==='h'?2:1);
     if(t==='h'){const nxt=els[i+1];const keep=1+(nxt?2:0);if(room()<gap+keep+lines.length-1)newPage();else y+=gap*LH;doc.text(String(e.no||''),66,y);lines.forEach(l=>put(l,'h'));continue}
     if(room()<gap+Math.min(2,lines.length))newPage();else y+=gap*LH;
     lines.forEach(l=>{if(y>BOT)newPage();put(l,t)})}
+  doc.setFontSize(12);labels.forEach(([n,lab])=>{doc.setPage(n);doc.text(lab+'.',540,36,{align:'right'})});
+  const hex=h=>{h=String(h||'#ffffff').replace('#','');return [0,2,4].map(k=>parseInt(h.slice(k,k+2),16)/255)};
+  const total=doc.getNumberOfPages();for(let n=1;n<=total;n++){const set=pageRev[n];if(!set||!set.size)continue;const latest=[...set].map(id=>rvS[id]).filter(Boolean).sort((a,b)=>b.i-a.i)[0];if(!latest)continue;
+    doc.setPage(n);doc.setFontSize(9);doc.text(revLabel(latest),470,36,{align:'right'});doc.setFontSize(12);
+    if(opts.color&&doc.internal.pages[n]){const [r,g,b]=hex(latest.color);doc.internal.pages[n].splice(1,0,'q',`${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg`,'0 0 612 792 re','f','Q')}}
+  if(opts.onlyRev){const first=tp.title?2:1;for(let n=total;n>=first;n--){if(!(pageRev[n]&&pageRev[n].size))doc.deletePage(n)}if(doc.getNumberOfPages()<first){toast('No revised pages to print yet.')}}
+  if(opts.wm&&String(opts.wm).trim()){const w=String(opts.wm).trim().slice(0,40);for(let n=1;n<=doc.getNumberOfPages();n++){doc.setPage(n);doc.saveGraphicsState();doc.setGState(new doc.GState({opacity:0.1}));doc.setFont('helvetica','bold');doc.setFontSize(Math.max(28,Math.min(72,900/Math.max(6,w.length))));doc.text(w,306,420,{align:'center',angle:45});doc.restoreGraphicsState()}doc.setFont('courier','normal');doc.setFontSize(12)}
   if(/[ऀ-෿]/.test(JSON.stringify(els)))toast('Note: the PDF cannot show Telugu or Hindi letters yet. Final Draft, Fountain and Text keep them.',6000);
   return doc}
 
@@ -2049,7 +2082,7 @@ function wxAlt(b){b=b||wxCurOrLast();if(!b)return;const draw=()=>{const a=wxAlts
   ${a.map((x,i)=>`<div class="wx-alt"><small>Version ${i+2}</small><div>${esc(x)}</div><span><button class="btn sm" data-altuse="${i}">Use this</button><button class="btn sm ghost danger" data-altdel="${i}">Delete</button></span></div>`).join('')}
   <div class="fieldbox"><label for="wxAltNew">Add a version</label><textarea id="wxAltNew" rows="3" style="width:100%" placeholder="Type another way to say it"></textarea></div>
   <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="btn" id="wxAltDup">Keep current, start a new version</button><button class="btn pri" id="wxAltAdd">Add version</button></div></div>`);
-  document.querySelectorAll('[data-altuse]').forEach(x=>x.onclick=()=>{wrPush();const a=wxAlts(b),i=+x.dataset.altuse;const old=b.textContent;setText(b,a[i]);a[i]=old;wxSetAlts(b,a.filter(s=>s.trim()));wrTouch(true);draw()});
+  document.querySelectorAll('[data-altuse]').forEach(x=>x.onclick=()=>{wrPush();const a=wxAlts(b),i=+x.dataset.altuse;const old=b.textContent;setText(b,a[i]);a[i]=old;revMark(b);wxSetAlts(b,a.filter(s=>s.trim()));wrTouch(true);draw()});
   document.querySelectorAll('[data-altdel]').forEach(x=>x.onclick=()=>{wrPush();const a=wxAlts(b);a.splice(+x.dataset.altdel,1);wxSetAlts(b,a);wrTouch(true);draw()});
   $('#wxAltAdd').onclick=()=>{const v=$('#wxAltNew').value.trim();if(!v)return;wrPush();const a=wxAlts(b);a.push(v);wxSetAlts(b,a);wrTouch(true);draw()};
   $('#wxAltDup').onclick=()=>{wrPush();const a=wxAlts(b);if(b.textContent.trim())a.push(b.textContent);wxSetAlts(b,a);closeModal();placeCaret(b);wrTouch(true);toast('Saved as a version. Rewrite the line; switch back from "Alternates".')}};draw()}
@@ -2060,7 +2093,7 @@ function wxDual(b){b=b||wxCurOrLast();if(!b)return;const d=wrDoc();let c=b;while
   let p=c.previousElementSibling;while(p&&(p.dataset.t==='d'||p.dataset.t==='p'))p=p.previousElementSibling;
   if(!p||p.dataset.t!=='c'||p===c){toast('Dual dialogue needs a speech right before this one.');return}
   if(p.dataset.dual){toast('That speech is already the right side of a dual pair.');return}
-  wrPush();c.dataset.dual='1';wrTouch(true);toast(`${U(p.textContent)} and ${U(c.textContent)} now speak side by side in the PDF and Final Draft file.`)}
+  wrPush();c.dataset.dual='1';revMark(c);wrTouch(true);toast(`${U(p.textContent)} and ${U(c.textContent)} now speak side by side in the PDF and Final Draft file.`)}
 /* --- Find & replace --- */
 function wxEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
 function wxRe(q,o,g){if(!q)return null;let s=wxEsc(q);if(o.word)s='\\b'+s+'\\b';return new RegExp(s,(o.cs?'':'i')+(g?'g':''))}
@@ -2081,7 +2114,7 @@ function wxFind(rep){const st=WR.find||(WR.find={q:'',r:'',cs:false,word:false})
     toast('No more matches');return false};
   $('#wxNext').onclick=()=>{const ov=$('#ov');ov.style.background='transparent';ov.style.backdropFilter='none';ov.style.alignItems='flex-start';next()};
   $('#wxOne').onclick=()=>{const o=opts(),re=wxRe(o.q,o,false);const s=getSelection();const b=wrCur();if(b&&s.rangeCount&&!s.isCollapsed&&re&&new RegExp('^(?:'+re.source+')$',re.flags).test(s.toString())){wrPush();document.execCommand('insertText',false,o.r);wrTouch(false)}next();count()};
-  $('#wxAll').onclick=()=>{const o=opts(),re=wxRe(o.q,o,true);if(!re)return;wrPush();let n=0;[...wrDoc().children].forEach(el=>{const t=el.textContent;const nt=t.replace(re,()=>{n++;return o.r});if(nt!==t)setText(el,nt)});wrTouch(true);count();toast(n?`Replaced ${n} match${n===1?'':'es'}`:'No matches')}}
+  $('#wxAll').onclick=()=>{const o=opts(),re=wxRe(o.q,o,true);if(!re)return;wrPush();let n=0;[...wrDoc().children].forEach(el=>{const t=el.textContent;const nt=t.replace(re,()=>{n++;return o.r});if(nt!==t){setText(el,nt);revMark(el)}});wrTouch(true);count();toast(n?`Replaced ${n} match${n===1?'':'es'}`:'No matches')}}
 /* --- Writing stats, daily goal and sprint timer --- */
 function wxStats(){const D=draft();if(!D.stats||typeof D.stats!=='object')D.stats={days:{},goal:500,sprints:[]};D.stats.days=D.stats.days||{};D.stats.sprints=D.stats.sprints||[];return D.stats}
 function wxWords(){const d=wrDoc();return ((d?d.textContent:draft().els.map(e=>e.x).join(' ')).match(/\S+/g)||[]).length}
@@ -2118,10 +2151,60 @@ function wxMarkCur(){const d=wrDoc();if(!d)return;const b=wrCur();d.querySelecto
 function wxNotesList(){const d=wrDoc();const box=$('#wrNotes');if(!d||!box)return;const nums=[];let cur='';const list=[];[...d.children].forEach((el,i)=>{if(el.dataset.t==='h')cur=el.dataset.n||'';if(el.dataset.note)list.push([i,cur,el.dataset.note,el.textContent])});
   box.innerHTML=list.length?list.map(([i,no,n,t])=>`<button data-wrgo="${i}" class="wx-nl"><b>${esc(no||'—')}</b><span><em>${esc(n)}</em><small>${esc(t.slice(0,60))}</small></span></button>`).join(''):'<p class="small muted" style="margin:6px">No notes yet. Put the cursor on a line and press Note.</p>';
   const tab=document.querySelector('[data-wrside="notes"]');if(tab)tab.textContent='Notes'+(list.length?' · '+list.length:'')}
-function wxTool(k){if(k==='note')return wxNote();if(k==='alt')return wxAlt();if(k==='dual')return wxDual();if(k==='find')return wxFind(true);if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
+function wxTool(k){if(k==='rev')return revModal();if(k==='omit')return wxOmit();if(k==='note')return wxNote();if(k==='alt')return wxAlt();if(k==='dual')return wxDual();if(k==='find')return wxFind(true);if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
   if(['tw','focus','mid','spell'].includes(k)){WXV[k]=!WXV[k];wxSaveView();wxApplyView();if(k==='tw'&&WXV.tw)setTimeout(wxTypewriter,50);if(k==='focus'&&WXV.focus)toast('Focus mode. Press Esc or "Exit focus" to leave.');const d=wrDoc();d&&d.focus({preventScroll:true})}}
-const WX_TOOLS=[['note','Note','Add a note to this line (Ctrl+Shift+N)'],['alt','Alternates','Keep other versions of this line'],['dual','Dual','Two characters speak at the same time'],['find','Find','Find and replace (Ctrl+F)'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint'],['tw','Typewriter','Keep the line you type at the same height'],['focus','Focus','Hide everything but the page'],['mid','Midnight','Dark page for night writing'],['spell','Spelling','Underline spelling mistakes']];
-function wxToolsHtml(){return `<div class="wx-tools" role="toolbar" aria-label="Writing tools">${WX_TOOLS.map(([k,l,t],i)=>`${i===6?'<span class="wx-sep" aria-hidden="true"></span>':''}<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell'].includes(k)?' aria-pressed="false"':''}>${l}</button>`).join('')}</div>`}
+const WX_TOOLS=[['note','Note','Add a note to this line (Ctrl+Shift+N)'],['alt','Alternates','Keep other versions of this line'],['dual','Dual','Two characters speak at the same time'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark this scene OMITTED or restore it'],['find','Find','Find and replace (Ctrl+F)'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint'],['tw','Typewriter','Keep the line you type at the same height'],['focus','Focus','Hide everything but the page'],['mid','Midnight','Dark page for night writing'],['spell','Spelling','Underline spelling mistakes']];
+function wxToolsHtml(){return `<div class="wx-tools" role="toolbar" aria-label="Writing tools"><span class="wx-revchip" id="wxRev" hidden></span>${WX_TOOLS.map(([k,l,t],i)=>`${k==='tw'?'<span class="wx-sep" aria-hidden="true"></span>':''}<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell'].includes(k)?' aria-pressed="false"':''}>${l}</button>`).join('')}</div>`}
+
+
+/* ================= Production revisions (v2.2): revision sets, marks, locked pages, A-pages, omitted scenes ================= */
+const REV_STD=[['White','#ffffff','#6e6e73'],['Blue','#cfe2ff','#1f5fd1'],['Pink','#ffd6e7','#c2306f'],['Yellow','#fff3b0','#8a6d00'],['Green','#d6f5d6','#1e7b3c'],['Goldenrod','#f5d77a','#946300'],['Buff','#f1e3c6','#82612f'],['Salmon','#ffc9b5','#c4502a'],['Cherry','#ffb3c1','#b3123a'],['Tan','#e0c9a6','#7a5a2c'],['Double White','#fafafa','#545458'],['Double Blue','#b8d4ff','#1747a6'],['Double Pink','#ffc2db','#a81f5a'],['Double Yellow','#ffec85','#7a5f00'],['Double Green','#bfeebf','#15652f']];
+function REVS(){const D=draft();if(!D.revs||!Array.isArray(D.revs.sets))D.revs={mode:false,cur:'',show:true,sets:[]};return D.revs}
+function revSet(id){return REVS().sets.find(s=>s.id===id)}
+function revCur(){const R=REVS();return R.mode?revSet(R.cur):null}
+function revMark(el){const s=revCur();if(!s||!el||el.nodeType!==1||!el.dataset)return;if(el.dataset.rev!==s.id){el.dataset.rev=s.id}}
+function revMarkCur(){const s=revCur();if(!s)return;const b=wrCur();if(b)revMark(b)}
+const revDate=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit'});
+function revLabel(s){return s?`${s.name} Rev. (${s.date||revDate()})`:''}
+/* ids so locked pages can follow each line */
+function wxEnsureIds(){const d=wrDoc();if(!d)return;const seen=new Set();[...d.children].forEach(el=>{let id=el.dataset.id;if(!id||seen.has(id)){id=uid();el.dataset.id=id}seen.add(id)})}
+/* omitted scenes: heading carries om=1, the lines after it until the next heading are skipped in exports and reports */
+function omSkip(els){const out=new Array(els.length).fill(false);let om=false;els.forEach((e,i)=>{if(e.t==='h')om=!!e.om;else if(om)out[i]=true});return out}
+function wxLive(els){const sk=omSkip(els);return els.filter((e,i)=>!sk[i]&&!(e.t==='h'&&e.om))}
+function wxOmit(){const d=wrDoc();if(!d)return;const b=wxCurOrLast();let h=b;while(h&&h.dataset.t!=='h')h=h.previousElementSibling;if(!h){toast('Put the cursor in the scene you want to omit.');return}
+  wrPush();if(h.dataset.om){delete h.dataset.om;toast(`Scene ${h.dataset.n||''} restored`)}else{h.dataset.om='1';revMark(h);toast(`Scene ${h.dataset.n||''} omitted. Its number stays; the scene prints as OMITTED. Press Omit again to restore it.`,6000)}wrTouch(true)}
+/* page locking: remember the page of each line now; later changes make A-pages instead of moving page numbers */
+function wxLock(on){const D=draft();if(!on){if(!confirm('Unlock pages? Page numbers will flow again from page 1.'))return;delete D.lock;dirty.draft=true;touch([]);wrDecorate();toast('Pages unlocked');return}
+  wxEnsureIds();wrSave();const d=wrDoc();const map={};let pg=1;[...d.children].forEach(el=>{if(el.classList.contains('pb'))pg=+(el.dataset.pg||pg+1);map[el.dataset.id]=pg});
+  D.lock={at:Date.now(),map,pages:pg};D.els=wrRead();dirty.draft=true;touch([]);logChange(`Script pages locked (${pg} pages)`,'script',true);wrDecorate();toast(`Pages locked at ${pg}. New material now goes on A-pages (12A) and deleted pages keep their numbers.`,6000)}
+/* lock page of each element: its own or the one before it */
+function lockPages(els){const L=draft().lock;if(!L)return null;let last=1;return els.map(e=>{const p=e.id&&L.map[e.id];if(p)last=Math.max(last,p);return last})}
+const A_LET='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function revModal(){const R=REVS(),D=draft();const used=new Set(R.sets.map(s=>s.name));const nxt=REV_STD.find(x=>!used.has(x[0])&&x[0]!=='White')||REV_STD[1];
+  const els=wrDoc()?wrRead():D.els;const cnt={};els.forEach(e=>{if(e.rev)cnt[e.rev]=(cnt[e.rev]||0)+1});
+  openModal(`<div class="modal-h"><h2>Revisions</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+  <p class="small muted">Like Final Draft's Revision Mode. While it is on, every line you change is marked with the current revision set: coloured in the writer and an asterisk (*) in the PDF margin. Lock pages once the script is out, so changes go on A-pages.</p>
+  <label class="wx-switch"><input type="checkbox" id="rvMode" ${R.mode?'checked':''}> <b>Revision mode</b> <span class="muted small">${R.mode&&revSet(R.cur)?'· marking as '+esc(revSet(R.cur).name):''}</span></label>
+  <label class="wx-switch"><input type="checkbox" id="rvShow" ${R.show!==false?'checked':''}> Show revision colours in the writer</label>
+  <h3 class="nd-k" style="margin:6px 0 0">Revision sets</h3>
+  ${R.sets.length?`<div class="rv-list">${R.sets.map(s=>`<div class="rv-row${s.id===R.cur?' on':''}"><i style="background:${s.color}"></i><b>${esc(s.name)}</b><small>${esc(s.date||'')} · ${cnt[s.id]||0} line${cnt[s.id]===1?'':'s'}</small><span><button class="btn sm${s.id===R.cur?' pri':''}" data-rvuse="${s.id}">${s.id===R.cur?'Current':'Use'}</button><button class="btn sm ghost danger" data-rvclr="${s.id}">Clear marks</button></span></div>`).join('')}</div>`:'<p class="small muted">No revision sets yet.</p>'}
+  <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="fieldbox" style="margin:0"><label for="rvNew">New revision set</label><select id="rvNew">${REV_STD.map(x=>`<option value="${x[0]}"${x[0]===nxt[0]?' selected':''}>${x[0]}</option>`).join('')}</select></div><button class="btn pri" id="rvAdd">Start this revision</button></div>
+  <h3 class="nd-k" style="margin:10px 0 0">Pages</h3>
+  <p class="small muted">${D.lock?`Locked ${new Date(D.lock.at).toLocaleDateString('en-GB')} at ${D.lock.pages} pages.`:'Pages are not locked.'}</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="rvLock">${D.lock?'Unlock pages':'Lock pages'}</button><button class="btn ghost danger" id="rvClrAll">Clear all revision marks</button></div></div>`);
+  $('#rvMode').onchange=e=>{R.mode=e.target.checked;if(R.mode&&!revSet(R.cur)){if(R.sets.length)R.cur=R.sets[R.sets.length-1].id;else{const x=nxt;const s={id:uid(),name:x[0],color:x[1],ink:x[2],date:revDate()};R.sets.push(s);R.cur=s.id}}dirty.draft=true;touch([]);wxRevChip();wrDecorate();revModal()};
+  $('#rvShow').onchange=e=>{R.show=e.target.checked;dirty.draft=true;touch([]);wrDecorate()};
+  $('#rvAdd').onclick=()=>{const nm=$('#rvNew').value;const x=REV_STD.find(r=>r[0]===nm)||REV_STD[1];let s=R.sets.find(z=>z.name===nm);if(!s){s={id:uid(),name:x[0],color:x[1],ink:x[2],date:revDate()};R.sets.push(s)}R.cur=s.id;R.mode=true;dirty.draft=true;touch([]);logChange(`${s.name} revision started`,'script',true);wxRevChip();wrDecorate();revModal()};
+  document.querySelectorAll('[data-rvuse]').forEach(b=>b.onclick=()=>{R.cur=b.dataset.rvuse;R.mode=true;dirty.draft=true;touch([]);wxRevChip();wrDecorate();revModal()});
+  document.querySelectorAll('[data-rvclr]').forEach(b=>b.onclick=()=>{if(!confirm('Remove the marks of this revision set? The text stays.'))return;wrPush();document.querySelectorAll(`#wrDoc .el[data-rev="${b.dataset.rvclr}"]`).forEach(el=>delete el.dataset.rev);wrTouch(true);wrSave();revModal()});
+  $('#rvClrAll').onclick=()=>{if(!confirm('Remove every revision mark? The text stays.'))return;wrPush();document.querySelectorAll('#wrDoc .el[data-rev]').forEach(el=>delete el.dataset.rev);wrTouch(true);wrSave();revModal()};
+  $('#rvLock').onclick=()=>{closeModal();wxLock(!D.lock)}}
+function wxRevChip(){const c=$('#wxRev');if(!c)return;const s=revCur();c.hidden=!s;if(s){c.textContent=s.name+' rev.';c.style.setProperty('--rc',s.ink||'#1f5fd1');c.style.setProperty('--rb',s.color)}}
+/* editor decorations for revisions, omitted scenes and locked page labels */
+function revDecorate(kids){const R=REVS();const sets={};R.sets.forEach(s=>sets[s.id]=s);const show=R.show!==false;let om=false;const stars=[];
+  kids.forEach(el=>{const s=el.dataset.rev&&sets[el.dataset.rev];if(s&&show){el.style.setProperty('--rc',s.ink||'#1f5fd1');el.classList.add('rv')}else{el.classList.remove('rv')}
+    if(el.dataset.t==='h')om=!!el.dataset.om;el.classList.toggle('om-hide',el.dataset.t!=='h'&&om);if(s)stars.push([el,s])});
+  return stars}
 
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];

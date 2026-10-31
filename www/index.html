@@ -919,6 +919,19 @@ body.wr-mid .wr-doc .el.rv{filter:brightness(1.6)}
 .i-catalog{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Ccircle cx='9' cy='10' r='1.8'/%3E%3Cpath d='M21 16l-5-5-8 8'/%3E%3C/svg%3E")}
 .i-tasks{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l1.5 1.5L8 5 M4 12l1.5 1.5L8 11 M4 18l1.5 1.5L8 17 M11 6h9 M11 12h9 M11 18h9'/%3E%3C/svg%3E")}
 .i-av{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2'/%3E%3Cpath d='M12 4v16 M5.5 8h4 M5.5 11h4 M14.5 8h4 M14.5 11h4 M14.5 14h3'/%3E%3C/svg%3E")}
+/* ---- watermark dialog ---- */
+.wm-wrap{display:grid;grid-template-columns:1fr 200px;gap:18px;align-items:start}.wm-form{display:flex;flex-direction:column;gap:10px}
+.wm-pos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.wm-pos button{border:0;background:var(--fill);border-radius:8px;padding:7px 4px;font:500 12px var(--f-ui);color:var(--fg);cursor:pointer}
+.wm-pos button[aria-checked=true]{background:var(--accent);color:#fff;font-weight:600}.wm-pos button:last-child{grid-column:1/-1}
+.wm-form input[type=range]{width:100%;accent-color:var(--accent)}
+.wm-prev{position:sticky;top:0}.wm-page{position:relative;aspect-ratio:1/1.414;background:#fff;border-radius:6px;box-shadow:0 0 0 .5px rgba(0,0,0,.15),0 8px 24px rgba(0,0,0,.1);overflow:hidden;padding:18% 14% 0;display:flex;flex-direction:column;gap:7px}
+.wm-page>i{display:block;height:4px;border-radius:2px;background:#d8d8dc}.wm-page>i:nth-child(3n){width:62%}.wm-page>i:nth-child(4n){width:80%;margin-left:20%}
+.wm-t{position:absolute;inset:0;pointer-events:none;font:800 calc(15px * var(--fs,1))/1 var(--f-ui);transition:opacity .2s}.wm-t span{position:absolute;white-space:nowrap}
+.wm-diag span{left:50%;top:50%;transform:translate(-50%,-50%) rotate(-54.7deg);font-size:calc(20px * var(--fs,1))}.wm-center span{left:50%;top:50%;transform:translate(-50%,-50%);font-size:calc(17px * var(--fs,1))}
+.wm-top span{left:50%;top:6px;transform:translateX(-50%);font-size:calc(9px * var(--fs,1))}.wm-bottom span{left:50%;bottom:6px;transform:translateX(-50%);font-size:calc(9px * var(--fs,1))}
+.wm-tl span{left:6px;top:6px;font-size:calc(9px * var(--fs,1))}.wm-tr span{right:6px;top:6px;font-size:calc(9px * var(--fs,1))}.wm-bl span{left:6px;bottom:6px;font-size:calc(9px * var(--fs,1))}.wm-br span{right:6px;bottom:6px;font-size:calc(9px * var(--fs,1))}
+.wm-tile{display:grid;grid-template-columns:repeat(2,1fr);align-content:space-around;justify-items:center}.wm-tile span{position:static;transform:rotate(-30deg);font-size:calc(7px * var(--fs,1))}
+@media (max-width:600px){.wm-wrap{grid-template-columns:1fr}.wm-prev{order:-1;width:150px;margin:0 auto;position:static}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -2027,7 +2040,6 @@ function wrOpen(){const inp=document.createElement('input');inp.type='file';inp.
 function wrDownload(){openModal(`<div class="modal-h"><h2>Download script</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   <p class="small muted">Standard screenplay layout (US Letter, Courier 12 pt) with scene numbers and page numbers, like your shooting draft.</p>
   <details class="sset" open><summary>PDF options</summary><div class="sset-g">
-    <label>Watermark (e.g. a name or CONFIDENTIAL)<input type="text" id="pdWm" maxlength="40" placeholder="None"></label>
     <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdMarks" checked> Revision marks (*)</label>
     <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdColor"> Revised pages in their revision colour</label>
     <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pdOnly"> Only revised pages</label></div></details>
@@ -2037,7 +2049,7 @@ function wrDownload(){openModal(`<div class="modal-h"><h2>Download script</h2><b
   <button class="btn" data-wrdl="fountain">Fountain (.fountain) · plain-text screenplay format</button>
   <button class="btn" data-wrdl="txt">Text (.txt)</button></div></div>`);
   document.querySelectorAll('[data-wrdl]').forEach(b=>b.onclick=async()=>{const k=b.dataset.wrdl;wrSave();const nm=(draft().tp.title||P.title||'script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')||'script';
-    try{if(k==='pdf'){const doc=await wrPdf({wm:($('#pdWm')||{}).value||'',marks:!$('#pdMarks')||$('#pdMarks').checked,color:!!($('#pdColor')&&$('#pdColor').checked),onlyRev:!!($('#pdOnly')&&$('#pdOnly').checked)});await saveFile(nm+'.pdf',doc.output('arraybuffer'))}
+    try{if(k==='pdf'){const doc=await wrPdf({marks:!$('#pdMarks')||$('#pdMarks').checked,color:!!($('#pdColor')&&$('#pdColor').checked),onlyRev:!!($('#pdOnly')&&$('#pdOnly').checked)});await saveFile(nm+'.pdf',await pdfOut(doc))}
       else if(k==='fdx')await saveFile(nm+'.fdx',new TextEncoder().encode(wrFdx()));
       else if(k==='fountain')await saveFile(nm+'.fountain',new TextEncoder().encode(wrFountain()));
       else await saveFile(nm+'.txt',new TextEncoder().encode(wrPlain()));closeModal()}catch(e){toast((e&&e.message)||'Download failed. Try again.')}})}
@@ -2405,7 +2417,7 @@ async function sbPdf(){await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;co
     doc.setDrawColor(200);doc.setLineWidth(0.6);doc.rect(cx,cy,gw,ih);if(x.img){try{doc.addImage(x.img,'JPEG',cx,cy,gw,ih,undefined,'FAST')}catch(e){}}
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(`Sc ${s.no} · Shot ${x.no||''}`,cx,cy+ih+13);doc.setFont('helvetica','normal');doc.setFontSize(8);const meta=[x.size,x.angle,x.move,x.lens].filter(Boolean).join(' · ');if(meta)doc.text(meta,cx+gw,cy+ih+13,{align:'right'});
     doc.splitTextToSize(x.desc||'',gw).slice(0,5).forEach((l,li)=>doc.text(l,cx,cy+ih+26+li*10));n++}
-  await saveFile((P.title||'Storyboard').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Storyboard.pdf',doc.output('arraybuffer'))}
+  await saveFile((P.title||'Storyboard').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Storyboard.pdf',await pdfOut(doc))}
 /* ---- Actor sides: the day's scenes in script format, a highlighted character ---- */
 function sidesEls(sceneNos){const D=P.draft;let els;if(draftReal())els=D.els;else els=scenesToEls(P.scenes,true);const nums=wrNumbers(els);const want=new Set(sceneNos.map(U));const out=[];let on=false;
   els.forEach((e,i)=>{if(e.t==='h'){on=want.has(U(nums[i]));if(on)out.push(Object.assign({},e,{n:nums[i]}))}else if(on)out.push(Object.assign({},e))});return out}
@@ -2423,7 +2435,7 @@ function sidesMount(){const c=$('#content');const V=VIEW.sides;if(!V||!c.querySe
   c.querySelectorAll('[data-sdcast]').forEach(x=>x.addEventListener('change',()=>{const n=x.dataset.sdcast;V.cast=x.checked?[...V.cast,n]:V.cast.filter(y=>y!==n)}))}
 async function sidesPdf(){const V=VIEW.sides;const S=SCH();const day=S.days.find(d=>d.id===V.day);const sc=day?dayScenes(day):P.scenes.filter(s=>V.pick.includes(s.id));if(!sc.length)return;
   const els=sidesEls(sc.map(s=>s.no));const lab=day?dayLabel(day):'Selected scenes';const hdr=`SIDES · ${lab} · Sc ${sc.map(s=>s.no).join(', ')}`;
-  const doc=await wrPdf({els,hl:new Set(V.cast),header:hdr,noTitle:true,marks:false});const nm=(P.title||'Script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Sides'+(day?'_Day'+(dayNums()[day.id]||''):'')+'.pdf';await saveFile(nm,doc.output('arraybuffer'))}
+  const doc=await wrPdf({els,hl:new Set(V.cast),header:hdr,noTitle:true,marks:false});const nm=(P.title||'Script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Sides'+(day?'_Day'+(dayNums()[day.id]||''):'')+'.pdf';await saveFile(nm,await pdfOut(doc))}
 /* ---- Catalog: locations, props, wardrobe and more, with photos ---- */
 const CAT_T=[['location','Location'],['prop','Prop'],['wardrobe','Wardrobe'],['set','Set dressing'],['vehicle','Vehicle'],['animal','Animal'],['sfx','Special effect'],['other','Other']];
 const CAT_SRC={prop:['props','spl_props'],set:['art','spl_sets'],vehicle:['vehicles'],animal:['animals'],sfx:['sfx','vfx']};
@@ -2561,6 +2573,47 @@ async function aiTasks(){const sum=P.scenes.slice(0,250).map(s=>`Sc ${s.no} ${ef
 Reply with only JSON: {"tasks":[{"title":"","dept":""}]}\n\nBREAKDOWN:\n${cutBytes(sum,Math.min(90000,aiBudget()*0.5))}\nCAST: ${(P.artists||[]).slice(0,40).map(a=>a.name).join(', ')}`);
   const L=(r&&r.tasks||[]).filter(t=>t&&t.title);if(!L.length)throw new Error('The AI returned no tasks.');const T=TASKS();snapshot();P.tasks=T.filter(t=>!t.auto||t.status!=='todo');
   L.forEach(t=>P.tasks.push({id:uid(),title:String(t.title).slice(0,160),dept:DEPTS.includes(t.dept)?t.dept:'',owner:'',due:'',status:'todo',auto:1}))}
+
+
+/* ================= Watermark on every PDF download: text, placement, intensity ================= */
+const WM_POS=[['diag','Diagonal'],['center','Centre'],['top','Top'],['bottom','Bottom'],['tl','Top left'],['tr','Top right'],['bl','Bottom left'],['br','Bottom right'],['tile','Tiled']];
+const WM_COL={grey:[110,110,115],red:[215,0,21],blue:[0,113,227],black:[0,0,0]};
+function wmPrefs(){try{return Object.assign({on:false,ask:true,text:'CONFIDENTIAL',pos:'diag',op:12,size:'m',col:'grey',date:false},JSON.parse(localStorage.getItem('scriptdesk.wm')||'{}'))}catch(e){return {on:false,ask:true,text:'CONFIDENTIAL',pos:'diag',op:12,size:'m',col:'grey',date:false}}}
+function wmSave(o){try{localStorage.setItem('scriptdesk.wm',JSON.stringify(o))}catch(e){}}
+function wmText(o){const t=String(o.text||'').trim().slice(0,60);return o.date?(t?t+'  ·  ':'')+new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):t}
+/* ask before saving a PDF; resolves to settings, false (no watermark) or null (cancelled) */
+function wmAsk(){const o=wmPrefs();if(!o.ask)return Promise.resolve(o.on?o:false);
+  return new Promise(res=>{let done=false;const fin=v=>{if(done)return;done=true;res(v)};
+    const draw=()=>{openModal(`<div class="modal-h"><h2>Watermark</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
+    <div class="wm-wrap"><div class="wm-form">
+      <label class="wx-switch"><input type="checkbox" id="wmOn" ${o.on?'checked':''}> <b>Add a watermark to this PDF</b></label>
+      <div class="fieldbox"><label for="wmT">Text</label><input type="text" id="wmT" maxlength="60" value="${esc(o.text)}" placeholder="e.g. CONFIDENTIAL or an actor's name"></div>
+      <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="wmD" ${o.date?'checked':''}> Add date and time</label>
+      <div class="fieldbox"><label>Placement</label><div class="wm-pos" role="radiogroup">${WM_POS.map(([k,l])=>`<button type="button" role="radio" data-wmpos="${k}" aria-checked="${o.pos===k}">${l}</button>`).join('')}</div></div>
+      <div class="fieldbox"><label for="wmO">Intensity <span id="wmOv">${o.op}%</span></label><input type="range" id="wmO" min="4" max="60" step="1" value="${o.op}"></div>
+      <div class="sset-g" style="margin:0"><label>Size<select id="wmS">${[['s','Small'],['m','Medium'],['l','Large']].map(([k,l])=>`<option value="${k}"${o.size===k?' selected':''}>${l}</option>`).join('')}</select></label><label>Colour<select id="wmC">${Object.keys(WM_COL).map(k=>`<option value="${k}"${o.col===k?' selected':''}>${k[0].toUpperCase()+k.slice(1)}</option>`).join('')}</select></label></div>
+      <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="wmA" ${o.ask?'checked':''}> Ask me every time I download a PDF</label>
+    </div><div class="wm-prev" aria-label="Preview"><div class="wm-page"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><div id="wmP"></div></div></div></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="btn" id="wmNo">Download without</button><button class="btn pri" id="wmGo">Download</button></div></div>`);
+      const read=()=>{o.on=$('#wmOn').checked;o.text=$('#wmT').value;o.date=$('#wmD').checked;o.op=+$('#wmO').value;o.size=$('#wmS').value;o.col=$('#wmC').value;o.ask=$('#wmA').checked};
+      const prev=()=>{read();$('#wmOv').textContent=o.op+'%';const p=$('#wmP');const t=esc(wmText(o)||' ');const c=WM_COL[o.col]||WM_COL.grey;const fs={s:.6,m:1,l:1.45}[o.size]||1;
+        p.className='wm-t wm-'+o.pos;p.style.color=`rgb(${c.join(',')})`;p.style.opacity=o.on?o.op/100:0;p.style.setProperty('--fs',fs);p.innerHTML=o.pos==='tile'?Array(12).fill(`<span>${t}</span>`).join(''):`<span>${t}</span>`;const L=Math.max(6,wmText(o).length);if(o.pos==='diag'||o.pos==='center'){const sp=p.querySelector('span');sp.style.fontSize=Math.min(o.pos==='diag'?22:18,(o.pos==='diag'?320:180)/L)*fs+'px'}};
+      ['wmOn','wmT','wmD','wmO','wmS','wmC','wmA'].forEach(id=>{$('#'+id).addEventListener('input',prev);$('#'+id).addEventListener('change',prev)});
+      document.querySelectorAll('[data-wmpos]').forEach(b=>b.onclick=()=>{o.pos=b.dataset.wmpos;document.querySelectorAll('[data-wmpos]').forEach(x=>x.setAttribute('aria-checked',x===b?'true':'false'));if(!$('#wmOn').checked)$('#wmOn').checked=true;prev()});
+      $('#wmT').addEventListener('input',()=>{if($('#wmT').value.trim())$('#wmOn').checked=true});
+      $('#wmGo').onclick=()=>{read();if(o.on&&!wmText(o)){toast('Type the watermark text, or choose "Download without".');return}wmSave(o);closeModal();fin(o.on?Object.assign({},o):false)};
+      $('#wmNo').onclick=()=>{read();o.on=false;wmSave(Object.assign({},o,{on:wmPrefs().on}));closeModal();fin(false)};
+      $('#ov').addEventListener('click',e=>{if(e.target.id==='ov'||e.target.closest('[data-close]'))fin(null)});prev()};draw()})}
+function wmApply(doc,o){const text=wmText(o);if(!text)return;const c=WM_COL[o.col]||WM_COL.grey;const k={s:.6,m:1,l:1.45}[o.size]||1;const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();doc.saveGraphicsState();doc.setGState(new doc.GState({opacity:Math.max(.02,Math.min(.9,o.op/100))}));doc.setTextColor(c[0],c[1],c[2]);doc.setFont('helvetica','bold');
+    const fit=(maxW,base)=>{doc.setFontSize(base);const w=doc.getTextWidth(text);return Math.max(8,Math.min(base*k,base*maxW/Math.max(1,w)*k))};
+    if(o.pos==='diag'){const fs=fit(Math.hypot(W,H)*0.7,90);doc.setFontSize(fs);const w=doc.getTextWidth(text),a=Math.atan2(H,W),deg=a*180/Math.PI;doc.text(text,W/2-Math.cos(a)*w/2+Math.sin(a)*fs*0.35,H/2+Math.sin(a)*w/2+Math.cos(a)*fs*0.35,{angle:deg})}
+    else if(o.pos==='tile'){const fs=Math.max(9,14*k);doc.setFontSize(fs);const w=doc.getTextWidth(text)+60;for(let y=40;y<H+80;y+=fs*6){for(let x=-W;x<W*1.5;x+=w){doc.text(text,x+(y/(fs*6)%2)*w/2,y,{angle:30})}}}
+    else{const fs=o.pos==='center'?fit(W*0.8,64):Math.max(9,16*k);doc.setFontSize(fs);const m=30,X={center:W/2,top:W/2,bottom:W/2,tl:m,bl:m,tr:W-m,br:W-m}[o.pos],Y={center:H/2+fs*0.35,top:m+fs*0.6,bottom:H-m+fs*0.2,tl:m+fs*0.6,tr:m+fs*0.6,bl:H-m+fs*0.2,br:H-m+fs*0.2}[o.pos];
+      doc.text(text,X,Y,{align:['tl','bl'].includes(o.pos)?'left':['tr','br'].includes(o.pos)?'right':'center'})}
+    doc.restoreGraphicsState()}doc.setTextColor(0,0,0)}
+async function pdfOut(doc){const o=await wmAsk();if(o===null){toast('Download cancelled.');return null}if(o)wmApply(doc,o);return doc.output('arraybuffer')}
+function wmSettings(){const o=wmPrefs();o.ask=true;wmSave(o);toast('ScriptDesk will ask about the watermark at your next PDF download.')}
 
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];
@@ -3662,7 +3715,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(page==='outline'&&olClick(t))return;if(page==='storyboard'&&await sbClick(t))return;if(page==='tasks'&&tkClick(t))return;if(page==='av'&&avClick(t))return;
   const act=t.dataset.act;
   if(act==='import')openImport();
-  if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();if(act==='aiBeats')aiFill('beats');if(act==='aiOutline')aiFill('outline');if(act==='aiCatalog')aiFill('catalog');if(act==='aiTasks')aiFill('tasks');if(act==='sbPdf')sbPdf();if(act==='sidesPdf')sidesPdf();if(act==='catFill')catFill();if(act==='catNew')catEdit();
+  if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();if(act==='wmSet')wmSettings();if(act==='aiBeats')aiFill('beats');if(act==='aiOutline')aiFill('outline');if(act==='aiCatalog')aiFill('catalog');if(act==='aiTasks')aiFill('tasks');if(act==='sbPdf')sbPdf();if(act==='sidesPdf')sidesPdf();if(act==='catFill')catFill();if(act==='catNew')catEdit();
   if(act==='avAdd'||act==='avScene'){const A=AVD();snapshot();A.rows.push(act==='avScene'?{scene:'SCENE '+(A.rows.filter(r=>r.scene).length+1)}:{video:'',audio:'',dur:''});touch([]);render(true)}
   if(act==='wrNew')wrNewProject();if(act==='wrTitle')wrTitle();if(act==='wrOpen')wrOpen();if(act==='wrDownload')wrDownload();if(act==='wrApply')wrApply();if(act==='wrFromProject')wrFromProject();if(act==='wrBlank')wrBlank();if(act==='wrRenumber')wrRenumber();
   if(act==='addArtist'){snapshot();const a=addArtist('NEW CHARACTER '+(P.artists.length+1),'Secondary','');logChange(`Artist ${a.name} added`,'artistInfo',true);touch([]);render(true);toast('Artist added. Click the name to rename.')}
@@ -3765,13 +3818,13 @@ function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no loca
   <div class="modal-f"><span class="small muted" style="margin-right:auto">${AI.sample?'The breakdown takes a few minutes for a full script.':'AI is off in this view. Reports will fill in as you type.'}</span><button class="btn" data-close>${fresh?'Later':'Done'}</button>${AI.sample?`<button class="btn pri" data-act="startBreakdown">Start AI breakdown</button>`:''}</div>`)}
 
 /* ================= Export ================= */
-async function saveFile(filename,data){try{DISK.exportCopy(filename,data)}catch(e){}if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
+async function saveFile(filename,data){if(data==null)return;try{DISK.exportCopy(filename,data)}catch(e){}if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
   try{await dl.save({filename,data});toast('Saved '+filename)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited')toast('A save prompt is already open.');else if(c==='rejected_extension'||c==='extension_not_enabled')toast('This file type cannot be saved in this view.');else toast('The file could not be saved. Try again.')}}
 let _dl;async function capDownloads(){if(_dl!==undefined)return _dl;try{_dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){_dl=null}return _dl}
 function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_${rep.replace(/[^\w]+/g,'_')}.${ext}`}
 async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');return}const name=PG[page]?PG[page].t:'Report';
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
-    else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),pdf.output('arraybuffer'))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
+    else{const pdf=await buildPdf(name,lastExp);await saveFile(fname(name,'pdf'),await pdfOut(pdf))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
   const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['scenic'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history');
@@ -4050,7 +4103,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   openModal(`<div class="modal-h"><h2>Settings</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${note?`<div class="banner">${esc(note)}</div>`:''}
   <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
-  <div class="fieldbox"><button class="btn" data-sec="open">Security &amp; saving: encryption and your hard disk</button></div>
+  <div class="fieldbox"><button class="btn" data-sec="open">Security &amp; saving: encryption and your hard disk</button><button class="btn" data-act="wmSet">PDF watermark: ask me at the next download</button></div>
   <div id="sBody"></div>
   <div class="pool-box"><h3>Your AI pool <span class="small muted">· several keys, switching automatically</span></h3>
     <p class="small muted" style="margin:0 0 8px;line-height:1.5">Fill in a service above, then press <b>Add to AI pool</b>. Add as many free keys as you like, even several for the same service. ScriptDesk uses the most accurate AI first, spreads work across equally good ones, and moves to the next one when a free limit is reached. Free allowances are never truly unlimited, but a pool of keys multiplies them.</p>

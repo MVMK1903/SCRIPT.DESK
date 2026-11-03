@@ -1299,6 +1299,7 @@ function blankLists(){const o={};LK.forEach(k=>o[k]=[]);return o}
 function newProject(o){return Object.assign({id:uid(),v:2,title:'Untitled film',production:'',front:'',scenes:[],artists:[],profiles:{},structure:null,changes:[],created:Date.now(),updated:Date.now(),sample:false},o||{})}
 const eff=s=>[U(s.ie),U(s.time)].filter(Boolean).join(' / ');
 const isNight=s=>/NIGHT|MIDNIGHT/.test(U(s.time));
+const NIGHTISH=/NIGHT|DUSK|EVENING|EVNG|\bEVE\b/i;/* evening and its short forms read as night in colours and counts */
 const A=id=>P.artists.find(a=>a.id===id);
 const aName=id=>{const a=A(id);return a?a.name:''};
 function findArtist(n){const k=norm(n);if(!k)return null;return P.artists.find(a=>norm(a.name)===k||(a.aliases||[]).some(x=>norm(x)===k))||null}
@@ -3878,7 +3879,7 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
   if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
-function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(/NIGHT/i.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
+function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(NIGHTISH.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
   $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
   if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?'Choose an AI service in Settings (free options available)':'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
@@ -4027,7 +4028,7 @@ async function loadXlsx(){if(window.XLSX)return;try{await loadScript(CDN.xlsxSty
 const XL_FILL={eff:'9DC3E6',loc:'FFE699',desc:'DDEBF7','':'D9D9D9'};
 function xlBorder(){const b={style:'thin',color:{rgb:'000000'}};return {top:b,bottom:b,left:b,right:b}}
 const DOC_CLASSIC=['slo','sloLoc','sloArt'];
-function docStats(){if(!P||!P.scenes||!P.scenes.length)return [];const S=P.scenes;const e8=S.reduce((a,s)=>a+pgE(s),0);const night=S.filter(s=>/NIGHT|DUSK|EVENING/i.test(s.time||'')).length;const ext=S.filter(s=>/EXT/.test(s.ie||'')).length;
+function docStats(){if(!P||!P.scenes||!P.scenes.length)return [];const S=P.scenes;const e8=S.reduce((a,s)=>a+pgE(s),0);const night=S.filter(s=>NIGHTISH.test(s.time||'')).length;const ext=S.filter(s=>/EXT/.test(s.ie||'')).length;
   return [['Scenes',S.length],['Pages',fmtPg(e8)],['Day / Night',`${S.length-night} / ${night}`],['Int / Ext',`${S.length-ext} / ${ext}`],['Locations',new Set(S.map(s=>U(s.loc||'').trim()).filter(Boolean)).size],['Artists',(P.artists||[]).length]]}
 function addSheet(wb,sh,title,classic){if(classic===false||(classic===undefined&&!DOC_CLASSIC.includes(page)))return addSheetPro(wb,sh,title);const n=sh.cols.length;const aoa=[];const kinds=[];const merges=[];
   const pad=a=>{while(a.length<n)a.push('');return a};
@@ -4044,7 +4045,7 @@ function addSheet(wb,sh,title,classic){if(classic===false||(classic===undefined&
       else if(k==='h')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:XL_FILL[hk[c]]}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
       else if(k==='g')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:'D9D9D9'}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
       else{const v=String(ws[ref].v||'');st={font,alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
-        if(hk[c]==='eff'&&v)st.fill={patternType:'solid',fgColor:{rgb:/NIGHT/i.test(v)?'E3E7F7':'FBF2D0'}};
+        if(hk[c]==='eff'&&v)st.fill={patternType:'solid',fgColor:{rgb:NIGHTISH.test(v)?'E3E7F7':'FBF2D0'}};
         if(c===0||hk[c]==='loc'||hk[c]==='eff')st.font=Object.assign({},font,{bold:true})}
       ws[ref].s=st}
     ws['!rows']=[{hpt:20},{hpt:24},{hpt:18},{hpt:22}]}
@@ -4073,7 +4074,7 @@ function addSheetPro(wb,sh,title){const n=Math.max(1,sh.cols.length);const aoa=[
       else if(k==='g')x={font:{name:'Calibri',sz:10.5,bold:true,color:{rgb:'0050C8'}},fill:{patternType:'solid',fgColor:{rgb:'E8F0FE'}},alignment:{horizontal:'left',vertical:'center',wrapText:true,indent:1},border:bd};
       else if(k==='f')x={font:{name:'Calibri',sz:9,italic:true,color:{rgb:'8E8E93'}},alignment:{horizontal:'right'}};
       else{const v=String(ws[ref].v||'');x={font:F,alignment:{horizontal:c===0||typeof ws[ref].v==='number'?'center':(String(v).length>28?'left':'center'),vertical:'center',wrapText:true},border:bd};if(k==='z')x.fill={patternType:'solid',fgColor:{rgb:'F7F7F9'}};
-        if(hk[c]==='eff'&&v)x.fill={patternType:'solid',fgColor:{rgb:/NIGHT|DUSK|EVENING/i.test(v)?'E4E6FF':'FFF4D6'}};if(c===0||hk[c]==='loc')x.font=Object.assign({},F,{bold:true})}
+        if(hk[c]==='eff'&&v)x.fill={patternType:'solid',fgColor:{rgb:NIGHTISH.test(v)?'E4E6FF':'FFF4D6'}};if(c===0||hk[c]==='loc')x.font=Object.assign({},F,{bold:true})}
       ws[ref].s=x}
     ws['!rows']=[{hpt:30},{hpt:21},{hpt:18},{hpt:6},{hpt:24}]}
   let nm=String(sh.name).replace(/[\\\/?*\[\]:]/g,'-').slice(0,31);let i=2;while(wb.SheetNames.includes(nm)){nm=String(sh.name).slice(0,27)+' '+i++}XLSX.utils.book_append_sheet(wb,ws,nm)}
@@ -4106,7 +4107,7 @@ async function buildPdfPro(title,exp){await loadScript(CDN.jspdf);await loadScri
       body:s.rows.map(r=>r&&r.group?[{content:r.group,colSpan:s.cols.length,styles:{fillColor:[232,240,254],fontStyle:'bold',textColor:[0,80,200],halign:'left'}}]:r.map(v=>v==null?'':String(v))),
       columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/tw,halign:(c.w||14)>=30?'left':'center'}])),
       didParseCell:d=>{if(d.section!=='body')return;const k=hdrKind(s.cols[d.column.index]?s.cols[d.column.index].h:'');if(d.column.index===0||k==='loc')d.cell.styles.fontStyle='bold';
-        if(k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string'&&d.cell.raw.trim())d.cell.styles.fillColor=/NIGHT|DUSK|EVENING/i.test(d.cell.raw)?[228,230,255]:[255,244,214]},
+        if(k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string'&&d.cell.raw.trim())d.cell.styles.fillColor=NIGHTISH.test(d.cell.raw)?[228,230,255]:[255,244,214]},
       didDrawPage:onPage}))});
   foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
 async function buildPdf(title,exp,classic){if(classic===false||(classic===undefined&&!DOC_CLASSIC.includes(page)))return buildPdfPro(title,exp);await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;

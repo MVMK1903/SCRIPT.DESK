@@ -1071,6 +1071,40 @@ body[data-page=gear] tr:hover .il{transform:none}
 .tr-n{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.82em;color:#8a5d00;margin:2px 0 8px;padding-left:calc(50% + 7px)}.tr-n.fx{color:var(--ok)}.tr-n span{flex:1 1 220px}
 .tr-gap{grid-column:1/-1;height:8px}
 @media (max-width:640px){.tr-g{grid-template-columns:1fr}.tr-ch:nth-child(2){display:none}.tr-ch:first-child::after{content:' / translation below each line'}.tr-o{padding-bottom:0}.tr-t{margin-bottom:6px}.tr-n{padding-left:0}}
+/* ===== v3 design pass: work first, stripboard colours, AA contrast, calm chrome (UI UX Pro Max + tasteskill rules) ===== */
+:root{--muted:#5a5a61;--faint:#6e6e75;--accent-text:#0062c4;--sb-de:#e0a800;--sb-di:#b8b8be;--sb-ne:#2f9e4f;--sb-ni:#3b6fd6}
+:root[data-theme="dark"]{--canvas:#000;--bg:#101012;--bg-2:#18181b;--panel:#101012;--panel-2:#18181b;--raise:#222226;--fill:#1a1a1d;--fill-2:#26262a;--line:#2a2a2e;--line-2:#1e1e22;--muted:#a9a9b0;--faint:#8c8c93;--accent-text:#4da3ff;--sb-de:#ffd60a;--sb-di:#8e8e93;--sb-ne:#30d158;--sb-ni:#5e8cff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.lastnote{background:none;box-shadow:none;padding:0 2px 10px;margin:0;font-size:12.5px;gap:8px}.lastnote[hidden]{display:none}
+.banner{background:var(--fill);box-shadow:none;border-radius:10px;padding:8px 12px;margin-bottom:12px;gap:10px;font-size:13px}.banner.info{box-shadow:none}
+.nav h6{font:600 12px/1 var(--f-ui);letter-spacing:0;text-transform:none;color:var(--muted);margin:20px 0 6px 10px}
+.nav button[aria-current="page"]{background:var(--fill-2);color:var(--fg);font-weight:600}.nav button[aria-current="page"] .ic{color:var(--accent)}
+.ph{margin-bottom:14px}.ph h1{font:600 24px/1.2 var(--f-display);letter-spacing:-.02em}.ph p{font-size:14px;margin-top:4px}
+.t th{text-transform:none;letter-spacing:0;font:600 12px/1.3 var(--f-ui);text-align:center}.t th.c-loc,.t th.c-desc,.t th.left{text-align:left}
+.t td,.stat b,.stats b{font-variant-numeric:tabular-nums}
+.t td.left{text-align:left}.t td.left+td.left{padding-left:12px}
+.t tr.g td{letter-spacing:0}
+.t tr[data-sb] td:first-child{box-shadow:inset 4px 0 0 var(--sbc,transparent)}
+.t tr[data-sb=de]{--sbc:var(--sb-de)}.t tr[data-sb=di]{--sbc:var(--sb-di)}.t tr[data-sb=ne]{--sbc:var(--sb-ne)}.t tr[data-sb=ni]{--sbc:var(--sb-ni)}
+.t tr[data-sb=de] td.eff{background:color-mix(in srgb,var(--sb-de) 20%,var(--bg))}.t tr[data-sb=di] td.eff{background:var(--fill)}
+.t tr[data-sb=ne] td.eff{background:color-mix(in srgb,var(--sb-ne) 18%,var(--bg))}.t tr[data-sb=ni] td.eff{background:color-mix(in srgb,var(--sb-ni) 18%,var(--bg))}
+.effc[data-sb=de]{background:color-mix(in srgb,var(--sb-de) 24%,var(--bg))!important;color:var(--fg)!important}.effc[data-sb=di]{background:var(--fill-2)!important;color:var(--fg)!important}.effc[data-sb=ne]{background:color-mix(in srgb,var(--sb-ne) 22%,var(--bg))!important;color:var(--fg)!important}.effc[data-sb=ni]{background:color-mix(in srgb,var(--sb-ni) 22%,var(--bg))!important;color:var(--fg)!important}
+.tr-bar select{background:var(--fill);color:var(--fg);border:0;border-radius:8px;padding:7px 10px;font:500 14px/1.2 var(--f-ui);min-height:36px}
+.sb-leg{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--muted);margin:0 0 8px}.sb-leg>span:first-child{font-weight:600;color:var(--fg)}.sb-leg .k{white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.sb-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--sbc)}
+.sb-leg i[data-sb=de]{--sbc:var(--sb-de)}.sb-leg i[data-sb=di]{--sbc:var(--sb-di)}.sb-leg i[data-sb=ne]{--sbc:var(--sb-ne)}.sb-leg i[data-sb=ni]{--sbc:var(--sb-ni)}
+.btn.ghost:not(:disabled){color:var(--accent-text)}
+.search::placeholder,input::placeholder,textarea::placeholder{color:var(--faint)}
+@media (max-width:820px){
+  .film{flex-direction:row;align-items:baseline;gap:6px;flex:1 1 100%}.film #fTitle{font:600 17px/1.3 var(--f-display);width:auto;flex:0 1 auto;max-width:60%}.film #fProd{font-size:13px;color:var(--muted);flex:1 1 0;min-width:0}
+  .top .tops{gap:8px}
+  .top .tops .btn.sm[data-ic]:not(.pri),.top .tops .btn.sm[data-ic].pri,.top .tops .btn.pri[data-ic]{position:relative;overflow:hidden;white-space:nowrap;text-indent:200%;font-size:12px;gap:0;padding:0;width:40px;height:40px;border-radius:50%;flex:none}
+  .top .tops .btn[data-ic]:not(.pri)::before,.top .tops .btn.pri[data-ic]::before{position:absolute;inset:0;margin:auto;width:18px;height:18px}
+  .ph h1{font-size:22px}
+  .ph .acts [data-x]{display:none}
+  .stats{display:grid!important;grid-template-columns:1fr 1fr;gap:14px 16px}
+  .bbar .tab{font-size:11px;color:var(--muted);letter-spacing:0;min-height:48px}
+}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1738,7 +1772,7 @@ function logChange(what,key,quiet){if(!P)return;const pages=(SHEETS_BY[key]||[pa
 function showSaved(pages){const el=$('#savedPill');const names=pages.map(id=>PG[id].t);
   el.innerHTML=`<span class="ck" aria-hidden="true">✓</span><b>Saved.</b> ${names.length>1?`Updated in all ${names.length} sheets that use it.`:'Updated.'}${names.length>1?`<small>${esc(names.join(' · '))}</small>`:''}`;
   el.hidden=false;const br=document.querySelector('.brand');if(br){br.classList.remove('clap');void br.offsetWidth;br.classList.add('clap')}clearTimeout(showSaved.t);showSaved.t=setTimeout(()=>{el.hidden=true},4200)}
-function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];return `<div class="lastnote" id="lastNote">${c?`<span>Last change</span><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ghost" data-act="history">History (${P.changes.length})</button>`:'<span>No changes yet. Every edit you make is listed here with the sheet, date and time.</span>'}</div>`}
+function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];return `<div class="lastnote" id="lastNote"${c?'':' hidden'}>${c?`<span>Last change</span><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ghost" data-act="history">History (${P.changes.length})</button>`:''}</div>`}
 function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml()}
 function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b"><p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
@@ -4032,11 +4066,22 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   syncTop();
   if(!P.scenes.length&&page!=='artists'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
-  c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> This is an example script so you can see every report. Import your own script to start.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
+  c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> An example script so you can see every report.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
   if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
-function sheetify(root){root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});root.querySelectorAll('.t td.eff').forEach(td=>td.classList.add(NIGHTISH.test(td.textContent)?'n':'d'));root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')})}
+const SB_KEYS=[['de','Day exterior'],['di','Day interior'],['ne','Night exterior'],['ni','Night interior']];
+/* the stripboard colour code every production office uses: yellow day exterior, white day interior, green night exterior, blue night interior */
+function sbKey(txt){const t=String(txt||'');return (NIGHTISH.test(t)?'n':'d')+(/EXT|I\/E/i.test(t)?'e':'i')}
+function sheetify(root){const LEFT=/artist|crowd|cast|character|name|note|remark|title|item|prop|costume|vehicle|animal|dept|detail|reason|task|description|what happens/i;
+  root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});
+  root.querySelectorAll('.t td.eff').forEach(td=>{td.classList.add(NIGHTISH.test(td.textContent)?'n':'d');const tr=td.closest('tr');if(tr&&td.textContent.trim())tr.dataset.sb=sbKey(td.textContent)});
+  root.querySelectorAll('table.t').forEach(t=>{const hs=[...t.querySelectorAll('thead th')];if(!hs.length)return;const cols=hs.map((h,i)=>{const x=h.textContent.trim();return LEFT.test(x)||hdrKind(x)==='loc'||hdrKind(x)==='desc'?i:-1}).filter(i=>i>=0);
+    cols.forEach(i=>hs[i].classList.add('left'));if(cols.length)t.querySelectorAll('tbody tr').forEach(tr=>{if(tr.cells.length!==hs.length)return;cols.forEach(i=>tr.cells[i].classList.add('left'))})});
+  root.querySelectorAll('.effc').forEach(x=>{if(x.textContent.trim())x.dataset.sb=sbKey(x.textContent)});
+  root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')});
+  const first=root.querySelector('.tw');if(first&&root.querySelector('tr[data-sb]')&&!root.querySelector('.sb-leg')){const used=new Set([...root.querySelectorAll('tr[data-sb]')].map(r=>r.dataset.sb));
+    first.insertAdjacentHTML('beforebegin',`<div class="sb-leg" role="group" aria-label="Colour code for scenes"><span>Colour code</span>${SB_KEYS.filter(k=>used.has(k[0])).map(k=>`<span class="k"><i data-sb="${k[0]}"></i>${k[1]}</span>`).join('')}</div>`)}}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
   $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
   if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?'Choose an AI service in Settings (free options available)':'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}

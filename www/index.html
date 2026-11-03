@@ -1072,6 +1072,22 @@ body[data-page=gear] tr:hover .il{transform:none}
 .sa-card,.sa-band,.sa-bar i,.sa-pt circle,.sa-pt text{animation-delay:0s!important}
 .sa-card{animation:none}.sa-card.on,.sa-card:focus-within{transform:none;box-shadow:0 0 0 1.5px var(--c)}
 .sa-pt circle{animation-duration:.3s}.sa-line{animation-duration:.9s}
+/* Translator */
+.i-translate{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h9M7.5 3v2M5 5c.6 3.2 2.6 5.6 6 7M10 5c-.7 3.6-3.1 6.6-7 8M13 21l4-10 4 10M14.5 17.5h5'/%3E%3C/svg%3E")}
+.tr-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}.tr-bar label{display:flex;gap:8px;align-items:center;font-weight:600}.tr-bar select{min-width:0;max-width:62vw}
+.tr-gl{margin:0 0 14px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--panel)}.tr-gl summary{cursor:pointer;font-weight:600}.tr-gl textarea{width:100%;box-sizing:border-box;margin:8px 0;font:inherit;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--fg)}
+.tr-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 8px}.tr-tools .grow,.tr-h .grow{flex:1}.tr-note{margin:0 0 14px}
+.trs{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:0 0 14px;overflow:hidden}
+.tr-h{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}.tr-hd{color:var(--muted);font-size:.9em}
+.tr-chip{font-size:.78em;font-weight:600;border-radius:99px;padding:2px 9px;background:color-mix(in srgb,var(--muted) 14%,transparent);color:var(--muted)}.tr-chip.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}.tr-chip.rv{background:#f5c51833;color:#9a6a00}
+.tr-pv{padding:10px 14px;color:var(--muted);font-size:.92em}
+.tr-g{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;padding:8px 14px 12px;font-family:'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Nirmala UI',inherit;line-height:1.55}
+.tr-ch{font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:2px 0 6px}
+.tr-o,.tr-t{padding:4px 6px;border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere}.tr-o{color:var(--muted)}.tr-t{outline:none}.tr-t:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}.tr-t:focus{background:color-mix(in srgb,var(--accent) 10%,transparent);box-shadow:0 0 0 1.5px var(--accent)}
+.tr-t.u{background:#f5c51838;box-shadow:inset 3px 0 0 #e0a800}.tr-t.fx{box-shadow:inset 3px 0 0 var(--ok)}
+.tr-n{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.82em;color:#8a5d00;margin:2px 0 8px;padding-left:calc(50% + 7px)}.tr-n.fx{color:var(--ok)}.tr-n span{flex:1 1 220px}
+.tr-gap{grid-column:1/-1;height:8px}
+@media (max-width:640px){.tr-g{grid-template-columns:1fr}.tr-ch:nth-child(2){display:none}.tr-ch:first-child::after{content:' / translation below each line'}.tr-o{padding-bottom:0}.tr-t{margin-bottom:6px}.tr-n{padding-left:0}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1143,6 +1159,7 @@ const PAGES=[
  {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
  {g:'Script',id:'characters',nav:'Characters',t:'Characters'},
  {g:'Script',id:'av',nav:'AV script',t:'AV script'},
+ {g:'Script',id:'translate',nav:'Translator',t:'Translator'},
  {g:'Single line order',id:'scenic',nav:'Scenic order',t:'Scenic order'},
  {g:'Single line order',id:'sloLoc',nav:'Location-wise',t:'Location-wise single line order'},
  {g:'Single line order',id:'sloArt',nav:'Artist-wise',t:'Artist-wise single line order'},
@@ -2808,6 +2825,176 @@ function gxMount(){const c=$('#content');if(page!=='gear'||!P)return;const mode=
 function gxInd(){const t=document.querySelector('.gx-tabs');if(!t)return;const on=t.querySelector('[aria-pressed="true"]');const ind=t.querySelector('.gx-ind');if(!on||!ind)return;ind.style.width=on.offsetWidth+'px';ind.style.transform=`translateX(${on.offsetLeft}px)`;if(on.offsetLeft<t.scrollLeft||on.offsetLeft+on.offsetWidth>t.scrollLeft+t.clientWidth)t.scrollTo({left:on.offsetLeft-24,behavior:'smooth'})}
 addEventListener('resize',()=>{if(page==='gear')gxInd()});
 
+/* ================= Translator: whole script, scene by scene, side by side, with a second-pass check ================= */
+const TR_LANGS=[['te','Telugu','తెలుగు'],['tl','Tinglish','Telugu in English letters'],['en','English',''],['hi','Hindi','हिन्दी'],['ta','Tamil','தமிழ்'],['kn','Kannada','ಕನ್ನಡ'],['ml','Malayalam','മലയാളം']];
+const TR_NAME=Object.fromEntries(TR_LANGS.map(l=>[l[0],l[1]]));
+const TR_TAG={te:'te',tl:'te-Latn',en:'en',hi:'hi',ta:'ta',kn:'kn',ml:'ml'};
+const TR_SCRIPT={te:/[ఀ-౿]/,hi:/[ऀ-ॿ]/,ta:/[஀-௿]/,kn:/[ಀ-೿]/,ml:/[ഀ-ൿ]/};
+const TR_DESC={te:'Telugu, written in Telugu script (తెలుగు లిపి)',tl:'Tinglish: the Telugu language written in English (Latin) letters, the way Telugu film scripts are typed, e.g. "nenu ikkade unnanu"',en:'English',hi:'Hindi, written in Devanagari script',ta:'Tamil, written in Tamil script',kn:'Kannada, written in Kannada script',ml:'Malayalam, written in Malayalam script'};
+const TR_EN=new Set('the a an and of to in is are was were he she it his her they them you i we that this with on for at as but not be have has had from by'.split(' '));
+const TR_FATAL=['no_key','bad_key','not_granted'];
+function TRS(){P.trans=P.trans||{src:'auto',tgt:'',gl:{}};P.trans.gl=P.trans.gl||{};return P.trans}
+/* work out the script's language from its letters: Indian scripts by Unicode block, English vs Tinglish by common English words */
+function trGuess(){const t=P.scenes.slice(0,15).map(s=>s.text||'').join('\n').slice(0,20000);const n={};let L=0;
+  for(const ch of t){if(/[A-Za-z]/.test(ch)){L++;continue}for(const k in TR_SCRIPT)if(TR_SCRIPT[k].test(ch)){n[k]=(n[k]||0)+1;break}}
+  const best=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(best&&n[best]>L*0.5)return best;
+  const w=t.toLowerCase().match(/[a-z']+/g)||[];if(!w.length)return 'en';return w.filter(x=>TR_EN.has(x)).length/w.length>0.12?'en':'tl'}
+function trSrc(){const T=TRS();return T.src&&T.src!=='auto'?T.src:trGuess()}
+function trTgt(){const T=TRS(),s=trSrc();if(T.tgt&&T.tgt!==s)return T.tgt;return {tl:'te',te:'tl'}[s]||(s==='en'?'te':'en')}
+function trHash(s){let h=0;s=String(s||'');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return (h>>>0).toString(36)+'.'+s.length}
+const trLines=s=>String(s.text||'').split('\n');
+function trOf(s){const r=s.tr;return r&&r.tgt===trTgt()&&r.src===trSrc()?r:null}
+function trState(s){const r=trOf(s);if(!r)return String(s.text||'').trim()?'none':'blank';if(r.h!==trHash(s.text))return 'stale';if(!r.ck||Object.keys(r.u||{}).length)return 'review';return 'ok'}
+function trGloss(src,tgt){const g=TRS().gl[src+'>'+tgt]||'';return g.split('\n').map(l=>{const m=l.split('=');return m.length>1?{a:m[0].trim(),b:m.slice(1).join('=').trim()}:null}).filter(x=>x&&x.a)}
+function trHas(s,w){w=String(w||'').trim();if(!w)return true;if(/^[\x00-\x7F]+$/.test(w))return new RegExp('(^|[^A-Za-z])'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|[^A-Za-z])','i').test(s);return String(s).includes(w)}
+/* checks that need no AI: empty line, numbers kept, names from the list, right script */
+function trMech(o,t,gl,tgt){const T=String(t||'').trim();if(!T)return 'No translation for this line.';
+  const miss=(String(o).match(/\d+/g)||[]).filter(x=>!T.includes(x));if(miss.length)return `The number ${miss[0]} from the original is missing.`;
+  for(const g of gl){if(g.b&&g.a!==g.b&&trHas(o,g.a)&&!trHas(T,g.b))return `The name ${g.a} should be written ${g.b}.`}
+  const rx=TR_SCRIPT[tgt];if(rx){if(!rx.test(T)&&(T.match(/[A-Za-z]{2,}/g)||[]).length>=4)return `This line is not in ${TR_NAME[tgt]} letters.`}
+  else if(/[ऀ-෿]/.test(T))return 'This line still has Indian-script letters; it should be in English letters.';
+  return ''}
+function trChunks(lines){const max=Math.max(1500,Math.min(3500,Math.floor(aiBudget()*0.2)));const out=[];let cur=[],b=0;
+  lines.forEach((o,i)=>{if(!o.trim())return;const n=byteLen(o)+8;if(cur.length&&(b+n>max||cur.length>=40)){out.push(cur);cur=[];b=0}cur.push(i);b+=n});if(cur.length)out.push(cur);return out}
+const trNames=gl=>gl.length?gl.map(g=>`${g.a} → ${g.b||g.a}`).join('\n'):'(none)';
+function trRules(src,tgt){return `${src==='tl'?'- The source is Telugu written in English letters; English words mixed into it are normal.\n':''}${tgt==='tl'?'- Write Tinglish the way Telugu film crews type it: plain English letters, no accents or diacritics, English words kept as English.\n':''}${tgt==='en'?'- Write natural, idiomatic Indian English that an actor can speak.\n':''}`}
+async function trChunk(s,lines,idx,src,tgt,gl){
+  const r=await ask(`You are a senior film-script translator for Indian cinema. Translate these screenplay lines from ${TR_DESC[src]} into ${TR_DESC[tgt]}.
+Rules:
+- Translate EVERY numbered line and return exactly one result per number. Never merge, split, skip, summarise or add lines.
+- Keep the full meaning, tone, emotion, slang, humour, dialect flavour and register of each line. Do not soften, censor or explain anything.
+- Dialogue must sound natural when an actor speaks it in the target language.
+- A character cue (a name alone on a line, often in capitals, maybe with (V.O.), (O.S.) or (CONT'D)) stays a cue: write the name as the NAME LIST says and keep the tags.
+- Use the NAME LIST spelling for those names everywhere.
+- Keep numbers, years, times, and camera or edit terms (CUT TO, FADE IN, WIDE SHOT, CLOSE UP, POV, INTERCUT, SFX) as they are.
+- If a line is already in the target language, or is only a name or a term, copy it unchanged.
+${trRules(src,tgt)}NAME LIST:
+${trNames(gl)}
+Reply with only JSON: {"lines":[{"n":12,"t":"the translated line"}]}
+
+SCENE ${s.no} · ${headingLine(s)}
+${idx.map(i=>`${i+1}|${lines[i].trim()}`).join('\n')}`);
+  const m={};((r&&r.lines)||[]).forEach(o=>{const i=parseInt(o&&o.n,10)-1,t=o&&(typeof o.t==='string'?o.t:typeof o.text==='string'?o.text:null);if(idx.includes(i)&&t!=null&&t.trim())m[i]=t.replace(/\s*\n\s*/g,' ').trim()});return m}
+async function trVerify(s,lines,t,idx,src,tgt,gl){
+  const r=await ask(`You are a second, independent reviewer checking a film-script translation from ${TR_DESC[src]} into ${TR_DESC[tgt]}. Each line is given twice: "n|" is the ORIGINAL and "n>" is the TRANSLATION.
+Check every pair: the meaning is complete and correct (nothing missing, added, reversed or mistranslated), the tone and slang are kept, names follow the NAME LIST, numbers match, the translation is in the right language and letters, and dialogue sounds natural for an actor.
+Report ONLY the lines that have a problem:
+- "v":"fix" when you are sure the translation is wrong; give the corrected translation in "t" and the reason in "why".
+- "v":"unsure" when it might be wrong or the original is ambiguous (an idiom, wordplay, a typo in the original, unclear meaning); say why in "why" and give your best alternative in "t".
+"why" is short and in English.
+${trRules(src,tgt)}NAME LIST:
+${trNames(gl)}
+Reply with only JSON: {"checks":[{"n":12,"v":"fix","t":"corrected translation","why":"reason"}]}. If every line is right, reply {"checks":[]}.
+
+SCENE ${s.no} · ${headingLine(s)}
+${idx.map(i=>`${i+1}| ${lines[i].trim()}\n${i+1}> ${t[i]||''}`).join('\n')}`);
+  if(!r||!Array.isArray(r.checks))throw {code:'invalid_json'};
+  return r.checks.map(c=>({i:parseInt(c&&c.n,10)-1,v:String((c&&(c.v||c.verdict))||'').toLowerCase(),t:typeof (c&&c.t)==='string'?c.t.replace(/\s*\n\s*/g,' ').trim():'',why:String((c&&c.why)||'').trim()})).filter(c=>idx.includes(c.i)&&(c.v==='fix'||c.v==='unsure'))}
+/* a sure fix replaces the line (the first version is kept so it can be restored), except on lines the user typed; anything else is flagged */
+function trApply(r,checks){checks.forEach(c=>{const ed=r.ed[c.i];
+  if(c.v==='fix'&&c.t&&!ed){if(c.t!==r.t[c.i]){r.fx[c.i]=r.t[c.i];r.t[c.i]=c.t;r.fw[c.i]=c.why||'Corrected by the check.'}}
+  else{r.u[c.i]=c.why||'The check was not sure about this line.';if(c.t&&c.t!==r.t[c.i])r.sg[c.i]=c.t}})}
+function trMechAll(r,lines,gl){lines.forEach((o,i)=>{if(!o.trim())return;const m=trMech(o,r.t[i],gl,r.tgt);if(m)r.u[i]=r.u[i]?r.u[i]+' '+m:m})}
+async function trCheck(s,r,lines,gl){r.u={};r.sg={};let ok=true,stop=null;
+  for(const idx of trChunks(lines)){try{trApply(r,await trVerify(s,lines,r.t,idx,r.src,r.tgt,gl))}catch(e){ok=false;if(e&&(e.code==='cancelled'||TR_FATAL.includes(e.code))){stop=e;break}}}
+  r.ck=ok?1:0;trMechAll(r,lines,gl);return stop}
+async function trScene(s,src,tgt){const lines=trLines(s),gl=trGloss(src,tgt);
+  const r={src,tgt,h:trHash(s.text),t:lines.map(()=>''),u:{},sg:{},fx:{},fw:{},ed:{},ck:0,at:Date.now()};
+  for(const idx of trChunks(lines)){const m=await trChunk(s,lines,idx,src,tgt,gl);const miss=idx.filter(i=>m[i]==null);
+    if(miss.length){try{Object.assign(m,await trChunk(s,lines,miss,src,tgt,gl))}catch(e){if(e&&(e.code==='cancelled'||TR_FATAL.includes(e.code)))throw e}}
+    idx.forEach(i=>{r.t[i]=m[i]!=null?m[i]:''})}
+  const stop=await trCheck(s,r,lines,gl);s.tr=r;if(stop)throw stop}
+/* one AI call writes the cast names in the target letters; the user can edit the list */
+async function trEnsureGloss(src,tgt,force){const T=TRS(),k=src+'>'+tgt;if(T.gl[k]!=null&&!force)return;
+  const names=uniq(P.artists.map(a=>a.name).filter(Boolean)).slice(0,120);if(!names.length){T.gl[k]='';return}
+  const latin=x=>x==='en'||x==='tl';if(latin(src)&&latin(tgt)){T.gl[k]=names.map(n=>n+' = '+n).join('\n');return}
+  const r=await ask(`These are character names from a film script written in ${TR_DESC[src]}. Write each name the way it should appear in ${TR_DESC[tgt]}. Transliterate the sound of the name; never translate its meaning.
+Reply with only JSON: {"names":[{"a":"name exactly as given","b":"name in the target letters"}]}
+
+${names.join('\n')}`);
+  const m=new Map(((r&&r.names)||[]).map(o=>[U(o&&o.a),String((o&&o.b)||'').trim()]));T.gl[k]=names.map(n=>n+' = '+(m.get(U(n))||n)).join('\n')}
+function trJobEnd(done,fails,what){if(JOB&&JOB.fatal&&!done.length)toast(errMsg(JOB.fatal),5000);else if(JOB&&JOB.ctl.signal.aborted)toast('Stopped. Finished scenes are kept.');
+  else toast(`${what} ${done.length} scene${done.length===1?'':'s'}${fails?`. ${fails} scene${fails===1?'':'s'} failed; press the button again to retry them`:''}. Lines marked in yellow need your eye.`,6000)}
+async function trRun(list,label,fn,what){snapshot();startJob(label,list.length);const done=[];let fails=0;const q=list.slice();
+  try{const work=async()=>{while(q.length&&JOB&&!JOB.ctl.signal.aborted){const s=q.shift();try{await fn(s);done.push(s.id)}catch(e){if(e&&e.code==='cancelled'){if(s.tr)done.push(s.id);return}fails++;if(TR_FATAL.includes(e&&e.code)){JOB.fatal=e;q.length=0}}if(JOB){JOB.done++;renderJob()}}};
+    await Promise.all(Array.from({length:Math.max(1,Math.min(aiWorkers(),q.length))},work));trJobEnd(done,fails,what)}
+  finally{if(done.length){logChange(`${what} ${done.length} scene${done.length===1?'':'s'} (${TR_NAME[trSrc()]} → ${TR_NAME[trTgt()]})`,'trans',true);touch(done)}endJob();render(true)}}
+async function trJob(only,redo){if(JOB)return;if(!AI.sample){noAI('The translator needs a connected AI service.');return}
+  const src=trSrc(),tgt=trTgt();if(src===tgt){toast('Choose a different language to translate into.');return}
+  const list=(only?[scById(only)]:P.scenes.filter(s=>redo||['none','stale'].includes(trState(s)))).filter(s=>s&&String(s.text||'').trim());
+  if(!list.length){toast('Every scene is already translated. Use "Translate all again" to redo them.');return}
+  startJob('Preparing the name list',1);try{await trEnsureGloss(src,tgt)}catch(e){if(TR_FATAL.includes(e&&e.code)||(e&&e.code==='cancelled')){endJob();if(e.code!=='cancelled')toast(errMsg(e),5000);return}}endJob();
+  await trRun(list,only?'Translating the scene':`Translating into ${TR_NAME[tgt]}`,s=>trScene(s,src,tgt),'Translated and checked')}
+async function trCheckJob(only){if(JOB)return;if(!AI.sample){noAI('The check needs a connected AI service.');return}
+  const list=(only?[scById(only)]:P.scenes).filter(s=>s&&['ok','review'].includes(trState(s)));if(!list.length){toast('Translate some scenes first.');return}
+  await trRun(list,only?'Checking the scene':'Checking the translation',async s=>{const r=s.tr;['u','sg','fx','fw','ed'].forEach(k=>r[k]=r[k]||{});const stop=await trCheck(s,r,trLines(s),trGloss(r.src,r.tgt));if(stop)throw stop},'Checked')}
+/* translated text of a scene, original kept where a line has no translation */
+function trText(s){const r=trOf(s);const L=trLines(s);if(!r||r.h!==trHash(s.text))return null;return L.map((o,i)=>o.trim()?(r.t[i]||o):o).join('\n')}
+function trBase(){return (P.title||'Script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_'+TR_NAME[trTgt()]}
+async function trTxt(){const S=P.scenes.filter(s=>String(s.text||'').trim());if(!S.some(trText)){toast('Translate some scenes first.');return}
+  const out=[`${P.title} (${TR_NAME[trTgt()]} translation)`,''];S.forEach(s=>{const t=trText(s);out.push(headingLine(s),'',t!=null?t:'(Not translated yet)\n'+s.text,'')});
+  await saveFile(trBase()+'.txt',new TextEncoder().encode(out.join('\n')))}
+/* PDF drawn page by page with the device's own fonts, so Telugu, Hindi, Tamil, Kannada and Malayalam letters print correctly */
+async function trPdf(){const S=P.scenes.filter(s=>trText(s)!=null);if(!S.length){toast('Translate some scenes first.');return}
+  await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});
+  const k=2,W=595*k,H=842*k,M=60*k,FS=11*k,LH=FS*1.6,FF="'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Nirmala UI','Gautami','Mangal','Latha','Tunga','Kartika','Courier New',sans-serif";
+  let cv=null,ctx=null,y=0,pg=0;
+  const put=()=>{if(!cv)return;ctx.font=`${8.5*k}px ${FF}`;ctx.fillStyle='#888';ctx.textAlign='right';ctx.fillText(pg+'.',W-M,H-M*0.6);ctx.textAlign='left';if(pg>1)doc.addPage();doc.addImage(cv.toDataURL('image/jpeg',0.88),'JPEG',0,0,595,842)};
+  const page=()=>{put();cv=document.createElement('canvas');cv.width=W;cv.height=H;ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.textBaseline='top';pg++;y=M;
+    ctx.font=`${8.5*k}px ${FF}`;ctx.fillStyle='#888';ctx.fillText(`${P.title} · ${TR_NAME[trTgt()]}`,M,M*0.5)};
+  const wrap=(t,maxW)=>{const out=[];let cur='';String(t).split(/(\s+)/).forEach(w=>{const nx=cur+w;if(ctx.measureText(nx).width<=maxW||!cur.trim()){cur=nx}else{out.push(cur.trimEnd());cur=w.trimStart()}
+      while(ctx.measureText(cur).width>maxW&&cur.length>1){let n=cur.length;while(n>1&&ctx.measureText(cur.slice(0,n)).width>maxW)n--;out.push(cur.slice(0,n));cur=cur.slice(n)}});if(cur.trim())out.push(cur.trimEnd());return out.length?out:['']};
+  const line=(t,o)=>{o=o||{};const f=`${o.bold?'bold ':''}${o.size||FS}px ${FF}`;ctx.font=f;const ind=o.indent||0;wrap(t,W-2*M-ind).forEach(w=>{if(y+LH>H-M){page();ctx.font=f}ctx.fillStyle='#000';ctx.fillText(w,M+ind,y);y+=o.lh||LH})};
+  page();line(P.title||'Script',{bold:1,size:18*k,lh:18*k*1.5});line(`${TR_NAME[trSrc()]} → ${TR_NAME[trTgt()]} translation`,{size:10*k});y+=LH;
+  S.forEach(s=>{if(y>H-M-LH*4)page();line(headingLine(s).toUpperCase(),{bold:1});y+=LH*0.4;let gap=false;
+    trText(s).split('\n').forEach((t,i)=>{const o=trLines(s)[i]||'';if(!t.trim()){if(!gap)y+=LH*0.5;gap=true;return}gap=false;const lead=Math.min(40,(o.match(/^\s*/)||[''])[0].length);
+      const cue=/^[A-Z][A-Z .'’()\-]{1,30}$/.test(o.trim())&&o.trim().split(/\s+/).length<=4;line(t.trim(),{bold:cue,indent:cue?(W-2*M)*0.32:lead*FS*0.3})});y+=LH});
+  put();await saveFile(trBase()+'.pdf',await pdfOut(doc))}
+/* a separate project holding the translated script; the original project is not changed */
+async function trNewProject(){const S=P.scenes.filter(s=>trText(s)!=null);if(!S.length){toast('Translate some scenes first.');return}
+  await flushNow();const np=JSON.parse(JSON.stringify(P));const src=trSrc(),tgt=trTgt();
+  np.scenes.forEach(s=>{const o=P.scenes.find(x=>x.id===s.id);const t=o&&trText(o);if(t!=null)s.text=t;delete s.tr});
+  Object.assign(np,{id:uid(),title:`${P.title} (${TR_NAME[tgt]})`,sample:false,created:Date.now(),updated:Date.now(),changes:[{at:Date.now(),sheet:'Translator',what:`Made from "${P.title}", translated ${TR_NAME[src]} → ${TR_NAME[tgt]}`}]});
+  delete np.draft;delete np.trans;P=np;undoStack.length=0;$('#bUndo').disabled=true;touch(np.scenes.map(s=>s.id));saveLocal();lsSet('last',np.id);page='script';render();
+  toast(`Opened "${np.title}". Your original project is unchanged; find both under Projects.`,6000)}
+R.translate=()=>{const T=TRS(),src=trSrc(),tgt=trTgt(),sc=P.scenes.filter(s=>String(s.text||'').trim());const st=new Map(sc.map(s=>[s.id,trState(s)]));const cnt=k=>sc.filter(s=>st.get(s.id)===k).length;
+  const done=cnt('ok')+cnt('review'),todo=cnt('none')+cnt('stale');let rv=0,fx=0;sc.forEach(s=>{const r=trOf(s);if(r&&st.get(s.id)!=='stale'){rv+=Object.keys(r.u||{}).length;fx+=Object.keys(r.fx||{}).length}});
+  const sel=(k,cur,auto)=>`<select data-trsel="${k}" aria-label="${k==='src'?'Translate from':'Translate into'}">${auto?`<option value="auto"${T.src==='auto'||!T.src?' selected':''}>Auto-detect (${TR_NAME[src]})</option>`:''}${TR_LANGS.map(([v,n,x])=>`<option value="${v}"${!(auto&&(T.src==='auto'||!T.src))&&cur===v?' selected':''}>${n}${x?' · '+x:''}</option>`).join('')}</select>`;
+  const gl=T.gl[src+'>'+tgt],gn=trGloss(src,tgt).length;const f=VIEW.trf||'all';
+  const shown=sc.filter(s=>f==='all'||(f==='review'?st.get(s.id)==='review':['none','stale'].includes(st.get(s.id))));
+  const card=s=>{const k=st.get(s.id),r=trOf(s),L=trLines(s);const chip=k==='ok'?'<span class="tr-chip ok">Checked</span>':k==='review'?`<span class="tr-chip rv">${!r.ck?'Check did not finish':'Needs review · '+Object.keys(r.u||{}).length}</span>`:k==='stale'?'<span class="tr-chip rv">Script changed since translation</span>':'<span class="tr-chip no">Not translated</span>';
+    const head=`<div class="tr-h"><b>Sc ${esc(s.no)}</b><span class="tr-hd">${esc([s.ie,s.loc,s.time].filter(Boolean).join(' · '))}</span>${chip}<span class="grow"></span>${k==='ok'||k==='review'?`<button class="btn sm ghost" data-tr="ck1" data-sid="${s.id}">Check again</button>`:''}<button class="btn sm${k==='none'||k==='stale'?' pri':''}" data-tr="one" data-sid="${s.id}">${k==='none'?'Translate':'Translate again'}</button></div>`;
+    if(k==='none'||k==='stale'){const pv=L.filter(x=>x.trim()).slice(0,3).map(x=>esc(x.trim())).join('<br>');return `<section class="trs" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase())}">${head}<div class="tr-pv" lang="${TR_TAG[src]}">${pv}${L.filter(x=>x.trim()).length>3?' …':''}</div></section>`}
+    let rows='',gap=false;L.forEach((o,i)=>{if(!o.trim()){if(!gap)rows+='<div class="tr-gap"></div>';gap=true;return}gap=false;const u=r.u[i],sg=r.sg[i],was=r.fx[i];
+      rows+=`<div class="tr-o" lang="${TR_TAG[src]}">${esc(o.trim())}</div><div class="tr-t${u?' u':''}${was!=null?' fx':''}" contenteditable="true" spellcheck="false" lang="${TR_TAG[tgt]}" data-trl="${s.id}|${i}" data-ph="Type the translation" aria-label="Translation of line ${i+1}">${esc(r.t[i]||'')}</div>`;
+      if(u)rows+=`<div class="tr-n"><span>${esc(u)}</span>${sg?`<button class="btn sm" data-tr="sug" data-sid="${s.id}" data-i="${i}" lang="${TR_TAG[tgt]}">Use: ${esc(sg)}</button>`:''}<button class="btn sm ghost" data-tr="okl" data-sid="${s.id}" data-i="${i}">It is right</button></div>`;
+      else if(was!=null)rows+=`<div class="tr-n fx"><span>Corrected by the check: ${esc(r.fw[i]||'')}</span><button class="btn sm ghost" data-tr="undo" data-sid="${s.id}" data-i="${i}">Restore first version</button></div>`});
+    return `<section class="trs" data-q="${esc((s.no+' '+s.loc+' '+s.text+' '+r.t.join(' ')).toLowerCase())}">${head}<div class="tr-g"><div class="tr-ch">${TR_NAME[src]} · original</div><div class="tr-ch">${TR_NAME[tgt]} · translation</div>${rows}</div></section>`};
+  const acts=searchBox('Search scenes')+(done&&!todo?'<button class="btn sm" disabled>All translated</button>':`<button class="btn sm pri" data-tr="all">${done?`Translate the rest (${todo})`:'Translate script'}</button>`);
+  return {html:pageHead('Translator','Translate the whole script scene by scene. A second AI pass checks every line against the original and marks anything doubtful in yellow. Character names follow your name list, and the original script is never changed.',acts)+
+  `<div class="tr-bar"><label>From ${sel('src',src,true)}</label><button class="btn sm ghost" data-tr="swap" aria-label="Swap languages" title="Swap languages">⇄</button><label>Into ${sel('tgt',tgt,false)}</label></div>
+  <details class="tr-gl"><summary>Name list · ${gn} name${gn===1?'':'s'} kept the same in every scene</summary><p class="small muted">One per line: <b>name in the script = how to write it in ${esc(TR_NAME[tgt])}</b>. It is made from your cast list when you first translate; edit it any time, then use "Check all again".</p><textarea data-trg rows="6" lang="${TR_TAG[tgt]}" placeholder="NINA = నీనా">${esc(gl||'')}</textarea><div><button class="btn sm" data-tr="gloss">${gl?'Write the names again with AI':'Write the names with AI'}</button></div></details>
+  <div class="stats"><div class="stat"><b>${done}/${sc.length}</b><span>Scenes translated</span></div><div class="stat"><b>${cnt('ok')}</b><span>Checked, no issues</span></div><div class="stat"><b>${rv}</b><span>Lines to review</span></div><div class="stat"><b>${fx}</b><span>Lines corrected by the check</span></div></div>
+  <div class="tr-tools">${segm('trf',[['all','All scenes'],['review','Needs review'],['none','Not translated']])}<span class="grow"></span>${done?`<button class="btn sm ghost" data-tr="ckall">Check all again</button><button class="btn sm ghost" data-tr="redo">Translate all again</button><button class="btn sm" data-tr="pdf">Translated script PDF</button><button class="btn sm" data-tr="txt">Text file</button><button class="btn sm" data-tr="newp">Open as new project</button>`:''}</div>
+  <p class="small muted tr-note">No translator is 100% accurate. Read the yellow lines, and have a native speaker read dialogue before the shoot.</p>
+  ${shown.length?shown.map(card).join(''):'<div class="empty"><b>Nothing here</b>No scenes match this filter.</div>'}`,
+  exp:{orient:'landscape',sheets:[{name:'Translation',cols:[{h:'Sc No',w:8},{h:'Heading',w:26},{h:`Original (${TR_NAME[src]})`,w:60},{h:`Translation (${TR_NAME[tgt]})`,w:60},{h:'Review notes',w:40}],
+    rows:sc.map(s=>{const r=trOf(s),t=trText(s),L=trLines(s);return [s.no,headingLine(s),String(s.text||'').trim(),t!=null?t.trim():'',r&&t!=null?Object.keys(r.u||{}).map(i=>`Line ${+i+1} (${(L[i]||'').trim().slice(0,40)}): ${r.u[i]}`).join('\n'):(st.get(s.id)==='stale'?'Script changed since translation':'Not translated')]})}]}}};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tr]');if(!t||!P)return;const a=t.dataset.tr,s=t.dataset.sid?scById(t.dataset.sid):null,i=+t.dataset.i,r=s&&s.tr;
+  if(a==='all')trJob();if(a==='redo'){if(!t.dataset.armed){t.dataset.armed=1;const o=t.textContent;t.textContent='Replace every translation? Click again';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent=o}},3500);return}trJob(null,true)}
+  if(a==='one'&&s)trJob(s.id,true);if(a==='ck1'&&s)trCheckJob(s.id);if(a==='ckall')trCheckJob();
+  if(a==='pdf')trPdf().catch(()=>toast('The PDF could not be made. Try again.'));if(a==='txt')trTxt();if(a==='newp')trNewProject();
+  if(a==='swap'){const T=TRS(),sr=trSrc(),tg=trTgt();T.src=tg;T.tgt=sr;touch([]);render(true)}
+  if(a==='gloss'){if(JOB)return;if(!AI.sample){noAI('Writing the names needs a connected AI service. You can type them yourself.');return}const sr=trSrc(),tg=trTgt();startJob('Writing the name list',1);
+    trEnsureGloss(sr,tg,true).then(()=>{touch([]);toast('Name list written. Check it, then translate or "Check all again".')}).catch(err=>{if(!(err&&err.code==='cancelled'))toast(errMsg(err),5000)}).finally(()=>{endJob();render(true)})}
+  if(r&&['sug','okl','undo'].includes(a)){snapshot();if(a==='sug'&&r.sg[i]!=null){r.t[i]=r.sg[i];r.ed[i]=1}if(a==='undo'&&r.fx[i]!=null){r.t[i]=r.fx[i];delete r.fx[i];delete r.fw[i];r.ed[i]=1}
+    delete r.u[i];delete r.sg[i];logChange(`Sc ${s.no} · translation line ${i+1} ${a==='okl'?'marked right':a==='sug'?'replaced with the suggestion':'restored'}`,'trans',true);touch([s.id]);render(true)}});
+document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset)return;
+  if(el.dataset.trsel){const T=TRS(),k=el.dataset.trsel;if(k==='tgt'&&el.value===trSrc()){toast('That is the language the script is in. Choose another one.');render(true);return}T[k]=el.value;if(k==='src'&&T.tgt===trSrc())T.tgt='';touch([]);render(true)}
+  if(el.matches&&el.matches('textarea[data-trg]')){TRS().gl[trSrc()+'>'+trTgt()]=el.value;touch([]);toast('Name list saved. It is used for the next translation or check.')}});
+document.addEventListener('focusout',e=>{const el=e.target;if(!P||!el.dataset||!el.dataset.trl)return;const [sid,ii]=el.dataset.trl.split('|'),s=scById(sid),r=s&&s.tr,i=+ii;if(!r)return;
+  const v=el.innerText.replace(/\s*\n\s*/g,' ').trim();if(v===(r.t[i]||''))return;snapshot();r.t[i]=v;r.ed[i]=1;delete r.u[i];delete r.sg[i];delete r.fx[i];delete r.fw[i];
+  const m=trMech(trLines(s)[i]||'',v,trGloss(r.src,r.tgt),r.tgt);if(m)r.u[i]=m;logChange(`Sc ${s.no} · translation line ${i+1} edited`,'trans',true);touch([s.id]);needsRender=true});
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];
 function BBD(){if(!P.beats||!Array.isArray(P.beats.cards))P.beats={cards:[],zoom:1};return P.beats}

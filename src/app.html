@@ -1064,7 +1064,7 @@ body[data-page=gear] tr:hover .il{transform:none}
 .tr-h{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}.tr-hd{color:var(--muted);font-size:.9em}
 .tr-chip{font-size:.78em;font-weight:600;border-radius:99px;padding:2px 9px;background:color-mix(in srgb,var(--muted) 14%,transparent);color:var(--muted)}.tr-chip.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}.tr-chip.rv{background:#f5c51833;color:#9a6a00}
 .tr-pv{padding:10px 14px;color:var(--muted);font-size:.92em}
-.tr-g{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;padding:8px 14px 12px;font-family:'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Nirmala UI',inherit;line-height:1.55}
+.tr-g{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;padding:8px 14px 12px;font-family:'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Bengali','Noto Sans Gujarati','Noto Sans Gurmukhi','Noto Nastaliq Urdu','Noto Naskh Arabic','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Nirmala UI',inherit;line-height:1.55}
 .tr-ch{font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:2px 0 6px}
 .tr-o,.tr-t{padding:4px 6px;border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere}.tr-o{color:var(--muted)}.tr-t{outline:none}.tr-t:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}.tr-t:focus{background:color-mix(in srgb,var(--accent) 10%,transparent);box-shadow:0 0 0 1.5px var(--accent)}
 .tr-t.u{background:#f5c51838;box-shadow:inset 3px 0 0 #e0a800}.tr-t.fx{box-shadow:inset 3px 0 0 var(--ok)}
@@ -1279,9 +1279,9 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 .wl-pop{position:fixed;z-index:61;width:min(360px,calc(100vw - 24px));max-height:min(420px,calc(100vh - 24px));overflow:auto;background:var(--glass-hi);backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);border:1px solid var(--glass-line);border-radius:14px;padding:12px 14px;box-shadow:var(--glass-sh);color:var(--fg);font-size:13.5px;line-height:1.45}
 .wl-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.wl-h b{font-size:15px;overflow-wrap:anywhere}
 .wl-tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;background:var(--fill);border-radius:10px;padding:8px 10px;margin-bottom:8px}.wl-tr .small{grid-column:1/-1}
-.wl-tt{font:600 19px/1.35 "Noto Sans Telugu","Nirmala UI","Gautami",var(--f-ui);overflow-wrap:anywhere}
+.wl-tt{font:600 19px/1.35 "Noto Sans Telugu","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Bengali","Noto Sans Gujarati","Noto Sans Gurmukhi","Noto Nastaliq Urdu","Noto Naskh Arabic","Nirmala UI","Gautami",var(--f-ui);overflow-wrap:anywhere}
 .wl-defs{margin:0 0 6px;padding-left:20px}.wl-defs li{margin:4px 0}.wl-defs i{color:var(--muted)}.wl-defs .small{display:block}
-.wl-src{margin:6px 0 0}
+.wl-src{margin:6px 0 0}.wl-into{display:flex;gap:8px;align-items:center;margin:0 0 8px}.wl-into select{background:var(--fill);border:1px solid var(--glass-line);color:var(--fg);border-radius:8px;padding:5px 8px;font:500 13px var(--f-ui);max-width:100%}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -2437,7 +2437,7 @@ function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipbo
 /* ---- Page ---- */
 R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   const fresh=!D.els.length;
-  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>${['screen','tv'].includes(fmtOf())?`Page template: <b>${esc(TPLS[tplOf()].name)}</b>. `:''}It saves on this device as you type. Select a word to see its meaning and Telugu. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
+  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>${['screen','tv'].includes(fmtOf())?`Page template: <b>${esc(TPLS[tplOf()].name)}</b>. `:''}It saves on this device as you type. Select a word to see its meaning and translation (Telugu, Hindi, Tamil, Malayalam and more). Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
     <div class="acts">${['screen','tv'].includes(fmtOf())?'<button class="btn sm" data-act="wrTpl">Page template</button>':''}<button class="btn sm" data-act="wrTitle">Title page</button><button class="btn sm" data-act="wrOpen">Open file</button><button class="btn sm" data-act="wrDownload">Download</button><button class="btn sm pri" data-act="wrApply">Update breakdown</button></div></div>`;
   if(fresh&&hasScript)return {html:head+`<div class="empty"><b>Write or revise this script</b>This project already has ${P.scenes.length} scenes from an imported script.<br><br><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn pri" data-act="wrFromProject">Open the script in the writer</button><button class="btn" data-act="wrBlank">Start a blank script</button></div></div>`,exp:null};
   const unsynced=D.at&&D.at>(D.syncedAt||0)&&hasScript;
@@ -3146,13 +3146,14 @@ function gxInd(){const t=document.querySelector('.gx-tabs');if(!t)return;const o
 addEventListener('resize',()=>{if(page==='gear')gxInd()});
 
 /* ================= Translator: whole script, scene by scene, side by side, with a second-pass check ================= */
-const TR_LANGS=[['te','Telugu','తెలుగు'],['tl','Tinglish','Telugu in English letters'],['en','English',''],['hi','Hindi','हिन्दी'],['ta','Tamil','தமிழ்'],['kn','Kannada','ಕನ್ನಡ'],['ml','Malayalam','മലയാളം']];
+const TR_LANGS=[['te','Telugu','తెలుగు'],['tl','Tinglish','Telugu in English letters'],['en','English',''],['hi','Hindi','हिन्दी'],['ta','Tamil','தமிழ்'],['kn','Kannada','ಕನ್ನಡ'],['ml','Malayalam','മലയാളം'],['bn','Bengali','বাংলা'],['gu','Gujarati','ગુજરાતી'],['mr','Marathi','मराठी'],['pa','Punjabi','ਪੰਜਾਬੀ'],['ur','Urdu','اردو']];
 const TR_NAME=Object.fromEntries(TR_LANGS.map(l=>[l[0],l[1]]));
-const TR_TAG={te:'te',tl:'te-Latn',en:'en',hi:'hi',ta:'ta',kn:'kn',ml:'ml'};
-const TR_SCRIPT={te:/[ఀ-౿]/,hi:/[ऀ-ॿ]/,ta:/[஀-௿]/,kn:/[ಀ-೿]/,ml:/[ഀ-ൿ]/};
-const TR_DESC={te:'Telugu, written in Telugu script (తెలుగు లిపి)',tl:'Tinglish: the Telugu language written in English (Latin) letters, the way Telugu film scripts are typed, e.g. "nenu ikkade unnanu"',en:'English',hi:'Hindi, written in Devanagari script',ta:'Tamil, written in Tamil script',kn:'Kannada, written in Kannada script',ml:'Malayalam, written in Malayalam script'};
+const TR_TAG={te:'te',tl:'te-Latn',en:'en',hi:'hi',ta:'ta',kn:'kn',ml:'ml',bn:'bn',gu:'gu',mr:'mr',pa:'pa',ur:'ur'};
+const TR_RTL=new Set(['ur']);const trDir=l=>TR_RTL.has(l)?' dir="rtl"':'';
+const TR_SCRIPT={te:/[ఀ-౿]/,hi:/[ऀ-ॿ]/,ta:/[஀-௿]/,kn:/[ಀ-೿]/,ml:/[ഀ-ൿ]/,bn:/[\u0980-\u09FF]/,gu:/[\u0A80-\u0AFF]/,pa:/[\u0A00-\u0A7F]/,ur:/[\u0600-\u06FF]/,mr:/[ऀ-ॿ]/};
+const TR_DESC={te:'Telugu, written in Telugu script (తెలుగు లిపి)',tl:'Tinglish: the Telugu language written in English (Latin) letters, the way Telugu film scripts are typed, e.g. "nenu ikkade unnanu"',en:'English',hi:'Hindi, written in Devanagari script',ta:'Tamil, written in Tamil script',kn:'Kannada, written in Kannada script',ml:'Malayalam, written in Malayalam script',bn:'Bengali, written in Bengali script',gu:'Gujarati, written in Gujarati script',mr:'Marathi, written in Devanagari script',pa:'Punjabi, written in Gurmukhi script',ur:'Urdu, written in Urdu (Perso-Arabic) script, right to left'};
 const TR_EN=new Set('the a an and of to in is are was were he she it his her they them you i we that this with on for at as but not be have has had from by'.split(' '));
-const TR_FATAL=['no_key','bad_key','not_granted'];
+const TR_FATAL=['no_key','bad_key','not_granted','free_down'];
 function TRS(){P.trans=P.trans||{src:'auto',tgt:'',gl:{}};P.trans.gl=P.trans.gl||{};return P.trans}
 /* work out the script's language from its letters: Indian scripts by Unicode block, English vs Tinglish by common English words */
 function trGuess(){const t=P.scenes.slice(0,15).map(s=>s.text||'').join('\n').slice(0,20000);const n={};let L=0;
@@ -3172,7 +3173,7 @@ function trMech(o,t,gl,tgt){const T=String(t||'').trim();if(!T)return 'No transl
   const miss=(String(o).match(/\d+/g)||[]).filter(x=>!T.includes(x));if(miss.length)return `The number ${miss[0]} from the original is missing.`;
   for(const g of gl){if(g.b&&g.a!==g.b&&trHas(o,g.a)&&!trHas(T,g.b))return `The name ${g.a} should be written ${g.b}.`}
   const rx=TR_SCRIPT[tgt];if(rx){if(!rx.test(T)&&(T.match(/[A-Za-z]{2,}/g)||[]).length>=4)return `This line is not in ${TR_NAME[tgt]} letters.`}
-  else if(/[ऀ-෿]/.test(T))return 'This line still has Indian-script letters; it should be in English letters.';
+  else if(/[\u0600-\u06FFऀ-෿]/.test(T))return 'This line still has Indian-script letters; it should be in English letters.';
   return ''}
 function trChunks(lines){const max=Math.max(1500,Math.min(3500,Math.floor(aiBudget()*0.2)));const out=[];let cur=[],b=0;
   lines.forEach((o,i)=>{if(!o.trim())return;const n=byteLen(o)+8;if(cur.length&&(b+n>max||cur.length>=40)){out.push(cur);cur=[];b=0}cur.push(i);b+=n});if(cur.length)out.push(cur);return out}
@@ -3235,9 +3236,34 @@ ${names.join('\n')}`);
   const m=new Map(((r&&r.names)||[]).map(o=>[U(o&&o.a),String((o&&o.b)||'').trim()]));T.gl[k]=names.map(n=>n+' = '+(m.get(U(n))||n)).join('\n')}
 function trJobEnd(done,fails,what){if(JOB&&JOB.fatal&&!done.length)toast(errMsg(JOB.fatal),5000);else if(JOB&&JOB.ctl.signal.aborted)toast('Stopped. Finished scenes are kept.');
   else toast(`${what} ${done.length} scene${done.length===1?'':'s'}${fails?`. ${fails} scene${fails===1?'':'s'} failed; press the button again to retry them`:''}. Lines marked in yellow need your eye.`,6000)}
-async function trRun(list,label,fn,what){snapshot();startJob(label,list.length);const done=[];let fails=0;const q=list.slice();
+/* Free Google Translate (the unofficial web endpoint used by deep-translator, Asrivast1/translate_to_indie and
+   vishnuuuvrdn/Telugu-Translator-Extension). No key, no second check, and Google can limit or block it at any time. */
+const GT_OK=new Set(['te','tl','en','hi','ta','kn','ml','bn','gu','mr','pa','ur']);
+ERRS.free_down='Could not reach free Google Translate (offline, blocked here, or Google has limited it). Try again later, or use AI translation.';
+/* Tinglish: Google cannot write it, so ask for Telugu with its romanisation (dt=rm) and strip the accent marks */
+async function gtx(text,sl,tl,ms){const c=new AbortController();const id=setTimeout(()=>c.abort(),ms||12000);const ting=tl==='tl';
+  try{const r=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(sl||'auto')}&tl=${ting?'te':encodeURIComponent(tl)}&dt=t${ting?'&dt=rm':''}&q=${encodeURIComponent(text)}`,{signal:c.signal});
+    if(!r.ok)throw {code:'free_down',message:'Google Translate answered '+r.status};const d=await r.json();const seg=Array.isArray(d)&&Array.isArray(d[0])?d[0]:[];
+    let out=seg.filter(x=>Array.isArray(x)&&x[0]!=null).map(x=>String(x[0]||'')).join('');
+    if(ting){const rm=seg.find(x=>Array.isArray(x)&&x[0]==null&&typeof x[2]==='string');if(!rm)throw {code:'free_down',message:'No Tinglish from Google'};out=rm[2].normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+    return {text:out,lang:typeof d[2]==='string'?d[2]:''}}
+  catch(e){if(e&&e.code)throw e;throw {code:'free_down',message:String(e&&e.message||e)}}finally{clearTimeout(id)}}
+/* one request per chunk of lines; the newlines come back in place, so line i stays line i */
+async function gtxLines(lines,sl,tl){const out=(await gtx(lines.join('\n'),sl,tl)).text.split('\n').map(x=>x.trim());while(out.length>lines.length&&!out[out.length-1])out.pop();return out}
+async function trFreeScene(s,src,tgt){const lines=trLines(s),sl=src==='tl'?'auto':src;const idx=lines.map((o,i)=>o.trim()?i:-1).filter(i=>i>=0);
+  const r={src,tgt,h:trHash(s.text),t:lines.map(()=>''),u:{},sg:{},fx:{},fw:{},ed:{},ck:0,free:1,at:Date.now()};
+  const stop=()=>{if(!JOB||JOB.ctl.signal.aborted)throw {code:'cancelled'}};let chunk=[],len=0;
+  const flush=async()=>{if(!chunk.length)return;stop();const out=await gtxLines(chunk.map(i=>lines[i].trim()),sl,tgt);
+    if(out.length===chunk.length)chunk.forEach((i,k)=>r.t[i]=out[k]);else for(const i of chunk){stop();r.t[i]=(await gtx(lines[i].trim(),sl,tgt)).text.trim()}chunk=[];len=0};
+  for(const i of idx){const n=encodeURIComponent(lines[i]).length+3;if(len+n>1500&&chunk.length)await flush();chunk.push(i);len+=n}await flush();
+  trMechAll(r,lines,trGloss(src,tgt));s.tr=r}
+async function trFreeJob(only,redo){if(JOB)return;const src=trSrc(),tgt=trTgt();if(src===tgt){toast('Choose a different language to translate into.');return}
+  const list=(only?[scById(only)]:P.scenes.filter(s=>redo||['none','stale'].includes(trState(s)))).filter(s=>s&&String(s.text||'').trim());
+  if(!list.length){toast('Every scene is already translated.');return}
+  await trRun(list,`Free translating into ${TR_NAME[tgt]}`,s=>trFreeScene(s,src,tgt),'Free translated',1)}
+async function trRun(list,label,fn,what,workers){snapshot();startJob(label,list.length);const done=[];let fails=0;const q=list.slice();
   try{const work=async()=>{while(q.length&&JOB&&!JOB.ctl.signal.aborted){const s=q.shift();try{await fn(s);done.push(s.id)}catch(e){if(e&&e.code==='cancelled'){if(s.tr)done.push(s.id);return}fails++;if(TR_FATAL.includes(e&&e.code)){JOB.fatal=e;q.length=0}}if(JOB){JOB.done++;renderJob()}}};
-    await Promise.all(Array.from({length:Math.max(1,Math.min(aiWorkers(),q.length))},work));trJobEnd(done,fails,what)}
+    await Promise.all(Array.from({length:Math.max(1,Math.min(workers||aiWorkers(),q.length))},work));trJobEnd(done,fails,what)}
   finally{if(done.length){logChange(`${what} ${done.length} scene${done.length===1?'':'s'} (${TR_NAME[trSrc()]} → ${TR_NAME[trTgt()]})`,'trans',true);touch(done)}endJob();render(true)}}
 async function trJob(only,redo){if(JOB)return;if(!AI.sample){noAI('The translator needs a connected AI service.');return}
   const src=trSrc(),tgt=trTgt();if(src===tgt){toast('Choose a different language to translate into.');return}
@@ -3257,18 +3283,19 @@ async function trTxt(){const S=P.scenes.filter(s=>String(s.text||'').trim());if(
 /* PDF drawn page by page with the device's own fonts, so Telugu, Hindi, Tamil, Kannada and Malayalam letters print correctly */
 async function trPdf(){const S=P.scenes.filter(s=>trText(s)!=null);if(!S.length){toast('Translate some scenes first.');return}
   await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});
-  const k=2,W=595*k,H=842*k,M=60*k,FS=11*k,LH=FS*1.6,FF="'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Nirmala UI','Gautami','Mangal','Latha','Tunga','Kartika','Courier New',sans-serif";
+  const k=2,W=595*k,H=842*k,M=60*k,FS=11*k,LH=FS*1.6,FF="'Noto Sans Telugu','Noto Sans Devanagari','Noto Sans Tamil','Noto Sans Kannada','Noto Sans Malayalam','Noto Sans Bengali','Noto Sans Gujarati','Noto Sans Gurmukhi','Noto Nastaliq Urdu','Noto Naskh Arabic','Nirmala UI','Shruti','Vrinda','Urdu Typesetting','Gautami','Mangal','Latha','Tunga','Kartika','Courier New',sans-serif";
   let cv=null,ctx=null,y=0,pg=0;
   const put=()=>{if(!cv)return;ctx.font=`${8.5*k}px ${FF}`;ctx.fillStyle='#888';ctx.textAlign='right';ctx.fillText(pg+'.',W-M,H-M*0.6);ctx.textAlign='left';if(pg>1)doc.addPage();doc.addImage(cv.toDataURL('image/jpeg',0.88),'JPEG',0,0,595,842)};
   const page=()=>{put();cv=document.createElement('canvas');cv.width=W;cv.height=H;ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.textBaseline='top';pg++;y=M;
     ctx.font=`${8.5*k}px ${FF}`;ctx.fillStyle='#888';ctx.fillText(`${P.title} · ${TR_NAME[trTgt()]}`,M,M*0.5)};
   const wrap=(t,maxW)=>{const out=[];let cur='';String(t).split(/(\s+)/).forEach(w=>{const nx=cur+w;if(ctx.measureText(nx).width<=maxW||!cur.trim()){cur=nx}else{out.push(cur.trimEnd());cur=w.trimStart()}
       while(ctx.measureText(cur).width>maxW&&cur.length>1){let n=cur.length;while(n>1&&ctx.measureText(cur.slice(0,n)).width>maxW)n--;out.push(cur.slice(0,n));cur=cur.slice(n)}});if(cur.trim())out.push(cur.trimEnd());return out.length?out:['']};
-  const line=(t,o)=>{o=o||{};const f=`${o.bold?'bold ':''}${o.size||FS}px ${FF}`;ctx.font=f;const ind=o.indent||0;wrap(t,W-2*M-ind).forEach(w=>{if(y+LH>H-M){page();ctx.font=f}ctx.fillStyle='#000';ctx.fillText(w,M+ind,y);y+=o.lh||LH})};
+  const line=(t,o)=>{o=o||{};const f=`${o.bold?'bold ':''}${o.size||FS}px ${FF}`;ctx.font=f;const ind=o.indent||0;wrap(t,W-2*M-ind).forEach(w=>{if(y+LH>H-M){page();ctx.font=f}ctx.fillStyle='#000';
+    if(o.rtl){ctx.direction='rtl';ctx.textAlign='right';ctx.fillText(w,W-M-ind,y);ctx.direction='ltr';ctx.textAlign='left'}else ctx.fillText(w,M+ind,y);y+=o.lh||LH})};
   page();line(P.title||'Script',{bold:1,size:18*k,lh:18*k*1.5});line(`${TR_NAME[trSrc()]} → ${TR_NAME[trTgt()]} translation`,{size:10*k});y+=LH;
   S.forEach(s=>{if(y>H-M-LH*4)page();line(headingLine(s).toUpperCase(),{bold:1});y+=LH*0.4;let gap=false;
     trText(s).split('\n').forEach((t,i)=>{const o=trLines(s)[i]||'';if(!t.trim()){if(!gap)y+=LH*0.5;gap=true;return}gap=false;const lead=Math.min(40,(o.match(/^\s*/)||[''])[0].length);
-      const cue=/^[A-Z][A-Z .'’()\-]{1,30}$/.test(o.trim())&&o.trim().split(/\s+/).length<=4;line(t.trim(),{bold:cue,indent:cue?(W-2*M)*0.32:lead*FS*0.3})});y+=LH});
+      const cue=/^[A-Z][A-Z .'’()\-]{1,30}$/.test(o.trim())&&o.trim().split(/\s+/).length<=4;line(t.trim(),{bold:cue,indent:cue?(W-2*M)*0.32:lead*FS*0.3,rtl:TR_RTL.has(trTgt())})});y+=LH});
   put();await saveFile(trBase()+'.pdf',await pdfOut(doc))}
 /* a separate project holding the translated script; the original project is not changed */
 async function trNewProject(){const S=P.scenes.filter(s=>trText(s)!=null);if(!S.length){toast('Translate some scenes first.');return}
@@ -3282,16 +3309,16 @@ R.translate=()=>{const T=TRS(),src=trSrc(),tgt=trTgt(),sc=P.scenes.filter(s=>Str
   const sel=(k,cur,auto)=>`<select data-trsel="${k}" aria-label="${k==='src'?'Translate from':'Translate into'}">${auto?`<option value="auto"${T.src==='auto'||!T.src?' selected':''}>Auto-detect (${TR_NAME[src]})</option>`:''}${TR_LANGS.map(([v,n,x])=>`<option value="${v}"${!(auto&&(T.src==='auto'||!T.src))&&cur===v?' selected':''}>${n}${x?' · '+x:''}</option>`).join('')}</select>`;
   const gl=T.gl[src+'>'+tgt],gn=trGloss(src,tgt).length;const f=VIEW.trf||'all';
   const shown=sc.filter(s=>f==='all'||(f==='review'?st.get(s.id)==='review':['none','stale'].includes(st.get(s.id))));
-  const card=s=>{const k=st.get(s.id),r=trOf(s),L=trLines(s);const chip=k==='ok'?'<span class="tr-chip ok">Checked</span>':k==='review'?`<span class="tr-chip rv">${!r.ck?'Check did not finish':'Needs review · '+Object.keys(r.u||{}).length}</span>`:k==='stale'?'<span class="tr-chip rv">Script changed since translation</span>':'<span class="tr-chip no">Not translated</span>';
-    const head=`<div class="tr-h"><b>Sc ${esc(s.no)}</b><span class="tr-hd">${esc([s.ie,s.loc,s.time].filter(Boolean).join(' · '))}</span>${chip}<span class="grow"></span>${k==='ok'||k==='review'?`<button class="btn sm ghost" data-tr="ck1" data-sid="${s.id}">Check again</button>`:''}<button class="btn sm${k==='none'||k==='stale'?' pri':''}" data-tr="one" data-sid="${s.id}">${k==='none'?'Translate':'Translate again'}</button></div>`;
+  const card=s=>{const k=st.get(s.id),r=trOf(s),L=trLines(s);const chip=k==='ok'?'<span class="tr-chip ok">Checked</span>':k==='review'?`<span class="tr-chip rv">${!r.ck?(r.free?'Free translation · not checked':'Check did not finish'):'Needs review · '+Object.keys(r.u||{}).length}</span>`:k==='stale'?'<span class="tr-chip rv">Script changed since translation</span>':'<span class="tr-chip no">Not translated</span>';
+    const head=`<div class="tr-h"><b>Sc ${esc(s.no)}</b><span class="tr-hd">${esc([s.ie,s.loc,s.time].filter(Boolean).join(' · '))}</span>${chip}<span class="grow"></span>${k==='ok'||k==='review'?`<button class="btn sm ghost" data-tr="ck1" data-sid="${s.id}">${r&&r.free&&!r.ck?'Check with AI':'Check again'}</button>`:''}<button class="btn sm${k==='none'||k==='stale'?' pri':''}" data-tr="one" data-sid="${s.id}">${k==='none'?'Translate':'Translate again'}</button></div>`;
     if(k==='none'||k==='stale'){const pv=L.filter(x=>x.trim()).slice(0,3).map(x=>esc(x.trim())).join('<br>');return `<section class="trs" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase())}">${head}<div class="tr-pv" lang="${TR_TAG[src]}">${pv}${L.filter(x=>x.trim()).length>3?' …':''}</div></section>`}
     let rows='',gap=false;L.forEach((o,i)=>{if(!o.trim()){if(!gap)rows+='<div class="tr-gap"></div>';gap=true;return}gap=false;const u=r.u[i],sg=r.sg[i],was=r.fx[i];
-      rows+=`<div class="tr-o" lang="${TR_TAG[src]}">${esc(o.trim())}</div><div class="tr-t${u?' u':''}${was!=null?' fx':''}" contenteditable="true" spellcheck="false" lang="${TR_TAG[tgt]}" data-trl="${s.id}|${i}" data-ph="Type the translation" aria-label="Translation of line ${i+1}">${esc(r.t[i]||'')}</div>`;
+      rows+=`<div class="tr-o" lang="${TR_TAG[src]}"${trDir(src)}>${esc(o.trim())}</div><div class="tr-t${u?' u':''}${was!=null?' fx':''}" contenteditable="true" spellcheck="false" lang="${TR_TAG[tgt]}"${trDir(tgt)} data-trl="${s.id}|${i}" data-ph="Type the translation" aria-label="Translation of line ${i+1}">${esc(r.t[i]||'')}</div>`;
       if(u)rows+=`<div class="tr-n"><span>${esc(u)}</span>${sg?`<button class="btn sm" data-tr="sug" data-sid="${s.id}" data-i="${i}" lang="${TR_TAG[tgt]}">Use: ${esc(sg)}</button>`:''}<button class="btn sm ghost" data-tr="okl" data-sid="${s.id}" data-i="${i}">It is right</button></div>`;
       else if(was!=null)rows+=`<div class="tr-n fx"><span>Corrected by the check: ${esc(r.fw[i]||'')}</span><button class="btn sm ghost" data-tr="undo" data-sid="${s.id}" data-i="${i}">Restore first version</button></div>`});
     return `<section class="trs" data-q="${esc((s.no+' '+s.loc+' '+s.text+' '+r.t.join(' ')).toLowerCase())}">${head}<div class="tr-g"><div class="tr-ch">${TR_NAME[src]} · original</div><div class="tr-ch">${TR_NAME[tgt]} · translation</div>${rows}</div></section>`};
-  const acts=searchBox('Search scenes')+(done&&!todo?'<button class="btn sm" disabled>All translated</button>':`<button class="btn sm pri" data-tr="all">${done?`Translate the rest (${todo})`:'Translate script'}</button>`);
-  return {html:pageHead('Translator','Translate the whole script scene by scene. A second AI pass checks every line against the original and marks anything doubtful in yellow. Character names follow your name list, and the original script is never changed.',acts)+
+  const acts=searchBox('Search scenes')+(done&&!todo?'<button class="btn sm" disabled>All translated</button>':`<button class="btn sm pri" data-tr="all">${done?`Translate the rest (${todo})`:'Translate script'}</button><button class="btn sm" data-tr="free" title="Google Translate, no AI and no second check">Free translate (no AI)</button>`);
+  return {html:pageHead('Translator','Translate the whole script scene by scene. A second AI pass checks every line against the original and marks anything doubtful in yellow. Character names follow your name list, and the original script is never changed. No AI service? "Free translate" uses Google Translate, without the check (its Tinglish is rougher than the AI translation).',acts)+
   `<div class="tr-bar"><label>From ${sel('src',src,true)}</label><button class="btn sm ghost" data-tr="swap" aria-label="Swap languages" title="Swap languages">⇄</button><label>Into ${sel('tgt',tgt,false)}</label></div>
   <details class="tr-gl"><summary>Name list · ${gn} name${gn===1?'':'s'} kept the same in every scene</summary><p class="small muted">One per line: <b>name in the script = how to write it in ${esc(TR_NAME[tgt])}</b>. It is made from your cast list when you first translate; edit it any time, then use "Check all again".</p><textarea data-trg rows="6" lang="${TR_TAG[tgt]}" placeholder="NINA = నీనా">${esc(gl||'')}</textarea><div><button class="btn sm" data-tr="gloss">${gl?'Write the names again with AI':'Write the names with AI'}</button></div></details>
   <div class="stats"><div class="stat"><b>${done}/${sc.length}</b><span>Scenes translated</span></div><div class="stat"><b>${cnt('ok')}</b><span>Checked, no issues</span></div><div class="stat"><b>${rv}</b><span>Lines to review</span></div><div class="stat"><b>${fx}</b><span>Lines corrected by the check</span></div></div>
@@ -3301,7 +3328,7 @@ R.translate=()=>{const T=TRS(),src=trSrc(),tgt=trTgt(),sc=P.scenes.filter(s=>Str
   exp:{orient:'landscape',sheets:[{name:'Translation',cols:[{h:'Sc No',w:8},{h:'Heading',w:26},{h:`Original (${TR_NAME[src]})`,w:60},{h:`Translation (${TR_NAME[tgt]})`,w:60},{h:'Review notes',w:40}],
     rows:sc.map(s=>{const r=trOf(s),t=trText(s),L=trLines(s);return [s.no,headingLine(s),String(s.text||'').trim(),t!=null?t.trim():'',r&&t!=null?Object.keys(r.u||{}).map(i=>`Line ${+i+1} (${(L[i]||'').trim().slice(0,40)}): ${r.u[i]}`).join('\n'):(st.get(s.id)==='stale'?'Script changed since translation':'Not translated')]})}]}}};
 document.addEventListener('click',e=>{const t=e.target.closest('[data-tr]');if(!t||!P)return;const a=t.dataset.tr,s=t.dataset.sid?scById(t.dataset.sid):null,i=+t.dataset.i,r=s&&s.tr;
-  if(a==='all')trJob();if(a==='redo'){if(!t.dataset.armed){t.dataset.armed=1;const o=t.textContent;t.textContent='Replace every translation? Click again';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent=o}},3500);return}trJob(null,true)}
+  if(a==='all')trJob();if(a==='free')trFreeJob();if(a==='redo'){if(!t.dataset.armed){t.dataset.armed=1;const o=t.textContent;t.textContent='Replace every translation? Click again';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent=o}},3500);return}trJob(null,true)}
   if(a==='one'&&s)trJob(s.id,true);if(a==='ck1'&&s)trCheckJob(s.id);if(a==='ckall')trCheckJob();
   if(a==='pdf')trPdf().catch(()=>toast('The PDF could not be made. Try again.'));if(a==='txt')trTxt();if(a==='newp')trNewProject();
   if(a==='swap'){const T=TRS(),sr=trSrc(),tg=trTgt();T.src=tg;T.tgt=sr;touch([]);render(true)}
@@ -3376,37 +3403,46 @@ function wlSel(){const d=wrDoc();const sel=getSelection();if(!d||!sel||sel.isCol
 function wlHideBtn(){if(WL.btn){WL.btn.remove();WL.btn=null}}
 function wlClose(){if(WL.pop){WL.pop.remove();WL.pop=null}}
 function wlTimed(url,ms){const c=new AbortController();const id=setTimeout(()=>c.abort(),ms||7000);return fetch(url,{signal:c.signal}).finally(()=>clearTimeout(id))}
-async function wlFree(t){const tel=/[ఀ-౿]/.test(t);
-  const tr=wlTimed(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tel?'en':'te'}&dt=t&q=${encodeURIComponent(t)}`)
-    .then(r=>r.ok?r.json():Promise.reject(new Error('translate '+r.status)))
-    /* every sentence piece, not only the first one */
-    .then(d=>({text:(Array.isArray(d)&&Array.isArray(d[0])?d[0]:[]).map(x=>Array.isArray(x)?String(x[0]||''):'').join('').trim(),lang:typeof d[2]==='string'?d[2]:''}));
-  const word=!tel&&/^[A-Za-z][A-Za-z'’-]*$/.test(t);
-  const dict=word?wlTimed(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(t.toLowerCase())}`).then(r=>r.ok?r.json():null)
-    .then(d=>Array.isArray(d)&&d[0]&&Array.isArray(d[0].meanings)?d[0].meanings.slice(0,3).map(m=>{const x=(m.definitions||[])[0]||{};return {pos:String(m.partOfSpeech||''),def:String(x.definition||''),ex:String(x.example||'')}}).filter(x=>x.def):null):Promise.resolve(null);
+function wlTgt(){try{const v=localStorage.getItem('scriptdesk.wltgt');return GT_OK.has(v)?v:'te'}catch(e){return 'te'}}
+function wlSetTgt(v){try{localStorage.setItem('scriptdesk.wltgt',v)}catch(e){}}
+/* text already written in the chosen language's letters is looked up into English instead */
+function wlInto(t,tgt){const rx=TR_SCRIPT[tgt];return rx&&rx.test(t)?'en':tgt}
+async function wlFree(t,tgt){const into=wlInto(t,tgt);
+  const tr=gtx(t,'auto',into,7000).then(r=>({text:r.text.trim(),lang:r.lang}));
+  const word=into!=='en'&&/^[A-Za-z][A-Za-z'’-]*$/.test(t);
+  const dict=word?fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(t.toLowerCase())}`).then(r=>r.ok?r.json():null)
+    .then(d=>Array.isArray(d)&&d[0]&&Array.isArray(d[0].meanings)?d[0].meanings.slice(0,3).map(m=>{const x=(m.definitions||[])[0]||{};return {pos:String(m.partOfSpeech||''),def:String(x.definition||''),ex:String(x.example||'')}}).filter(x=>x.def):null).catch(()=>null):Promise.resolve(null);
   const [a,b]=await Promise.allSettled([tr,dict]);
-  return {tel,tr:a.status==='fulfilled'?a.value.text:'',lang:a.status==='fulfilled'?a.value.lang:'',defs:b.status==='fulfilled'?b.value:null,src:'free'}}
-async function wlAI(t){const tel=/[ఀ-౿]/.test(t);
-  const r=await ask(`A film writer selected this word or phrase in a screenplay: "${t}". It may be English, Telugu, or Tinglish (Telugu in English letters).
-Give: "lang" (the language it is in), "tr" (${tel?'its English translation':'its Telugu translation in Telugu script'}), and "defs": up to 3 meanings, each {"pos":"part of speech","def":"meaning in plain English","ex":"short example sentence"}.
-Reply with only JSON: {"lang":"","tr":"","defs":[]}`);
-  return {tel,tr:String((r&&r.tr)||'').trim(),lang:String((r&&r.lang)||''),defs:Array.isArray(r&&r.defs)?r.defs.filter(x=>x&&x.def).slice(0,3).map(x=>({pos:String(x.pos||''),def:String(x.def),ex:String(x.ex||'')})):null,src:'ai'}}
-async function wlLookup(t){const k=t.toLowerCase();if(WL.cache.has(k))return WL.cache.get(k);
-  let r=await wlFree(t);if(!r.tr&&!(r.defs&&r.defs.length)&&AI.sample){try{r=await wlAI(t)}catch(e){}}
+  let res={into,tr:a.status==='fulfilled'?a.value.text:'',lang:a.status==='fulfilled'?a.value.lang:'',defs:b.status==='fulfilled'?b.value:null,src:'free'};
+  /* Google says the text was already in the target language: show English instead */
+  if(into!=='en'&&res.lang===into){try{const e=await gtx(t,'auto','en',7000);res=Object.assign(res,{into:'en',tr:e.text.trim()})}catch(err){}}
+  return res}
+async function wlAI(t,tgt){const into=wlInto(t,tgt);
+  const r=await ask(`A film writer selected this word or phrase in a screenplay: "${t}". It may be English, Telugu, Tinglish (Telugu in English letters) or another Indian language.
+Give: "lang" (the language it is in), "tr" (its translation into ${TR_DESC[into]}; if it is already in that language, translate it into English instead and set "into":"en"), "into" (the language code you translated into), and "defs": up to 3 meanings, each {"pos":"part of speech","def":"meaning in plain English","ex":"short example sentence"}.
+Reply with only JSON: {"lang":"","tr":"","into":"","defs":[]}`);
+  const got=String((r&&r.into)||'')==='en'?'en':into;
+  return {into:got,tr:String((r&&r.tr)||'').trim(),lang:String((r&&r.lang)||''),defs:Array.isArray(r&&r.defs)?r.defs.filter(x=>x&&x.def).slice(0,3).map(x=>({pos:String(x.pos||''),def:String(x.def),ex:String(x.ex||'')})):null,src:'ai'}}
+async function wlLookup(t,tgt){const k=tgt+'|'+t.toLowerCase();if(WL.cache.has(k))return WL.cache.get(k);
+  let r;try{r=await wlFree(t,tgt)}catch(e){r={into:tgt,tr:'',defs:null,src:'free'}}
+  if(!r.tr&&!(r.defs&&r.defs.length)&&AI.sample){try{r=await wlAI(t,tgt)}catch(e){}}
   if(r.tr||(r.defs&&r.defs.length))WL.cache.set(k,r);return r}
 function wlPlace(el,rect){const w=el.offsetWidth||300,h=el.offsetHeight||40;let x=Math.max(8,Math.min(innerWidth-w-8,rect.left));let y=rect.top-h-8;if(y<8)y=rect.bottom+8;if(y+h>innerHeight-8)y=Math.max(8,innerHeight-h-8);el.style.left=x+'px';el.style.top=y+'px'}
+function wlBtnLabel(){if(!WL.btn)return;const t=wlTgt(),l=TR_LANGS.find(x=>x[0]===t)||['te','Telugu','తెలుగు'];WL.btn.innerHTML=`Meaning · <span lang="${TR_TAG[t]}"${trDir(t)}>${esc(l[2]&&!/^[\x00-\x7F]+$/.test(l[2])?l[2]:l[1])}</span>`}
 async function wlOpen(s){wlHideBtn();wlClose();const p=document.createElement('div');p.className='wl-pop';p.setAttribute('role','dialog');p.setAttribute('aria-label','Word lookup');
-  p.innerHTML=`<div class="wl-h"><b>${esc(s.t)}</b><button type="button" class="btn sm ghost" data-wl="x" aria-label="Close">Close</button></div><div class="wl-b small muted">Looking up…</div>`;
+  const tgt=wlTgt();WL.last=s;
+  p.innerHTML=`<div class="wl-h"><b>${esc(s.t)}</b><button type="button" class="btn sm ghost" data-wl="x" aria-label="Close">Close</button></div><label class="wl-into small">Into <select data-wlsel aria-label="Translate into">${TR_LANGS.filter(l=>GT_OK.has(l[0])).map(([v,n,x])=>`<option value="${v}"${v===tgt?' selected':''}>${n}${x?' · '+x:''}</option>`).join('')}</select></label><div class="wl-b small muted">Looking up…</div>`;
+  p.querySelector('[data-wlsel]').addEventListener('change',e=>{wlSetTgt(e.target.value);if(WL.btn)wlBtnLabel();wlOpen(WL.last)});
   document.body.appendChild(p);WL.pop=p;wlPlace(p,s.rect);
   p.addEventListener('click',e=>{const b=e.target.closest('[data-wl]');if(!b)return;if(b.dataset.wl==='x')wlClose();if(b.dataset.wl==='copy'){try{navigator.clipboard.writeText(b.dataset.v||'');toast('Copied.')}catch(err){toast('Could not copy.')}}});
-  const r=await wlLookup(s.t);if(WL.pop!==p)return;const body=p.querySelector('.wl-b');
+  const r=await wlLookup(s.t,tgt);if(WL.pop!==p)return;const body=p.querySelector('.wl-b');
   if(!r.tr&&!(r.defs&&r.defs.length)){body.innerHTML=`Could not look this up. The free dictionary and translator may be offline or blocked here${AI.sample?'':', and no AI service is connected to answer instead'}.`;wlPlace(p,s.rect);return}
-  const to=r.tel?'English':'Telugu';
-  body.className='wl-b';body.innerHTML=(r.tr?`<div class="wl-tr"><span class="small muted">${to}</span><div class="wl-tt" lang="${r.tel?'en':'te'}">${esc(r.tr)}</div><button type="button" class="btn sm" data-wl="copy" data-v="${esc(r.tr)}">Copy</button></div>`:'')+
+  const to=TR_NAME[r.into]||'English';
+  body.className='wl-b';body.innerHTML=(r.tr?`<div class="wl-tr"><span class="small muted">${to}</span><div class="wl-tt" lang="${TR_TAG[r.into]||'en'}"${trDir(r.into)}>${esc(r.tr)}</div><button type="button" class="btn sm" data-wl="copy" data-v="${esc(r.tr)}">Copy</button></div>`:'')+
     (r.defs&&r.defs.length?`<ol class="wl-defs">${r.defs.map(d=>`<li>${d.pos?`<i>${esc(d.pos)}</i> `:''}${esc(d.def)}${d.ex?`<span class="small muted">Example: ${esc(d.ex)}</span>`:''}</li>`).join('')}</ol>`:'')+
-    `<p class="wl-src small muted">${r.src==='ai'?'From your AI service.':'Free dictionary (dictionaryapi.dev) and Google Translate.'}${r.lang&&r.lang!=='en'&&!r.tel?' Detected: '+esc(r.lang)+'.':''}</p>`;wlPlace(p,s.rect)}
+    `<p class="wl-src small muted">${r.src==='ai'?'From your AI service.':'Free dictionary (dictionaryapi.dev) and Google Translate.'}${r.lang?' Detected: '+esc(r.lang)+'.':''}</p>`;wlPlace(p,s.rect)}
 document.addEventListener('selectionchange',()=>{clearTimeout(WL.t);WL.t=setTimeout(()=>{if(page!=='write'||WL.pop){if(page!=='write')wlHideBtn();return}const s=wlSel();if(!s){wlHideBtn();return}
-  if(!WL.btn){const b=document.createElement('button');b.type='button';b.className='wl-btn';b.innerHTML='Meaning · <span lang="te">తెలుగు</span>';b.setAttribute('aria-label','Look up the meaning and Telugu of the selected text');
+  if(!WL.btn){const b=document.createElement('button');b.type='button';b.className='wl-btn';WL.btn=b;wlBtnLabel();b.setAttribute('aria-label','Look up the meaning and translation of the selected text');
     b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});b.addEventListener('click',()=>{const s2=wlSel();if(s2)wlOpen(s2)});document.body.appendChild(b);WL.btn=b}
   wlPlace(WL.btn,s.rect)},200)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&WL.pop){wlClose();return}

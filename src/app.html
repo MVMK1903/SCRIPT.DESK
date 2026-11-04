@@ -1273,6 +1273,15 @@ input.search,.search,.tr-bar select,select.mini,.fieldbox input,.fieldbox select
 .card,.tw,.banner,.trs,.dv-card,.dv-check,.dv-items li,.sa-hero,.sa-card,.sa-arcw,.sa-note,.tp-opt,.cs-top,.cs-sec,.sday,.shotcard,.ch-card,.tk-col,.nd-card,.ty-card,.cat-card,.av-row,.ol-line,.wx-tools,.tr-gl,.dv-gloss,.empty,.sb-f,.bb-card,.side{border-radius:16px!important}
 .modal{border-radius:18px!important}
 select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!important}
+/* Word lookup in the writer */
+.wl-btn{position:fixed;z-index:60;border:1px solid var(--glass-line);background:var(--glass-hi);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);color:var(--accent-text);font:600 12.5px/1 var(--f-ui);padding:8px 11px;border-radius:8px;box-shadow:var(--glass-sh);cursor:pointer;white-space:nowrap}
+.wl-btn:hover{background:var(--pill-on)}
+.wl-pop{position:fixed;z-index:61;width:min(360px,calc(100vw - 24px));max-height:min(420px,calc(100vh - 24px));overflow:auto;background:var(--glass-hi);backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);border:1px solid var(--glass-line);border-radius:14px;padding:12px 14px;box-shadow:var(--glass-sh);color:var(--fg);font-size:13.5px;line-height:1.45}
+.wl-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.wl-h b{font-size:15px;overflow-wrap:anywhere}
+.wl-tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;background:var(--fill);border-radius:10px;padding:8px 10px;margin-bottom:8px}.wl-tr .small{grid-column:1/-1}
+.wl-tt{font:600 19px/1.35 "Noto Sans Telugu","Nirmala UI","Gautami",var(--f-ui);overflow-wrap:anywhere}
+.wl-defs{margin:0 0 6px;padding-left:20px}.wl-defs li{margin:4px 0}.wl-defs i{color:var(--muted)}.wl-defs .small{display:block}
+.wl-src{margin:6px 0 0}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -2428,7 +2437,7 @@ function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipbo
 /* ---- Page ---- */
 R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   const fresh=!D.els.length;
-  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>${['screen','tv'].includes(fmtOf())?`Page template: <b>${esc(TPLS[tplOf()].name)}</b>. `:''}It saves on this device as you type. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
+  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>${['screen','tv'].includes(fmtOf())?`Page template: <b>${esc(TPLS[tplOf()].name)}</b>. `:''}It saves on this device as you type. Select a word to see its meaning and Telugu. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
     <div class="acts">${['screen','tv'].includes(fmtOf())?'<button class="btn sm" data-act="wrTpl">Page template</button>':''}<button class="btn sm" data-act="wrTitle">Title page</button><button class="btn sm" data-act="wrOpen">Open file</button><button class="btn sm" data-act="wrDownload">Download</button><button class="btn sm pri" data-act="wrApply">Update breakdown</button></div></div>`;
   if(fresh&&hasScript)return {html:head+`<div class="empty"><b>Write or revise this script</b>This project already has ${P.scenes.length} scenes from an imported script.<br><br><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn pri" data-act="wrFromProject">Open the script in the writer</button><button class="btn" data-act="wrBlank">Start a blank script</button></div></div>`,exp:null};
   const unsynced=D.at&&D.at>(D.syncedAt||0)&&hasScript;
@@ -3356,6 +3365,54 @@ new MutationObserver(fxQueue).observe(document.documentElement,{subtree:true,chi
 addEventListener('resize',()=>{document.querySelectorAll(FX_GROUPS).forEach(g=>g._fx=null);fxQueue()});
 /* glass theme: on phones the main tabs sit under the film title, so the tab bar moves up next to the project header */
 (()=>{const b=document.querySelector('.bbar'),t=document.querySelector('.main > .top');if(b&&t)t.after(b)})();
+/* ================= Word lookup in the writer: meaning and Telugu for a selected word or phrase =================
+   Idea and free sources from github.com/vishnuuuvrdn/Telugu-Translator-Extension (MIT): dictionaryapi.dev for English
+   meanings and Google Translate's free web endpoint for Telugu. That endpoint is unofficial and can be rate-limited,
+   so when the free sources cannot be reached the connected AI service answers instead. */
+const WL={btn:null,pop:null,t:0,cache:new Map()};
+function wlSel(){const d=wrDoc();const sel=getSelection();if(!d||!sel||sel.isCollapsed||!sel.rangeCount)return null;const r=sel.getRangeAt(0);
+  if(!d.contains(r.commonAncestorContainer))return null;const t=sel.toString().replace(/\s+/g,' ').trim();
+  if(!t||t.length>80||t.split(' ').length>8)return null;return {t,rect:r.getBoundingClientRect()}}
+function wlHideBtn(){if(WL.btn){WL.btn.remove();WL.btn=null}}
+function wlClose(){if(WL.pop){WL.pop.remove();WL.pop=null}}
+function wlTimed(url,ms){const c=new AbortController();const id=setTimeout(()=>c.abort(),ms||7000);return fetch(url,{signal:c.signal}).finally(()=>clearTimeout(id))}
+async function wlFree(t){const tel=/[ఀ-౿]/.test(t);
+  const tr=wlTimed(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tel?'en':'te'}&dt=t&q=${encodeURIComponent(t)}`)
+    .then(r=>r.ok?r.json():Promise.reject(new Error('translate '+r.status)))
+    /* every sentence piece, not only the first one */
+    .then(d=>({text:(Array.isArray(d)&&Array.isArray(d[0])?d[0]:[]).map(x=>Array.isArray(x)?String(x[0]||''):'').join('').trim(),lang:typeof d[2]==='string'?d[2]:''}));
+  const word=!tel&&/^[A-Za-z][A-Za-z'’-]*$/.test(t);
+  const dict=word?wlTimed(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(t.toLowerCase())}`).then(r=>r.ok?r.json():null)
+    .then(d=>Array.isArray(d)&&d[0]&&Array.isArray(d[0].meanings)?d[0].meanings.slice(0,3).map(m=>{const x=(m.definitions||[])[0]||{};return {pos:String(m.partOfSpeech||''),def:String(x.definition||''),ex:String(x.example||'')}}).filter(x=>x.def):null):Promise.resolve(null);
+  const [a,b]=await Promise.allSettled([tr,dict]);
+  return {tel,tr:a.status==='fulfilled'?a.value.text:'',lang:a.status==='fulfilled'?a.value.lang:'',defs:b.status==='fulfilled'?b.value:null,src:'free'}}
+async function wlAI(t){const tel=/[ఀ-౿]/.test(t);
+  const r=await ask(`A film writer selected this word or phrase in a screenplay: "${t}". It may be English, Telugu, or Tinglish (Telugu in English letters).
+Give: "lang" (the language it is in), "tr" (${tel?'its English translation':'its Telugu translation in Telugu script'}), and "defs": up to 3 meanings, each {"pos":"part of speech","def":"meaning in plain English","ex":"short example sentence"}.
+Reply with only JSON: {"lang":"","tr":"","defs":[]}`);
+  return {tel,tr:String((r&&r.tr)||'').trim(),lang:String((r&&r.lang)||''),defs:Array.isArray(r&&r.defs)?r.defs.filter(x=>x&&x.def).slice(0,3).map(x=>({pos:String(x.pos||''),def:String(x.def),ex:String(x.ex||'')})):null,src:'ai'}}
+async function wlLookup(t){const k=t.toLowerCase();if(WL.cache.has(k))return WL.cache.get(k);
+  let r=await wlFree(t);if(!r.tr&&!(r.defs&&r.defs.length)&&AI.sample){try{r=await wlAI(t)}catch(e){}}
+  if(r.tr||(r.defs&&r.defs.length))WL.cache.set(k,r);return r}
+function wlPlace(el,rect){const w=el.offsetWidth||300,h=el.offsetHeight||40;let x=Math.max(8,Math.min(innerWidth-w-8,rect.left));let y=rect.top-h-8;if(y<8)y=rect.bottom+8;if(y+h>innerHeight-8)y=Math.max(8,innerHeight-h-8);el.style.left=x+'px';el.style.top=y+'px'}
+async function wlOpen(s){wlHideBtn();wlClose();const p=document.createElement('div');p.className='wl-pop';p.setAttribute('role','dialog');p.setAttribute('aria-label','Word lookup');
+  p.innerHTML=`<div class="wl-h"><b>${esc(s.t)}</b><button type="button" class="btn sm ghost" data-wl="x" aria-label="Close">Close</button></div><div class="wl-b small muted">Looking up…</div>`;
+  document.body.appendChild(p);WL.pop=p;wlPlace(p,s.rect);
+  p.addEventListener('click',e=>{const b=e.target.closest('[data-wl]');if(!b)return;if(b.dataset.wl==='x')wlClose();if(b.dataset.wl==='copy'){try{navigator.clipboard.writeText(b.dataset.v||'');toast('Copied.')}catch(err){toast('Could not copy.')}}});
+  const r=await wlLookup(s.t);if(WL.pop!==p)return;const body=p.querySelector('.wl-b');
+  if(!r.tr&&!(r.defs&&r.defs.length)){body.innerHTML=`Could not look this up. The free dictionary and translator may be offline or blocked here${AI.sample?'':', and no AI service is connected to answer instead'}.`;wlPlace(p,s.rect);return}
+  const to=r.tel?'English':'Telugu';
+  body.className='wl-b';body.innerHTML=(r.tr?`<div class="wl-tr"><span class="small muted">${to}</span><div class="wl-tt" lang="${r.tel?'en':'te'}">${esc(r.tr)}</div><button type="button" class="btn sm" data-wl="copy" data-v="${esc(r.tr)}">Copy</button></div>`:'')+
+    (r.defs&&r.defs.length?`<ol class="wl-defs">${r.defs.map(d=>`<li>${d.pos?`<i>${esc(d.pos)}</i> `:''}${esc(d.def)}${d.ex?`<span class="small muted">Example: ${esc(d.ex)}</span>`:''}</li>`).join('')}</ol>`:'')+
+    `<p class="wl-src small muted">${r.src==='ai'?'From your AI service.':'Free dictionary (dictionaryapi.dev) and Google Translate.'}${r.lang&&r.lang!=='en'&&!r.tel?' Detected: '+esc(r.lang)+'.':''}</p>`;wlPlace(p,s.rect)}
+document.addEventListener('selectionchange',()=>{clearTimeout(WL.t);WL.t=setTimeout(()=>{if(page!=='write'||WL.pop){if(page!=='write')wlHideBtn();return}const s=wlSel();if(!s){wlHideBtn();return}
+  if(!WL.btn){const b=document.createElement('button');b.type='button';b.className='wl-btn';b.innerHTML='Meaning · <span lang="te">తెలుగు</span>';b.setAttribute('aria-label','Look up the meaning and Telugu of the selected text');
+    b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});b.addEventListener('click',()=>{const s2=wlSel();if(s2)wlOpen(s2)});document.body.appendChild(b);WL.btn=b}
+  wlPlace(WL.btn,s.rect)},200)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&WL.pop){wlClose();return}
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='M'||e.key==='m')&&page==='write'){const s=wlSel();if(s){e.preventDefault();wlOpen(s)}}});
+document.addEventListener('pointerdown',e=>{if(WL.pop&&!WL.pop.contains(e.target))wlClose()},true);
+addEventListener('scroll',()=>{wlHideBtn();wlClose()},true);
 /* ================= Beat Board: free canvas of story cards ================= */
 const BB_COL=['#ffffff','#fff3c4','#ffd9d6','#d9ecff','#dcf5e3','#eadcff','#ffe3c4','#e8e8ed'];
 function BBD(){if(!P.beats||!Array.isArray(P.beats.cards))P.beats={cards:[],zoom:1};return P.beats}

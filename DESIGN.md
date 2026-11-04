@@ -27,9 +27,11 @@ Exports keep their own document formats.
 - **Surfaces.** Cards, tables, banners, the sidebar and dialogs are frosted glass: `rgba(255,255,255,.56)` light /
   `rgba(26,31,54,.56)` dark, 20px blur, a 1px white edge, 20-24px corners and a soft blue shadow. Bars over the
   backdrop (app bar, project header) stay transparent. The script page stays white paper.
-- **Pills.** Buttons are glass pills. The primary is a blue gradient pill (`#2f6bff` to `#4f5df5`) with a soft glow;
+- **Buttons.** Buttons are glass rectangles. The primary is a blue gradient pill (`#2f6bff` to `#4f5df5`) with a soft glow;
   "Checks" is a peach pill. Active tabs, nav items and segmented options are a pale blue pill (`--pill-on`) with blue
   text and a soft glow.
+- **Shapes.** Rectangles only, no circles or pill shapes: buttons, tabs and inputs 10px corners, the highlight inside a
+  switch 8px, chips and small badges 6px, cards 16px, dialogs 18px, story-arc markers rounded squares.
 - **Type.** The film title is bold uppercase (22px desktop, up to 26px on a phone); page titles 26px/700.
 - **Story arc** uses the blue to purple to pink gradient curve and coloured bands.
 - **Phone.** The main tabs sit under the film title as a sticky glass pill row (icon over label; icon beside label

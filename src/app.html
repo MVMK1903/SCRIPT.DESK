@@ -1282,6 +1282,11 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 .wl-tt{font:600 19px/1.35 "Noto Sans Telugu","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Bengali","Noto Sans Gujarati","Noto Sans Gurmukhi","Noto Nastaliq Urdu","Noto Naskh Arabic","Nirmala UI","Gautami",var(--f-ui);overflow-wrap:anywhere}
 .wl-defs{margin:0 0 6px;padding-left:20px}.wl-defs li{margin:4px 0}.wl-defs i{color:var(--muted)}.wl-defs .small{display:block}
 .wl-src{margin:6px 0 0}.wl-into{display:flex;gap:8px;align-items:center;margin:0 0 8px}.wl-into select{background:var(--fill);border:1px solid var(--glass-line);color:var(--fg);border-radius:8px;padding:5px 8px;font:500 13px var(--f-ui);max-width:100%}
+/* Writer toolbar (Scene, Action, Character...): a solid glass bar, so the white page scrolling under it never hides the buttons */
+@media (min-width:821px){
+  .wr-bar{background:rgba(237,242,251,.94)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--glass-line);border-radius:14px;padding:8px 10px!important;margin-bottom:12px;box-shadow:0 8px 24px rgba(20,30,70,.12)}
+  :root[data-theme="dark"] .wr-bar{background:rgba(17,22,42,.95)!important;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>

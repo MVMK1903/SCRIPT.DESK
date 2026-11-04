@@ -43,6 +43,14 @@ Exports keep their own document formats.
 - **Motion** is feedback only: press, hover, focus, a sheet opening. Nothing performs an entrance, and reduced motion is respected.
 - **No** gradients, glows, glass, emoji icons, icon-in-tinted-circle KPIs or rainbow charts.
 
+## Page templates (writer)
+
+Five screenplay page templates, picked when a screenplay is started and changeable from "Page template" in the writer:
+Final Draft default (the default and the earlier layout), Compact (58 lines a page), Cole & Hagg (57-character action,
+40-character dialogue), Warner Bros. (57-character action, 34-character dialogue) and Celtx default (one blank line before
+scene headings, (CONTINUED) at page breaks, no watermark). Each sets the margins, indents, spacing before scene headings,
+the editor's page breaks, the page count and the PDF. Stage, audio and comic formats keep their own layouts.
+
 ## Checks
 
 ```bash

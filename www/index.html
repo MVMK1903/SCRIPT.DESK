@@ -1122,6 +1122,36 @@ body[data-page=gear] tr:hover .il{transform:none}
   .stats{display:grid!important;grid-template-columns:1fr 1fr;gap:14px 16px}
   .bbar .tab{font-size:11px;color:var(--muted);letter-spacing:0;min-height:48px}
 }
+/* Page templates: the paper follows the chosen template on wide screens; phones keep the fluid layout */
+@media (min-width:821px){
+  .wr-paper.fmt-screen,.wr-paper.fmt-tv{padding-top:calc(var(--u) * var(--tm,1));padding-bottom:calc(var(--u) * var(--bm,1))}
+  .wr-paper.fmt-screen .wr-doc .el,.wr-paper.fmt-tv .wr-doc .el{margin-left:calc(var(--u) * var(--xa,1.5));width:calc(var(--u) * var(--wa,6))}
+  .wr-paper.fmt-screen .wr-doc .el-h:not(:first-child):not(.pb),.wr-paper.fmt-tv .wr-doc .el-h:not(:first-child):not(.pb){margin-top:calc(var(--u) / 6 * var(--hg,2))}
+  .wr-paper.fmt-screen .wr-doc .el-c,.wr-paper.fmt-tv .wr-doc .el-c{margin-left:calc(var(--u) * var(--xc,3.5));width:calc(var(--u) * var(--wc,3.5))}
+  .wr-paper.fmt-screen .wr-doc .el-d,.wr-paper.fmt-tv .wr-doc .el-d{margin-left:calc(var(--u) * var(--xd,2.5));width:calc(var(--u) * var(--wd,3.5))}
+  .wr-paper.fmt-screen .wr-doc .el-p,.wr-paper.fmt-tv .wr-doc .el-p{margin-left:calc(var(--u) * var(--xp,3));width:calc(var(--u) * var(--wp,2.5))}
+  .wr-paper.fmt-screen .wr-doc .el-t,.wr-paper.fmt-tv .wr-doc .el-t{width:calc(var(--u) * var(--wt,6))}
+}
+.modal:has(.tp-wrap){width:min(1060px,calc(100vw - 32px));max-width:none}
+.tp-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}
+.tp-list{display:flex;flex-direction:column;gap:8px}
+.tp-opt{display:flex;flex-direction:column;gap:4px;text-align:left;border:0;background:var(--fill);color:var(--fg);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;box-shadow:inset 0 0 0 1.5px transparent;transition:background .15s,box-shadow .15s}
+.tp-opt:hover{background:var(--fill-2)}.tp-opt[aria-checked=true]{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.tp-h{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.tp-h b{font-size:15px}.tp-tag{font-size:12px;color:var(--muted)}
+.tp-ab{font-size:13px;line-height:1.45;color:var(--fg)}.tp-st{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.tp-st b{color:var(--fg);font-weight:600}
+.tp-prev{position:sticky;top:0}.tp-cap{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.tp-page{--u:min(54px,calc((100vw - 96px) / 8.5));position:relative;width:calc(var(--u) * 8.5);height:calc(var(--u) * 11);background:#fff;color:#111;box-shadow:0 0 0 .5px rgba(0,0,0,.15),0 6px 24px rgba(0,0,0,.12);border-radius:2px;padding-top:calc(var(--u) * var(--tm,1));box-sizing:border-box;overflow:hidden;color-scheme:light}
+.tp-in{overflow:hidden;font-family:"Courier Prime","Courier New",Courier,monospace;font-size:calc(var(--u) / 6);line-height:calc(var(--u) / 6)}
+.tp-in .el{white-space:pre-wrap;overflow-wrap:break-word;margin-left:calc(var(--u) * var(--xa,1.5));width:calc(var(--u) * var(--wa,6));margin-top:calc(var(--u) / 6);position:relative}
+.tp-in .el.first{margin-top:0}.tp-in .el-h{margin-top:calc(var(--u) / 6 * var(--hg,2));text-transform:uppercase}.tp-in .el-h.first{margin-top:0}
+.tp-in .el-h::before{content:attr(data-n);position:absolute;left:calc(var(--u) * -0.6)}
+.tp-in .el-c{margin-left:calc(var(--u) * var(--xc,3.5));width:calc(var(--u) * var(--wc,3.5));text-transform:uppercase}
+.tp-in .el-d{margin-left:calc(var(--u) * var(--xd,2.5));width:calc(var(--u) * var(--wd,3.5));margin-top:0}
+.tp-in .el-p{margin-left:calc(var(--u) * var(--xp,3));width:calc(var(--u) * var(--wp,2.5));margin-top:0}
+.tp-in .el-t{width:calc(var(--u) * var(--wt,6));text-align:right;text-transform:uppercase}
+.tp-num{position:absolute;top:calc(var(--u) * 0.5);right:calc(var(--u) * 1);font:calc(var(--u) / 6)/1 "Courier Prime","Courier New",monospace}
+.tp-foot{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px}
+@media (max-width:820px){.tp-wrap{grid-template-columns:1fr}.tp-prev{position:static}.tp-page{--u:calc((100vw - 64px) / 8.5)}.tp-foot .btn{width:100%}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -2111,11 +2141,11 @@ function wrDecorate(){const d=wrDoc();if(!d)return;
   if(!d.children.length){d.innerHTML=wrBlockHtml({t:draft().els.length?'a':'h',x:''})}
   [...d.childNodes].forEach(n=>{if(n.nodeType===3){if(n.textContent.trim()){const b=mkBlock('a',n.textContent);d.replaceChild(b,n)}else n.remove()}else if(n.nodeType===1&&(n.nodeName==='BR'||n.nodeName==='STYLE')){n.remove()}else if(n.nodeType===1&&!n.dataset.t){n.dataset.t='a';n.className='el el-a';n.dataset.ph=W_PH.a}});
   wxEnsureIds();const kids=[...d.children];const els=kids.map(el=>({t:el.dataset.t,x:el.textContent,n:el.dataset.no}));const nums=wrNumbers(els);
-  let line=0,page=1;const LP=54;const marks=[];const cur=wrCur();const lps=lockPages(kids.map(el=>({id:el.dataset.id})));let lockNo=1,suf=-1;
+  let line=0,page=1;const LP=tplLP();const TG=TPLS[tplEff()].hgap;const marks=[];const cur=wrCur();const lps=lockPages(kids.map(el=>({id:el.dataset.id})));let lockNo=1,suf=-1;
   kids.forEach((el,i)=>{const t=el.dataset.t;if(t==='h')el.dataset.n=nums[i];else delete el.dataset.n;
     el.classList.toggle('wr-empty',!el.textContent.length);
-    const txt=el.textContent||' ';const lines=txt.split('\n').reduce((a,p)=>a+Math.max(1,Math.ceil(p.length/W_CPL[t])),0);
-    const gap=line===0?0:(t==='h'?2:(t==='d'||t==='p')?0:1);
+    const txt=el.textContent||' ';const lines=txt.split('\n').reduce((a,p)=>a+Math.max(1,Math.ceil(p.length/tplCpl(t))),0);
+    const gap=line===0?0:(t==='h'?TG:(t==='d'||t==='p')?0:1);
     let need=gap+lines+(t==='h'?2:t==='c'?1:0);
     let lab=null;if(lps&&lps[i]>lockNo){if(lps[i]-lockNo>1&&marks.length)marks[marks.length-1][1]+='-'+(lps[i]-1);lockNo=lps[i];suf=-1;lab=String(lockNo);if(i===0){line+=gap+lines;return}}
     else if(line+need>LP&&line>0){lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(page+1)}
@@ -2194,17 +2224,17 @@ function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipbo
 /* ---- Page ---- */
 R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   const fresh=!D.els.length;
-  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>Screenplay editor in Celtx layout. It saves on this device as you type. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
-    <div class="acts"><button class="btn sm" data-act="wrTitle">Title page</button><button class="btn sm" data-act="wrOpen">Open file</button><button class="btn sm" data-act="wrDownload">Download</button><button class="btn sm pri" data-act="wrApply">Update breakdown</button></div></div>`;
+  const head=`<div class="ph"><div class="grow"><h1>Write script</h1><p>${['screen','tv'].includes(fmtOf())?`Page template: <b>${esc(TPLS[tplOf()].name)}</b>. `:''}It saves on this device as you type. Enter moves to the next element and Tab changes the element. Press "Update breakdown" to send the script to every report.</p></div>
+    <div class="acts">${['screen','tv'].includes(fmtOf())?'<button class="btn sm" data-act="wrTpl">Page template</button>':''}<button class="btn sm" data-act="wrTitle">Title page</button><button class="btn sm" data-act="wrOpen">Open file</button><button class="btn sm" data-act="wrDownload">Download</button><button class="btn sm pri" data-act="wrApply">Update breakdown</button></div></div>`;
   if(fresh&&hasScript)return {html:head+`<div class="empty"><b>Write or revise this script</b>This project already has ${P.scenes.length} scenes from an imported script.<br><br><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn pri" data-act="wrFromProject">Open the script in the writer</button><button class="btn" data-act="wrBlank">Start a blank script</button></div></div>`,exp:null};
   const unsynced=D.at&&D.at>(D.syncedAt||0)&&hasScript;
   return {html:head+(unsynced?`<div class="banner small"><span>The reports still use the earlier version of the script. Press <b>Update breakdown</b> when you are ready.</span></div>`:'')+
   `<div class="wr"><aside class="wr-side"><div class="seg wx-side-tabs" role="tablist"><button type="button" data-wrside="scenes" aria-pressed="true">Scenes</button><button type="button" data-wrside="notes" aria-pressed="false">Notes</button></div><div id="wrScenes"></div><div id="wrNotes" hidden></div></aside>
    <div class="wr-main" id="wrMain">${wxToolsHtml()}<div class="wr-bar"><div class="wr-types" role="toolbar" aria-label="Element type">${WKEYS.map((k,i)=>`<button type="button" data-wrt="${k}" aria-pressed="false" title="${WT[k]} (Ctrl+${i+1})">${WT_SHORT[k]}</button>`).join('')}</div>
      ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
-     <div class="wr-paper fmt-${fmtOf()}" id="wrPaper"><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
+     <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
      <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div></div>`,exp:null}};
-function wrMount(){const d=wrDoc();if(!d)return;const D=draft();WR.hist=[];WR.redo=[];
+function wrMount(){const d=wrDoc();if(!d)return;const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
   d.addEventListener('keydown',wrKey);d.addEventListener('input',wrInput);d.addEventListener('paste',wrPaste);
   d.addEventListener('blur',()=>{setTimeout(hideAC,120);clearTimeout(WR.saveT);wrSave()});
@@ -2219,8 +2249,8 @@ document.addEventListener('selectionchange',()=>{if(page==='write'&&wrDoc()){cle
 
 /* ---- Actions ---- */
 function wrFromProject(){snapshot();const D=draft();D.els=scenesToEls(P.scenes,true);if(P.front&&!D.tp.title)D.tp.title=P.title;D.at=Date.now();D.syncedAt=D.at;dirty.draft=true;logChange(`Script opened in the writer (${P.scenes.length} scenes)`,'script',true);touch([]);render()}
-function wrBlank(){snapshot();const D=draft();D.els=[{t:'h',x:''}];D.at=Date.now();dirty.draft=true;touch([]);render()}
-async function wrNewProject(){await flushNow();P=newProject({title:'Untitled script'});P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render()}
+function wrBlank(){snapshot();const D=draft();D.els=[{t:'h',x:''}];D.at=Date.now();dirty.draft=true;touch([]);render();setTimeout(()=>tplPick({start:true}),60)}
+async function wrNewProject(){await flushNow();P=newProject({title:'Untitled script'});P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render();setTimeout(()=>tplPick({start:true}),60)}
 function wrTitle(){const tp=draft().tp;const f=(id,l,v,ph)=>`<div class="fieldbox"><label for="${id}">${l}</label><input type="text" id="${id}" value="${esc(v||'')}" placeholder="${esc(ph||'')}"></div>`;
   openModal(`<div class="modal-h"><h2>Title page</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${f('tpT','Title',tp.title||P.title,'RAAHU KAALAM')}<div class="two">${f('tpC','Credit',tp.credit||'Written by','Written by')}${f('tpA','Author(s)',tp.author,'Your name')}</div>
@@ -2300,12 +2330,12 @@ function wrFdx(){const T={h:'Scene Heading',a:'Action',c:'Character',p:'Parenthe
 async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'letter'});
   const all0=opts.els||wrEls(),nums0=wrNumbers(all0),sk0=omSkip(all0);const els=all0.map((e,i)=>Object.assign({},e,e.t==='h'?{no:nums0[i]}:{})).filter((e,i)=>!sk0[i]&&String(e.x||'').trim());
   const RV=REVS(),rvS={};RV.sets.forEach((z,i)=>rvS[z.id]=Object.assign({i},z));const marksOn=opts.marks!==false;let curRev='';const pageRev={};const labels=[];const lps=draft().lock?lockPages(els):null;let lockNo=1,suf=-1;
-  const tp=draft().tp;const LH=12,TOP=72,BOT=720;const X={h:108,a:108,s:108,c:252,d:180,p:216,t:540};const WD={h:432,a:432,s:432,c:288,d:252,p:180,t:432};const FM=opts.els?{}:(FMTS[fmtOf()]||{});Object.assign(X,FM.X||{});Object.assign(WD,FM.WD||{});let curHL=false;
+  const tp=draft().tp;const TPT=TPLS[tplEff()];const LH=12,TOP=TPT.top,BOT=792-TPT.bot;const X=Object.assign({},TPT.X);const WD=Object.assign({},TPT.WD);const FM=opts.els?{}:(FMTS[fmtOf()]||{});Object.assign(X,FM.X||{});Object.assign(WD,FM.WD||{});let curHL=false;
   doc.setFont('courier','normal');doc.setFontSize(12);doc.setTextColor(0);let pg=1,y=TOP;
   if(tp.title&&!opts.noTitle){let ty=270;doc.text(U(tp.title),306,ty,{align:'center'});ty+=36;if(tp.credit){doc.text(tp.credit,306,ty,{align:'center'});ty+=24}if(tp.author){doc.splitTextToSize(tp.author,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     if(tp.source){ty+=24;doc.splitTextToSize(tp.source,400).forEach(l=>{doc.text(l,306,ty,{align:'center'});ty+=LH})}
     let cy=660;(tp.contact||'').split('\n').forEach(l=>{doc.text(l,108,cy);cy+=LH});const dr=[tp.draft,tp.date].filter(Boolean);let dy=660;dr.forEach(l=>{doc.text(l,540,dy,{align:'right'});dy+=LH});doc.addPage()}
-  const newPage=lab=>{doc.addPage();pg++;y=TOP;if(lab==null)lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(pg);labels.push([doc.getNumberOfPages(),lab])};
+  const newPage=(lab,atHead)=>{const cont=TPT.cont&&!atHead&&y>TOP;if(cont)doc.text('(CONTINUED)',X.t,BOT+LH,{align:'right'});doc.addPage();pg++;y=TOP;if(cont){doc.text('CONTINUED:',X.a,y);y+=2*LH}if(lab==null)lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(pg);labels.push([doc.getNumberOfPages(),lab])};
   const star=yy=>{if(!curRev)return;const n=doc.getNumberOfPages();(pageRev[n]=pageRev[n]||new Set()).add(curRev);if(marksOn&&rvS[curRev])doc.text('*',560,yy)};
   const put=(l,t)=>{if(curHL&&(t==='d'||t==='p'||t==='c')){doc.setFillColor(255,233,130);doc.rect(X[t]-3,y-9.5,(t==='c'?doc.getTextWidth(l):WD[t])+6,12,'F')}if(t==='t')doc.text(l,X.t,y,{align:'right'});else doc.text(l,X[t],y);star(y);y+=LH};
   const room=()=>Math.floor((BOT-y)/LH)+1;
@@ -2324,7 +2354,7 @@ async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPD
       else lines.forEach(([t,l])=>put(l,t));continue}
     const t=e.t==='d'||e.t==='p'?'a':e.t;const v=t==='h'&&e.om?'OMITTED':t==='h'||t==='s'||t==='t'?U(x):x;const lines=v.split('\n').flatMap(p=>doc.splitTextToSize(p,WD[t]));
     const gap=y===TOP?0:(t==='h'?2:1);
-    if(t==='h'){const nxt=els[i+1];const keep=1+(nxt?2:0);if(room()<gap+keep+lines.length-1)newPage();else y+=gap*LH;doc.text(String(e.no||''),66,y);lines.forEach(l=>put(l,'h'));continue}
+    const hg=t==='h'?(y===TOP?0:TPT.hgap):gap;if(t==='h'){const nxt=els[i+1];const keep=1+(nxt?2:0);if(room()<hg+keep+lines.length-1)newPage(undefined,true);else y+=hg*LH;doc.text(String(e.no||''),66,y);lines.forEach(l=>put(l,'h'));continue}
     if(room()<gap+Math.min(2,lines.length))newPage();else y+=gap*LH;
     lines.forEach(l=>{if(y>BOT)newPage();put(l,t)})}
   if(opts.header){for(let n=1;n<=doc.getNumberOfPages();n++){doc.setPage(n);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(String(opts.header).slice(0,110),72,36);doc.setFont('courier','normal')}}
@@ -2498,7 +2528,7 @@ const chNorm=x=>U(String(x||'')).replace(/\s*\([^)]*\)\s*/g,' ').replace(/\s+/g,
 function chData(){const D=P.draft;const useDraft=draftReal();const by={},scenes=[];const get=n=>by[n]||(by[n]={name:n,speeches:0,words:0,scenes:new Set(),spoke:new Set(),e8:0,first:null,last:null,partners:{}});
   if(useDraft){const els=D.els,sk=omSkip(els),nums=wrNumbers(els);let sc=null,spk=null;
     els.forEach((e,i)=>{if(sk[i])return;const x=String(e.x||'').trim();if(e.t==='h'){if(e.om){sc=null;return}sc={no:String(nums[i]),lines:2,present:new Set(),action:''};scenes.push(sc);spk=null;return}if(!sc)return;
-      sc.lines+=Math.max(1,Math.ceil(x.length/(W_CPL[e.t]||60)))+(e.t==='d'||e.t==='p'?0:1);
+      sc.lines+=Math.max(1,Math.ceil(x.length/(tplCpl(e.t)||60)))+(e.t==='d'||e.t==='p'?0:1);
       if(e.t==='c'){spk=chNorm(x);if(!spk)return;const c=get(spk);c.speeches++;c.scenes.add(sc.no);c.spoke.add(sc.no);sc.present.add(spk)}
       else if(e.t==='d'&&spk){get(spk).words+=(x.match(/\S+/g)||[]).length}
       else if(e.t==='a'){sc.action+=' '+x;spk=null}else if(e.t!=='p')spk=null});
@@ -2690,6 +2720,62 @@ function fmtOf(){return (P&&P.draft&&FMTS[P.draft.fmt])?P.draft.fmt:'screen'}
 function fmtApply(){const f=FMTS[fmtOf()];Object.assign(WT,WT0,f.wt||{});Object.assign(WT_SHORT,WS0,f.ws||{});Object.assign(W_PH,WP0,f.ph||{})}
 function fmtSel(){return `<label class="wx-fmt"><span class="sr-only">Script format</span><select class="mini" data-wrfmt aria-label="Script format">${Object.entries(FMTS).map(([k,v])=>`<option value="${k}"${k===fmtOf()?' selected':''}>${v.name}</option>`).join('')}</select></label>`}
 function fmtMount(){const s=document.querySelector('[data-wrfmt]');if(!s)return;s.addEventListener('change',()=>{wrSave();const D=draft();snapshot();D.fmt=s.value;dirty.draft=true;logChange(`Script format set to ${FMTS[s.value].name}`,'script',true);touch([]);render(true);toast(`${FMTS[s.value].name} format. The element buttons and PDF layout follow it.`)})}
+/* ================= Page templates for screenplays: margins, indents, spacing, with a sample page to compare ================= */
+/* points on a US Letter page (72 pt = 1 inch); Courier 12 pt, 10 characters an inch, 6 lines an inch */
+const TPL_FD={X:{h:108,a:108,s:108,c:252,d:180,p:216,t:540},WD:{h:432,a:432,s:432,c:288,d:252,p:180,t:432}};
+const TPL_CH={X:{h:108,a:108,s:108,c:281,d:180,p:223,t:518},WD:{h:410,a:410,s:410,c:288,d:288,p:173,t:410}};
+const TPLS={
+  fd:{name:'Final Draft default',tag:'Industry standard',top:72,bot:72,hgap:2,cont:false,X:TPL_FD.X,WD:TPL_FD.WD,
+    about:'The layout producers, studios and contests expect. About one page a minute of screen time.'},
+  orig:{name:'Compact',tag:'Most on a page',top:54,bot:36,hgap:2,cont:false,X:TPL_FD.X,WD:TPL_FD.WD,
+    about:'Final Draft indents with smaller top and bottom margins: four more lines a page, so the page count reads short. Good for your own drafts; readers may notice it on a submission.'},
+  ch:{name:'Cole & Hagg',tag:'Classic studio',top:72,bot:72,hgap:2,cont:false,X:TPL_CH.X,WD:TPL_CH.WD,
+    about:'The traditional studio typing format. Narrower action and wider dialogue, so the same script runs a little longer.'},
+  wb:{name:'Warner Bros.',tag:'Studio format',top:72,bot:72,hgap:2,cont:false,X:TPL_CH.X,WD:Object.assign({},TPL_CH.WD,{d:245}),
+    about:'Almost the same as Cole & Hagg: the same narrower action, with standard-width dialogue.'},
+  celtx:{name:'Celtx default',tag:'Celtx style',top:72,bot:72,hgap:1,cont:true,X:TPL_FD.X,WD:TPL_FD.WD,
+    about:'Final Draft indents with one blank line before scene headings, and (CONTINUED) where a scene runs onto the next page. No watermark.'}};
+const TPL_IDS=['fd','orig','ch','wb','celtx'];
+function tplOf(){const t=P&&P.draft&&P.draft.tpl;return TPLS[t]?t:'fd'}
+/* templates shape screenplays and TV scripts; stage, audio and comic keep their own layouts */
+function tplEff(){return ['screen','tv'].includes(fmtOf())?tplOf():'fd'}
+function tplLP(id){const T=TPLS[id||tplEff()];return Math.floor((792-T.top-T.bot)/12)}
+function tplCpl(t,id){const T=TPLS[id||tplEff()];return Math.max(10,Math.round((T.WD[t]||T.WD.a)/7.2))}
+function tplVars(id){const T=TPLS[id],X=T.X,W=T.WD,i=v=>+(v/72).toFixed(3);
+  return `--tm:${i(T.top)};--bm:${i(T.bot)};--xa:${i(X.a)};--wa:${i(W.a)};--xc:${i(X.c)};--wc:${i(612-72-X.c)};--xd:${i(X.d)};--wd:${i(W.d)};--xp:${i(X.p)};--wp:${i(W.p)};--wt:${i(X.t-X.a)};--hg:${T.hgap}`}
+/* the same page counting the editor uses, for any template */
+function tplPages(els,id){const T=TPLS[id],LP=tplLP(id);let line=0,page=1;
+  (els||[]).forEach(e=>{const t=e.t,txt=String(e.x||'')||' ';const lines=txt.split('\n').reduce((a,p)=>a+Math.max(1,Math.ceil(p.length/tplCpl(t,id))),0);
+    const gap=line===0?0:(t==='h'?T.hgap:(t==='d'||t==='p')?0:1);const need=gap+lines+(t==='h'?2:t==='c'?1:0);
+    if(line+need>LP&&line>0){page++;line=lines}else line+=gap+lines});return page}
+const TPL_SAMPLE=[['t','FADE IN:'],['h','EXT. GODAVARI RIVER BANK - DAWN'],['a','Mist hangs over the water. A wooden ferry knocks against the jetty. Fishermen haul their nets in silence.'],
+  ['a','RAVI (30s, ferryman, sleeves rolled to the elbow) coils a rope and watches the far bank.'],['c','LAKSHMI (V.O.)'],['d','Ravi! The first boat leaves at six.'],
+  ['a','He does not turn. A bicycle bell rings somewhere up the bank.'],['a','LAKSHMI (40s, his elder sister, a basket of marigolds on her hip) hurries down the steps.'],
+  ['c','LAKSHMI'],['p','(out of breath)'],['d','You promised Amma you would be on time today. Just today.'],['c','RAVI'],['d',"The river doesn't keep Amma's clock."],
+  ['a','She laughs despite herself and climbs aboard.'],['t','CUT TO:'],['h','INT. FERRY - CONTINUOUS'],
+  ['a','Passengers squeeze onto the narrow benches: a schoolboy with a slate, a priest, two women with steel milk cans.'],['a',"The SCHOOLBOY (10) stares at Ravi's scarred hands."],
+  ['c','SCHOOLBOY'],['d','Anna, how did you get those?'],['c','RAVI'],['p','(smiling)'],['d','I argued with a crocodile. I won.'],['a',"The boy's eyes go wide. Lakshmi rolls hers."],
+  ['a','Halfway across, the engine coughs, splutters and dies. The ferry drifts with the current.'],['c','LAKSHMI'],['d','Ravi. Ravi, what is happening? Tell me the truth, are we going to hit the bridge?'],
+  ['c','RAVI'],['d','Nothing is happening. Sit down. Everybody sit down.'],['a','He kneels by the engine, wipes the plugs on his shirt and tries again. Nothing.'],
+  ['a','Downstream, the old railway bridge looms out of the mist, its iron pillars black with river weed.'],['c','PRIEST'],['d','Narayana, Narayana...'],
+  ['h','EXT. RAILWAY BRIDGE - CONTINUOUS'],['a','A goods train thunders overhead. Rust and gravel rain down onto the water.'],['a','The ferry swings broadside toward a pillar.'],
+  ['h','INT. FERRY - CONTINUOUS'],['a','Ravi grabs a bamboo pole, plants it against the pillar and pushes with everything he has.'],['c','RAVI'],['d','Lakshmi, the rope! Throw it to the jetty boys!'],
+  ['a','She hurls the coil. A FISHERMAN on the bank catches it on the second try.'],['a',"The ferry jerks to a stop an arm's length from the stone."],['a','Silence. Then the schoolboy starts to clap.'],
+  ['c','SCHOOLBOY'],['d','Did you argue with the bridge too?'],['t','SMASH CUT TO:'],['h','EXT. JETTY - LATER'],
+  ['a','Ravi sits alone on the steps, his hands still shaking. Lakshmi sits beside him and hands him a steel tumbler of tea.'],['c','LAKSHMI'],['d','Drink. Then you can tell Amma why you were late.']];
+function tplPageHtml(id){const lp=tplLP(id);let no=0;
+  return `<div class="tp-page" style="${tplVars(id)}"><div class="tp-in" style="height:calc(var(--u) / 6 * ${lp})">${TPL_SAMPLE.map(([t,x],i)=>`<div class="el el-${t}${i===0?' first':''}"${t==='h'?` data-n="${++no}"`:''}>${esc(x)}</div>`).join('')}</div><span class="tp-num">1.</span></div>`}
+function tplPick(opts){opts=opts||{};if(!['screen','tv'].includes(fmtOf())){toast('Page templates are for screenplays and TV scripts. Choose one of those formats first.');return}
+  const D=draft(),real=D.els.filter(e=>String(e.x||'').trim()).length>3;let cur=tplOf();if(opts.start&&!D.tplAsked){D.tplAsked=1;dirty.draft=true;touch([])}
+  const card=id=>{const T=TPLS[id],pg=real?tplPages(D.els,id):0;return `<button type="button" class="tp-opt" role="radio" aria-checked="${id===cur}" data-tpl="${id}"><span class="tp-h"><b>${esc(T.name)}</b><span class="tp-tag">${esc(T.tag)}</span></span><span class="tp-ab">${esc(T.about)}</span><span class="tp-st">${tplLP(id)} lines a page · action ${tplCpl('a',id)} · dialogue ${tplCpl('d',id)} characters a line${pg?` · <b>your script: ${pg} page${pg===1?'':'s'}</b>`:''}</span></button>`};
+  openModal(`<div class="modal-h"><h2>${opts.start?'Choose a page template to write in':'Page template'}</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><div class="tp-wrap">
+    <div class="tp-list" role="radiogroup" aria-label="Page template">${TPL_IDS.map(card).join('')}</div>
+    <div class="tp-prev"><p class="tp-cap">Page 1 of the same sample scene in <b id="tpName">${esc(TPLS[cur].name)}</b>. Compare where the page ends.</p><div id="tpPage">${tplPageHtml(cur)}</div></div></div>
+    <div class="tp-foot"><span class="small muted">You can change it any time from "Page template" in the writer. Your text never changes, only where it sits on the page.</span><button class="btn pri" id="tpUse">Use ${esc(TPLS[cur].name)}</button></div></div>`);
+  const sel=id=>{cur=id;document.querySelectorAll('[data-tpl]').forEach(b=>b.setAttribute('aria-checked',b.dataset.tpl===id?'true':'false'));$('#tpPage').innerHTML=tplPageHtml(id);$('#tpName').textContent=TPLS[id].name;$('#tpUse').textContent='Use '+TPLS[id].name};
+  document.querySelectorAll('[data-tpl]').forEach(b=>{b.onclick=()=>sel(b.dataset.tpl);b.onkeydown=e=>{if(!['ArrowDown','ArrowUp','ArrowRight','ArrowLeft'].includes(e.key))return;e.preventDefault();const i=TPL_IDS.indexOf(cur),n=TPL_IDS[(i+(e.key==='ArrowDown'||e.key==='ArrowRight'?1:TPL_IDS.length-1))%TPL_IDS.length];sel(n);document.querySelector(`[data-tpl="${n}"]`).focus()}});
+  $('#tpUse').onclick=()=>{const D2=draft();const was=tplOf();D2.tplAsked=1;if(was!==cur||!D2.tpl){if(typeof wrSave==='function'&&wrDoc())wrSave();snapshot();D2.tpl=cur;dirty.draft=true;logChange(`Page template set to ${TPLS[cur].name}`,'script',true);touch([])}closeModal();render(true);
+    toast(`${TPLS[cur].name}. Page breaks, page count and the PDF follow it.`);setTimeout(()=>{const d=wrDoc();if(d&&opts.start){d.focus()}},80)}}
 /* ---- AV two-column script (Celtx AV) ---- */
 function AVD(){if(!P.av||!Array.isArray(P.av.rows))P.av={rows:[]};return P.av}
 R.av=()=>{const A=AVD();let t=0;const secs=s=>{const m=String(s||'').match(/^(\d+):(\d{1,2})$/);return m?(+m[1])*60+(+m[2]):(parseFloat(s)||0)};
@@ -4129,7 +4215,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(act==='import')openImport();
   if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();if(act==='wmSet')wmSettings();if(act==='aiBeats')aiFill('beats');if(act==='aiOutline')aiFill('outline');if(act==='aiCatalog')aiFill('catalog');if(act==='aiTasks')aiFill('tasks');if(act==='sbPdf')sbPdf();if(act==='sidesPdf')sidesPdf();if(act==='catFill')catFill();if(act==='catNew')catEdit();
   if(act==='avAdd'||act==='avScene'){const A=AVD();snapshot();A.rows.push(act==='avScene'?{scene:'SCENE '+(A.rows.filter(r=>r.scene).length+1)}:{video:'',audio:'',dur:''});touch([]);render(true)}
-  if(act==='wrNew')wrNewProject();if(act==='wrTitle')wrTitle();if(act==='wrOpen')wrOpen();if(act==='wrDownload')wrDownload();if(act==='wrApply')wrApply();if(act==='wrFromProject')wrFromProject();if(act==='wrBlank')wrBlank();if(act==='wrRenumber')wrRenumber();
+  if(act==='wrNew')wrNewProject();if(act==='wrTpl')tplPick();if(act==='wrTitle')wrTitle();if(act==='wrOpen')wrOpen();if(act==='wrDownload')wrDownload();if(act==='wrApply')wrApply();if(act==='wrFromProject')wrFromProject();if(act==='wrBlank')wrBlank();if(act==='wrRenumber')wrRenumber();
   if(act==='addArtist'){snapshot();const a=addArtist('NEW CHARACTER '+(P.artists.length+1),'Secondary','');logChange(`Artist ${a.name} added`,'artistInfo',true);touch([]);render(true);toast('Artist added. Click the name to rename.')}
   if(act==='desig')desigJob();
   if(act==='rmFakes'){const fk=fakeArtists();if(!fk.length)return;snapshot();const sids=removeArtists(fk.map(a=>a.id));logChange(`Removed ${fk.length} non-character name${fk.length===1?'':'s'} from the artist list: ${fk.map(a=>a.name).join(', ')}`,'artistName');touch(sids);render(true);toast(`Removed ${fk.length}. Undo brings them back.`)}

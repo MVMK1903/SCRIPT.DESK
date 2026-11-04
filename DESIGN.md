@@ -32,6 +32,7 @@ Exports keep their own document formats.
   text and a soft glow.
 - **Shapes.** Rectangles only, no circles or pill shapes: buttons, tabs and inputs 10px corners, the highlight inside a
   switch 8px, chips and small badges 6px, cards 16px, dialogs 18px, story-arc markers rounded squares.
+- **Bars that stay put** (phone app bar and tab row, the writer's element toolbar, table headers, the phone menu) are solid, never see-through, so text scrolling under them cannot show.
 - **Type.** The film title is bold uppercase (22px desktop, up to 26px on a phone); page titles 26px/700.
 - **Story arc** uses the blue to purple to pink gradient curve and coloured bands.
 - **Phone.** The main tabs sit under the film title as a sticky glass pill row (icon over label; icon beside label

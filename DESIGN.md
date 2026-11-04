@@ -41,6 +41,12 @@ Exports keep their own document formats.
   their text for screen readers and hide it with an overflow trick, never `font-size:0`.
 - **Focus.** `:focus-visible` shows a 2px accent outline everywhere.
 - **Motion** is feedback only: press, hover, focus, a sheet opening. Nothing performs an entrance, and reduced motion is respected.
+  Two effects are ported from Libraries.dev (MIT, plain JS, no React):
+  - **Border beam pulse** on pressing a button (inner pulse, ocean blue-violet; white on the blue primary) and on changing a
+    select (outer pulse). One shot, about 0.7 s, an overlay that never covers the label.
+  - **Gooey move** on segmented controls and the writer's element buttons: the highlight stretches as liquid from the old
+    option to the new one (head 0.26 s, tail 0.46 s). Only the highlight layer is filtered, so labels stay sharp.
+  Do not add other glows or decorative motion, and never put two effects on the same element.
 - **No** gradients, glows, glass, emoji icons, icon-in-tinted-circle KPIs or rainbow charts.
 
 ## Page templates (writer)

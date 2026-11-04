@@ -1135,6 +1135,23 @@ body[data-page=gear] tr:hover .il{transform:none}
 .tp-num{position:absolute;top:calc(var(--u) * 0.5);right:calc(var(--u) * 1);font:calc(var(--u) / 6)/1 "Courier Prime","Courier New",monospace}
 .tp-foot{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px}
 @media (max-width:820px){.tp-wrap{grid-template-columns:1fr}.tp-prev{position:static}.tp-page{--u:calc((100vw - 64px) / 8.5)}.tp-foot .btn{width:100%}}
+/* Story devices */
+.dv{margin-top:28px}.dv .sa-h{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.dv h3{margin:0}
+.dv-sum{font-size:15px;line-height:1.5;margin:8px 0 14px;max-width:80ch}
+.dv-fam{margin:20px 0 8px;font:600 14px/1.3 var(--f-ui)}
+.dv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.dv-card,.dv-check{background:var(--bg);border-radius:12px;padding:12px 14px;box-shadow:0 0 0 .5px var(--hair)}
+.dv-card p,.dv-check p{margin:6px 0 0;font-size:13.5px;line-height:1.45}
+.dv-ct{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}.dv-ct b{font-size:14px}
+.dv-path{display:inline-flex;gap:6px;align-items:center;color:var(--muted);font-size:12px}
+.dv-sc{background:var(--fill);border-radius:6px;padding:2px 7px;font-size:12px;color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dv-checks{display:grid;gap:8px;margin:0 0 6px}.dv-checks h4{margin:6px 0 2px;font:600 14px/1.3 var(--f-ui)}
+.dv-check{box-shadow:inset 3px 0 0 var(--warn),0 0 0 .5px var(--hair)}.dv-fix{color:var(--muted)}.dv-fix b{color:var(--fg)}
+.dv-items{list-style:none;margin:0;padding:0;display:grid;gap:6px}.dv-items li{display:grid;grid-template-columns:minmax(140px,220px) auto 1fr;gap:12px;align-items:baseline;background:var(--bg);border-radius:10px;padding:10px 14px;box-shadow:0 0 0 .5px var(--hair);font-size:13.5px}
+@media (max-width:640px){.dv-items li{grid-template-columns:1fr auto}.dv-items li span:last-child{grid-column:1/-1}}
+.dv-gloss{margin-top:20px;background:var(--fill);border-radius:12px;padding:10px 14px}.dv-gloss summary{cursor:pointer;font-weight:600}
+.dv-gloss h4{margin:14px 0 6px;font:600 13px/1.3 var(--f-ui)}.dv-gloss dl{margin:0;display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:6px 14px;font-size:13px;line-height:1.45}.dv-gloss dt{font-weight:600}.dv-gloss dd{margin:0}
+@media (max-width:640px){.dv-gloss dl{grid-template-columns:1fr}.dv-gloss dd{margin-bottom:6px}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1604,10 +1621,10 @@ Known characters (use these exact UPPERCASE names; map spelling variants to them
 For EACH scene below return:
 - id: copy exactly.
 - title: 1-3 word scene title in UPPERCASE (e.g. "HAUNTING", "THE STATEMENT").
-- desc: scene description for a single line order, 1-2 short sentences, present tense, English.
+- desc: scene description for a single line order, 1-2 short sentences, present tense, English. When the scene turns (a reveal, a discovery, a reversal), say plainly what changes; no storytelling jargon.
 - loc: the script location in UPPERCASE as written in the heading (fix obvious typos only).
 - ie: INT, EXT, INT/EXT. time: the time/effect exactly as the heading writes it, e.g. DAY, NIGHT, MRNG, AFTN, EVNG, DAWN.
-- timeline: "Present" unless the scene is a flashback, dream or a different period; then e.g. "1947", "Flashback", "Dream".
+- timeline: "Present" unless the scene sits outside the main story time: "Flashback" (an earlier event), "Flash-forward" (a later event), "Dream", "Imagination", "Montage", or the period such as "1947" or "Flashback 1947". Clues: headings or captions like FLASHBACK, YEARS EARLIER, BACK TO PRESENT, MONTAGE, a year, a younger or older version of a character, or dialogue that frames the scene as a memory.
 - artists: EVERY named character present in the scene, in order of appearance: everyone who speaks (listed under each scene below; all of them must be included) plus everyone described in the action, even if silent (UPPERCASE). Never list as artists: phone or screen text, caller names shown on a mobile, signs, boards, posters, messages, sound effects or camera/editing notes. When a character is heard on a phone, list that character's own name.
 - juniors: crowd / junior artistes groups with estimated count, e.g. "Villagers (30)".
 - extras: small non-speaking bit roles, e.g. "Waiter", "Valet guy".
@@ -1618,9 +1635,10 @@ For EACH scene below return:
 - vehicles, animals, vfx (CG, digital), sfx (rain, fire, smoke, blasts, breakaways), spl_sets (special or constructed sets), spl_props (special, period or rigged props, weapons), equipment (drone, crane, jimmy jib, car mount, underwater), technicians (fight master, choreographer, animal handler, VFX supervisor, etc.).
 - fight: null, or {"d":"what happens","artists":["NAME"],"fighters":"e.g. 15 fighters","needs":"rope rigging, breakaway glass, safety"} if the scene has a fight, chase or stunt.
 - song: null, or {"d":"short description"} if a song or montage happens in this scene.
+- story: objects, costume details or marks the story depends on that appear in this scene: something shown pointedly that matters later (a Chekhov's gun), a recurring object, a clue or a false clue. 1-6 words each, e.g. "Rock hammer", "Red mitten with LEO stitched". They need continuity care. [] if none.
 - flags: short notes about anything unclear in the scene (empty if clear).
 Rules: read each scene line by line and do not skip details from the middle or end of a scene; never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies. Return one entry for EVERY scene id.
-Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"fight":null,"song":null,"flags":[]}]}
+Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"story":[],"fight":null,"song":null,"flags":[]}]}
 
 SCENES:
 ${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}${sceneSpeakers(s).length?`\nSpeaking characters (must be in artists): ${sceneSpeakers(s).join(', ')}`:''}
@@ -1632,6 +1650,7 @@ function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?
   setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
   if(!s.loc&&r.loc)s.loc=U(r.loc);if(!s.ie&&r.ie)s.ie=U(r.ie);if(!s.time&&r.time)s.time=U(r.time);
   setIf('timeline',cleanItem(r.timeline)==='Present'?'':cleanItem(r.timeline));
+  if(!L.story&&Array.isArray(r.story)){const v=arr(r.story);if(v.length||!s.story)s.story=uniq([...(s.story||[]),...v]).slice(0,20)}
   if(!L.artists){const ids=namesToIds(arr(r.artists),'Found by AI');s.artists=byAppearance(s,[...sureCast(s),...ids])}
   LK.forEach(k=>{if(!L[k])s[k]=arr(r[k])});
   if(!L.costumes&&Array.isArray(r.costumes)){s.costumes=r.costumes.filter(c=>c&&c.costume).map(c=>{const a=findArtist(c.artist);return {a:a?a.id:null,n:a?'':U(c.artist),c:cleanItem(c.costume)}})}
@@ -1672,8 +1691,88 @@ ${scr}`,{modelTier:'complex'});
   (r&&r.profiles||[]).forEach(x=>{const a=findArtist(x.name);if(!a)return;const j=v=>Array.isArray(v)?v.map(s=>String(s).trim()).filter(Boolean).join('\n'):String(v||'').trim();
     P.profiles[a.id]={description:j(x.description),start:j(x.arc_start),turns:j(x.arc_turns),end:j(x.arc_end),relationships:j(x.relationships),key:j(x.key_scenes),at:Date.now()}});
   dirty.meta=true}
+/* ================= Screenwriting knowledge: devices the AI looks for, in plain words ================= */
+/* Definitions written for ScriptDesk from common screenwriting references (No Film School's list of plot devices,
+   Final Draft's guide to plot twists, and standard narrative terms). "look" tells the AI what to search for;
+   "risk" is the craft check it applies. */
+const STORY_KB=[
+  {id:'chekhov',fam:'Set-up and payoff',name:"Chekhov's gun",def:'An object or detail shown pointedly early on that turns out to matter later.',look:'an object the camera or action singles out early that is used decisively later',risk:'A gun that never fires: something set up with weight and never used.'},
+  {id:'plant',fam:'Set-up and payoff',name:'The plant (recurring)',def:'An object, person or detail that keeps returning and changes meaning each time until it becomes central.',look:'the same object or detail in three or more scenes with a shifting meaning',risk:'It appears once or twice and is dropped.'},
+  {id:'foreshadow',fam:'Set-up and payoff',name:'Foreshadowing',def:'Quiet hints of what is coming, often only noticed afterwards.',look:'lines, images or events that hint at a later turn',risk:'Hints so loud the turn is obvious, or none at all so the turn feels unfair.'},
+  {id:'motif',fam:'Set-up and payoff',name:'Motif and symbol',def:'A recurring image, sound or idea that carries the theme.',look:'a repeated image, colour, sound, song or phrase',risk:''},
+  {id:'arcwords',fam:'Set-up and payoff',name:'Arc words',def:'A phrase that returns with a different meaning as a character changes.',look:'the same line said at different points of the story',risk:''},
+  {id:'redherring',fam:'Twist and reveal',name:'Red herring',def:'A false clue that points suspicion at the wrong person or explanation so the real answer surprises.',look:'a character or clue the story makes suspicious that turns out innocent',risk:'Too many false leads, or one that is never explained away.'},
+  {id:'unreliable',fam:'Twist and reveal',name:'Unreliable narrator',def:'The person telling the story is lying, mistaken, biased or unwell, so what we saw must be re-read.',look:'voice-over or point of view later shown to be false or partial',risk:'The lie is not supported by what was shown earlier.'},
+  {id:'anagnorisis',fam:'Twist and reveal',name:'Anagnorisis (discovery)',def:'The moment a character learns a big truth about themselves or someone else, and everything is reframed.',look:'a scene where a character learns who someone really is or what has really been happening',risk:''},
+  {id:'peripeteia',fam:'Twist and reveal',name:'Peripeteia (reversal)',def:"A sudden reversal of fortune that comes from the characters' own choices, not luck.",look:'the winner becoming the loser, or the reverse, because of a choice already made',risk:''},
+  {id:'poetic',fam:'Twist and reveal',name:'Poetic justice',def:'A character gets exactly what their actions earned, often in an ironic way.',look:'a punishment or reward that mirrors what the character did',risk:''},
+  {id:'twist',fam:'Twist and reveal',name:'Twist ending',def:'A late reveal that changes the meaning of what came before.',look:'a final reveal that recontextualises earlier scenes',risk:'A twist the audience could not have worked out from what they saw.'},
+  {id:'delayed',fam:'Twist and reveal',name:'Delayed reveal',def:'Information is held back on purpose to build mystery.',look:'a question raised early and answered much later',risk:'A question raised and never answered.'},
+  {id:'mistaken',fam:'Twist and reveal',name:'Mistaken identity',def:'A character is taken for someone else, causing confusion or danger.',look:'one person mistaken for another',risk:''},
+  {id:'falsevictory',fam:'Twist and reveal',name:'False victory',def:'An apparent win that is followed by a bigger problem.',look:'a success, usually mid-story, that is undone soon after',risk:''},
+  {id:'deusex',fam:'Craft warnings',name:'Deus ex machina',def:'An outside event or rescue that solves the problem at the last moment instead of the characters doing it.',look:'a climax resolved by coincidence, a new character or an outside force',risk:'The ending does not come from what the characters chose or did.'},
+  {id:'plotarmor',fam:'Craft warnings',name:'Plot armour',def:'A hero survives against all logic, which drains the danger.',look:'repeated escapes with no cost or explanation',risk:'Danger that never costs the hero anything.'},
+  {id:'coincidence',fam:'Craft warnings',name:'Convenient coincidence',def:'Chance that helps the hero out of trouble.',look:'luck that solves a problem; one coincidence that causes trouble is usually accepted, one that solves it rarely is',risk:'More than one coincidence that helps the hero.'},
+  {id:'deadend',fam:'Craft warnings',name:'Dead end',def:'A thread or character set up and then forgotten.',look:'a subplot, question or character that vanishes without resolution',risk:'Unless deliberate, it reads as a mistake.'},
+  {id:'analepsis',fam:'Time',name:'Analepsis (flashback)',def:'The story jumps back to show an earlier event that changes how we read the present.',look:'scenes set earlier than the main story, flagged by headings, captions, dialogue or a different period',risk:'A flashback that only repeats what we know.'},
+  {id:'prolepsis',fam:'Time',name:'Prolepsis (flash-forward)',def:'A jump ahead to a later moment that hints at what will happen.',look:'a scene set after the main story time, often an opening hook',risk:''},
+  {id:'medias',fam:'Time',name:'In medias res',def:'The story opens in the middle of the action and fills in the background later.',look:'an opening already mid-crisis',risk:''},
+  {id:'frame',fam:'Time',name:'Frame story',def:'A story told inside another story.',look:'a narrator or present-day scenes that bookend the main tale',risk:''},
+  {id:'parallel',fam:'Time',name:'Parallel timelines',def:'Two or more storylines in different times or places cut together.',look:'alternating periods or places that comment on each other',risk:'Timelines that never connect.'},
+  {id:'montage',fam:'Time',name:'Montage',def:'Quick linked shots that compress time or show several things at once.',look:'MONTAGE or SERIES OF SHOTS, or a song covering time passing',risk:''},
+  {id:'clock',fam:'Tension',name:'Ticking clock',def:'A deadline that builds urgency.',look:'a time limit the characters race against',risk:''},
+  {id:'irony',fam:'Tension',name:'Dramatic irony',def:'The audience knows something a character does not.',look:'scenes where we know the danger or truth and the character does not',risk:''},
+  {id:'hook',fam:'Tension',name:'Narrative hook',def:'An opening moment that grabs the audience.',look:'the first scenes: a question, danger or striking image',risk:'A slow opening with no question.'},
+  {id:'cliffhanger',fam:'Tension',name:'Cliffhanger',def:'A scene or act that ends with tension unresolved.',look:'an act, interval or episode ending on an open danger',risk:''},
+  {id:'macguffin',fam:'Tension',name:'MacGuffin',def:'An object or goal everyone chases; what it is matters less than the chase.',look:'a sought-after object, document or treasure driving the plot',risk:''},
+  {id:'interval',fam:'Tension',name:'Interval block',def:'In Indian films, the high point or turn placed just before the interval.',look:'the scene before INTERVAL, or the mid-point turn of a two-half film',risk:'A weak interval that gives no reason to return.'}];
+const KB_BY=Object.fromEntries(STORY_KB.map(k=>[k.id,k]));
+const KB_FAMS=['Set-up and payoff','Twist and reveal','Time','Tension','Craft warnings'];
+function kbText(){return STORY_KB.map(k=>`- ${k.id} | ${k.name}: ${k.def} Look for: ${k.look}.${k.risk?' Risk: '+k.risk:''}`).join('\n')}
+/* scene numbers like "Sc 3, 41" or "3-5" to the scenes they name */
+function scRefs(txt){const nos=P.scenes.map(s=>U(String(s.no)));const out=[];String(txt||'').replace(/\d+[A-Z]?/gi,m=>{const i=nos.indexOf(U(m));if(i>=0&&!out.includes(P.scenes[i]))out.push(P.scenes[i]);return m});return out}
+async function aiDevices(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(120000,aiBudget()*0.55));
+  const r=await ask(`You are a script consultant. Read this screenplay (it may be in Telugu, Tinglish, English or another language) and find the storytelling devices it really uses, using these definitions:
+${kbText()}
+
+Return in clear English, using scene numbers from the outline:
+- devices: each device actually present, [{"id":"chekhov","setup":"Sc 3","payoff":"Sc 41","what":"what it is in this story, 1 sentence","effect":"what it does for the audience, 1 sentence"}]. "setup" is where it starts and "payoff" where it lands (same scene or "" if it has none). Only devices that are clearly there; never invent.
+- checks: craft problems a script consultant would raise, [{"id":"deusex|plotarmor|coincidence|deadend|chekhov|redherring|twist|delayed|hook|interval|other","scenes":"Sc 40","note":"the problem in plain words","fix":"one concrete way to fix it"}]. Include set-ups that never pay off and questions never answered. Empty if none.
+- items: objects, costume details or marks the story depends on (planted objects, clues, recurring objects), [{"item":"1-6 words","scenes":"Sc 3, 41","why":"why it matters to the story"}]. These need continuity care.
+- summary: 1-2 sentences on how the script builds surprise and payoff.
+Reply with only JSON: {"devices":[],"checks":[],"items":[],"summary":""}
+
+SCENE OUTLINE:
+${cutBytes(outline(),Math.min(30000,aiBudget()*0.2))}
+
+SCRIPT:
+${scr}`,{modelTier:'complex'});
+  if(!r||!Array.isArray(r.devices))throw {code:'invalid_json'};
+  const S=x=>String(x==null?'':x).trim();
+  P.devices={devices:r.devices.filter(d=>d&&KB_BY[S(d.id).toLowerCase()]).map(d=>({id:S(d.id).toLowerCase(),setup:S(d.setup),payoff:S(d.payoff),what:S(d.what),effect:S(d.effect)})).slice(0,40),
+    checks:(r.checks||[]).filter(c=>c&&S(c.note)).map(c=>({id:S(c.id).toLowerCase(),scenes:S(c.scenes),note:S(c.note),fix:S(c.fix)})).slice(0,20),
+    items:(r.items||[]).filter(i=>i&&S(i.item)).map(i=>({item:cleanItem(i.item),scenes:S(i.scenes),why:S(i.why)})).slice(0,40),summary:S(r.summary),at:Date.now()};
+  /* story-critical items go onto the scenes they appear in, unless you have edited that row */
+  const ids=[];P.devices.items.forEach(it=>scRefs(it.scenes).forEach(s=>{if((s.locked||{}).story)return;s.story=s.story||[];if(!s.story.some(x=>norm(x)===norm(it.item))){s.story.push(it.item);ids.push(s.id)}}));
+  dirty.meta=true;if(ids.length)touch(uniq(ids))}
+async function devicesJob(){if(JOB)return;if(!AI.sample){noAI('Finding story devices needs a connected AI service.');return}snapshot();startJob('Finding story devices',0);
+  try{await aiDevices();logChange('Story devices found by AI','structure',true);touch([]);toast(`Found ${P.devices.devices.length} device${P.devices.devices.length===1?'':'s'} and ${P.devices.checks.length} craft note${P.devices.checks.length===1?'':'s'}.`)}
+  catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
+function devicesHtml(){const D=P.devices;const btn=`<button class="btn sm${D?'':' pri'}" data-act="genDevices">${D?'Find again with AI':'Find story devices with AI'}</button>`;
+  const gloss=`<details class="dv-gloss"><summary>Glossary of devices the AI looks for (${STORY_KB.length})</summary>${KB_FAMS.map(f=>`<h4>${esc(f)}</h4><dl>${STORY_KB.filter(k=>k.fam===f).map(k=>`<dt>${esc(k.name)}</dt><dd>${esc(k.def)}${k.risk?` <span class="muted">Watch for: ${esc(k.risk)}</span>`:''}</dd>`).join('')}</dl>`).join('')}</details>`;
+  if(!D)return `<section class="dv"><div class="sa-h"><h3>Story devices</h3>${btn}</div><p class="small muted">The AI finds set-ups and payoffs, twists, flashbacks and tension devices in this script, shows where each starts and lands, and raises craft problems such as a set-up that never pays off or an ending solved by chance.</p>${gloss}</section>`;
+  const sc=t=>t?`<span class="dv-sc">${esc(t)}</span>`:'';
+  const byFam=KB_FAMS.map(f=>[f,D.devices.filter(d=>KB_BY[d.id].fam===f)]).filter(x=>x[1].length);
+  return `<section class="dv"><div class="sa-h"><h3>Story devices</h3>${btn}</div>${D.summary?`<p class="dv-sum">${esc(D.summary)}</p>`:''}
+    ${D.checks.length?`<div class="dv-checks"><h4>Craft notes · ${D.checks.length}</h4>${D.checks.map(c=>`<article class="dv-check"><div class="dv-ct"><b>${esc((KB_BY[c.id]||{name:'Note'}).name)}</b>${sc(c.scenes)}</div><p>${esc(c.note)}</p>${c.fix?`<p class="dv-fix"><b>Try:</b> ${esc(c.fix)}</p>`:''}</article>`).join('')}</div>`:''}
+    ${byFam.map(([f,L])=>`<h4 class="dv-fam">${esc(f)}</h4><div class="dv-list">${L.map(d=>`<article class="dv-card"><div class="dv-ct"><b>${esc(KB_BY[d.id].name)}</b><span class="dv-path">${sc(d.setup)}${d.payoff&&d.payoff!==d.setup?`<span aria-hidden="true">→</span>${sc(d.payoff)}`:''}</span></div><p>${esc(d.what)}</p>${d.effect?`<p class="small muted">${esc(d.effect)}</p>`:''}</article>`).join('')}</div>`).join('')}
+    ${D.items.length?`<h4 class="dv-fam">Story-critical items</h4><p class="small muted">Also listed on each scene's breakdown so props, costume and continuity keep track of them.</p><ul class="dv-items">${D.items.map(i=>`<li><b>${esc(i.item)}</b>${sc(i.scenes)}<span>${esc(i.why)}</span></li>`).join('')}</ul>`:''}
+    ${gloss}</section>`}
+function devicesExp(){const D=P.devices;if(!D)return [];return [{group:'Story devices'},...D.devices.map(d=>[KB_BY[d.id].name,[d.setup,d.payoff].filter(Boolean).join(' → '),d.what+(d.effect?' '+d.effect:'')]),
+  ...(D.checks.length?[{group:'Craft notes'},...D.checks.map(c=>[(KB_BY[c.id]||{name:'Note'}).name,c.scenes,c.note+(c.fix?' Try: '+c.fix:'')])]:[]),
+  ...(D.items.length?[{group:'Story-critical items'},...D.items.map(i=>[i.item,i.scenes,i.why])]:[])]}
 async function aiStructure(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(120000,aiBudget()*0.6));
-  const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several.
+  const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), the Indian two-half structure built around an interval block, Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several.
 Return in clear English:
 - main: the main structure. also: other structures it uses (may be empty). why: 2-4 sentences explaining the choice in simple words.
 - parts: the acts or beats of the MAIN structure in order, each {"name":"Act I – Setup","summary":"what happens, 1-3 sentences","scenes":"e.g. Sc 2–14"}. Use scene numbers from the outline.
@@ -1713,7 +1812,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     if(JOB.fatal)throw JOB.fatal;if(JOB.ctl.signal.aborted)throw {code:'cancelled'};
     if(thorough()){const done=pending.filter(s=>s.status==='done');JOB.label='Double-checking scenes';JOB.done=0;JOB.total=done.length;renderJob();await checkPass(done)}
     assignUnits();touch(P.scenes.map(s=>s.id));
-    if(needStr){JOB.label='Reading story structure';JOB.total=0;renderJob();try{await aiStructure()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Story structure could not be written. Use the button on its page to retry.'}touch([])}
+    if(needStr){JOB.label='Reading story structure';JOB.total=0;renderJob();try{await aiStructure();JOB.label='Finding story devices';renderJob();try{await aiDevices()}catch(e2){if(FATAL.includes(e2&&e2.code)||e2&&e2.code==='cancelled')throw e2}}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Story structure could not be written. Use the button on its page to retry.'}touch([])}
     if(needProf){JOB.label='Writing character profiles';renderJob();try{await aiProfiles()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e;soft=soft||'Character profiles could not be written. Use the button on their page to retry.'}touch([])}
     if(P.artists.some(a=>!a.designation)){JOB.label='Writing designations';JOB.total=0;renderJob();try{await aiDesignations()}catch(e){if(FATAL.includes(e&&e.code)||e&&e.code==='cancelled')throw e}touch([])}
     {const fk=fakeArtists();if(fk.length){const sids=removeArtists(fk.map(a=>a.id));logChange(`Removed ${fk.length} non-character name${fk.length===1?'':'s'} from the artist list: ${fk.map(a=>a.name).join(', ')}`,'artistName',true);touch(sids)}}
@@ -1779,16 +1878,17 @@ function setSceneField(s,f,t){t=String(t).replace(/ /g,' ').trim();s.locked=s.l
     case 'artists':s.artists=namesToIds(splitList(t),'Added by you');break;
     case 'crowd':s.juniors=splitList(t);s.locked.juniors=1;return;
     case 'costumes':s.costumes=parseCostumes(t);break;
+    case 'story':s.story=splitList(t);break;
     case 'desc':case 'title':case 'setup':case 'notes':case 'timeline':s[f]=f==='title'?U(t):t;break;
     case 'fd':case 'fa':case 'ff':case 'fr':case 'funit':{s.fight=s.fight||{unit:'',d:'',a:'',f:'',r:''};const map={fd:'d',fa:'a',ff:'f',fr:'r',funit:'unit'};s.fight[map[f]]=f==='funit'?U(t):t;if(f==='funit')s.locked.unit=1;if(!s.fight.d&&!s.fight.a&&!s.fight.f&&!s.fight.r)s.fight=null;s.locked.fight=1;return}
     case 'sd':case 'sunit':{s.song=s.song||{unit:'',d:''};if(f==='sd')s.song.d=t;else{s.song.unit=U(t);s.locked.sunit=1}if(!s.song.d&&!s.song.unit)s.song=null;s.locked.song=1;return}
     default:if(LK.includes(f))s[f]=splitList(t);else return}
   s.locked[f]=1}
 const FL={no:'Scene number',loc:'Location',eff:'Effect / time',desc:'Description',artists:'Artists',crowd:'Crowd',costumes:'Costumes',title:'Scene title',setup:'Setup',notes:'Notes',timeline:'Timeline',fd:'Fight / stunt',fa:'Fight artists',ff:'Fighters',fr:'Fight requirements',funit:'Fight unit',sd:'Song',sunit:'Song unit'};
-Object.assign(FL,LISTS);
+Object.assign(FL,LISTS);FL.story='Story-critical items';
 const ALLSC=['slo','sloLoc','sloArt','sloFight','locations','locScenes','artScenes','breakdown','special','costume','artprops','script'];
 const SHEETS_BY={no:ALLSC,loc:ALLSC,eff:ALLSC,desc:['slo','sloLoc','sloArt','breakdown'],artists:['slo','sloLoc','sloArt','artists','artScenes','breakdown','costume'],crowd:['slo','sloLoc','sloArt','sloFight','breakdown'],juniors:['slo','sloLoc','sloArt','sloFight','breakdown'],
-  costumes:['breakdown','costume'],makeup:['breakdown','costume'],props:['breakdown','artprops'],art:['breakdown','artprops'],spl_props:['breakdown','artprops','special'],setup:['breakdown','artprops'],
+  story:['breakdown','structure'],costumes:['breakdown','costume'],makeup:['breakdown','costume'],props:['breakdown','artprops'],art:['breakdown','artprops'],spl_props:['breakdown','artprops','special'],setup:['breakdown','artprops'],
   vfx:['breakdown','special'],sfx:['breakdown','special'],animals:['breakdown','special'],vehicles:['breakdown','special'],spl_sets:['breakdown','special'],equipment:['breakdown','special'],technicians:['breakdown','special'],extras:['breakdown'],
   fd:['sloFight','breakdown'],fa:['sloFight'],ff:['sloFight'],fr:['sloFight'],funit:['sloFight'],sd:['slo','sloFight','breakdown'],sunit:['slo','sloFight'],title:['breakdown'],notes:['breakdown'],timeline:['breakdown','special','costume'],
   artistName:['slo','sloLoc','sloArt','sloFight','artists','artScenes','breakdown','costume','profiles'],artistInfo:['artists','artScenes','profiles'],tier:['artists','sloArt','artScenes','costume','profiles'],
@@ -1959,8 +2059,8 @@ R.locScenes=()=>{const gs=locGroups();return {html:pageHead('Location-wise scene
 R.artScenes=()=>{const as=sortedArtists().filter(a=>a.n);return {html:pageHead('Artist-wise scene list','Every artist with their scene numbers, primary artists first.',searchBox())+
   `<div class="tw"><table class="t rt"><thead><tr><th>Character</th><th>Level</th><th>Artist</th><th>No.</th><th>Scene numbers</th></tr></thead><tbody>${as.map(a=>`<tr data-q="${esc((a.name+' '+a.actor).toLowerCase())}"><td data-l="Character" style="font-weight:600">${esc(a.name)}</td><td data-l="Level"><span class="tag ${a.tier==='Primary'?'acc':''}">${a.tier}</span></td><td data-l="Artist">${esc(a.actor)||'<span class="faint">—</span>'}</td><td class="num" data-l="No.">${a.n}</td><td data-l="Scenes" style="font-variant-numeric:tabular-nums">${esc(artistScenes(a.id).map(s=>s.no).join(', '))}</td></tr>`).join('')}</tbody></table></div>`,
   exp:{orient:'portrait',sheets:[{name:'Artist-wise scenes',cols:[{h:'Character',w:24},{h:'Level',w:11},{h:'Artist',w:20},{h:'No.',w:6},{h:'Scene numbers',w:50}],rows:as.map(a=>[a.name,a.tier,a.actor,a.n,artistScenes(a.id).map(s=>s.no).join(', ')])}]}}};
-const BD_ROWS=[['setup','Setup'],['artists','Artistes'],['extras','Extras'],['juniors','Juniors'],['props','Props'],['art','Art / set'],['costumes','Costumes'],['makeup','Makeup / hair'],['vehicles','Vehicles'],['animals','Animals'],['vfx','VFX / CG'],['sfx','SFX'],['fd','Stunts / fight'],['sd','Song'],['spl_sets','Special sets'],['spl_props','Special props'],['equipment','Spl equipment'],['technicians','Spl technicians'],['notes','Notes']];
-function bdVal(s,k){if(k==='artists')return s.artists.map(aName).join(', ');if(k==='costumes')return costumeStr(s);if(k==='fd')return s.fight?s.fight.d:'';if(k==='sd')return s.song?s.song.d:'';if(LK.includes(k))return listStr(s,k);return s[k]||''}
+const BD_ROWS=[['setup','Setup'],['artists','Artistes'],['extras','Extras'],['juniors','Juniors'],['props','Props'],['art','Art / set'],['costumes','Costumes'],['makeup','Makeup / hair'],['vehicles','Vehicles'],['animals','Animals'],['vfx','VFX / CG'],['sfx','SFX'],['fd','Stunts / fight'],['sd','Song'],['spl_sets','Special sets'],['spl_props','Special props'],['equipment','Spl equipment'],['technicians','Spl technicians'],['story','Story-critical'],['notes','Notes']];
+function bdVal(s,k){if(k==='artists')return s.artists.map(aName).join(', ');if(k==='costumes')return costumeStr(s);if(k==='fd')return s.fight?s.fight.d:'';if(k==='sd')return s.song?s.song.d:'';if(k==='story')return (s.story||[]).join(', ');if(LK.includes(k))return listStr(s,k);return s[k]||''}
 R.breakdown=()=>{const sc=P.scenes;return {html:pageHead('Script breakdown','One sheet per scene. Separate list items with commas, costumes with semicolons (NAME – costume).',searchBox('Find a scene'))+
   `<div class="cards">${sc.map(s=>`<article class="card" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.title+' '+s.desc+' '+s.artists.map(aName).join(' ')+' '+LK.map(k=>s[k].join(' ')).join(' ')).toLowerCase())}">
    <div class="card-h"><div class="no">${esc(s.no)}</div><div class="hl"><span class="effc ${isNight(s)?'n':'d'}">${esc(eff(s))}</span><span>${esc(s.loc)}</span>${s.timeline?`<span class="tag acc">${esc(s.timeline)}</span>`:''}${s.status==='err'?'<span class="tag bad">AI failed</span>':s.status==='run'?'<span class="tag acc">Reading…</span>':s.status==='stale'?'<span class="tag warn">Script edited</span>':s.status==='new'?'<span class="tag">Not read yet</span>':''}</div>
@@ -2021,7 +2121,7 @@ R.profiles=()=>{const prim=sortedArtists().filter(a=>a.tier==='Primary');
     rows:prim.map(a=>{const p=P.profiles[a.id]||{};return [a.name,a.designation,p.description,p.start,p.turns,p.end,p.relationships,p.key]}),
     cards:prim.map(a=>{const p=P.profiles[a.id]||{};return {head:a.name+(a.designation?'  —  '+a.designation:''),rows:[['Description',p.description],['Where they start',p.start],['Turning points',p.turns],['Where they end',p.end],['Relationships',p.relationships],['Key scenes',p.key]]}})}]}}};
 R.structure=()=>{const st=P.structure;const btn=`<button class="btn sm pri" data-act="genStructure">${st?'Re-read with AI':'Find structure with AI'}</button>`;
-  if(!st)return {html:pageHead('Story structure','The AI identifies the structure the script follows (three-act, Hero\'s Journey, Save the Cat, Kishotenketsu, non-linear and more) and maps its acts or beats.',btn)+`<div class="empty"><b>Not read yet</b>Run the AI breakdown or press the button above.</div>`,exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:30},{h:'Summary',w:70}],rows:[]}]}};
+  if(!st)return {html:pageHead('Story structure','The AI identifies the structure the script follows (three-act, Hero\'s Journey, Save the Cat, Kishotenketsu, non-linear and more) and maps its acts or beats.',btn)+`<div class="empty"><b>Not read yet</b>Run the AI breakdown or press the button above.</div>`+devicesHtml(),exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:30},{h:'Scenes',w:14},{h:'Summary',w:70}],rows:devicesExp()}]}};
   const parts=st.parts||[];const nos=P.scenes.map(s=>U(String(s.no)));const tot=Math.max(1,nos.length);const COL=['#0a84ff','#5e5ce6','#bf5af2','#ff375f','#ff9f0a','#30d158','#64d2ff','#ffd60a'];
   let starts=parts.map(p=>{const m=String(p.scenes||'').match(/(\d+[A-Z]?)/i);const i=m?nos.indexOf(U(m[1])):-1;return i});const ok=starts.every((v,i)=>v>=0&&(i===0||v>=starts[i-1]))&&parts.length>1;
   if(!ok)starts=parts.map((p,i)=>Math.round(i*tot/Math.max(1,parts.length)));const ends=starts.map((v,i)=>i<starts.length-1?starts[i+1]:tot);
@@ -2044,8 +2144,8 @@ R.structure=()=>{const st=P.structure;const btn=`<button class="btn sm pri" data
     ${ce(`data-st="psum" data-i="${i}"`,p.summary,'sa-sum','What happens')}</article>`).join('')}</div>`;
   const notes=`<div class="sa-notes"><section class="sa-note"><h3>Why this structure</h3><textarea id="st-why" rows="4" data-st="why" aria-label="Why">${esc(st.why)}</textarea></section><section class="sa-note"><h3>Time jumps and periods</h3><textarea id="st-tnotes" rows="4" data-st="tnotes" aria-label="Time jumps">${esc(st.tnotes)}</textarea></section></div>`;
   return {html:pageHead('Story structure','How the story is built. Click any text to edit it; the AI only writes the first draft.',btn)+(st.incomplete?`<div class="banner info">This script looks like part of the film (for example the first half). The structure covers what is here.</div>`:'')+
-    hero+`<section class="sa-arcw"><div class="sa-h"><h3>Story arc</h3><span class="small muted">Tension rises to the climax; dots are the parts below.</span></div>${svg}</section><h3 class="nd-k">Acts and beats</h3>`+cards+notes,
-  exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:28},{h:'Scenes',w:14},{h:'What happens',w:70}],rows:[{group:'Main structure: '+st.main+(st.also?' · Also: '+st.also:'')},['Why','',st.why],['Timeline',st.ttype,st.tnotes],{group:'Acts and beats'},...parts.map(p=>[p.name,p.scenes,p.summary])]}]}}};
+    hero+`<section class="sa-arcw"><div class="sa-h"><h3>Story arc</h3><span class="small muted">Tension rises to the climax; dots are the parts below.</span></div>${svg}</section><h3 class="nd-k">Acts and beats</h3>`+cards+notes+devicesHtml(),
+  exp:{orient:'portrait',sheets:[{name:'Story structure',cols:[{h:'Part',w:28},{h:'Scenes',w:14},{h:'What happens',w:70}],rows:[{group:'Main structure: '+st.main+(st.also?' · Also: '+st.also:'')},['Why','',st.why],['Timeline',st.ttype,st.tnotes],{group:'Acts and beats'},...parts.map(p=>[p.name,p.scenes,p.summary]),...devicesExp()]}]}}};
 function saMount(){const c=$('#content');if(!c.querySelector('.sa-arc'))return;const hi=i=>{c.querySelectorAll('[data-sai]').forEach(x=>x.classList.toggle('on',i!=null&&x.dataset.sai===String(i)))};
   c.querySelectorAll('[data-sai]').forEach(x=>{x.addEventListener('mouseenter',()=>hi(x.dataset.sai));x.addEventListener('mouseleave',()=>hi(null));x.addEventListener('focusin',()=>hi(x.dataset.sai))});
   c.querySelectorAll('.sa-pt').forEach(g=>g.addEventListener('click',()=>{const card=c.querySelector(`.sa-card[data-sai="${g.dataset.sai}"]`);if(card){card.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});card.classList.remove('ping');void card.offsetWidth;card.classList.add('ping')}}))}
@@ -4206,7 +4306,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(act==='settings')openSettings();
   if(act==='install')doInstall();
   if(act==='genProfiles')profileJob();
-  if(act==='genStructure')structureJob();
+  if(act==='genStructure')structureJob();if(act==='genDevices')devicesJob();
   if(act==='checkScenes')openSceneCheck();
   if(act==='startBreakdown'){closeModal();runAll()}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('.pcard')){openProject(e.target.dataset.open)}});

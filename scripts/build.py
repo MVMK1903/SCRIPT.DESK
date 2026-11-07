@@ -118,13 +118,13 @@ def csp(page):
     hashes = ["'sha256-%s'" % base64.b64encode(hashlib.sha256(m.encode('utf-8')).digest()).decode()
               for m in re.findall(r'<script>(.*?)</script>', page, re.S)]
     pol = ("default-src 'self'; "
-           "script-src 'self' " + ' '.join(hashes) + " https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com; "
+           "script-src 'self' " + ' '.join(hashes) + " https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; "
            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; "
            "font-src 'self' data: https://fonts.gstatic.com; "
            "img-src 'self' data: blob: https:; "
            "connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; "
            "worker-src 'self' blob: https://cdnjs.cloudflare.com; "
-           "frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app; "
+           "frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; "
            "media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'")
     return '<meta http-equiv="Content-Security-Policy" content="%s">' % pol
 

@@ -31,6 +31,23 @@ sign-in screen: **Sign in** or **Create account** with email and password, **For
   passphrase-encrypted `.scriptdesk` files.
 - The AI breakdown, translation and other AI features still send scene text to the AI service chosen in Settings.
 
+## Scripts locked with OTP
+
+- **Locked with OTP** is the first choice for a new screenplay (and in Move on the Projects page). The script is
+  encrypted on the device (AES-256-GCM) with its own random key. No vault passphrase is involved.
+- The key is kept only by ScriptDesk's server functions (`functions/index.js`), in a database area the rules close to every
+  app. **Every time the script is opened**, the app asks for a one-time code:
+  - **Email:** a 6-digit code to the account's own email, sent from your Gmail. It works for 5 minutes and only once.
+    Five wrong codes end it, and at most 5 codes can be asked for in 15 minutes.
+  - **SMS:** a code to the mobile number registered in Account & security (Firebase phone verification). SMS works in the
+    web app; the desktop app offers the email code (Firebase's SMS check needs a web address).
+- After the right code, the server hands the key to the app, which keeps it in memory only while the script is open. Opening
+  another script, signing out or closing the app forgets it. After a restart a locked script stays closed until a new code.
+- The database and the cloud copy only hold encrypted data, with no title. Opening a locked script needs the internet.
+- Codes sent, scripts opened and wrong codes appear in the sign-in activity list.
+- If someone has the account password, they could ask for a code, but it goes to your email or phone. If you get a code you
+  did not ask for, change the password.
+
 ## Teams
 
 - A verified account creates a team and invites people by email. The invited person signs in with that email, unlocks or
@@ -119,7 +136,25 @@ owners change teams or hand out keys, and only invited, verified emails ask to j
 6. For Google sign-in in the **desktop app**, also do the Google Cloud steps below in the same project (Firebase creates
    it in Google Cloud), add the Desktop client ID in Firebase *Authentication → Sign-in method → Google → Safelist client IDs*.
 
-Firebase's free Spark plan covers a production team comfortably (50,000 reads and 20,000 writes a day, 1 GB stored).
+Firebase's free Spark plan covers accounts, the vault, teams and the notepad (50,000 reads and 20,000 writes a day, 1 GB).
+
+### OTP lock (server functions)
+
+The OTP lock needs Firebase's pay-as-you-go **Blaze** plan, because server functions and SMS are not on the free plan.
+Normal use stays within Blaze's monthly free allowance (2 million function calls). SMS: the first 10 a day are free, then
+about $0.07 each in India. Email codes cost nothing.
+
+1. Firebase console → ⚙ **Usage and billing → Modify plan → Blaze** (add a card; set a budget alert, for example ₹500).
+2. **Authentication → Sign-in method → Phone → Enable** (for SMS codes).
+3. Gmail that sends the codes: turn on 2-Step Verification for it, then create an **app password** at
+   https://myaccount.google.com/apppasswords (16 letters).
+4. Google Cloud console (same project) → IAM & Admin → **Service accounts** → create "scriptdesk-deploy" with the roles
+   *Firebase Admin*, *Cloud Functions Admin*, *Service Account User*, *Secret Manager Admin*, *Cloud Build Editor* and
+   *Artifact Registry Administrator* → Keys → **Add key → JSON**.
+5. GitHub → Settings → Secrets and variables → Actions → add `FIREBASE_SERVICE_ACCOUNT` (the whole JSON file),
+   `GMAIL_USER` (the Gmail address) and `GMAIL_APP_PASSWORD` (the app password).
+6. Actions → **Deploy ScriptDesk server (Firebase)** → Run workflow. It stores the Gmail secrets on the server and deploys
+   the database rules and the functions.
 
 ## Setting up Google sign-in without Firebase
 

@@ -129,7 +129,8 @@ Projects are saved on the device. Use **Projects → Backup** to move a project 
 ## Accounts, encrypted vault, teams and security
 
 The Windows/Mac apps and the web app open on a sign-in screen (email and password, or Google) once a Firebase project is
-connected. Screenplays can be *Just me · private & encrypted*, shared with a *team* (encrypted for the team), or plain.
+connected. Screenplays can be *Locked with OTP* (a code by email or SMS every time they open), *Just me · private & encrypted*,
+shared with a *team* (encrypted for the team), or plain.
 Encrypted scripts and the Notepad are locked with a vault passphrase that only you know. ScriptDesk signs out after
 30 minutes with no activity (adjustable), and the Account window lists recent sign-ins on every device.
 Setup steps, and how it all works: [SECURITY.md](SECURITY.md).

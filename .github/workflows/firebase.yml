@@ -1,0 +1,42 @@
+name: Deploy ScriptDesk server (Firebase)
+
+# Run by hand: Actions tab -> Deploy ScriptDesk server (Firebase) -> Run workflow.
+# Needs repository secrets:
+#   FIREBASE_SERVICE_ACCOUNT  - JSON key of a Google Cloud service account with Firebase Admin rights
+#   GMAIL_USER                - the Gmail address that sends OTP codes
+#   GMAIL_APP_PASSWORD        - a Google "app password" for that Gmail (not the normal password)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --omit=dev
+        working-directory: functions
+      - name: Sign in to Google Cloud
+        shell: bash
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+          echo "PROJECT_ID=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['project_id'])" "$RUNNER_TEMP/sa.json")" >> "$GITHUB_ENV"
+      - name: Store the Gmail sender as server secrets
+        shell: bash
+        env:
+          GU: ${{ secrets.GMAIL_USER }}
+          GP: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          printf '%s' "$GU" | npx -y firebase-tools@latest functions:secrets:set GMAIL_USER --project "$PROJECT_ID" --data-file=- --force
+          printf '%s' "$GP" | npx -y firebase-tools@latest functions:secrets:set GMAIL_APP_PASSWORD --project "$PROJECT_ID" --data-file=- --force
+      - name: Deploy database rules, indexes and functions
+        run: npx -y firebase-tools@latest deploy --only firestore,functions --project "$PROJECT_ID" --non-interactive --force
+      - if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

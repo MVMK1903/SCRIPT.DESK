@@ -5491,14 +5491,30 @@ function fbInit(){if(FBX.ready)return FBX.ready;
       phoneConfirm:async code=>{if(!conf)throw {code:'auth/code-expired'};await conf.confirm(code);conf=null;await auth.currentUser.getIdToken(true)}});
     return FBX})();
   FBX.ready.catch(()=>{FBX.ready=null});return FBX.ready}
-const FB_ERR={'auth/invalid-credential':'The email or password is not right.','auth/wrong-password':'The email or password is not right.','auth/user-not-found':'The email or password is not right.',
-  'auth/invalid-email':'That email address does not look right.','auth/email-already-in-use':'An account with this email already exists. Sign in instead, or reset the password.',
-  'auth/weak-password':'Choose a stronger password: at least 8 characters with letters and numbers.','auth/too-many-requests':'Too many tries. Wait a few minutes, or reset your password.',
+/* Sign-in failures all say the same words, so a wrong password, an unknown email, a paused account and a turned-off account cannot be told apart. */
+const FB_WRONG='Incorrect email or password',FB_CHECK='Check your details and try again.';
+const FB_ERR={'auth/invalid-credential':FB_WRONG,'auth/wrong-password':FB_WRONG,'auth/user-not-found':FB_WRONG,
+  'auth/invalid-email':FB_WRONG,'auth/email-already-in-use':FB_CHECK,'auth/missing-email':FB_WRONG,
+  'auth/weak-password':'Choose a stronger password: at least 8 characters with letters and numbers.','auth/too-many-requests':FB_WRONG,
+  'sd/server':'Could not sign in right now. Try again in a moment.','sd/signup-server':'Could not create the account right now. Try again in a moment.',
+  'functions/invalid-argument':FB_CHECK,'functions/resource-exhausted':'Try again later.',
   'auth/network-request-failed':'No internet connection. Connect and try again.','auth/popup-closed-by-user':'The Google window was closed before sign-in finished.','auth/cancelled-popup-request':'Sign-in was cancelled.',
-  'auth/popup-blocked':'The browser blocked the Google window. Allow pop-ups for this site and try again.','auth/user-disabled':'This account has been turned off. Contact the ScriptDesk admin.',
+  'auth/popup-blocked':'The browser blocked the Google window. Allow pop-ups for this site and try again.','auth/user-disabled':FB_WRONG,
   'auth/unauthorized-domain':'Google sign-in is not allowed from this address yet (Firebase authorized domains).','auth/missing-password':'Enter your password.','auth/requires-recent-login':'Sign in again, then retry.'};
 const fbErr=e=>FB_ERR[e&&e.code]||gaErr(e&&e.code||(e&&e.message)||'error');
 const fbPassOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);
+/* The server checks the password first (counts wrong tries, pauses the account after five, slows repeated tries), then the
+   app signs in with Firebase. If the server part is not set up or cannot be reached, Firebase's own protection still applies. */
+const FB_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable';
+async function fbLogin(fx,email,pass){
+  try{await fx.call('loginGate',{email,password:pass})}
+  catch(err){const c=err&&err.code;if(FB_NOSERVER(c)||c==='auth/network-request-failed'){/* go on: Firebase checks it */}
+    else if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/server'};else throw {code:'auth/invalid-credential'}}
+  return fx.signIn(email,pass)}
+/* Sign-up is done by the server too, and answers the same way whether or not the email already has an account. */
+async function fbSignup(fx,email,pass,name){
+  try{await fx.call('signupGate',{email,password:pass,...(name?{name}:{})});return null}
+  catch(err){const c=err&&err.code;if(FB_NOSERVER(c))return fx.create(email,pass,name);if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/signup-server'};throw err}}
 
 /* ---------- sign-in screen: Sign in / Create account, forgot password, Google ---------- */
 function fbGate(note){return new Promise(async res=>{let fx;
@@ -5530,10 +5546,13 @@ function fbGate(note){return new Promise(async res=>{let fx;
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.e)){msg='Enter your email address.';draw();return}
     if(tab==='forgot'){busy=true;draw();try{await fx.reset(v.e)}catch(err){if(err&&err.code==='auth/network-request-failed'){fail(err);return}}
       /* the same answer whether or not the account exists, so the form cannot be used to find accounts */
-      busy=false;tab='in';info=`If ${v.e} has a ScriptDesk account, a password reset email is on its way. Check your inbox and spam folder.`;draw();return}
+      busy=false;tab='in';info="If that email is registered, you'll receive a reset link";draw();return}
     if(!v.p){msg='Enter your password.';draw();return}
     if(tab==='up'&&!fbPassOk(v.p)){msg=FB_ERR['auth/weak-password'];draw();return}
-    busy=true;draw();try{await done(tab==='up'?await fx.create(v.e,v.p,v.n):await fx.signIn(v.e,v.p))}catch(err){fail(err,tab)}});
+    busy=true;draw();try{
+      if(tab==='up'){const u=await fbSignup(fx,v.e,v.p,v.n);if(u){await done(u);return}
+        busy=false;tab='in';v.p='';info='Check your email to finish setting up your account. Then sign in.';draw();return}
+      await done(await fbLogin(fx,v.e,v.p))}catch(err){fail(err,tab)}});
   draw();document.body.appendChild(d);const f=d.querySelector(v.e?'#fbP':'#fbE');if(f)f.focus()})}
 /* Firebase could not load (offline at first start): keep the last account usable offline for a few days */
 function gaGateOffline(note){const last=gaLastGet();return new Promise(async res=>{
@@ -5815,7 +5834,7 @@ function otpForget(except){Object.keys(OTPK).forEach(k=>{if(k!==except)delete OT
 async function otpKeyFromB64(s){return aesKey(unb64(s))}
 /* a new OTP lock for this script: the server makes the key */
 async function otpPrepare(p){if(!p||p.space!=='o'||OTPK[p.id])return true;try{const fx=await fbInit();const r=await fx.call('otpCreate',{pid:p.id});OTPK[p.id]=await otpKeyFromB64(r.key);return true}
-  catch(e){if(e&&e.code==='functions/already-exists')return otpAsk(p.id,p.title);p.space='me';toast('Could not reach the ScriptDesk server, so this script is saved without the OTP lock. Move it to "Locked with OTP" later from Projects.',7000);return false}}
+  catch(e){if(e&&e.code==='functions/already-exists')return otpAsk(p.id,p.title);p.space='me';toast(e&&e.code==='functions/failed-precondition'?'Verify your email first (check your inbox), so this script is saved without the OTP lock for now. Move it to "Locked with OTP" later from Projects.':'Could not reach the ScriptDesk server, so this script is saved without the OTP lock. Move it to "Locked with OTP" later from Projects.',7000);return false}}
 /* the code screen: email or SMS, then the 6-digit code */
 function otpAsk(pid,title){return new Promise(res=>{const u=GA.user;let via='',done=false,cool=0,ct=0;
   const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';

@@ -67,9 +67,18 @@ service cloud.firestore {
       }
     }
 
-    // OTP lock keys and codes: only the ScriptDesk server functions may touch these, never an app.
+    // OTP lock keys and codes, and the sign-in try counters: only the ScriptDesk server functions may touch these.
     match /otpKeys/{id} { allow read, write: if false; }
     match /otpCodes/{id} { allow read, write: if false; }
+    match /authLimits/{id} { allow read, write: if false; }
+
+    // Non-sensitive profile made by the server when an account is created: plan and preferences. The owner can read it
+    // and change only their preferences (never the plan).
+    match /profiles/{uid} {
+      allow read: if isUser(uid);
+      allow update: if isUser(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['prefs']);
+      allow create, delete: if false;
+    }
 
     // Lets people find invitations addressed to their own verified email across all teams.
     match /{path=**}/invites/{email} {

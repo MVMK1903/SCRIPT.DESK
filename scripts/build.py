@@ -130,6 +130,8 @@ def csp(page):
 
 def main():
     vendor = '--vendor' in sys.argv
+    if subprocess.call([sys.executable, os.path.join(ROOT, 'scripts', 'check_logs.py')]):  # never log passwords, tokens or codes
+        sys.exit(1)
     app = open(SRC, encoding='utf-8').read()
     files = []
     if vendor:

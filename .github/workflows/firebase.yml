@@ -5,6 +5,7 @@ name: Deploy ScriptDesk server (Firebase)
 #   FIREBASE_SERVICE_ACCOUNT  - JSON key of a Google Cloud service account with Firebase Admin rights
 #   GMAIL_USER                - the Gmail address that sends OTP codes
 #   GMAIL_APP_PASSWORD        - a Google "app password" for that Gmail (not the normal password)
+#   FIREBASE_CONFIG           - the same web config the app build uses (its apiKey is how the server checks passwords)
 on:
   workflow_dispatch:
 
@@ -36,6 +37,20 @@ jobs:
         run: |
           printf '%s' "$GU" | npx -y firebase-tools@latest functions:secrets:set GMAIL_USER --project "$PROJECT_ID" --data-file=- --force
           printf '%s' "$GP" | npx -y firebase-tools@latest functions:secrets:set GMAIL_APP_PASSWORD --project "$PROJECT_ID" --data-file=- --force
+      - name: Give the server the project's web API key (public, not a secret) to check passwords
+        shell: bash
+        env:
+          FC: ${{ secrets.FIREBASE_CONFIG }}
+        run: |
+          python3 - <<'PY'
+          import os, re, json
+          raw = os.environ['FC']
+          m = re.search(r'apiKey["\']?\s*:\s*["\']([^"\']+)["\']', raw)
+          if not m: raise SystemExit('FIREBASE_CONFIG has no apiKey')
+          open('functions/.env', 'w').write('WEB_API_KEY=' + m.group(1) + '\n')
+          PY
+      - name: Run the server tests
+        run: NODE_PATH="$PWD/functions/node_modules" node --test functions/test/auth.test.js
       - name: Deploy database rules, indexes and functions
         run: npx -y firebase-tools@latest deploy --only firestore,functions --project "$PROJECT_ID" --non-interactive --force
       - if: always()

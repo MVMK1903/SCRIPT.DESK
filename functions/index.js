@@ -6,28 +6,32 @@
 // code checked by Firebase phone sign-in. The app keeps the key in memory while the script is open and forgets it when
 // the script is closed, so every opening needs a new code.
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
-const { defineSecret } = require('firebase-functions/params');
+const logger = require('firebase-functions/logger');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 admin.initializeApp();
 const db = admin.firestore();
-const GMAIL_USER = defineSecret('GMAIL_USER');
-const GMAIL_APP_PASSWORD = defineSecret('GMAIL_APP_PASSWORD');
+const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
+const { otpInput } = require('./validate');
+Object.assign(exports, require('./auth')); // sign-in gate, safe sign-up, account triggers
 
-const OPTS = { region: 'asia-south1', maxInstances: 10 };
-const PID = /^[\w-]{1,60}$/;
 const CODE_MINUTES = 5;
 const MAX_TRIES = 5;
 const MAX_SENDS = 5;            // codes per script per 15 minutes
 const SMS_FRESH_SECONDS = 300;  // the SMS check must be this recent
 
-function need(req) {
+// verified: making a lock or asking for a code needs a verified email (a password account must confirm its address)
+function need(req, { verified = false } = {}) {
   if (!req.auth) throw new HttpsError('unauthenticated', 'Sign in first.');
-  const pid = String((req.data && req.data.pid) || '');
-  if (!PID.test(pid)) throw new HttpsError('invalid-argument', 'That script id is not valid.');
-  return { uid: req.auth.uid, pid, tok: req.auth.token };
+  const p = otpInput.safeParse(req.data || {});
+  if (!p.success) {
+    logger.warn('otp: invalid input', { fields: p.error.issues.map((i) => i.path.join('.')), uid: req.auth.uid });
+    throw new HttpsError('invalid-argument', 'That request is not valid.');
+  }
+  if (verified && req.auth.token.email_verified !== true) throw new HttpsError('failed-precondition', 'Verify your email first. Check your inbox for the link.');
+  return { uid: req.auth.uid, pid: p.data.pid, code: p.data.code || '', tok: req.auth.token };
 }
 const keyRef = (uid, pid) => db.doc(`otpKeys/${uid}_${pid}`);
 const codeRef = (uid, pid) => db.doc(`otpCodes/${uid}_${pid}`);
@@ -45,7 +49,7 @@ async function keyFor(uid, pid) {
 
 // A new lock: makes the script's key. Only once per script, so the key can never be fetched again without a code.
 exports.otpCreate = onCall(OPTS, async (req) => {
-  const { uid, pid } = need(req);
+  const { uid, pid } = need(req, { verified: true });
   const key = crypto.randomBytes(32).toString('base64');
   await db.runTransaction(async (tx) => {
     const s = await tx.get(keyRef(uid, pid));
@@ -58,7 +62,7 @@ exports.otpCreate = onCall(OPTS, async (req) => {
 
 // Email: a 6-digit code to the account's own email (never an address sent by the app).
 exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] }, async (req) => {
-  const { uid, pid, tok } = need(req);
+  const { uid, pid, tok } = need(req, { verified: true });
   await keyFor(uid, pid);
   const email = tok.email;
   if (!email) throw new HttpsError('failed-precondition', 'This account has no email address.');
@@ -83,8 +87,8 @@ exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] },
 
 // Email: check the code and hand over the key. Five wrong tries end the code.
 exports.otpVerify = onCall(OPTS, async (req) => {
-  const { uid, pid } = need(req);
-  const code = String((req.data && req.data.code) || '').replace(/\D/g, '');
+  const { uid, pid, code: raw } = need(req);
+  const code = raw.replace(/\D/g, '');
   const ref = codeRef(uid, pid);
   const d = (await ref.get()).data();
   if (!d || Date.now() > d.exp) throw new HttpsError('deadline-exceeded', 'The code has expired. Send a new one.');

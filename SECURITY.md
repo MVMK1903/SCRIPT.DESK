@@ -1,6 +1,6 @@
 # ScriptDesk security
 
-How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026.
+How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026 (sign-in protection added the same day).
 
 ## Accounts (Firebase)
 
@@ -15,6 +15,42 @@ sign-in screen: **Sign in** or **Create account** with email and password, **For
 - **Google:** a Google pop-up on the web; on the desktop, the browser sign-in described below, which only passes an
   identity token to Firebase (no Drive access, nothing stored).
 - Sessions stay signed in until **Sign out** or **auto sign-out** (below).
+
+## Sign-in protection (server)
+
+Password sign-in and sign-up go through ScriptDesk's server functions (`functions/auth.js`) first.
+
+- **Checked on the server, whatever the app does:** every field is validated with Zod (`functions/validate.js`). Emails are
+  checked and lower-cased, never altered; passwords are only length-checked (8 to 128, letters and a number for new ones)
+  and never changed, trimmed or logged; names have script blocks, HTML tags and special characters stripped. Anything
+  invalid gets the same general answer, and the server log records which kind of input failed (never the value).
+- **Same words for every sign-in failure:** "Incorrect email or password". A wrong password, an unknown email, a turned-off
+  account, too many tries and a paused account all say exactly this.
+- **Rate limit:** at most 10 sign-in tries per network address per minute.
+- **Lockout:** 5 wrong passwords in a row pause the account for 15 minutes. While paused, even the right password gets
+  the same words, and the app never says "locked". Each wrong try also waits longer (0.5, 1, 2, 4, then 5 seconds).
+  The count is taken before the password is checked, so sending many tries at once still only gets five.
+  Unknown emails are counted the same way, so the behaviour looks the same for them.
+- **Lockout email:** when the account is paused, an email with a password-reset link goes to the address, only if it
+  has an account.
+- **Password reset** says "If that email is registered, you'll receive a reset link", whatever the address.
+- **Sign-up never confirms an email:** a new address gets a "confirm your email" message; an address that already has an
+  account gets an "you already have an account" message with a reset link. The app shows the same screen both times.
+- **Passwords stay with Firebase.** ScriptDesk does not store or hash passwords (Firebase Authentication uses a salted,
+  memory-hard scrypt hash). The server only passes a password to Firebase to check it, and it is never written to a log
+  (`scripts/check_logs.py` fails the build if a log call names a password, token, code or link).
+- **Verified email:** making an OTP lock, asking for a code, and teams need a verified email.
+- **Profile:** when an account is created the server writes `profiles/{uid}` (plan and preferences only, never a password or
+  token). The owner can read it and change preferences, but not the plan. When an account is deleted the server removes
+  its data, public key and OTP keys (teams the person owns are left for their members).
+- **Limits you should know about:** Firebase's own sign-in address is public, so a determined attacker can still call it
+  directly (Firebase slows repeated wrong passwords there). The lockout protects sign-in through the app. If the server
+  part is not deployed (or cannot be reached), the app falls back to signing in with Firebase directly.
+- Anyone can make five wrong tries on a known email and pause that account for 15 minutes. That is the cost of any
+  lockout; the lockout email tells the owner, and the pause ends by itself.
+- An account made by the sign-up form with someone else's email stays unverified, and the real owner still gets the
+  "you already have an account" email with a reset link. Teams and OTP locks need a verified email, and finishing a
+  password reset verifies the address.
 
 ## End-to-end encrypted vault
 
@@ -153,8 +189,9 @@ about $0.07 each in India. Email codes cost nothing.
    *Artifact Registry Administrator* → Keys → **Add key → JSON**.
 5. GitHub → Settings → Secrets and variables → Actions → add `FIREBASE_SERVICE_ACCOUNT` (the whole JSON file),
    `GMAIL_USER` (the Gmail address) and `GMAIL_APP_PASSWORD` (the app password).
-6. Actions → **Deploy ScriptDesk server (Firebase)** → Run workflow. It stores the Gmail secrets on the server and deploys
-   the database rules and the functions.
+6. Actions → **Deploy ScriptDesk server (Firebase)** → Run workflow. It stores the Gmail secrets on the server, gives the
+   server the project's web API key (from the `FIREBASE_CONFIG` secret, so that secret must exist first), runs the server
+   tests, and deploys the database rules and the functions. The same functions also protect password sign-in and sign-up.
 
 ## Setting up Google sign-in without Firebase
 

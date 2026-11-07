@@ -3,3 +3,5 @@ www/vendor/
 desktop/google.json
 www/google.json
 config/firebase.json
+functions/.env
+functions/node_modules/

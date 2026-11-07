@@ -110,7 +110,7 @@ def firebase_config():
     keep = {k: str(c[k]) for k in ('apiKey', 'authDomain', 'projectId', 'appId', 'storageBucket', 'messagingSenderId') if c.get(k)}
     return keep if keep.get('apiKey') and keep.get('projectId') else None
 
-def csp(page):
+def csp_policy(page):
     """Content Security Policy for the installed apps and the web app. Only the page's own inline scripts (by hash), the
     pinned library CDNs and Google sign-in may run scripts, so text hidden in an imported script or a project file can
     never run as code. AI services are reached over https (and http on this computer or the office network)."""
@@ -126,7 +126,26 @@ def csp(page):
            "worker-src 'self' blob: https://cdnjs.cloudflare.com; "
            "frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; "
            "media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'")
-    return '<meta http-equiv="Content-Security-Policy" content="%s">' % pol
+    return pol
+
+def csp(page):
+    return '<meta http-equiv="Content-Security-Policy" content="%s">' % csp_policy(page)
+
+def headers_file(page):
+    """www/_headers: real HTTP security headers for hosts that read this file (Cloudflare Pages, Netlify). GitHub Pages
+    ignores it, so there the policy in the page's <meta> is the only one (a meta tag cannot stop other sites framing the
+    page; these headers can)."""
+    return ('/*\n'
+            "  Content-Security-Policy: %s; frame-ancestors 'none'\n"
+            '  Strict-Transport-Security: max-age=31536000; includeSubDomains\n'
+            '  X-Content-Type-Options: nosniff\n'
+            '  X-Frame-Options: DENY\n'
+            '  Referrer-Policy: strict-origin-when-cross-origin\n'
+            '  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()\n'
+            '  Cross-Origin-Opener-Policy: same-origin-allow-popups\n'
+            '  Cross-Origin-Resource-Policy: same-origin\n'
+            '/sw.js\n'
+            '  Cache-Control: no-cache\n') % csp_policy(page)
 
 def main():
     vendor = '--vendor' in sys.argv
@@ -157,7 +176,9 @@ def main():
     if fbc:
         import html as _h
         page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="sd-firebase" content="' + _h.escape(json.dumps(fbc, separators=(',', ':')), quote=True) + '">', 1)
+    hdr = headers_file(page)
     page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + csp(page), 1)
+    open(os.path.join(WWW, '_headers'), 'w', encoding='utf-8').write(hdr)
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:
         ver = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT).decode().strip()

@@ -157,6 +157,15 @@ owners change teams or hand out keys, and only invited, verified emails ask to j
   handlers) are refused, embedded browsers are blocked, and camera, microphone, location and notification requests are
   refused without asking.
 - **Spreadsheets** are only written, never read, so the known SheetJS read-side issues do not apply.
+- **Cross-origin access (desktop):** the app only grants cross-origin access to its own page (`file://`), never to any other
+  origin, for the AI, Firebase and Drive calls it makes.
+- **Security headers:** every build writes `www/_headers` (same policy as the page, plus `frame-ancestors 'none'`, HSTS,
+  `nosniff`, a referrer policy and a permissions policy). Cloudflare Pages and Netlify apply it; GitHub Pages ignores it
+  and cannot set headers, so there only the page's own policy applies and other sites could still frame the page. Put the web
+  app behind one of those hosts for the full set.
+- **Phone apps:** built with Capacitor 8 (the supported release; 6 had reached end of support) on Node 22, Java 21 and the
+  latest Xcode. This update has not been built yet: run the Android build first and check the status bar and keyboard
+  spacing before releasing.
 
 ## Setting up accounts (Firebase)
 

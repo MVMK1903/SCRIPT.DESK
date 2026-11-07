@@ -3,20 +3,21 @@
   "version": "2.7.0",
   "description": "ScriptDesk \u2013 AI film script breakdown (iOS and Android app)",
   "private": true,
+  "engines": { "node": ">=22" },
   "scripts": {
     "prepare-web": "node -e \"const fs=require('fs');fs.rmSync('www',{recursive:true,force:true});fs.cpSync('../www','www',{recursive:true})\"",
     "icons": "capacitor-assets generate --iconBackgroundColor '#e4e7ec' --splashBackgroundColor '#e4e7ec'",
     "sync": "npm run prepare-web && cap sync"
   },
   "dependencies": {
-    "@capacitor/android": "^6.1.2",
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/filesystem": "^6.0.1",
-    "@capacitor/ios": "^6.1.2",
-    "@capacitor/share": "^6.0.2"
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/share": "^8.0.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
-    "@capacitor/cli": "^6.1.2"
+    "@capacitor/cli": "^8.0.0"
   }
 }

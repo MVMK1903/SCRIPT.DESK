@@ -172,6 +172,8 @@ function allowAI() {
   ses.webRequest.onHeadersReceived((d, cb) => {
     if (!AI_HOSTS.test(d.url)) return cb({});
     const r = REQ.get(d.id) || {}; REQ.delete(d.id);
+    // Only the bundled app itself (a file:// page, whose origin is "null") is ever given cross-origin access.
+    if (r.o && r.o !== 'null' && !r.o.startsWith('file://')) return cb({});
     const h = d.responseHeaders || {};
     for (const k of Object.keys(h)) if (/^access-control-allow-/i.test(k)) delete h[k];
     h['Access-Control-Allow-Origin'] = [r.o || '*'];

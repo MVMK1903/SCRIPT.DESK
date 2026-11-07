@@ -93,6 +93,24 @@ def load_illustrations():
     print('scene images OK:', len(scenes))
     return {'scenes': scenes, 'svgs': svgs, 'items': items, 'fallback': man['fallback'], 'cats': [dict(id=c, **man['categoryInfo'][c]) for c in man['categories']]}
 
+def csp(page):
+    """Content Security Policy for the installed apps and the web app. Only the page's own inline scripts (by hash), the
+    pinned library CDNs and Google sign-in may run scripts, so text hidden in an imported script or a project file can
+    never run as code. AI services are reached over https (and http on this computer or the office network)."""
+    import hashlib, base64
+    hashes = ["'sha256-%s'" % base64.b64encode(hashlib.sha256(m.encode('utf-8')).digest()).decode()
+              for m in re.findall(r'<script>(.*?)</script>', page, re.S)]
+    pol = ("default-src 'self'; "
+           "script-src 'self' " + ' '.join(hashes) + " https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com; "
+           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; "
+           "font-src 'self' data: https://fonts.gstatic.com; "
+           "img-src 'self' data: blob: https:; "
+           "connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; "
+           "worker-src 'self' blob: https://cdnjs.cloudflare.com; "
+           "frame-src https://accounts.google.com; "
+           "media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'")
+    return '<meta http-equiv="Content-Security-Policy" content="%s">' % pol
+
 def main():
     vendor = '--vendor' in sys.argv
     app = open(SRC, encoding='utf-8').read()
@@ -116,6 +134,7 @@ def main():
     # Inline the local SVG illustrations (src/illustrations + manifest.json) so the single-file app needs no image files.
     app = app.replace('/*ILLUS*/{}', json.dumps(load_illustrations(), ensure_ascii=False, separators=(',', ':')))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
+    page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + csp(page), 1)
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:
         ver = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT).decode().strip()

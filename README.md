@@ -126,6 +126,13 @@ Open ScriptDesk inside Claude (claude.ai or the Claude app). There it uses your 
 
 Projects are saved on the device. Use **Projects → Backup** to move a project to another device (open it with **Import script**).
 
+## Google sign-in, Drive sync and security
+
+The Windows/Mac apps and the web app ask for a Google (Gmail) sign-in once it is set up. Projects then save to a private,
+hidden ScriptDesk folder in the user's own Google Drive and open on their other computers. ScriptDesk signs out after
+30 minutes with no activity (adjustable), and the Account window lists recent sign-ins on every device.
+Setup steps, and how sign-in, sync and the app's other protections work: [SECURITY.md](SECURITY.md).
+
 ## What it costs (everything else is free and open source)
 
 | Part | Cost |

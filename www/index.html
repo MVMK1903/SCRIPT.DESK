@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VeCCPUAdXqKELpbvlNMX1cHn+CA2acqxsZf+7A5kSFc=' 'sha256-x56iUww0nMD5BEN3zhlnHjUEenWwJTFSa64oiY0q6U0=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
 <meta name="description" content="AI film script breakdown: single line orders, artist and location lists, breakdown sheets, costume continuity, art and props, character profiles.">
@@ -1333,6 +1334,34 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 /* scripts in Telugu, Hindi, Tamil and other Indian letters get one and a half line spacing in the writer, so tall letters do not touch */
 .wr-paper.ind .wr-doc{line-height:calc(var(--u) / 4)}
 @media (max-width:820px){.wr-paper.ind .wr-doc{line-height:1.75}}
+/* Google sign-in screen and account window */
+#galock{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;background:#edf2fb}
+#galock::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--backdrop)}
+:root[data-theme="dark"] #galock{background:#0b1020}
+.ga-card{width:100%;max-width:440px;padding:28px 26px 22px;border-radius:18px;background:var(--glass);backdrop-filter:blur(var(--glass-blur,20px));-webkit-backdrop-filter:blur(var(--glass-blur,20px));border:1px solid var(--glass-line);box-shadow:var(--glass-sh);color:var(--fg)}
+.ga-brand{display:flex;align-items:center;gap:10px;font-size:15px;margin-bottom:18px}.ga-brand .logo{width:28px;height:28px}
+.ga-card h1{font-size:24px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+.ga-sub{margin:0 0 18px;color:var(--muted);line-height:1.5;font-size:14px}
+.ga-note{margin:0 0 14px;padding:10px 12px;border-radius:10px;background:var(--pill-on);color:var(--accent-text);font-size:13px;line-height:1.4}
+.ga-btn{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;margin:0 0 10px;padding:10px 14px;border-radius:10px;border:1px solid var(--glass-line);background:var(--glass-hi);color:var(--fg);font:inherit;font-size:14px;text-align:left;cursor:pointer}
+.ga-btn:hover:not([disabled]){border-color:var(--accent)}.ga-btn[disabled]{opacity:.6;cursor:progress}
+.ga-btn.pri{background:linear-gradient(135deg,#2f6bff,#4f5df5);color:#fff;border-color:transparent;box-shadow:0 8px 22px rgba(47,107,255,.32)}
+.ga-btn.pri:only-of-type,.ga-btn.pri span:only-child{justify-content:center}
+.ga-btn span{display:flex;flex-direction:column;gap:2px;min-width:0}.ga-btn small{font-size:12px;opacity:.85;overflow:hidden;text-overflow:ellipsis}
+.ga-btn img,.ga-btn .ga-ini{width:34px;height:34px;border-radius:8px;flex:none;object-fit:cover}
+.ga-ini{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#2f6bff,#673de6);color:#fff;font-weight:700;font-size:13px}
+.ga-ini.big{width:44px;height:44px;border-radius:10px;font-size:18px}
+.ga-link{display:block;margin:0 auto 6px;background:none;border:0;color:var(--accent-text);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+.ga-msg{min-height:1.2em;margin:4px 0 8px;font-size:13px;color:#c0392b}:root[data-theme="dark"] .ga-msg{color:#ff8a80}
+.ga-fine{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--faint)}
+.ga-acctb{padding:3px!important;min-width:36px;justify-content:center}.ga-acctb img{width:26px;height:26px;border-radius:6px;object-fit:cover;display:block}
+.ga-acct h3{font-size:14px;font-weight:600;margin:20px 0 6px}
+.ga-who{display:flex;align-items:center;gap:12px}.ga-who img{width:44px;height:44px;border-radius:10px;object-fit:cover}.ga-who>div{flex:1;min-width:0}
+.ga-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.ga-row select{min-height:36px;width:auto;max-width:100%}
+.ga-act{list-style:none;margin:6px 0 0;padding:0;max-height:260px;overflow:auto;border-top:1px solid var(--line)}
+.ga-act li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px}
+.ga-act li span{grid-column:1;color:var(--muted);font-size:12px}.ga-act li time{grid-column:2;grid-row:1/3;align-self:center;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.ga-act li.bad b{color:#c0392b}:root[data-theme="dark"] .ga-act li.bad b{color:#ff8a80}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1358,6 +1387,7 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
         <button class="btn sm warn" id="bChecks" hidden></button>
         <button class="btn sm ghost i-undo" data-ic id="bUndo" aria-label="Undo" title="Undo last edit" disabled>Undo</button>
         <button class="btn sm i-install" data-ic id="bInstall" aria-label="Install app" title="Install app" data-act="install" hidden>Install app</button>
+        <button class="btn sm ga-acctb" id="bAcct" aria-label="Account and security" hidden></button>
         <button class="btn sm i-settings" data-ic id="bSettings" aria-label="Settings" title="Settings" data-act="settings" hidden>Settings</button>
         <button class="btn sm i-projects" data-ic id="bProjects" aria-label="Projects" title="Projects">Projects</button>
         <button class="btn sm i-excel mob-only" data-ic id="bMx" aria-label="Export Excel" title="Export Excel">Excel</button><button class="btn sm i-pdf mob-only" data-ic id="bMp" aria-label="Export PDF" title="Export PDF">PDF</button><button class="btn sm i-download" data-ic id="bAll" aria-label="Download all" title="Download all">Download all</button>
@@ -1429,7 +1459,9 @@ const PAGES=[
  {g:'Budget',id:'budget',nav:'Budget & rates',t:'Budget & rate card'},
  {g:'Budget',id:'tasks',nav:'Tasks',t:'Tasks'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
-const LSKEY='scriptdesk.v2.';
+/* data on this device is kept per Google account: the store of the last account that signed in, guarded by the sign-in screen */
+let GA_NS=(()=>{try{const a=JSON.parse(localStorage.getItem('scriptdesk.auth.last')||'null');return a&&/^g\w{1,41}$/.test(a.ns||'')?a.ns:''}catch(e){return ''}})();
+let LSKEY='scriptdesk.v2.'+(GA_NS?GA_NS+'.':'');
 
 /* ================= Utilities ================= */
 const $=s=>document.querySelector(s);
@@ -1568,11 +1600,11 @@ function touch(sceneIds){if(!P)return;P.updated=Date.now();dirty.meta=true;(scen
   saveLocal();clearTimeout(flushT);flushT=setTimeout(flush,1200);setSync('busy','Saving…')}
 function saveLocal(){if(!P)return;DISK.sched();const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
 function idxEntry(){return {id:P.id,title:P.title,production:P.production,updated:P.updated,scenes:P.scenes.length,sample:!!P.sample}}
-function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx)}
+function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx);if(!P.sample&&typeof gdSoon==='function')gdSoon()}
 const DRAFT_CH=60000;
 function metaBody(){const {scenes,draft,...m}=P;m.order=scenes.map(s=>s.id);m.draftN=draft?Math.ceil(JSON.stringify(draft).length/DRAFT_CH):0;return JSON.parse(JSON.stringify(m))}
 function base(){return 'data/users/'+UID}
-async function flush(){if(!P)return;if(!cloudOK){dirty.meta=false;dirty.draft=false;dirty.scenes.clear();dirty.deleted.clear();setSync('ok','Saved on this device');return}
+async function flush(){if(!P)return;if(!cloudOK){dirty.meta=false;dirty.draft=false;dirty.scenes.clear();dirty.deleted.clear();if(!(GA.user&&GD.busy))setSync('ok',GA.user&&GA.mode!=='offline'&&!P.sample?'Saved on this device · Drive sync next':'Saved on this device');return}
   if(flushing){clearTimeout(flushT);flushT=setTimeout(flush,800);return}
   flushing=true;setSync('busy','Saving…');const pid=P.id,proj=P;
   try{
@@ -1603,7 +1635,7 @@ async function loadProject(id){let local=lsGet('p.'+id);const il=await IDB.get('
   if(cloudOK&&local&&(!cloud||local.updated>cloud.updated)){P=pick;dirty.meta=true;if(pick.draft)dirty.draft=true;pick.scenes.forEach(s=>dirty.scenes.add(s.id));setTimeout(flush,500)}
   return pick}
 function upgrade(p){p=Object.assign(newProject(),p);p.scenes=(p.scenes||[]).map(s=>{const n=newScene(s);LK.forEach(k=>{if(!Array.isArray(n[k]))n[k]=[]});if(!Array.isArray(n.artists))n.artists=[];if(!Array.isArray(n.costumes))n.costumes=[];if(!n.locked)n.locked={};if(!Array.isArray(n.flags))n.flags=[];return n});p.artists=p.artists||[];p.profiles=p.profiles||{};p.changes=Array.isArray(p.changes)?p.changes:[];return p}
-async function deleteProject(id){lsDel('p.'+id);await IDB.del('p.'+id);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==id));
+async function deleteProject(id){lsDel('p.'+id);await IDB.del('p.'+id);if(typeof gdForget==='function')gdForget(id);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==id));
   if(cloudOK){try{const pdoc=DB.collection(base()).doc('p_'+id);const qs=await pdoc.collection('scenes').limit(1000).get();for(const d of qs.docs){await pdoc.collection('scenes').doc(d.id).delete()}await pdoc.delete();const list=(await cloudIndex()).filter(x=>x.id!==id);await writeDoc(DB.collection(base()).doc('index'),{projects:list})}catch(e){}}}
 function setSync(cls,msg){const el=$('#sync');el.className='sync '+cls;el.lastElementChild.textContent=msg}
 
@@ -4957,6 +4989,8 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
   async set(k,v){try{const d=await this.open();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});return true}catch(e){return false}},
   async del(k){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}};
 {const g=IDB.get.bind(IDB),st=IDB.set.bind(IDB);IDB.get=async k=>{const v=await g(k);if(v&&v.__enc&&String(k).startsWith('p.')){if(!SEC.dek)return null;try{return JSON.parse(await aesDec(SEC.dek,v.__enc))}catch(e){return null}}return v};IDB.set=async(k,v)=>{if(SEC.on&&String(k).startsWith('p.')){if(!SEC.dek)return false;return st(k,{__enc:await aesEnc(SEC.dek,JSON.stringify(v))})}return st(k,v)}}
+/* each Google account has its own projects on this device */
+{const g=IDB.get.bind(IDB),st=IDB.set.bind(IDB),dl=IDB.del.bind(IDB);const K=k=>GA_NS?GA_NS+':'+k:k;IDB.get=k=>g(K(k));IDB.set=(k,v)=>st(K(k),v);IDB.del=k=>dl(K(k))}
 /* ---- AI services: Claude (paid) or free options (Gemini, Groq, OpenRouter free models, Ollama on this computer, any OpenAI-compatible server) ---- */
 const PROVIDERS={
   ollama:{group:'local',name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
@@ -5168,16 +5202,236 @@ window.addEventListener('online',()=>{if(STANDALONE)setSync('ok','Online · save
 window.addEventListener('offline',()=>{if(STANDALONE)setSync('ok','Offline · saved on this device')});
 if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:\/\/127\./.test(location.href)&&document.querySelector('link[rel="manifest"]')){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 
+
+/* ================= Google sign-in, Google Drive sync, auto sign-out and sign-in activity =================
+   Desktop app: the main process runs Google's installed-app sign-in in the normal browser and keeps the refresh token in
+   the operating system's key store; this page only gets short-lived access tokens (window.sdGoogle).
+   Web app: Google Identity Services gives an access token in a Google pop-up; it is kept in memory only.
+   Projects are saved to the account's hidden ScriptDesk app folder in Google Drive (drive.appdata scope): ScriptDesk
+   cannot see any other Drive file, and the files do not clutter the user's Drive.
+   Sign-in is required once Google sign-in is set up for the build (google.json / repository secrets). A build without
+   it (and the Claude version, and the phone apps for now) work as before. */
+const GA={applies:STANDALONE&&!NATIVE,desk:!!window.sdGoogle,cfg:null,user:null,mode:'',drive:false,web:{at:null,exp:0}};
+const G_SCOPES='openid email profile https://www.googleapis.com/auth/drive.appdata';
+const G_OFFLINE_DAYS=7;
+const G_DEV=(()=>{try{let d=localStorage.getItem('scriptdesk.dev');if(!d){d=uid()+uid();localStorage.setItem('scriptdesk.dev',d)}return d}catch(e){return 'unknown'}})();
+function gaDevice(){const ua=navigator.userAgent;const os=/Windows/.test(ua)?'Windows':/Mac OS X|Macintosh/.test(ua)?'Mac':/Android/.test(ua)?'Android':/iPhone|iPad|iPod/.test(ua)?'iPhone/iPad':/Linux/.test(ua)?'Linux':'device';
+  if(GA.desk)return os+' app';const br=/Edg\//.test(ua)?'Edge':/OPR\//.test(ua)?'Opera':/Firefox\//.test(ua)?'Firefox':/Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':'browser';return br+' on '+os}
+const gaNs=sub=>'g'+(/^\d{1,40}$/.test(String(sub))?String(sub):String(sub).replace(/[^\w]/g,'').slice(0,40));
+function gaLastSet(o){try{if(o)localStorage.setItem('scriptdesk.auth.last',JSON.stringify(o));else localStorage.removeItem('scriptdesk.auth.last')}catch(e){}}
+function gaLastGet(){try{return JSON.parse(localStorage.getItem('scriptdesk.auth.last')||'null')}catch(e){return null}}
+/* switch the device's data to this account's own store (no reload needed before the projects are loaded) */
+function gaUseNs(ns){GA_NS=ns;LSKEY='scriptdesk.v2.'+(ns?ns+'.':'');const pg=lsGet('page');if(pg&&PG[pg])page=pg;const v=lsGet('views');if(v)Object.assign(VIEW,v)}
+/* the projects that were on this device before sign-in existed move into the first account that signs in */
+async function gaMigrate(ns){try{if(localStorage.getItem('scriptdesk.auth.migrated'))return false}catch(e){return false}
+  const pre='scriptdesk.v2.',ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(pre)&&!/^scriptdesk\.v2\.g\w+\./.test(k)&&k!==pre+'sec')ks.push(k)}
+  let moved=0;ks.forEach(k=>{try{localStorage.setItem(pre+ns+'.'+k.slice(pre.length),localStorage.getItem(k));localStorage.removeItem(k);moved++}catch(e){}});
+  try{const db=await IDB.open();const keys=await new Promise(r=>{const q=db.transaction('kv').objectStore('kv').getAllKeys();q.onsuccess=()=>r(q.result||[]);q.onerror=()=>r([])});
+    for(const k of keys){if(/^g\w+:/.test(String(k)))continue;const v=await new Promise(r=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(undefined)});if(v===undefined)continue;
+      await new Promise(r=>{const t=db.transaction('kv','readwrite');const s=t.objectStore('kv');s.put(v,ns+':'+k);s.delete(k);t.oncomplete=r;t.onerror=r});moved++}}catch(e){}
+  try{localStorage.setItem('scriptdesk.auth.migrated',ns)}catch(e){}return moved>0}
+
+/* ---------- sign-in activity: kept per account on this device and merged through Drive, so sign-ins on other devices show too ---------- */
+const GA_ACT_MAX=300;
+function gaLog(t,extra){const a=lsGet('activity')||[];a.unshift(Object.assign({t,at:Date.now(),dev:G_DEV,dn:gaDevice()},extra||{}));lsSet('activity',a.slice(0,GA_ACT_MAX))}
+const GA_ACT_TXT={in:'Signed in',out:'Signed out',idle:'Signed out after no activity',offline:'Opened offline',fail:'Sign-in failed',denied:'Drive access not given',new:'New device'};
+
+/* ---------- tokens ---------- */
+async function gaConfig(){if(GA.cfg)return GA.cfg;
+  if(GA.desk){const r=await window.sdGoogle.session();GA.cfg={configured:!!(r.ok&&r.v.configured),profile:r.ok?r.v.profile:null,keyStore:r.ok&&r.v.keyStore}}
+  else{let id='';try{const r=await fetch('google.json',{cache:'no-store'});if(r.ok){const j=await r.json();id=String(j.webClientId||'').trim()}}catch(e){}GA.cfg={configured:/^[\w.-]+\.apps\.googleusercontent\.com$/.test(id),webClientId:id}}
+  return GA.cfg}
+const GIS_SRC='https://accounts.google.com/gsi/client';
+function gaWebToken(hint){return new Promise(async(res,rej)=>{try{await loadScript(GIS_SRC)}catch(e){return rej(Object.assign(new Error('offline'),{code:'offline'}))}
+  let settled=false;const c=google.accounts.oauth2.initTokenClient({client_id:GA.cfg.webClientId,scope:G_SCOPES,prompt:hint?'':'select_account',login_hint:hint||undefined,
+    callback:r=>{settled=true;if(!r||r.error)return rej(Object.assign(new Error(r&&r.error||'failed'),{code:r&&r.error||'failed'}));
+      res({at:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,drive:google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/drive.appdata')})},
+    error_callback:e=>{if(!settled){settled=true;rej(Object.assign(new Error(e&&e.type||'popup_closed'),{code:e&&e.type||'popup_closed'}))}}});
+  c.requestAccessToken()})}
+async function gaWebProfile(at){const r=await fetch('https://openidconnect.googleapis.com/v1/userinfo',{headers:{Authorization:'Bearer '+at}});if(!r.ok)throw Object.assign(new Error('profile'),{code:'profile'});
+  const j=await r.json();if(!j.sub||!j.email||j.email_verified===false)throw Object.assign(new Error('profile'),{code:'profile'});
+  return {sub:String(j.sub),email:String(j.email),name:String(j.name||j.email),picture:/^https:\/\//.test(j.picture||'')?String(j.picture):''}}
+/* a valid access token for Drive, or an error with code 'reconnect' (web: needs a click) / 'signed_out' / 'offline' */
+async function gaToken(interactive){if(!GA.user)throw Object.assign(new Error('signed_out'),{code:'signed_out'});
+  if(GA.desk){const r=await window.sdGoogle.token();if(!r.ok)throw Object.assign(new Error(r.code),{code:r.code});return r.v.at}
+  if(GA.web.at&&Date.now()<GA.web.exp-60000)return GA.web.at;
+  if(!interactive)throw Object.assign(new Error('reconnect'),{code:'reconnect'});
+  const t=await gaWebToken(GA.user.email);GA.web=t;GA.drive=t.drive;return t.at}
+
+/* ---------- the sign-in screen ---------- */
+const GA_ERR={access_denied:'Sign-in was cancelled.',popup_closed:'The Google window was closed before sign-in finished.',popup_failed_to_open:'The browser blocked the Google sign-in window. Allow pop-ups for this site and try again.',
+  timeout:'Sign-in took too long. Try again.',offline:'You are offline. Connect to the internet to sign in.',state_mismatch:'Sign-in could not be confirmed. Try again.',cancelled:'Sign-in was cancelled.',superseded:'Sign-in was restarted.',
+  profile:'Google did not share the account email. Try again.',bad_token:'Google\'s answer could not be confirmed. Try again.',not_configured:'Google sign-in is not set up in this copy of ScriptDesk.'};
+const gaErr=c=>GA_ERR[c]||'Sign-in did not work ('+String(c||'error').slice(0,40)+'). Try again.';
+function gaGate(note){return new Promise(async res=>{
+  if(!GA.applies)return res();
+  let cfg;try{cfg=await gaConfig()}catch(e){cfg={configured:false}}
+  if(!cfg.configured)return res(); /* a build without Google sign-in set up works as before */
+  const last=gaLastGet();
+  /* desktop: still signed in from last time */
+  if(GA.desk&&cfg.profile){const r=await window.sdGoogle.token();
+    if(r.ok){await gaEnter(cfg.profile,'online',true);return res()}
+    if(r.code==='offline'&&last&&last.sub===cfg.profile.sub&&Date.now()-(last.on||0)<G_OFFLINE_DAYS*864e5){await gaEnter(cfg.profile,'offline',true);gaLog('offline');return res()}}
+  const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','ga-h');
+  const offlineOk=()=>last&&!last.signedOut&&Date.now()-(last.on||0)<G_OFFLINE_DAYS*864e5;
+  const draw=(msg,busy)=>{const online=navigator.onLine!==false;
+    d.innerHTML=`<div class="ga-card"><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>
+      <h1 id="ga-h">${last&&last.email?'Welcome back':'Sign in to ScriptDesk'}</h1>
+      <p class="ga-sub">Sign in with your Google account. Your projects are saved to a private ScriptDesk folder in your own Google Drive, so they open on your other computers too.</p>
+      ${note?`<p class="ga-note" role="status">${esc(note)}</p>`:''}
+      ${last&&last.email?`<button type="button" class="ga-btn pri" data-ga="again"${busy?' disabled':''}>${last.picture?`<img src="${esc(last.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="ga-ini" aria-hidden="true">${esc((last.name||last.email)[0].toUpperCase())}</span>`}<span><b>Continue as ${esc(last.name||last.email)}</b><small>${esc(last.email)}</small></span></button>
+        <button type="button" class="ga-btn" data-ga="other"${busy?' disabled':''}>Use another Google account</button>`
+       :`<button type="button" class="ga-btn pri" data-ga="new"${busy?' disabled':''}><span><b>Sign in with Google</b></span></button>`}
+      ${!online&&offlineOk()?`<button type="button" class="ga-btn" data-ga="offline">Continue offline as ${esc(last.name||last.email)}</button>`:''}
+      ${busy&&GA.desk?`<button type="button" class="ga-link" data-ga="cancel">Cancel</button>`:''}
+      <p class="ga-msg" role="alert">${msg?esc(msg):''}</p>
+      <p class="ga-fine">${GA.desk?'Sign-in opens in your web browser. Come back here when it is done.':'Sign-in opens in a Google window.'} ScriptDesk only gets your name, email and its own Drive folder: it cannot see your other files or your password.</p></div>`};
+  const go=async(kind)=>{if(kind==='cancel'){if(GA.desk)window.sdGoogle.cancel();return}
+    if(kind==='offline'){d.remove();await gaEnter(last,'offline');gaLog('offline');return res()}
+    const hint=kind==='again'?last.email:'';draw(GA.desk?'Waiting for Google in your browser…':'Waiting for Google…',true);
+    try{let prof,drive=true;
+      if(GA.desk){const r=await window.sdGoogle.signIn(hint);if(!r.ok)throw Object.assign(new Error(r.code),{code:r.code});prof=r.v.profile;drive=r.v.drive}
+      else{const t=await gaWebToken(hint);GA.web=t;drive=t.drive;prof=await gaWebProfile(t.at)}
+      GA.drive=drive;d.remove();await gaEnter(prof,'online');if(!drive)gaLog('denied');res()}
+    catch(e){const c=e&&e.code||'failed';if(c!=='cancelled'&&c!=='superseded'&&c!=='popup_closed')gaFailLog(last,c);draw(gaErr(c),false)}};
+  d.addEventListener('click',e=>{const b=e.target.closest('[data-ga]');if(b&&!b.disabled)go(b.dataset.ga)});
+  const re=()=>{if(d.isConnected&&!d.querySelector('[disabled]'))draw('',false)};addEventListener('online',re);addEventListener('offline',re);
+  draw('',false);document.body.appendChild(d);const f=d.querySelector('.ga-btn');if(f)f.focus()})}
+/* a failed sign-in is noted in the last account's log on this device */
+function gaFailLog(last,code){if(!last||!last.ns)return;const k='scriptdesk.v2.'+last.ns+'.activity';try{const a=JSON.parse(localStorage.getItem(k)||'[]');a.unshift({t:'fail',at:Date.now(),dev:G_DEV,dn:gaDevice(),why:String(code).slice(0,40)});localStorage.setItem(k,JSON.stringify(a.slice(0,GA_ACT_MAX)))}catch(e){}}
+async function gaEnter(prof,mode,quiet){const ns=gaNs(prof.sub);const first=!localStorage.getItem('scriptdesk.auth.migrated');
+  if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;
+  const prev=gaLastGet();gaLastSet({ns,sub:GA.user.sub,email:GA.user.email,name:GA.user.name,picture:GA.user.picture,on:mode==='online'?Date.now():(prev&&prev.on)||0,signedOut:false});
+  if(mode==='online'&&!quiet){const seen=(lsGet('activity')||[]).some(x=>x.dev===G_DEV);gaLog('in',seen?null:{first:1})}
+  else if(mode==='online'&&quiet&&!(lsGet('activity')||[]).length)gaLog('in');
+  gaIdleStart();gaAcctBtn()}
+async function gaSignOut(why){if(!GA.user)return;try{saveLocal()}catch(e){}
+  try{await Promise.race([gdSync('signout'),sleep(12000)])}catch(e){}
+  gaLog(why==='idle'?'idle':'out');try{await Promise.race([gdSync('log'),sleep(6000)])}catch(e){}
+  if(GA.desk){try{await window.sdGoogle.signOut()}catch(e){}}
+  else if(GA.web.at){try{google.accounts.oauth2.revoke(GA.web.at,()=>{})}catch(e){}}
+  GA.web={at:null,exp:0};const l=gaLastGet();if(l)gaLastSet(Object.assign(l,{signedOut:true}));
+  try{sessionStorage.setItem('scriptdesk.auth.note',why==='idle'?`You were signed out after ${gaIdleMin()} minutes with no activity.`:'You have signed out.')}catch(e){}
+  location.reload()}
+
+/* ---------- auto sign-out when idle ---------- */
+const GA_IDLE_OPTS=[15,30,60,120,240,0];
+function gaIdleMin(){const v=lsGet('idle');return GA_IDLE_OPTS.includes(v)?v:30}
+const GA_IDLE={last:Date.now(),t:0,on:false};
+function gaIdleStart(){if(GA_IDLE.on)return;GA_IDLE.on=true;const mark=()=>{GA_IDLE.last=Date.now()};
+  ['pointerdown','keydown','wheel','touchstart','input','scroll'].forEach(ev=>addEventListener(ev,mark,{passive:true,capture:true}));
+  /* timers can pause while a laptop sleeps, so the check compares real clock time */
+  GA_IDLE.t=setInterval(()=>{const m=gaIdleMin();if(!m||!GA.user)return;if(JOB)return mark(); /* an AI job is running */
+    if(Date.now()-GA_IDLE.last>=m*60000){clearInterval(GA_IDLE.t);gaSignOut('idle')}},20000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){const m=gaIdleMin();if(m&&GA.user&&!JOB&&Date.now()-GA_IDLE.last>=m*60000)gaSignOut('idle')}})}
+
+/* ---------- Google Drive sync (hidden app folder) ---------- */
+const GD={busy:false,again:false,t:0,last:0,state:'',msg:'',timer:0};
+const GD_API='https://www.googleapis.com/drive/v3/files',GD_UP='https://www.googleapis.com/upload/drive/v3/files';
+async function gdFetch(url,opt,retry){const at=await gaToken(false);const r=await fetch(url,Object.assign({},opt,{headers:Object.assign({},opt&&opt.headers,{Authorization:'Bearer '+at})}));
+  if(r.status===401&&!retry){if(!GA.desk)GA.web={at:null,exp:0};return gdFetch(url,opt,1)}
+  if(r.status===403||r.status===429){const j=await r.clone().json().catch(()=>({}));const why=((j.error&&j.error.errors&&j.error.errors[0])||{}).reason||'';
+    if(/storageQuotaExceeded/.test(why))throw Object.assign(new Error('full'),{code:'full'});if(/insufficient|PERMISSION/i.test(why+JSON.stringify(j)))throw Object.assign(new Error('denied'),{code:'denied'})}
+  if(!r.ok)throw Object.assign(new Error('drive '+r.status),{code:'http',status:r.status});return r}
+async function gdList(){const out=[];let pt='';do{const q=new URLSearchParams({spaces:'appDataFolder',fields:'nextPageToken,files(id,name,appProperties)',pageSize:'200'});if(pt)q.set('pageToken',pt);
+  const j=await (await gdFetch(GD_API+'?'+q)).json();(j.files||[]).forEach(f=>out.push(f));pt=j.nextPageToken||''}while(pt);return out}
+async function gdGet(id){return (await gdFetch(`${GD_API}/${encodeURIComponent(id)}?alt=media`)).json()}
+async function gdPut(id,name,obj,props){const meta=id?{appProperties:props}:{name,parents:['appDataFolder'],appProperties:props};const b='sd'+uid()+uid();
+  const body=`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(obj)}\r\n--${b}--`;
+  const j=await (await gdFetch(id?`${GD_UP}/${encodeURIComponent(id)}?uploadType=multipart&fields=id`:`${GD_UP}?uploadType=multipart&fields=id`,{method:id?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+b},body})).json();return j.id||id}
+async function gdDel(id){try{await gdFetch(`${GD_API}/${encodeURIComponent(id)}`,{method:'DELETE'})}catch(e){if(e.status!==404)throw e}}
+const gdProps=o=>({pid:String(o.id).slice(0,60),u:String(o.updated||0),t:String(o.title||'').slice(0,60),n:String((o.scenes||[]).length)});
+function gdSetStatus(state,msg){GD.state=state;GD.msg=msg;if(GA.user)setSync(state==='err'?'err':state==='busy'?'busy':'ok',msg);const s=document.getElementById('gaSyncLine');if(s)s.textContent=msg}
+/* a valid project from Drive: an object with an id, scenes and a title, nothing else is trusted from the file */
+const gdValid=o=>o&&typeof o==='object'&&typeof o.id==='string'&&/^[\w-]{1,60}$/.test(o.id)&&Array.isArray(o.scenes);
+async function gdStoreLocal(o){lsSet('p.'+o.id,o);await IDB.set('p.'+o.id,o);const idx=(lsGet('index')||[]).filter(x=>x.id!==o.id);idx.push({id:o.id,title:o.title,production:o.production,updated:o.updated,scenes:o.scenes.length,sample:false});idx.sort((a,b)=>b.updated-a.updated);lsSet('index',idx)}
+function gdSoon(ms){if(!GA.user||!GA.cfg||!GA.cfg.configured)return;clearTimeout(GD.timer);GD.timer=setTimeout(()=>gdSync('save'),ms||5000)}
+async function gdSync(reason){if(!GA.user||GA.mode==='offline'&&navigator.onLine===false)return;if(!GA.drive&&!GA.desk){gdSetStatus('err','Saved on this device. Drive access was not given.');return}
+  if(GD.busy){GD.again=true;return}GD.busy=true;GD.again=false;
+  try{gdSetStatus('busy','Syncing with Google Drive…');const st=lsGet('gsync')||{map:{},del:[]};st.map=st.map||{};st.del=st.del||[];
+    /* projects deleted here while offline */
+    for(const pid of st.del.slice()){const m=st.map[pid];if(m&&m.fid)await gdDel(m.fid);delete st.map[pid];st.del=st.del.filter(x=>x!==pid)}
+    const files=await gdList();const remote={};let actFile=null;
+    files.forEach(f=>{const a=f.appProperties||{};if(f.name==='activity.json')actFile=f;else if(a.pid&&/^p_/.test(f.name||''))remote[a.pid]=f});
+    const idx=lsGet('index')||[];const local=Object.fromEntries(idx.map(x=>[x.id,x]));let changedOpen=false,added=0;
+    /* 1. newer copies on Drive come down */
+    for(const pid of Object.keys(remote)){const f=remote[pid],ru=+(f.appProperties.u||0),m=st.map[pid],l=local[pid];
+      if(l&&l.sample)continue;const lu=l?+l.updated||0:0,base=m?m.u:0;
+      if(l&&ru<=base)continue;                      /* nothing new on Drive */
+      if(l&&ru===lu){st.map[pid]={fid:f.id,u:ru};continue}
+      const o=await gdGet(f.id);if(!gdValid(o)||o.id!==pid)continue;
+      if(l&&lu>base){/* changed on both sides since the last sync: keep this device's version and save Drive's as a copy */
+        const c=JSON.parse(JSON.stringify(o));c.id=uid();c.title=(o.title||'Untitled')+' (copy from another device, '+new Date(ru||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+')';c.updated=Date.now();await gdStoreLocal(c);added++;st.map[pid]={fid:f.id,u:ru};continue}
+      if(P&&P.id===pid){if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('[contenteditable],input,textarea'))continue; /* not while typing */
+        P=o;changedOpen=true}
+      await gdStoreLocal(o);st.map[pid]={fid:f.id,u:+o.updated||ru};if(!l)added++}
+    /* 2. projects removed on another device go here too (unless edited here since) */
+    for(const pid of Object.keys(st.map)){if(remote[pid])continue;const l=local[pid];if(!l){delete st.map[pid];continue}
+      if((+l.updated||0)<=st.map[pid].u){lsDel('p.'+pid);await IDB.del('p.'+pid);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==pid));delete st.map[pid];if(P&&P.id===pid){P=null;changedOpen=true}}
+      else delete st.map[pid]}
+    /* 3. this device's changes go up */
+    for(const l of lsGet('index')||[]){if(l.sample)continue;const m=st.map[l.id];if(m&&(+l.updated||0)<=m.u)continue;
+      const o=P&&P.id===l.id?JSON.parse(JSON.stringify(P)):await loadProject(l.id);if(!gdValid(o))continue;
+      const fid=await gdPut(m&&m.fid||(remote[l.id]&&remote[l.id].id)||null,'p_'+o.id+'.json',o,gdProps(o));st.map[l.id]={fid,u:+o.updated||0}}
+    /* 4. sign-in activity: merge this device's entries with the other devices' */
+    const mine=lsGet('activity')||[];let all=mine;
+    if(actFile){try{const r=await gdGet(actFile.id);if(Array.isArray(r))all=gaMergeAct(mine,r)}catch(e){}}
+    const sent=lsGet('actsent')||0;const fresh=mine.some(x=>x.at>sent&&x.dev===G_DEV);
+    if(fresh||!actFile){await gdPut(actFile?actFile.id:null,'activity.json',all.slice(0,GA_ACT_MAX),{kind:'activity'});lsSet('actsent',Date.now())}
+    lsSet('activity',all.slice(0,GA_ACT_MAX));
+    lsSet('gsync',st);GD.last=Date.now();gdSetStatus('ok','Saved to Google Drive');
+    if(changedOpen){if(!P){const i=lsGet('index')||[];P=i.length?await loadProject(i[0].id):sampleProject()}render(true)}
+    if(added)toast(added===1?'1 project came in from Google Drive.':added+' projects came in from Google Drive.')}
+  catch(e){const c=e&&e.code;
+    if(c==='reconnect')gdSetStatus('err','Saved on this device. Reconnect Google Drive to sync.');
+    else if(c==='signed_out'){gdSetStatus('err','Google sign-in ended.');setTimeout(()=>gaSignOut('out'),1500)}
+    else if(c==='full')gdSetStatus('err','Google Drive is full. Saved on this device only.');
+    else if(c==='denied')gdSetStatus('err','Saved on this device. Drive access was not given.');
+    else{gdSetStatus('err',navigator.onLine===false?'Offline · saved on this device':'Saved on this device. Drive sync will retry.');gdSoon(60000)}}
+  finally{GD.busy=false;if(GD.again)gdSoon(1500);gaAcctBtn()}}
+function gaMergeAct(a,b){const m=new Map();[...a,...b].forEach(x=>{if(!x||typeof x!=='object'||!GA_ACT_TXT[x.t]||!(+x.at))return;const k=x.t+'|'+x.at+'|'+x.dev;if(!m.has(k))m.set(k,{t:x.t,at:+x.at,dev:String(x.dev||'').slice(0,40),dn:String(x.dn||'').slice(0,40),why:x.why?String(x.why).slice(0,40):undefined,first:x.first?1:undefined})});
+  return [...m.values()].sort((x,y)=>y.at-x.at)}
+function gdForget(pid){if(!GA.user)return;const st=lsGet('gsync')||{map:{},del:[]};st.del=(st.del||[]).filter(x=>x!==pid);if(st.map&&st.map[pid])st.del.push(pid);lsSet('gsync',st);gdSoon(1500)}
+
+/* ---------- account button and window ---------- */
+function gaAcctBtn(){const b=document.getElementById('bAcct');if(!b)return;if(!GA.user){b.hidden=true;return}b.hidden=false;
+  const ini=esc((GA.user.name||GA.user.email||'?').trim()[0].toUpperCase());
+  b.innerHTML=GA.user.picture?`<img src="${esc(GA.user.picture)}" alt="" referrerpolicy="no-referrer"><span class="sr-only">Account: ${esc(GA.user.email)}</span>`:`<span class="ga-ini" aria-hidden="true">${ini}</span><span class="sr-only">Account: ${esc(GA.user.email)}</span>`;
+  b.title=GA.user.name+' · '+GA.user.email}
+function gaWhen(t){const d=new Date(t);return d.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function openAccount(){if(!GA.user)return;const acts=(lsGet('activity')||[]).slice(0,40);const m=gaIdleMin();
+  const devs=new Set(acts.filter(x=>x.dev!==G_DEV&&x.t==='in').map(x=>x.dev));
+  openModal(`<div class="modal-h"><h2>Account &amp; security</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b ga-acct">
+    <div class="ga-who">${GA.user.picture?`<img src="${esc(GA.user.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="ga-ini big" aria-hidden="true">${esc((GA.user.name||GA.user.email)[0].toUpperCase())}</span>`}<div><b>${esc(GA.user.name)}</b><div class="small muted">${esc(GA.user.email)}</div></div>
+      <button class="btn" id="gaOut">Sign out</button></div>
+    <h3>Google Drive</h3><p class="small muted">Projects are saved in a private ScriptDesk folder in your Google Drive. It is hidden in Drive and ScriptDesk cannot see your other files.</p>
+    <div class="ga-row"><span id="gaSyncLine" class="small">${esc(GD.msg||(GA.mode==='offline'?'Offline · saved on this device':'Not synced yet'))}</span>${GD.last?`<span class="small muted">Last synced ${esc(gaWhen(GD.last))}</span>`:''}<button class="btn sm" id="gaSyncNow">${!GA.desk&&!(GA.web.at&&Date.now()<GA.web.exp-60000)?'Reconnect and sync':'Sync now'}</button></div>
+    <h3>Auto sign-out</h3><label class="ga-row"><span class="small">Sign out after no activity for</span><select id="gaIdle">${GA_IDLE_OPTS.map(v=>`<option value="${v}"${v===m?' selected':''}>${v?v<60?v+' minutes':v/60+(v===60?' hour':' hours'):'Never'}</option>`).join('')}</select></label>
+    <p class="small muted">Your work is saved and synced before signing out. An AI breakdown that is running keeps you signed in until it finishes.</p>
+    <h3>Sign-in activity</h3>${devs.size?`<p class="small">Signed in on ${devs.size} other device${devs.size>1?'s':''} recently. If one is not yours, sign out there, then <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">remove ScriptDesk's access</a> in your Google account and sign in again.</p>`:''}
+    <ol class="ga-act">${acts.length?acts.map(x=>`<li class="${x.t==='fail'||x.t==='denied'?'bad':''}"><b>${esc(GA_ACT_TXT[x.t]||x.t)}</b><span>${esc(x.dn||'device')}${x.dev===G_DEV?' (this device)':''}${x.first?' · first time on this device':''}${x.why?' · '+esc(x.why):''}</span><time>${esc(gaWhen(x.at))}</time></li>`).join(''):'<li class="muted small">Nothing yet.</li>'}</ol></div>`);
+  $('#gaOut').onclick=()=>{closeModal();gaSignOut('out')};
+  $('#gaIdle').onchange=e=>{const v=+e.target.value;lsSet('idle',GA_IDLE_OPTS.includes(v)?v:30);GA_IDLE.last=Date.now();toast(v?`You will be signed out after ${e.target.selectedOptions[0].textContent} with no activity.`:'Auto sign-out is off.')};
+  $('#gaSyncNow').onclick=async()=>{try{if(!GA.desk)await gaToken(true);await gdSync('manual')}catch(e){gdSetStatus('err',gaErr(e&&e.code))}const b=$('#gaSyncNow');if(b)b.textContent='Sync now'}}
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#bAcct'))openAccount()});
+async function gaAfterBoot(){if(!GA.user)return;
+  if(GA.mode==='offline'){gdSetStatus('ok','Offline · saved on this device');return}
+  await gdSync('start');
+  addEventListener('online',()=>gdSoon(2000));
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-GD.last>60000)gdSoon(500)});
+  setInterval(()=>{if(Date.now()-GD.last>5*60000)gdSync('timer')},60000)}
+
 /* ================= Boot ================= */
 (async function boot(){
   if(SEC.on)await secGate();
+  {let note='';try{note=sessionStorage.getItem('scriptdesk.auth.note')||'';sessionStorage.removeItem('scriptdesk.auth.note')}catch(e){}await gaGate(note)}
   try{await DISK.init();DISK.sched(true)}catch(e){}
   render();
   const lastId=lsGet('last');
   if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}
   if(!P){const idx=lsGet('index')||[];if(idx.length){const p=await loadProject(idx[0].id);if(p){P=p;render()}}}
   if(!P){P=sampleProject();saveLocal();render()}
-  if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;refreshAI();setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();return}
+  if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;refreshAI();setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();gaAfterBoot();return}
   const [smp,db,usr]=await Promise.all([window.claude.use('sample').catch(()=>null),window.claude.use('db').catch(()=>null),window.claude.use('user').catch(()=>null)]);
   AI.sample=smp;AI.checked=true;if(smp){try{AI.limits=await smp.limits()}catch(e){AI.limits=null}}
   if(db&&usr&&!SEC.on){try{UID=await usr.id()}catch(e){UID=null}if(UID){DB=db;cloudOK=true}}

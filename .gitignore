@@ -1,2 +1,4 @@
 www/vendor/
 .DS_Store
+desktop/google.json
+www/google.json

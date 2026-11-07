@@ -51,7 +51,8 @@ async function gTokenCall(params) {
   return j;
 }
 const G_PAGE = (ok) => `<!doctype html><meta charset="utf-8"><title>ScriptDesk</title><body style="font:16px system-ui;background:#0b1020;color:#e8ecf6;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><div style="max-width:420px;text-align:center"><h1 style="font-size:22px">${ok ? 'You are signed in to ScriptDesk' : 'Sign-in did not finish'}</h1><p style="opacity:.8">${ok ? 'You can close this tab and go back to the ScriptDesk app.' : 'Close this tab, go back to ScriptDesk and try again.'}</p></div>`;
-function gSignIn(win, hint) {
+function gSignIn(win, hint, mode) {
+  const idOnly = mode === 'id'; // Firebase accounts: only an identity token is needed, no Drive access and no stored session
   if (!GCFG.desktopClientId) return Promise.reject(Object.assign(new Error('not_configured'), { code: 'not_configured' }));
   if (G.pending) { G.pending.cancel('superseded'); }
   const verifier = b64url(crypto.randomBytes(48));
@@ -72,6 +73,7 @@ function gSignIn(win, hint) {
       try {
         const j = await gTokenCall({ code: u.searchParams.get('code'), code_verifier: verifier, grant_type: 'authorization_code', redirect_uri: redirect });
         const scopes = String(j.scope || '').split(' ');
+        if (idOnly) { const prof = gIdProfile(j.id_token); resolve({ profile: prof, idt: j.id_token }); return; }
         G.profile = gIdProfile(j.id_token); G.at = j.access_token; G.exp = Date.now() + (j.expires_in || 3600) * 1000;
         if (j.refresh_token) G.rt = j.refresh_token;
         gSave();
@@ -84,7 +86,7 @@ function gSignIn(win, hint) {
     srv.on('error', (e) => { if (!done) { finish(); reject(e); } });
     srv.listen(0, '127.0.0.1', () => {
       redirect = `http://127.0.0.1:${srv.address().port}/callback`;
-      const q = new URLSearchParams({ client_id: GCFG.desktopClientId, redirect_uri: redirect, response_type: 'code', scope: G_SCOPES, code_challenge: challenge, code_challenge_method: 'S256', state, access_type: 'offline', prompt: 'select_account' });
+      const q = new URLSearchParams({ client_id: GCFG.desktopClientId, redirect_uri: redirect, response_type: 'code', scope: idOnly ? 'openid email profile' : G_SCOPES, code_challenge: challenge, code_challenge_method: 'S256', state, access_type: idOnly ? 'online' : 'offline', prompt: 'select_account' });
       if (hint && /^[^@\s]+@[^@\s]+$/.test(hint)) q.set('login_hint', hint);
       shell.openExternal('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
     });
@@ -111,7 +113,7 @@ async function gSignOut() {
 // errors cross to the page as plain codes only
 const gWrap = (fn) => async (...a) => { try { return { ok: true, v: await fn(...a) }; } catch (e) { return { ok: false, code: String(e.code || e.message || 'error').slice(0, 60) }; } };
 ipcMain.handle('sd:g:session', gWrap(async () => ({ configured: !!GCFG.desktopClientId, profile: G.rt ? G.profile : null, keyStore: safeStorage.isEncryptionAvailable() })));
-ipcMain.handle('sd:g:signin', gWrap((e, hint) => gSignIn(BrowserWindow.fromWebContents(e.sender), typeof hint === 'string' ? hint.slice(0, 200) : '')));
+ipcMain.handle('sd:g:signin', gWrap((e, hint, mode) => gSignIn(BrowserWindow.fromWebContents(e.sender), typeof hint === 'string' ? hint.slice(0, 200) : '', mode === 'id' ? 'id' : '')));
 ipcMain.handle('sd:g:cancel', gWrap(async () => { if (G.pending) G.pending.cancel('cancelled'); return true; }));
 ipcMain.handle('sd:g:token', gWrap(() => gAccess()));
 ipcMain.handle('sd:g:signout', gWrap(() => gSignOut()));
@@ -154,18 +156,28 @@ const LOCAL_AI = /^http:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.
 const AI_HOSTS = { test: (u) => /^https:\/\//.test(u) || LOCAL_AI.test(u) };
 function allowAI() {
   const ses = session.defaultSession;
+  // remember what each request asked for, so the answer can allow exactly that (origin, extra headers such as
+  // Firebase's x-goog-api-client, and PATCH/DELETE for Drive and Firestore)
+  const REQ = new Map();
   ses.webRequest.onBeforeSendHeaders((d, cb) => {
     const h = d.requestHeaders;
+    const get = (k) => h[k] || h[k.toLowerCase()];
+    if (AI_HOSTS.test(d.url)) {
+      REQ.set(d.id, { o: get('Origin'), rh: get('Access-Control-Request-Headers') });
+      if (REQ.size > 500) REQ.delete(REQ.keys().next().value);
+    }
     if (LOCAL_AI.test(d.url)) { delete h.Origin; delete h.origin; } // Ollama accepts requests without an Origin
     cb({ requestHeaders: h });
   });
   ses.webRequest.onHeadersReceived((d, cb) => {
     if (!AI_HOSTS.test(d.url)) return cb({});
+    const r = REQ.get(d.id) || {}; REQ.delete(d.id);
     const h = d.responseHeaders || {};
     for (const k of Object.keys(h)) if (/^access-control-allow-/i.test(k)) delete h[k];
-    h['Access-Control-Allow-Origin'] = ['*'];
-    h['Access-Control-Allow-Headers'] = ['authorization, content-type, x-api-key, x-goog-api-key, anthropic-version, anthropic-dangerous-direct-browser-access, http-referer, x-title'];
-    h['Access-Control-Allow-Methods'] = ['GET, POST, OPTIONS'];
+    h['Access-Control-Allow-Origin'] = [r.o || '*'];
+    if (r.o) { h['Access-Control-Allow-Credentials'] = ['true']; h['Vary'] = ['Origin']; }
+    h['Access-Control-Allow-Headers'] = [r.rh || 'authorization, content-type, x-api-key, x-goog-api-key, anthropic-version, anthropic-dangerous-direct-browser-access, http-referer, x-title'];
+    h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, PATCH, DELETE, OPTIONS'];
     cb(d.method === 'OPTIONS' ? { responseHeaders: h, statusLine: 'HTTP/1.1 204 No Content' } : { responseHeaders: h });
   });
 }

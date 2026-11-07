@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VeCCPUAdXqKELpbvlNMX1cHn+CA2acqxsZf+7A5kSFc=' 'sha256-x56iUww0nMD5BEN3zhlnHjUEenWwJTFSa64oiY0q6U0=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VeCCPUAdXqKELpbvlNMX1cHn+CA2acqxsZf+7A5kSFc=' 'sha256-TxCgPGXGe/4i81saFP7XeZu50c2tjDjvxgBlseYcJBg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
 <meta name="description" content="AI film script breakdown: single line orders, artist and location lists, breakdown sheets, costume continuity, art and props, character profiles.">
@@ -543,6 +543,10 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-budget{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='18' height='12' rx='2'/%3E%3Cpath d='M12 9v6M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.3-2.5 1.5-2.5.6-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5'/%3E%3C/svg%3E")}
 .i-gear{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h4l2-3h6l2 3h4v12H3z M12 10a4 4 0 1 0 0 8a4 4 0 1 0 0-8'/%3E%3C/svg%3E")}
 .i-run{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.200 6.300L20.500 11.500l-6.300 2.200L12 20l-2.200-6.300L3.500 11.500l6.300-2.200z M19 3v4 M17 5h4'/%3E%3C/svg%3E")}
+.i-lock{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 7 0v3'/%3E%3C/svg%3E")}
+.i-team{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M3.5 19a5.5 5.5 0 0 1 11 0 M16 11a2.5 2.5 0 1 0 0-5 M17.5 14.5a4.5 4.5 0 0 1 3 4.5'/%3E%3C/svg%3E")}
+.i-cloud{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z'/%3E%3C/svg%3E")}
+.i-notes{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h9l4 4v14H6z M14 3v5h5 M9 12h7 M9 16h7'/%3E%3C/svg%3E")}
 .i-undo{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E")}
 .i-install{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
 .i-download{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
@@ -1362,6 +1366,36 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 .ga-act li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px}
 .ga-act li span{grid-column:1;color:var(--muted);font-size:12px}.ga-act li time{grid-column:2;grid-row:1/3;align-self:center;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .ga-act li.bad b{color:#c0392b}:root[data-theme="dark"] .ga-act li.bad b{color:#ff8a80}
+/* accounts, vault, spaces, teams, notepad */
+.fb-card h1{font-size:26px}
+.fb-tabs{display:flex;width:100%;margin:4px 0 14px}.fb-tabs button{flex:1}
+.fb-l{display:block;font-size:13px;font-weight:600;margin:12px 0 6px}
+.fb-i{width:100%;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--glass-line);background:var(--glass-hi);color:var(--fg);font:inherit;font-size:15px;box-sizing:border-box}
+.fb-i:focus-visible{outline:2px solid var(--accent);outline-offset:1px}.fb-i.mono,.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;letter-spacing:.02em}
+.fb-pw{display:flex;gap:8px;align-items:center}.fb-pw .fb-i{flex:1}.fb-pw .btn{min-width:64px}
+.fb-h{margin:6px 0 0;font-size:12px;color:var(--faint)}
+.fb-forgot{display:block;margin:8px 0 4px auto;text-align:right}
+.fb-go{margin-top:16px}
+.fb-or{display:flex;align-items:center;gap:12px;margin:12px 0;color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.fb-or::before,.fb-or::after{content:"";flex:1;height:1px;background:var(--glass-line)}
+.fb-ver{padding:10px 12px;border-radius:10px;background:var(--pill-on);margin:12px 0}
+.sv-m p{line-height:1.5}.sv-m #svGen{width:100%;min-height:44px;justify-content:center}.ga-msg.info{color:var(--accent-text)!important}.sv-warn{color:#b45309;background:rgba(245,158,11,.12);padding:10px 12px;border-radius:10px}:root[data-theme="dark"] .sv-warn{color:#fbbf24}
+.sv-chk{display:flex;gap:10px;align-items:flex-start;margin:14px 0 4px;font-size:13px;line-height:1.45}.sv-chk input{width:20px;height:20px;flex:none;margin-top:1px}
+.sp-h{font-size:13px;font-weight:600;margin:0 0 10px}
+.sp-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.sp-c{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 12px;border-radius:12px;border:1.5px solid var(--glass-line);background:var(--glass-hi);color:var(--fg);font:inherit;cursor:pointer;text-align:center}
+.sp-c .ic{width:26px;height:26px}.sp-c span{font-size:12px;color:var(--muted)}.sp-c.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.sp-c[disabled]{opacity:.55;cursor:not-allowed}
+.sp-b{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--panel-2);color:var(--muted);margin-top:4px;width:fit-content}.sp-b .ic{width:13px;height:13px}.sp-b.sec{background:var(--accent-soft);color:var(--accent-text)}
+.tm-l{list-style:none;margin:6px 0;padding:0}.tm-l>li{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.tm-t{display:block!important}.tm-top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.tm-m{list-style:none;margin:8px 0;padding:0}.tm-m li{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:4px 0;font-size:13px}
+.tm-t .ga-row .fb-i{flex:1;min-width:180px;min-height:36px;font-size:13px}
+.nt{display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:14px;min-height:60vh}
+.nt-list{list-style:none;margin:0;padding:6px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-line);overflow:auto;max-height:70vh}
+.nt-i{display:grid;width:100%;text-align:left;gap:2px;padding:10px 12px;border-radius:10px;border:0;background:none;color:var(--fg);font:inherit;cursor:pointer}.nt-i span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nt-i time{font-size:11px;color:var(--faint)}
+.nt-i.on{background:var(--pill-on)}.nt-i:hover:not(.on){background:var(--glass-hi)}
+.nt-ed{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-line)}
+.nt-ed textarea{flex:1;min-height:320px;resize:vertical;padding:12px;border-radius:10px;border:1px solid var(--glass-line);background:var(--glass-hi);color:var(--fg);font-family:inherit;font-size:15px;line-height:1.6}
+.nt-f{display:flex;justify-content:space-between;align-items:center}.nt-lock{display:inline-flex;align-items:center;gap:5px;color:#1f8a4c;font-weight:600}:root[data-theme="dark"] .nt-lock{color:#4ade80}.nt-lock .ic{width:14px;height:14px}
+@media (max-width:720px){.nt{grid-template-columns:1fr}.nt-list{max-height:220px}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -1426,6 +1460,7 @@ const SCN_IN_RE=/^\s*(?:సీన్|సీను|దృశ్యం|సన్�
 const NOT_CHAR=/^(CUT TO|FADE|DISSOLVE|INTERCUT|INTER CUT|CONTINUED|CONT'?D|THE END|BLACK|SONG|MONTAGE|SUPER|TITLE|FLASH ?BACK|BACK TO|END OF|INTERVAL|LATER|MORNING|NIGHT|DAY|EXT|INT|SCENE|SMASH CUT|MATCH CUT|V\.?O\.?|O\.?S\.?)\b/;
 const PAGES=[
  {g:'Main',id:'write',nav:'Write script',t:'Write script'},
+ {g:'Main',id:'notes',nav:'Notepad',t:'Notepad',hide:()=>!(GA.fb&&GA.user)},
  {g:'Main',id:'script',nav:'Full script',t:'Full script'},
  {g:'Main',id:'slo',nav:'Single line order',t:'Single line order'},
  {g:'Main',id:'structure',nav:'Story structure',t:'Story structure'},
@@ -1460,7 +1495,7 @@ const PAGES=[
  {g:'Budget',id:'tasks',nav:'Tasks',t:'Tasks'}];
 const PG=Object.fromEntries(PAGES.map(p=>[p.id,p]));
 /* data on this device is kept per Google account: the store of the last account that signed in, guarded by the sign-in screen */
-let GA_NS=(()=>{try{const a=JSON.parse(localStorage.getItem('scriptdesk.auth.last')||'null');return a&&/^g\w{1,41}$/.test(a.ns||'')?a.ns:''}catch(e){return ''}})();
+let GA_NS=(()=>{try{const a=JSON.parse(localStorage.getItem('scriptdesk.auth.last')||'null');return a&&/^[gf]\w{1,41}$/.test(a.ns||'')?a.ns:''}catch(e){return ''}})();
 let LSKEY='scriptdesk.v2.'+(GA_NS?GA_NS+'.':'');
 
 /* ================= Utilities ================= */
@@ -1527,7 +1562,7 @@ const DISK={mode:null,on:false,handle:null,msg:'',t:0,safe:s=>String(s||'film').
       else if(this.mode==='cap'){const F=window.Capacitor.Plugins.Filesystem;await F.writeFile(Object.assign({path:'ScriptDesk/'+rel,directory:'DOCUMENTS',recursive:true},text?{data,encoding:'utf8'}:{data:b64(data)}))}
       else{const {d,file}=await this.fsaDir(rel);const w=await (await d.getFileHandle(file,{create:true})).createWritable();await w.write(data);await w.close()}
       this.msg='';return true}catch(e){this.msg=e&&e.message==='needs permission'?'Allow access to the folder (press Save now)':'Could not write to the folder';this.err=this.msg;return false}},
-  sched(now){if(!this.on||!P||!this.mode)return;clearTimeout(this.t);this.t=setTimeout(()=>this.saveProject(),now?50:2000)},
+  sched(now){if(!this.on||!P||!this.mode)return;if(P.space&&P.space!=='me')return; /* private and team scripts are never written to disk as readable files */clearTimeout(this.t);this.t=setTimeout(()=>this.saveProject(),now?50:2000)},
   async saveProject(){if(!this.on||!P||P.sample)return false;const dir='Projects/'+this.safe(P.title)+'__'+P.id.slice(0,6)+'/';const json=JSON.stringify(P);
     let body=json,txt=P.scenes.map(s=>headingLine(s)+'\n\n'+s.text).join('\n\n');let name='project.scriptdesk.json',tn='script.txt';
     if(SEC.on&&SEC.dek){body=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,json)});txt=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,txt)});name='project.scriptdesk';tn='script.scriptdesk'}
@@ -1598,9 +1633,9 @@ const dirty={meta:false,draft:false,scenes:new Set(),deleted:new Set()};
 let flushT=null,flushing=false;
 function touch(sceneIds){if(!P)return;P.updated=Date.now();dirty.meta=true;(sceneIds||[]).forEach(id=>dirty.scenes.add(id));
   saveLocal();clearTimeout(flushT);flushT=setTimeout(flush,1200);setSync('busy','Saving…')}
-function saveLocal(){if(!P)return;DISK.sched();const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
-function idxEntry(){return {id:P.id,title:P.title,production:P.production,updated:P.updated,scenes:P.scenes.length,sample:!!P.sample}}
-function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx);if(!P.sample&&typeof gdSoon==='function')gdSoon()}
+function saveLocal(){if(!P)return;if(typeof spSecure==='function'&&spSecure(spOf(P))){const snap=JSON.parse(JSON.stringify(P));updateIndexLocal();secureLocalSave(snap).then(ok=>{if(!ok)setSync('err','Unlock your vault to save this private script')});return}DISK.sched();const snap=JSON.parse(JSON.stringify(P));const ok=lsSet('p.'+P.id,snap);updateIndexLocal();IDB.set('p.'+P.id,snap).then(ok2=>{if(!ok&&!ok2&&!cloudOK)setSync('err','Not saved: device storage is full or blocked')})}
+function idxEntry(){return {id:P.id,title:P.title,production:P.production,updated:P.updated,scenes:P.scenes.length,sample:!!P.sample,space:P.space||'me'}}
+function updateIndexLocal(){const idx=(lsGet('index')||[]).filter(x=>x.id!==P.id);idx.unshift(idxEntry());lsSet('index',idx);if(!P.sample){if(GA.fb)csSoon();else if(typeof gdSoon==='function')gdSoon()}}
 const DRAFT_CH=60000;
 function metaBody(){const {scenes,draft,...m}=P;m.order=scenes.map(s=>s.id);m.draftN=draft?Math.ceil(JSON.stringify(draft).length/DRAFT_CH):0;return JSON.parse(JSON.stringify(m))}
 function base(){return 'data/users/'+UID}
@@ -1624,7 +1659,7 @@ async function writeDoc(ref,body){for(let i=0;i<2;i++){try{await ref.set(body);a
 async function cloudIndex(){if(!cloudOK)return [];try{const d=await DB.collection(base()).doc('index').get();return d.exists&&Array.isArray(d.data().projects)?d.data().projects:[]}catch(e){return []}}
 async function saveCloudIndex(){if(!cloudOK)return;const list=(await cloudIndex()).filter(x=>x.id!==P.id);list.unshift(idxEntry());await writeDoc(DB.collection(base()).doc('index'),{projects:list.slice(0,200)})}
 async function listProjects(){const local=lsGet('index')||[];const cloud=await cloudIndex();const m=new Map();[...cloud,...local].forEach(x=>{const e=m.get(x.id);if(!e||x.updated>e.updated)m.set(x.id,x)});return [...m.values()].sort((a,b)=>b.updated-a.updated)}
-async function loadProject(id){let local=lsGet('p.'+id);const il=await IDB.get('p.'+id);if(il&&(!local||il.updated>=local.updated))local=il;let cloud=null;
+async function loadProject(id){let local=lsGet('p.'+id);const il=await IDB.get('p.'+id);if(il&&(!local||il.updated>=local.updated))local=il;if(local&&local.__sd){local=await secureLocalOpen(local);if(!local)return null}let cloud=null;
   if(cloudOK){try{const pdoc=DB.collection(base()).doc('p_'+id);const m=await pdoc.get();
     if(m.exists){const meta=m.data();const qs=await pdoc.collection('scenes').limit(1000).get();const byId={};qs.docs.forEach(d=>byId[d.id]=d.data());
       const scenes=(meta.order||Object.keys(byId)).map(i=>byId[i]).filter(Boolean).map(x=>JSON.parse(JSON.stringify(x)));
@@ -1635,7 +1670,7 @@ async function loadProject(id){let local=lsGet('p.'+id);const il=await IDB.get('
   if(cloudOK&&local&&(!cloud||local.updated>cloud.updated)){P=pick;dirty.meta=true;if(pick.draft)dirty.draft=true;pick.scenes.forEach(s=>dirty.scenes.add(s.id));setTimeout(flush,500)}
   return pick}
 function upgrade(p){p=Object.assign(newProject(),p);p.scenes=(p.scenes||[]).map(s=>{const n=newScene(s);LK.forEach(k=>{if(!Array.isArray(n[k]))n[k]=[]});if(!Array.isArray(n.artists))n.artists=[];if(!Array.isArray(n.costumes))n.costumes=[];if(!n.locked)n.locked={};if(!Array.isArray(n.flags))n.flags=[];return n});p.artists=p.artists||[];p.profiles=p.profiles||{};p.changes=Array.isArray(p.changes)?p.changes:[];return p}
-async function deleteProject(id){lsDel('p.'+id);await IDB.del('p.'+id);if(typeof gdForget==='function')gdForget(id);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==id));
+async function deleteProject(id){const ie=(lsGet('index')||[]).find(x=>x.id===id);lsDel('p.'+id);await IDB.del('p.'+id);if(GA.fb)csForget(id,ie&&ie.space);else if(typeof gdForget==='function')gdForget(id);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==id));
   if(cloudOK){try{const pdoc=DB.collection(base()).doc('p_'+id);const qs=await pdoc.collection('scenes').limit(1000).get();for(const d of qs.docs){await pdoc.collection('scenes').doc(d.id).delete()}await pdoc.delete();const list=(await cloudIndex()).filter(x=>x.id!==id);await writeDoc(DB.collection(base()).doc('index'),{projects:list})}catch(e){}}}
 function setSync(cls,msg){const el=$('#sync');el.className='sync '+cls;el.lastElementChild.textContent=msg}
 
@@ -2546,7 +2581,7 @@ document.addEventListener('selectionchange',()=>{if(page==='write'&&wrDoc()){cle
 /* ---- Actions ---- */
 function wrFromProject(){snapshot();const D=draft();D.els=scenesToEls(P.scenes,true);if(P.front&&!D.tp.title)D.tp.title=P.title;D.at=Date.now();D.syncedAt=D.at;dirty.draft=true;logChange(`Script opened in the writer (${P.scenes.length} scenes)`,'script',true);touch([]);render()}
 function wrBlank(){snapshot();const D=draft();D.els=[{t:'h',x:''}];D.at=Date.now();dirty.draft=true;touch([]);render();setTimeout(()=>tplPick({start:true}),60)}
-async function wrNewProject(){await flushNow();P=newProject({title:'Untitled script'});P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render();setTimeout(()=>tplPick({start:true}),60)}
+async function wrNewProject(){let sp='me';if(GA.fb){sp=await askSpace();if(!sp)return}await flushNow();P=newProject({title:'Untitled script'});if(sp!=='me')P.space=sp;P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render();setTimeout(()=>tplPick({start:true}),60)}
 function wrTitle(){const tp=draft().tp;const f=(id,l,v,ph)=>`<div class="fieldbox"><label for="${id}">${l}</label><input type="text" id="${id}" value="${esc(v||'')}" placeholder="${esc(ph||'')}"></div>`;
   openModal(`<div class="modal-h"><h2>Title page</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${f('tpT','Title',tp.title||P.title,'RAAHU KAALAM')}<div class="two">${f('tpC','Credit',tp.credit||'Written by','Written by')}${f('tpA','Author(s)',tp.author,'Your name')}</div>
@@ -4228,7 +4263,7 @@ document.addEventListener('dragover',e=>{if(!DRAG)return;const z=e.target.closes
 document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closest&&e.target.closest('[data-dropday]');if(!z)return;e.preventDefault();const row=e.target.closest('tr[data-drag]');const sid=DRAG;DRAG=null;
   const before=row&&row.dataset.drag!==sid?row.dataset.drag:null;const to=z.dataset.dropday||null;const s=scById(sid);if(!s)return;snapshot();placeScene(sid,to,before);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)});
 
-function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.g!==g){if(g)h+='</div>';g=p.g;h+=`<h6>${esc(g)}</h6><div class="ng">`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic i-${p.id}" aria-hidden="true"></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
+function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.hide&&p.hide())return;if(p.g!==g){if(g)h+='</div>';g=p.g;h+=`<h6>${esc(g)}</h6><div class="ng">`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic i-${p.id}" aria-hidden="true"></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
 /* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
 const RATE_SRC='Telugu Film Chamber of Commerce and Telugu Film Industry Employees Federation, "General conditions and wages" agreement dated 01-07-2022 (valid 01-07-2022 to 30-06-2025; stunt wages to 30-03-2025 as printed)';
 /* [union, role / item, rupees, unit, pdf page, note] */
@@ -4628,7 +4663,7 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();wxApplyView();
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
   syncTop();
-  if(!P.scenes.length&&page!=='artists'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
+  if(!P.scenes.length&&page!=='artists'&&page!=='notes'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> An example script so you can see every report.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
@@ -4652,7 +4687,7 @@ function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.product
 function applySearch(){const q=(VIEW.q||'').toLowerCase().trim();document.querySelectorAll('#content [data-q]').forEach(el=>{el.hidden=!!q&&!el.dataset.q.includes(q)})}
 function go(id){if(typeof RA!=='undefined'&&RA.on)raStop();if(page==='write'&&wrDoc()){clearTimeout(WR.saveT);wrSave()}page=id;lsSet('page',id);VIEW.q='';VIEW.tedit=false;VIEW.editScene=null;sheetClose();render()}
 async function fillProjects(){const box=$('#plist');if(!box)return;const list=await listProjects();
-  box.innerHTML=list.length?list.map(p=>`<div class="pcard" role="button" tabindex="0" data-open="${p.id}"><b>${esc(p.title)}</b><span class="muted small">${esc(p.production||'')}</span><span class="small faint">${p.scenes} scenes · updated ${new Date(p.updated).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}${p.sample?' · sample':''}</span><div style="display:flex;gap:6px;margin-top:6px"><button class="btn sm" data-open="${p.id}">Open</button><button class="btn sm" data-backup="${p.id}">Backup</button><button class="btn sm ghost danger" data-delp="${p.id}">Delete</button></div></div>`).join(''):`<div class="empty"><b>No projects yet</b>Start by importing a script.</div>`}
+  box.innerHTML=list.length?list.map(p=>`<div class="pcard" role="button" tabindex="0" data-open="${p.id}"><b>${esc(p.title)}</b><span class="muted small">${esc(p.production||'')}</span><span class="small faint">${p.scenes} scenes · updated ${new Date(p.updated).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}${p.sample?' · sample':''}</span>${GA.fb&&!p.sample?`<span class="sp-b${spSecure(p.space||'me')?' sec':''}"><i class="ic ${(p.space||'me')==='me'?'i-cloud':String(p.space).startsWith('t:')?'i-team':'i-lock'}" aria-hidden="true"></i>${esc(spLabel(p.space||'me'))}</span>`:''}<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="btn sm" data-open="${p.id}">Open</button>${GA.fb&&!p.sample?`<button class="btn sm" data-move="${p.id}">Move</button>`:''}<button class="btn sm" data-backup="${p.id}">Backup</button><button class="btn sm ghost danger" data-delp="${p.id}">Delete</button></div></div>`).join(''):`<div class="empty"><b>No projects yet</b>Start by importing a script.</div>`}
 
 /* ================= Actions ================= */
 document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-open]');if(!t)return;
@@ -4660,8 +4695,9 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}
   if(t.dataset.x){exportPage(t.dataset.x);return}
   if(t.dataset.delp){e.stopPropagation();if(t.dataset.armed){const id=t.dataset.delp;t.textContent='Deleting…';await deleteProject(id);if(P&&P.id===id)P=null;toast('Project deleted');render();return}t.dataset.armed=1;t.textContent='Confirm delete';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}
-  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp&&SEC.on){await saveFile(DISK.safe(bp.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',await envMake(JSON.stringify(bp)));return}
+  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp&&(SEC.on||(bp.space&&bp.space!=='me'))){await saveFile(DISK.safe(bp.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',await envMake(JSON.stringify(bp)));return}
   if(bp)await saveFile(`${(bp.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(bp));return}
+  if(t.dataset.move){e.stopPropagation();moveAsk(t.dataset.move);return}
   if(t.dataset.open){await openProject(t.dataset.open);return}
   if(t.dataset.edit){VIEW.editScene=t.dataset.edit;render(true);const ta=$('#ed-'+t.dataset.edit);ta&&ta.focus();return}
   if(t.dataset.cancel!==undefined&&t.hasAttribute('data-cancel')){VIEW.editScene=null;render(true);return}
@@ -4712,7 +4748,7 @@ $('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>page==='write'&&P
 $('#fTitle').addEventListener('change',e=>{if(!P)return;P.title=e.target.value.trim()||'Untitled film';logChange(`Film title set to ${P.title}`,'x',true);touch([])});
 $('#fProd').addEventListener('change',e=>{if(!P)return;P.production=e.target.value.trim();logChange(`Production house set to ${P.production||'—'}`,'x',true);touch([])});
 
-async function openProject(id){const p=await loadProject(id);if(!p){toast('That project could not be opened.');return}await flushNow();P=p;undoStack.length=0;$('#bUndo').disabled=true;lsSet('last',id);if(page==='projects')page=lsGet('page')&&lsGet('page')!=='projects'?lsGet('page'):'slo';render()}
+async function openProject(id){const ie=(lsGet('index')||[]).find(x=>x.id===id);if(ie&&GA.fb&&spSecure(ie.space||'me')&&!SV.vk){if(!(await svUnlockAsk({why:'This screenplay is end-to-end encrypted. Unlock your vault to open it.'})))return}const p=await loadProject(id);if(!p){toast('That project could not be opened.');return}await flushNow();P=p;undoStack.length=0;$('#bUndo').disabled=true;lsSet('last',id);if(page==='projects')page=lsGet('page')&&lsGet('page')!=='projects'?lsGet('page'):'slo';render()}
 async function flushNow(){if(P&&(dirty.meta||dirty.draft||dirty.scenes.size)){clearTimeout(flushT);await flush()}}
 async function profileJob(id){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude. You can type profiles by hand.');return}snapshot();startJob(id?'Writing profile':'Writing character profiles',0);
   try{await aiProfiles(id);logChange(id?`${aName(id)} profile rewritten by AI`:'Character profiles written by AI','profile',true);touch([]);toast('Profiles written. Edit anything you like.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
@@ -4738,7 +4774,7 @@ function openModal(html){$('#modalRoot').innerHTML=`<div class="ov" id="ov"><div
 function closeModal(){const ov=$('#ov');if(ov&&typeof MOTION_OK!=='undefined'&&MOTION_OK){ov.removeAttribute('id');ov.classList.add('closing');setTimeout(()=>ov.remove(),180)}else $('#modalRoot').innerHTML='';if(pendingRename){const f=pendingRename.only;pendingRename=null;f()}}
 function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><button class="btn ghost" data-close>Close</button></div>
  <div class="modal-b">
-  <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>
+  <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>${GA.fb&&GA.user?`<div class="fieldbox"><label for="iSpace">Where should this live?</label><select id="iSpace"><option value="v">Just me · private &amp; encrypted</option>${TEAMS.list.filter(t=>t.mine).map(t=>`<option value="t:${esc(t.id)}">Team · ${esc(t.name)} · encrypted</option>`).join('')}<option value="me">My account · not encrypted</option></select></div>`:''}
   <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json or encrypted .scriptdesk). Any language or format.</span></label>
   <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json,.scriptdesk" hidden>
   <div class="fieldbox"><label for="iText">Or paste the script</label><textarea id="iText" placeholder="SCENE NO 1  EXT. VILLAGE - DAY&#10;&#10;..."></textarea></div>
@@ -4761,12 +4797,13 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
     try{let text=$('#iText').value;
       if(scanned){text=await ocrPdf(scanned,m=>info.textContent=m);$('#iText').value=text}
       if(!text.trim()){info.textContent='Choose a file or paste the script first.';btn.disabled=false;return}
+      const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       let r=detectScenes(text);
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
       if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}finally{JOB=null}}
       if(!r.scenes.length){info.textContent='No scenes could be found. Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".';btn.disabled=false;return}
       await flushNow();
-      P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});
+      P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});if(isp!=='me')P.space=isp;
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}
     catch(e){info.textContent=errMsg(e);btn.disabled=false}}}
 function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no location',(!s.ie||!s.time)&&'effect incomplete',sc.filter(x=>U(x.no)===U(s.no)).length>1&&'duplicate number'].filter(Boolean);
@@ -5211,30 +5248,30 @@ if(STANDALONE&&'serviceWorker' in navigator&&/^https:|^http:\/\/localhost|^http:
    cannot see any other Drive file, and the files do not clutter the user's Drive.
    Sign-in is required once Google sign-in is set up for the build (google.json / repository secrets). A build without
    it (and the Claude version, and the phone apps for now) work as before. */
-const GA={applies:STANDALONE&&!NATIVE,desk:!!window.sdGoogle,cfg:null,user:null,mode:'',drive:false,web:{at:null,exp:0}};
+const GA={fb:false,applies:STANDALONE&&!NATIVE,desk:!!window.sdGoogle,cfg:null,user:null,mode:'',drive:false,web:{at:null,exp:0}};
 const G_SCOPES='openid email profile https://www.googleapis.com/auth/drive.appdata';
 const G_OFFLINE_DAYS=7;
 const G_DEV=(()=>{try{let d=localStorage.getItem('scriptdesk.dev');if(!d){d=uid()+uid();localStorage.setItem('scriptdesk.dev',d)}return d}catch(e){return 'unknown'}})();
 function gaDevice(){const ua=navigator.userAgent;const os=/Windows/.test(ua)?'Windows':/Mac OS X|Macintosh/.test(ua)?'Mac':/Android/.test(ua)?'Android':/iPhone|iPad|iPod/.test(ua)?'iPhone/iPad':/Linux/.test(ua)?'Linux':'device';
   if(GA.desk)return os+' app';const br=/Edg\//.test(ua)?'Edge':/OPR\//.test(ua)?'Opera':/Firefox\//.test(ua)?'Firefox':/Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':'browser';return br+' on '+os}
-const gaNs=sub=>'g'+(/^\d{1,40}$/.test(String(sub))?String(sub):String(sub).replace(/[^\w]/g,'').slice(0,40));
+const gaNs=(sub,pre)=>(pre||'g')+(/^\d{1,40}$/.test(String(sub))?String(sub):String(sub).replace(/[^\w]/g,'').slice(0,40));
 function gaLastSet(o){try{if(o)localStorage.setItem('scriptdesk.auth.last',JSON.stringify(o));else localStorage.removeItem('scriptdesk.auth.last')}catch(e){}}
 function gaLastGet(){try{return JSON.parse(localStorage.getItem('scriptdesk.auth.last')||'null')}catch(e){return null}}
 /* switch the device's data to this account's own store (no reload needed before the projects are loaded) */
 function gaUseNs(ns){GA_NS=ns;LSKEY='scriptdesk.v2.'+(ns?ns+'.':'');const pg=lsGet('page');if(pg&&PG[pg])page=pg;const v=lsGet('views');if(v)Object.assign(VIEW,v)}
 /* the projects that were on this device before sign-in existed move into the first account that signs in */
 async function gaMigrate(ns){try{if(localStorage.getItem('scriptdesk.auth.migrated'))return false}catch(e){return false}
-  const pre='scriptdesk.v2.',ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(pre)&&!/^scriptdesk\.v2\.g\w+\./.test(k)&&k!==pre+'sec')ks.push(k)}
+  const pre='scriptdesk.v2.',ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(pre)&&!/^scriptdesk\.v2\.[gf]\w+\./.test(k)&&k!==pre+'sec')ks.push(k)}
   let moved=0;ks.forEach(k=>{try{localStorage.setItem(pre+ns+'.'+k.slice(pre.length),localStorage.getItem(k));localStorage.removeItem(k);moved++}catch(e){}});
   try{const db=await IDB.open();const keys=await new Promise(r=>{const q=db.transaction('kv').objectStore('kv').getAllKeys();q.onsuccess=()=>r(q.result||[]);q.onerror=()=>r([])});
-    for(const k of keys){if(/^g\w+:/.test(String(k)))continue;const v=await new Promise(r=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(undefined)});if(v===undefined)continue;
+    for(const k of keys){if(/^[gf]\w+:/.test(String(k)))continue;const v=await new Promise(r=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(undefined)});if(v===undefined)continue;
       await new Promise(r=>{const t=db.transaction('kv','readwrite');const s=t.objectStore('kv');s.put(v,ns+':'+k);s.delete(k);t.oncomplete=r;t.onerror=r});moved++}}catch(e){}
   try{localStorage.setItem('scriptdesk.auth.migrated',ns)}catch(e){}return moved>0}
 
 /* ---------- sign-in activity: kept per account on this device and merged through Drive, so sign-ins on other devices show too ---------- */
 const GA_ACT_MAX=300;
 function gaLog(t,extra){const a=lsGet('activity')||[];a.unshift(Object.assign({t,at:Date.now(),dev:G_DEV,dn:gaDevice()},extra||{}));lsSet('activity',a.slice(0,GA_ACT_MAX))}
-const GA_ACT_TXT={in:'Signed in',out:'Signed out',idle:'Signed out after no activity',offline:'Opened offline',fail:'Sign-in failed',denied:'Drive access not given',new:'New device'};
+const GA_ACT_TXT={vault:'Vault set up',vaultpass:'Vault passphrase changed',vaultfail:'Wrong vault passphrase',team:'Team created',join:'Asked to join a team',remove:'Removed a team member',in:'Signed in',out:'Signed out',idle:'Signed out after no activity',offline:'Opened offline',fail:'Sign-in failed',denied:'Drive access not given',new:'New device'};
 
 /* ---------- tokens ---------- */
 async function gaConfig(){if(GA.cfg)return GA.cfg;
@@ -5263,7 +5300,7 @@ const GA_ERR={access_denied:'Sign-in was cancelled.',popup_closed:'The Google wi
   timeout:'Sign-in took too long. Try again.',offline:'You are offline. Connect to the internet to sign in.',state_mismatch:'Sign-in could not be confirmed. Try again.',cancelled:'Sign-in was cancelled.',superseded:'Sign-in was restarted.',
   profile:'Google did not share the account email. Try again.',bad_token:'Google\'s answer could not be confirmed. Try again.',not_configured:'Google sign-in is not set up in this copy of ScriptDesk.'};
 const gaErr=c=>GA_ERR[c]||'Sign-in did not work ('+String(c||'error').slice(0,40)+'). Try again.';
-function gaGate(note){return new Promise(async res=>{
+function gaGate(note){if(fbOn())return fbGate(note);return new Promise(async res=>{
   if(!GA.applies)return res();
   let cfg;try{cfg=await gaConfig()}catch(e){cfg={configured:false}}
   if(!cfg.configured)return res(); /* a build without Google sign-in set up works as before */
@@ -5299,16 +5336,18 @@ function gaGate(note){return new Promise(async res=>{
   draw('',false);document.body.appendChild(d);const f=d.querySelector('.ga-btn');if(f)f.focus()})}
 /* a failed sign-in is noted in the last account's log on this device */
 function gaFailLog(last,code){if(!last||!last.ns)return;const k='scriptdesk.v2.'+last.ns+'.activity';try{const a=JSON.parse(localStorage.getItem(k)||'[]');a.unshift({t:'fail',at:Date.now(),dev:G_DEV,dn:gaDevice(),why:String(code).slice(0,40)});localStorage.setItem(k,JSON.stringify(a.slice(0,GA_ACT_MAX)))}catch(e){}}
-async function gaEnter(prof,mode,quiet){const ns=gaNs(prof.sub);const first=!localStorage.getItem('scriptdesk.auth.migrated');
+async function gaEnter(prof,mode,quiet,pre){const ns=gaNs(prof.sub,pre);const first=!localStorage.getItem('scriptdesk.auth.migrated');
   if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;
   const prev=gaLastGet();gaLastSet({ns,sub:GA.user.sub,email:GA.user.email,name:GA.user.name,picture:GA.user.picture,on:mode==='online'?Date.now():(prev&&prev.on)||0,signedOut:false});
   if(mode==='online'&&!quiet){const seen=(lsGet('activity')||[]).some(x=>x.dev===G_DEV);gaLog('in',seen?null:{first:1})}
   else if(mode==='online'&&quiet&&!(lsGet('activity')||[]).length)gaLog('in');
   gaIdleStart();gaAcctBtn()}
 async function gaSignOut(why){if(!GA.user)return;try{saveLocal()}catch(e){}
-  try{await Promise.race([gdSync('signout'),sleep(12000)])}catch(e){}
-  gaLog(why==='idle'?'idle':'out');try{await Promise.race([gdSync('log'),sleep(6000)])}catch(e){}
-  if(GA.desk){try{await window.sdGoogle.signOut()}catch(e){}}
+  const sync=r=>GA.fb?csSync(r):gdSync(r);
+  try{await Promise.race([sync('signout'),sleep(12000)])}catch(e){}
+  gaLog(why==='idle'?'idle':'out');try{await Promise.race([sync('log'),sleep(6000)])}catch(e){}
+  if(GA.fb){try{const fx=await fbInit();await fx.signOut()}catch(e){}}
+  else if(GA.desk){try{await window.sdGoogle.signOut()}catch(e){}}
   else if(GA.web.at){try{google.accounts.oauth2.revoke(GA.web.at,()=>{})}catch(e){}}
   GA.web={at:null,exp:0};const l=gaLastGet();if(l)gaLastSet(Object.assign(l,{signedOut:true}));
   try{sessionStorage.setItem('scriptdesk.auth.note',why==='idle'?`You were signed out after ${gaIdleMin()} minutes with no activity.`:'You have signed out.')}catch(e){}
@@ -5413,13 +5452,348 @@ function openAccount(){if(!GA.user)return;const acts=(lsGet('activity')||[]).sli
   $('#gaOut').onclick=()=>{closeModal();gaSignOut('out')};
   $('#gaIdle').onchange=e=>{const v=+e.target.value;lsSet('idle',GA_IDLE_OPTS.includes(v)?v:30);GA_IDLE.last=Date.now();toast(v?`You will be signed out after ${e.target.selectedOptions[0].textContent} with no activity.`:'Auto sign-out is off.')};
   $('#gaSyncNow').onclick=async()=>{try{if(!GA.desk)await gaToken(true);await gdSync('manual')}catch(e){gdSetStatus('err',gaErr(e&&e.code))}const b=$('#gaSyncNow');if(b)b.textContent='Sync now'}}
-document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#bAcct'))openAccount()});
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#bAcct'))(GA.fb?fbAccount:openAccount)()});
 async function gaAfterBoot(){if(!GA.user)return;
+  if(GA.fb){if(GA.mode==='offline'){setSync('ok','Offline · saved on this device');return}await csSync('start');addEventListener('online',()=>csSoon(2000));
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-CS.last>60000)csSoon(500)});setInterval(()=>{if(Date.now()-CS.last>5*60000)csSync('timer')},60000);return}
   if(GA.mode==='offline'){gdSetStatus('ok','Offline · saved on this device');return}
   await gdSync('start');
   addEventListener('online',()=>gdSoon(2000));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-GD.last>60000)gdSoon(500)});
   setInterval(()=>{if(Date.now()-GD.last>5*60000)gdSync('timer')},60000)}
+
+
+/* ================= Accounts (Firebase), encrypted vault, teams and notepad =================
+   When the build carries a Firebase project (meta sd-firebase), ScriptDesk accounts use Firebase Authentication:
+   email + password (with password reset and email verification) or Google. Projects sync through Cloud Firestore.
+   End-to-end encryption: a screenplay can be "Just me · private & encrypted" or belong to a team. Those are encrypted on
+   the device with AES-256-GCM before they are stored or sent, so Firebase (and anyone with database access) only sees
+   unreadable data. The vault key is protected by a passphrase only the user knows (PBKDF2-SHA-256, 600,000 rounds);
+   it cannot be recovered if the passphrase is lost. Team scripts use a team key that is handed to each member wrapped
+   with their own public key (ECDH P-256), so only members can open it. Notes in the notepad use the vault key. */
+const FB_CFG=(()=>{try{const m=document.querySelector('meta[name="sd-firebase"]');const c=m?JSON.parse(m.content):null;return c&&c.apiKey&&c.projectId?c:null}catch(e){return null}})();
+const FBV='13.2.0',FBU=`https://www.gstatic.com/firebasejs/${FBV}/`;
+const FBX={ready:null};
+function fbOn(){return GA.applies&&!!(FB_CFG||window.__FB_FAKE)}
+function fbInit(){if(FBX.ready)return FBX.ready;
+  FBX.ready=(async()=>{if(window.__FB_FAKE){Object.assign(FBX,window.__FB_FAKE);return FBX}
+    const [A,AU,FS]=await Promise.all([import(FBU+'firebase-app.js'),import(FBU+'firebase-auth.js'),import(FBU+'firebase-firestore.js')]);
+    const app=A.initializeApp(FB_CFG);
+    const auth=AU.initializeAuth(app,Object.assign({persistence:[AU.indexedDBLocalPersistence,AU.browserLocalPersistence]},GA.desk?{}:{popupRedirectResolver:AU.browserPopupRedirectResolver}));
+    const db=FS.getFirestore(app);
+    const Uo=u=>u&&{uid:u.uid,email:String(u.email||'').toLowerCase(),name:u.displayName||'',picture:u.photoURL||'',verified:!!u.emailVerified,providers:(u.providerData||[]).map(p=>p.providerId)};
+    const dref=p=>FS.doc(db,p),cref=p=>FS.collection(db,p);
+    Object.assign(FBX,{
+      waitUser:()=>new Promise(r=>{const un=AU.onAuthStateChanged(auth,u=>{un();r(Uo(u))})}),
+      current:()=>Uo(auth.currentUser),
+      signIn:async(e,p)=>Uo((await AU.signInWithEmailAndPassword(auth,e,p)).user),
+      create:async(e,p,name)=>{const c=await AU.createUserWithEmailAndPassword(auth,e,p);if(name)await AU.updateProfile(c.user,{displayName:name});try{await AU.sendEmailVerification(c.user)}catch(x){}return Uo(auth.currentUser)},
+      reset:e=>AU.sendPasswordResetEmail(auth,e),
+      verify:()=>AU.sendEmailVerification(auth.currentUser),
+      reload:async()=>{await AU.reload(auth.currentUser);await auth.currentUser.getIdToken(true);return Uo(auth.currentUser)},
+      google:async idt=>Uo((idt?await AU.signInWithCredential(auth,AU.GoogleAuthProvider.credential(idt)):await AU.signInWithPopup(auth,new AU.GoogleAuthProvider())).user),
+      signOut:()=>AU.signOut(auth),
+      get:async p=>{const s=await FS.getDoc(dref(p));return s.exists()?s.data():null},
+      set:(p,d,merge)=>FS.setDoc(dref(p),d,merge?{merge:true}:{}),
+      del:p=>FS.deleteDoc(dref(p)),
+      list:async p=>(await FS.getDocs(cref(p))).docs.map(d=>({id:d.id,data:d.data()})),
+      where:async(p,f,op,v,group)=>(await FS.getDocs(FS.query(group?FS.collectionGroup(db,p):cref(p),FS.where(f,op,v)))).docs.map(d=>({id:d.id,path:d.ref.path,data:d.data()}))});
+    return FBX})();
+  FBX.ready.catch(()=>{FBX.ready=null});return FBX.ready}
+const FB_ERR={'auth/invalid-credential':'The email or password is not right.','auth/wrong-password':'The email or password is not right.','auth/user-not-found':'The email or password is not right.',
+  'auth/invalid-email':'That email address does not look right.','auth/email-already-in-use':'An account with this email already exists. Sign in instead, or reset the password.',
+  'auth/weak-password':'Choose a stronger password: at least 8 characters with letters and numbers.','auth/too-many-requests':'Too many tries. Wait a few minutes, or reset your password.',
+  'auth/network-request-failed':'No internet connection. Connect and try again.','auth/popup-closed-by-user':'The Google window was closed before sign-in finished.','auth/cancelled-popup-request':'Sign-in was cancelled.',
+  'auth/popup-blocked':'The browser blocked the Google window. Allow pop-ups for this site and try again.','auth/user-disabled':'This account has been turned off. Contact the ScriptDesk admin.',
+  'auth/unauthorized-domain':'Google sign-in is not allowed from this address yet (Firebase authorized domains).','auth/missing-password':'Enter your password.','auth/requires-recent-login':'Sign in again, then retry.'};
+const fbErr=e=>FB_ERR[e&&e.code]||gaErr(e&&e.code||(e&&e.message)||'error');
+const fbPassOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);
+
+/* ---------- sign-in screen: Sign in / Create account, forgot password, Google ---------- */
+function fbGate(note){return new Promise(async res=>{let fx;
+  try{fx=await fbInit()}catch(e){return res(gaGateOffline(note))}
+  const u=await fx.waitUser();if(u){await fbEnter(u,'online',true);return res()}
+  const last=gaLastGet();const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','ga-h');
+  let tab='in',msg='',info=note||'',busy=false;const v={e:last&&last.email||'',p:'',n:''};
+  const draw=()=>{d.innerHTML=`<form class="ga-card fb-card" novalidate><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>
+    <h1 id="ga-h">${tab==='up'?'Create your account':tab==='forgot'?'Reset your password':'Your set is ready.'}</h1>
+    ${tab==='forgot'?'':`<div class="seg fb-tabs" role="tablist"><button type="button" role="tab" aria-pressed="${tab==='in'}" aria-selected="${tab==='in'}" data-fb="tin">Sign in</button><button type="button" role="tab" aria-pressed="${tab==='up'}" aria-selected="${tab==='up'}" data-fb="tup">Create account</button></div>`}
+    ${info?`<p class="ga-note" role="status">${esc(info)}</p>`:''}
+    ${tab==='up'?`<label class="fb-l" for="fbN">Your name</label><input class="fb-i" id="fbN" autocomplete="name" value="${esc(v.n)}" placeholder="Name shown to your team">`:''}
+    <label class="fb-l" for="fbE">Email</label><input class="fb-i" id="fbE" type="email" autocomplete="${tab==='up'?'email':'username'}" inputmode="email" value="${esc(v.e)}" placeholder="you@studio.com" required>
+    ${tab==='forgot'?'':`<label class="fb-l" for="fbP">Password</label><div class="fb-pw"><input class="fb-i" id="fbP" type="password" autocomplete="${tab==='up'?'new-password':'current-password'}" value="${esc(v.p)}" required${tab==='up'?' aria-describedby="fbPh"':''}><button type="button" class="btn sm ghost" data-fb="eye" aria-label="Show password" aria-pressed="false">Show</button></div>
+      ${tab==='up'?'<p class="fb-h" id="fbPh">At least 8 characters, with letters and numbers.</p>':'<button type="button" class="ga-link fb-forgot" data-fb="forgot">Forgot password?</button>'}`}
+    <button type="submit" class="ga-btn pri fb-go"${busy?' disabled':''}><span><b>${tab==='up'?'Create account':tab==='forgot'?'Send reset email':'Sign in'}</b></span></button>
+    ${tab==='forgot'?'<button type="button" class="ga-link" data-fb="tin">Back to sign in</button>':`<div class="fb-or"><span>or</span></div><button type="button" class="ga-btn" data-fb="google"${busy?' disabled':''}><span><b>Continue with Google</b></span></button>`}
+    <p class="ga-msg" role="alert">${msg?esc(msg):''}</p>
+    <p class="ga-fine">Private scripts are end-to-end encrypted on this device before they are saved. ${GA.desk?'Google sign-in opens in your web browser.':''}</p></form>`};
+  const keep=()=>{const g=id=>d.querySelector(id);if(g('#fbE'))v.e=g('#fbE').value.trim();if(g('#fbP'))v.p=g('#fbP').value;if(g('#fbN'))v.n=g('#fbN').value.trim()};
+  const done=async u=>{d.remove();await fbEnter(u,'online');res()};
+  const fail=(e,where)=>{busy=false;msg=fbErr(e);if(where==='in'&&last&&last.ns)gaFailLog(last,e&&e.code||'error');draw();const f=d.querySelector('#fbP')||d.querySelector('#fbE');if(f)f.focus()};
+  d.addEventListener('click',async e=>{const b=e.target.closest('[data-fb]');if(!b||b.disabled)return;keep();const a=b.dataset.fb;
+    if(a==='eye'){const i=d.querySelector('#fbP');const show=i.type==='password';i.type=show?'text':'password';b.textContent=show?'Hide':'Show';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',show?'Hide password':'Show password');return}
+    if(a==='tin'||a==='tup'||a==='forgot'){tab=a==='tin'?'in':a==='tup'?'up':'forgot';msg='';info='';draw();const f=d.querySelector(tab==='up'?'#fbN':'#fbE');if(f)f.focus();return}
+    if(a==='google'){busy=true;msg='';info=GA.desk?'Waiting for Google in your browser…':'';draw();
+      try{let idt=null;if(GA.desk){const r=await window.sdGoogle.signIn(v.e,'id');if(!r.ok)throw {code:r.code};idt=r.v.idt}await done(await fx.google(idt))}catch(err){info='';fail(err,'g')}}});
+  d.addEventListener('submit',async e=>{e.preventDefault();keep();msg='';
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.e)){msg='Enter your email address.';draw();return}
+    if(tab==='forgot'){busy=true;draw();try{await fx.reset(v.e)}catch(err){if(err&&err.code==='auth/network-request-failed'){fail(err);return}}
+      /* the same answer whether or not the account exists, so the form cannot be used to find accounts */
+      busy=false;tab='in';info=`If ${v.e} has a ScriptDesk account, a password reset email is on its way. Check your inbox and spam folder.`;draw();return}
+    if(!v.p){msg='Enter your password.';draw();return}
+    if(tab==='up'&&!fbPassOk(v.p)){msg=FB_ERR['auth/weak-password'];draw();return}
+    busy=true;draw();try{await done(tab==='up'?await fx.create(v.e,v.p,v.n):await fx.signIn(v.e,v.p))}catch(err){fail(err,tab)}});
+  draw();document.body.appendChild(d);const f=d.querySelector(v.e?'#fbP':'#fbE');if(f)f.focus()})}
+/* Firebase could not load (offline at first start): keep the last account usable offline for a few days */
+function gaGateOffline(note){const last=gaLastGet();return new Promise(async res=>{
+  if(last&&!last.signedOut&&/^f/.test(last.ns||'')&&Date.now()-(last.on||0)<G_OFFLINE_DAYS*864e5){await gaEnter({sub:last.sub,email:last.email,name:last.name,picture:last.picture},'offline',true,'f');gaLog('offline');GA.fb=true;return res()}
+  const d=document.createElement('div');d.id='galock';d.innerHTML=`<div class="ga-card"><h1>Connect to sign in</h1><p class="ga-sub">ScriptDesk needs the internet to sign you in. Connect, then try again.</p><button class="ga-btn pri" data-r><span><b>Try again</b></span></button></div>`;
+  d.querySelector('[data-r]').onclick=()=>location.reload();document.body.appendChild(d)})}
+async function fbEnter(u,mode,quiet){GA.fb=true;await gaEnter({sub:u.uid,email:u.email,name:u.name||u.email.split('@')[0],picture:u.picture||''},mode,quiet,'f');GA.user.verified=!!u.verified;GA.user.providers=u.providers||[];
+  if(!u.verified&&(u.providers||[]).includes('password'))setTimeout(()=>toast('Check your inbox to verify your email. Teams need a verified email.',6000),1200);
+  await svLoad();if(SV.cfg&&!SV.vk)setTimeout(()=>svUnlockAsk({soft:true}),900)}
+
+/* ---------- vault: the passphrase-protected key for private scripts and notes ---------- */
+const SV={cfg:null,vk:null,priv:null,pub:null,fails:0,until:0};
+const SV_ITER=600000;
+const te=new TextEncoder(),td=new TextDecoder();
+async function svKek(pass,salt,iter){const m=await crypto.subtle.importKey('raw',te.encode(String(pass).normalize('NFKC')),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function gcmEnc(key,bytes){const iv=rnd(12);return {iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,bytes))}}
+async function gcmDec(key,o){return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},key,unb64(o.ct)))}
+const aesKey=(raw,ext)=>crypto.subtle.importKey('raw',raw,{name:'AES-GCM'},!!ext,['encrypt','decrypt']);
+async function gz(bytes,un){if(typeof CompressionStream==='undefined')return bytes;const s=new Blob([bytes]).stream().pipeThrough(un?new DecompressionStream('gzip'):new CompressionStream('gzip'));return new Uint8Array(await new Response(s).arrayBuffer())}
+/* objects in and out of encrypted form: JSON, gzip, AES-GCM */
+async function sealJson(key,obj){return Object.assign({z:typeof CompressionStream!=='undefined'?1:0},await gcmEnc(key,await gz(te.encode(JSON.stringify(obj)))))}
+async function openJson(key,o){const b=await gcmDec(key,o);return JSON.parse(td.decode(o.z?await gz(b,1):b))}
+function svGenPass(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',b=rnd(25);let s='';b.forEach((x,i)=>{s+=A[x%32];if(i%5===4&&i<24)s+='-'});return s}
+async function svLoad(){SV.cfg=lsGet('vault')||null;if(GA.mode==='offline')return;try{const fx=await fbInit();const d=await fx.get('users/'+GA.user.sub);if(d&&d.vault){SV.cfg=d.vault;lsSet('vault',d.vault)}}catch(e){}}
+async function svCreate(pass){const raw=rnd(32);const vk=await aesKey(raw);const kp=await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
+  const priv=await crypto.subtle.exportKey('jwk',kp.privateKey),pub=await crypto.subtle.exportKey('jwk',kp.publicKey);const salt=rnd(16);
+  const cfg={v:1,iter:SV_ITER,salt:b64(salt),wvk:await gcmEnc(await svKek(pass,salt,SV_ITER),raw),wpriv:await sealJson(vk,priv),pub,at:Date.now()};
+  const fx=await fbInit();await fx.set('users/'+GA.user.sub,{vault:cfg},true);
+  await fx.set('publicKeys/'+GA.user.sub,{email:GA.user.email,name:GA.user.name,pub,at:Date.now()});
+  lsSet('vault',cfg);SV.cfg=cfg;SV.vk=vk;SV.priv=await crypto.subtle.importKey('jwk',priv,{name:'ECDH',namedCurve:'P-256'},false,['deriveKey']);SV.pub=pub;gaLog('vault')}
+async function svOpen(pass){const c=SV.cfg;const raw=await gcmDec(await svKek(pass,unb64(c.salt),c.iter||SV_ITER),c.wvk);const vk=await aesKey(raw);
+  const priv=await openJson(vk,c.wpriv);SV.vk=vk;SV.priv=await crypto.subtle.importKey('jwk',priv,{name:'ECDH',namedCurve:'P-256'},false,['deriveKey']);SV.pub=c.pub}
+async function svChange(oldp,newp){const c=SV.cfg;const raw=await gcmDec(await svKek(oldp,unb64(c.salt),c.iter||SV_ITER),c.wvk);const salt=rnd(16);
+  const cfg=Object.assign({},c,{iter:SV_ITER,salt:b64(salt),wvk:await gcmEnc(await svKek(newp,salt,SV_ITER),raw),at:Date.now()});
+  const fx=await fbInit();await fx.set('users/'+GA.user.sub,{vault:cfg},true);lsSet('vault',cfg);SV.cfg=cfg;gaLog('vaultpass')}
+/* "Set up your vault": generate or choose a passphrase, confirm it, and say it is saved somewhere safe */
+function svSetupAsk(){return new Promise(res=>{let ok=false;
+  openModal(`<div class="modal-h"><h2>Set up your vault</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b sv-m">
+    <p>Private screenplays and notes are end-to-end encrypted on this device before they are saved or synced. Choose a passphrase, or let ScriptDesk make a strong one.</p>
+    <p class="sv-warn"><b>If you lose this passphrase, your private scripts and notes cannot be recovered. Not by you, and not by ScriptDesk.</b></p>
+    <button type="button" class="btn" id="svGen">Generate a strong passphrase for me</button>
+    <label class="fb-l" for="svP1">Passphrase</label><div class="fb-pw"><input class="fb-i mono" id="svP1" type="password" autocomplete="new-password" placeholder="Choose or generate a passphrase"><button type="button" class="btn sm ghost" id="svEye" aria-pressed="false">Show</button></div>
+    <label class="fb-l" for="svP2">Confirm passphrase</label><input class="fb-i mono" id="svP2" type="password" autocomplete="new-password" placeholder="Confirm passphrase">
+    <p class="fb-h">At least 12 characters. A sentence of several words is easy to remember and hard to guess.</p>
+    <label class="sv-chk"><input type="checkbox" id="svOk"> I've saved this passphrase somewhere safe. I understand ScriptDesk cannot recover it if I lose it.</label>
+    <p class="small muted">The AI breakdown and translation still send scene text to the AI service you choose in Settings.</p>
+    <p class="ga-msg" id="svMsg" role="alert"></p>
+    <div class="bacts"><button class="btn" data-close>Cancel</button><button class="btn pri" id="svGo">Create vault</button></div></div>`);
+  const ov=$('#ov');const m=(t,info)=>{const e=$('#svMsg');e.textContent=t;e.classList.toggle('info',!!info)};
+  $('#svEye').onclick=e=>{const show=$('#svP1').type==='password';['#svP1','#svP2'].forEach(s=>$(s).type=show?'text':'password');e.target.textContent=show?'Hide':'Show';e.target.setAttribute('aria-pressed',String(show))};
+  $('#svGen').onclick=()=>{const p=svGenPass();$('#svP1').value=p;$('#svP2').value=p;['#svP1','#svP2'].forEach(s=>$(s).type='text');$('#svEye').textContent='Hide';try{navigator.clipboard.writeText(p);m('A passphrase was made and copied. Save it in a password manager or write it down now.',1)}catch(e){m('Save this passphrase in a password manager or write it down now.',1)}};
+  $('#svGo').onclick=async()=>{const a=$('#svP1').value,b=$('#svP2').value;if(a.length<12){m('Use at least 12 characters.');return}if(a!==b){m('The two passphrases are different.');return}if(!$('#svOk').checked){m('Tick the box once the passphrase is saved somewhere safe.');return}
+    const g=$('#svGo');g.disabled=true;m('Creating your vault…',1);try{await svCreate(a);ok=true;closeModal();toast('Vault ready. Private scripts and notes are now end-to-end encrypted.');res(true)}catch(e){g.disabled=false;m(navigator.onLine===false?'Connect to the internet to create the vault.':'Could not create the vault. Try again.')}};
+  new MutationObserver((r,o)=>{if(!ov.isConnected){o.disconnect();if(!ok)res(false)}}).observe(document.body,{childList:true,subtree:true});$('#svP1').focus()})}
+function svUnlockAsk(o){o=o||{};return new Promise(res=>{if(SV.vk)return res(true);if(!SV.cfg){if(o.soft)return res(false);return svSetupAsk().then(res)}let ok=false;
+  openModal(`<div class="modal-h"><h2>Unlock your vault</h2><button class="btn ghost" data-close>${o.soft?'Later':'Cancel'}</button></div><div class="modal-b sv-m">
+    <p>${esc(o.why||'Enter your vault passphrase to open your private scripts, team scripts and notes on this device.')}</p>
+    <label class="fb-l" for="svU">Vault passphrase</label><div class="fb-pw"><input class="fb-i mono" id="svU" type="password" autocomplete="current-password"><button type="button" class="btn sm ghost" id="svUe" aria-pressed="false">Show</button></div>
+    <p class="ga-msg" id="svUm" role="alert"></p><div class="bacts"><button class="btn" data-close>${o.soft?'Later':'Cancel'}</button><button class="btn pri" id="svUgo">Unlock</button></div></div>`);
+  const ov=$('#ov');const go=async()=>{const m=$('#svUm');if(Date.now()<SV.until){m.textContent=`Too many tries. Wait ${Math.ceil((SV.until-Date.now())/1000)} seconds.`;return}
+    const b=$('#svUgo');b.disabled=true;m.textContent='Unlocking…';try{await svOpen($('#svU').value);ok=true;closeModal();SV.fails=0;toast('Vault unlocked.');res(true);csSoon(300);if(typeof render==='function'&&(page==='notes'||page==='projects'))render(true)}
+    catch(e){SV.fails++;if(SV.fails>=5){SV.until=Date.now()+30000*Math.pow(2,Math.min(4,SV.fails-5))}gaLog('vaultfail');b.disabled=false;m.textContent='That passphrase is not right.';$('#svU').select()}};
+  $('#svUgo').onclick=go;$('#svU').onkeydown=e=>{if(e.key==='Enter')go()};$('#svUe').onclick=e=>{const i=$('#svU');const s=i.type==='password';i.type=s?'text':'password';e.target.textContent=s?'Hide':'Show';e.target.setAttribute('aria-pressed',String(s))};
+  new MutationObserver((r,ob)=>{if(!ov.isConnected){ob.disconnect();if(!ok)res(false)}}).observe(document.body,{childList:true,subtree:true});$('#svU').focus()})}
+
+/* ---------- spaces: where a screenplay lives ---------- */
+/* 'me' = my account, not encrypted · 'v' = just me, private & encrypted · 't:<team id>' = a team, encrypted with the team key */
+const spOf=o=>o&&o.space&&o.space!=='me'?o.space:'me';
+const spSecure=s=>s&&s!=='me';
+const TEAMS={list:[],keys:{},kv:{}};
+function spLabel(s){if(s==='v')return 'Just me · private & encrypted';if(String(s).startsWith('t:')){const t=TEAMS.list.find(x=>x.id===s.slice(2));return 'Team · '+(t?t.name:'team')}return 'My account · not encrypted'}
+/* "Where should this live?" for a new screenplay */
+function askSpace(){return new Promise(res=>{if(!(GA.fb&&GA.user))return res('me');let pick=SV.cfg?'v':'v',done=false;const teams=TEAMS.list.filter(t=>t.mine);
+  const card=(v,icon,t,sub,dis)=>`<button type="button" class="sp-c${pick===v?' on':''}" data-sp="${esc(v)}"${dis?' disabled':''} aria-pressed="${pick===v}"><i class="ic ${icon}" aria-hidden="true"></i><b>${esc(t)}</b><span>${esc(sub)}</span></button>`;
+  const body=()=>`<div class="sp-g">${card('v','i-lock','Just me','Private & encrypted')}${teams.length?teams.map(t=>card('t:'+t.id,'i-team',t.name,'Shared with '+t.members+' member'+(t.members===1?'':'s')+' · encrypted')).join(''):card('_','i-team','No teams joined','Join a team to enable sharing',1)}${card('me','i-cloud','My account','Not encrypted · works everywhere')}</div>`;
+  openModal(`<div class="modal-h"><h2>New screenplay</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b"><h3 class="sp-h">Where should this live?</h3><div id="spBox">${body()}</div>
+    <p class="small muted" id="spNote">${SV.cfg?'':'You will set up your vault passphrase next.'}</p><div class="bacts"><button class="btn" data-close>Cancel</button><button class="btn pri" id="spGo">Create</button></div></div>`);
+  const ov=$('#ov');$('#spBox').onclick=e=>{const b=e.target.closest('[data-sp]');if(!b||b.disabled)return;pick=b.dataset.sp;$('#spBox').innerHTML=body();$('#spNote').textContent=pick==='v'&&!SV.cfg?'You will set up your vault passphrase next.':''};
+  $('#spGo').onclick=async()=>{done=true;closeModal();if(spSecure(pick)&&!(await svUnlockAsk({why:'Unlock your vault to create an encrypted screenplay.'})))return res(null);if(pick.startsWith('t:')&&!TEAMS.keys[pick.slice(2)])await csTeams();res(pick)};
+  new MutationObserver((r,o)=>{if(!ov.isConnected){o.disconnect();if(!done)res(null)}}).observe(document.body,{childList:true,subtree:true})})}
+
+/* ---------- encrypted copies on this device ---------- */
+/* private and team scripts are kept on the device encrypted with the vault key, never as readable text */
+async function secureLocalSave(o){if(!SV.vk)return false;const box=Object.assign({__sd:1,id:o.id,space:o.space,updated:o.updated,title:o.title},await sealJson(SV.vk,o));
+  lsSet('p.'+o.id,box);return IDB.set('p.'+o.id,box)}
+async function secureLocalOpen(box){if(!box||!box.__sd)return box;if(!SV.vk)return null;try{return await openJson(SV.vk,box)}catch(e){return null}}
+
+/* ---------- cloud sync through Firestore ---------- */
+const CS={busy:false,again:false,timer:0,last:0,msg:''};
+const CS_CHUNK=700000;
+const csCol=s=>String(s).startsWith('t:')?`teams/${s.slice(2)}/projects`:`users/${GA.user.sub}/projects`;
+function csSoon(ms){if(!(GA.fb&&GA.user))return;clearTimeout(CS.timer);CS.timer=setTimeout(()=>csSync('save'),ms||4000)}
+async function csKey(sp){if(sp==='v')return SV.vk;if(String(sp).startsWith('t:'))return TEAMS.keys[sp.slice(2)]||null;return null}
+async function csPack(o){const sp=spOf(o);const key=await csKey(sp);let d;
+  if(spSecure(sp)){if(!key)throw Object.assign(new Error('locked'),{code:'locked'});d=JSON.stringify(await sealJson(key,o))}else d=b64(await gz(te.encode(JSON.stringify(o))));
+  return {sp,d,meta:{u:+o.updated||0,sp:sp.startsWith('t:')?'t':sp,kv:sp.startsWith('t:')?TEAMS.kv[sp.slice(2)]||1:0,by:GA.user.sub,t:spSecure(sp)?'':String(o.title||'').slice(0,120),z:typeof CompressionStream!=='undefined'?1:0}}}
+async function csPut(col,o){const fx=await fbInit();const p=await csPack(o);const n=Math.max(1,Math.ceil(p.d.length/CS_CHUNK));
+  for(let i=0;i<n;i++)await fx.set(`${col}/${o.id}/c/${i}`,{d:p.d.slice(i*CS_CHUNK,(i+1)*CS_CHUNK)});
+  await fx.set(`${col}/${o.id}`,Object.assign(p.meta,{n}));
+  /* leftover chunks from a bigger earlier version */
+  for(let i=n;i<n+40;i++){const x=await fx.get(`${col}/${o.id}/c/${i}`);if(!x)break;await fx.del(`${col}/${o.id}/c/${i}`)}}
+async function csGet(col,pid,meta,sp){const fx=await fbInit();let d='';for(let i=0;i<(meta.n||1);i++){const c=await fx.get(`${col}/${pid}/c/${i}`);if(!c)throw new Error('missing chunk');d+=String(c.d||'')}
+  let o;if(meta.sp==='me'||!meta.sp){o=JSON.parse(td.decode(meta.z===0?unb64(d):await gz(unb64(d),1)))}
+  else{const key=await csKey(sp);if(!key)return null;o=await openJson(key,JSON.parse(d))}
+  if(!gdValid(o)||o.id!==pid)return null;o.space=sp;return o}
+async function csDel(col,pid){const fx=await fbInit();for(let i=0;i<60;i++){const x=await fx.get(`${col}/${pid}/c/${i}`);if(!x)break;await fx.del(`${col}/${pid}/c/${i}`)}await fx.del(`${col}/${pid}`)}
+async function csStoreLocal(o){if(spSecure(spOf(o))){await secureLocalSave(o)}else{lsSet('p.'+o.id,o);await IDB.set('p.'+o.id,o)}
+  const idx=(lsGet('index')||[]).filter(x=>x.id!==o.id);idx.push({id:o.id,title:o.title,production:o.production,updated:o.updated,scenes:(o.scenes||[]).length,sample:false,space:spOf(o)});idx.sort((a,b)=>b.updated-a.updated);lsSet('index',idx)}
+function csSetStatus(state,msg){CS.msg=msg;if(GA.user)setSync(state,msg);const s=document.getElementById('gaSyncLine');if(s)s.textContent=msg}
+async function csSync(reason){if(!(GA.fb&&GA.user)||GA.mode==='offline'&&navigator.onLine===false)return;if(CS.busy){CS.again=true;return}CS.busy=true;CS.again=false;
+  try{csSetStatus('busy','Syncing…');const fx=await fbInit();await csTeams();const st=lsGet('csync')||{};st.m=st.m||{};st.del=st.del||[];
+    for(const [col,pid] of st.del.slice()){try{await csDel(col,pid)}catch(e){if(!/permission/i.test(e.message||''))throw e}st.del=st.del.filter(x=>!(x[0]===col&&x[1]===pid));if(st.m[col])delete st.m[col][pid]}
+    const spaces=['me',...TEAMS.list.filter(t=>t.mine&&TEAMS.keys[t.id]).map(t=>'t:'+t.id)];let changedOpen=false,added=0,locked=0;
+    for(const sp of spaces){const col=csCol(sp);const m=st.m[col]=st.m[col]||{};const remote={};(await fx.list(col)).forEach(x=>remote[x.id]=x.data);
+      const local={};(lsGet('index')||[]).forEach(x=>{const s2=x.space||'me';if(csCol(s2)===col&&!x.sample)local[x.id]=x});
+      for(const pid of Object.keys(remote)){const r=remote[pid],ru=+r.u||0,l=local[pid],base=m[pid]||0,lu=l?+l.updated||0:0;
+        const rsp=r.sp==='t'?sp:r.sp==='v'?'v':'me';
+        if(l&&ru<=base)continue;if(l&&ru===lu){m[pid]=ru;continue}
+        if(spSecure(rsp)&&!(await csKey(rsp))){locked++;continue}
+        const o=await csGet(col,pid,r,rsp);if(!o)continue;
+        if(l&&lu>base){const c=JSON.parse(JSON.stringify(o));c.id=uid();c.title=(o.title||'Untitled')+' (copy from another device, '+new Date(ru||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+')';c.updated=Date.now();await csStoreLocal(c);added++;m[pid]=ru;continue}
+        if(P&&P.id===pid){const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('[contenteditable],input,textarea'))continue;P=o;changedOpen=true}
+        await csStoreLocal(o);m[pid]=+o.updated||ru;if(!l)added++}
+      for(const pid of Object.keys(m)){if(remote[pid])continue;const l=local[pid];if(!l){delete m[pid];continue}
+        if((+l.updated||0)<=m[pid]){lsDel('p.'+pid);await IDB.del('p.'+pid);lsSet('index',(lsGet('index')||[]).filter(x=>x.id!==pid));delete m[pid];if(P&&P.id===pid){P=null;changedOpen=true}}else delete m[pid]}
+      for(const l of Object.values(local)){if(m[l.id]&&(+l.updated||0)<=m[l.id])continue;let o=P&&P.id===l.id?JSON.parse(JSON.stringify(P)):await loadProject(l.id);if(!gdValid(o)){if(spSecure(l.space))locked++;continue}
+        o.space=l.space||'me';try{await csPut(col,o);m[l.id]=+o.updated||0}catch(e){if(e.code==='locked'){locked++;continue}throw e}}}
+    await ntSync();await gaActSync();
+    lsSet('csync',st);CS.last=Date.now();csSetStatus('ok',locked?'Synced · unlock your vault for private scripts':'Saved to your account');
+    if(changedOpen){if(!P){const i=lsGet('index')||[];P=i.length?await loadProject(i[0].id):null;if(!P)P=sampleProject()}render(true)}
+    if(added)toast(added===1?'1 script came in from your account.':added+' scripts came in from your account.')}
+  catch(e){const off=navigator.onLine===false||/network|offline|unavailable/i.test((e&&(e.code||e.message))||'');csSetStatus('err',off?'Offline · saved on this device':'Saved on this device. Sync will retry.');csSoon(60000)}
+  finally{CS.busy=false;if(CS.again)csSoon(1500);gaAcctBtn()}}
+function csForget(pid,space){if(!(GA.fb&&GA.user))return;const st=lsGet('csync')||{};st.del=st.del||[];st.del.push([csCol(space||'me'),pid]);lsSet('csync',st);csSoon(1500)}
+/* move a screenplay to another space: encrypt it for the vault or a team, or make it plain again */
+async function csMove(pid,to){const o=P&&P.id===pid?P:await loadProject(pid);if(!o)return false;const from=spOf(o);if(from===to)return true;
+  if(spSecure(to)&&!(await svUnlockAsk({why:'Unlock your vault to encrypt this screenplay.'})))return false;
+  o.space=to;o.updated=Date.now();if(P&&P.id===pid)P=o;await csStoreLocal(o);if(P&&P.id===pid){try{DISK.sched()}catch(e){}}
+  const st=lsGet('csync')||{};st.del=st.del||[];if(csCol(from)!==csCol(to))st.del.push([csCol(from),pid]);else{st.m=st.m||{};if(st.m[csCol(to)])delete st.m[csCol(to)][pid]}lsSet('csync',st);
+  csSoon(500);toast('Moved to '+spLabel(to)+'.');return true}
+
+/* ---------- activity in the account (each entry written once) ---------- */
+async function gaActSync(){if(!(GA.fb&&GA.user))return;const fx=await fbInit();const sent=lsGet('actsent')||0;const mine=lsGet('activity')||[];
+  for(const a of mine.filter(x=>x.dev===G_DEV&&x.at>sent).reverse())await fx.set(`users/${GA.user.sub}/activity/${a.at}_${G_DEV.slice(0,8)}_${a.t}`,a);
+  lsSet('actsent',Date.now());const all=(await fx.list(`users/${GA.user.sub}/activity`)).map(x=>x.data);lsSet('activity',gaMergeAct(mine,all).slice(0,GA_ACT_MAX))}
+
+/* ---------- teams ---------- */
+async function ecWrap(rawKey,pubJwk){const pub=await crypto.subtle.importKey('jwk',pubJwk,{name:'ECDH',namedCurve:'P-256'},false,[]);const eph=await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
+  const k=await crypto.subtle.deriveKey({name:'ECDH',public:pub},eph.privateKey,{name:'AES-GCM',length:256},false,['encrypt']);return Object.assign({epk:await crypto.subtle.exportKey('jwk',eph.publicKey)},await gcmEnc(k,rawKey))}
+async function ecUnwrap(w){const epk=await crypto.subtle.importKey('jwk',w.epk,{name:'ECDH',namedCurve:'P-256'},false,[]);const k=await crypto.subtle.deriveKey({name:'ECDH',public:epk},SV.priv,{name:'AES-GCM',length:256},false,['decrypt']);return gcmDec(k,w)}
+/* teams I belong to, their keys (needs the vault), and joining requests to approve when I own the team */
+async function csTeams(){if(!(GA.fb&&GA.user)||GA.mode==='offline')return;const fx=await fbInit();const me=GA.user.sub;
+  const rows=await fx.where('teams','memberUids','array-contains',me);
+  TEAMS.list=rows.map(r=>({id:r.id,name:String(r.data.name||'Team'),owner:r.data.owner,mine:true,isOwner:r.data.owner===me,kv:r.data.kv||1,members:(r.data.memberUids||[]).length,m:r.data.members||{},uids:r.data.memberUids||[]}));
+  for(const t of TEAMS.list){if(SV.priv&&(!TEAMS.keys[t.id]||TEAMS.kv[t.id]!==t.kv)){const w=await fx.get(`teams/${t.id}/keys/${me}`);if(w){try{TEAMS.keys[t.id]=await aesKey(await ecUnwrap(w));TEAMS.kv[t.id]=w.kv||t.kv}catch(e){}}}
+    if(t.isOwner&&SV.priv&&TEAMS.keys[t.id])await tmApprove(t)}
+  try{TEAMS.invites=(await fx.where('invites','email','==',GA.user.email,true)).map(r=>({tid:r.path.split('/')[1],name:String(r.data.team||'Team'),by:String(r.data.byName||r.data.by||''),email:r.data.email})).filter(x=>!TEAMS.list.some(t=>t.id===x.tid))}catch(e){TEAMS.invites=[]}
+  lsSet('teams',TEAMS.list.map(({id,name,owner,isOwner,kv,members})=>({id,name,owner,isOwner,kv,members,mine:true})))}
+async function tmRawKey(tid){return new Uint8Array(await crypto.subtle.exportKey('raw',TEAMS.keys[tid]))}
+async function tmCreate(name){if(!GA.user.verified)throw Object.assign(new Error('unverified'),{code:'unverified'});if(!(await svUnlockAsk({why:'Teams use your vault keys. Unlock it to create a team.'})))return null;
+  const fx=await fbInit();const tid=uid()+uid();const raw=rnd(32);const me=GA.user.sub;
+  await fx.set('teams/'+tid,{name:String(name).slice(0,80),owner:me,memberUids:[me],members:{[me]:{email:GA.user.email,name:GA.user.name,role:'owner'}},kv:1,at:Date.now()});
+  await fx.set(`teams/${tid}/keys/${me}`,Object.assign({kv:1},await ecWrap(raw,SV.pub)));TEAMS.keys[tid]=await aesKey(raw,true);TEAMS.kv[tid]=1;gaLog('team',{why:String(name).slice(0,40)});await csTeams();return tid}
+async function tmInvite(t,email){email=String(email).trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))throw Object.assign(new Error('email'),{code:'email'});
+  const fx=await fbInit();await fx.set(`teams/${t.id}/invites/${email}`,{email,team:t.name,by:GA.user.email,byName:GA.user.name,at:Date.now()})}
+async function tmAccept(inv){if(!GA.user.verified)throw Object.assign(new Error('unverified'),{code:'unverified'});if(!(await svUnlockAsk({why:'Unlock or set up your vault to join a team. Team scripts are encrypted with it.'})))return false;
+  const fx=await fbInit();await fx.set(`teams/${inv.tid}/requests/${GA.user.sub}`,{email:GA.user.email,name:GA.user.name,at:Date.now()});gaLog('join',{why:inv.name.slice(0,40)});return true}
+/* the owner's app adds people who were invited and asked to join: it hands them the team key wrapped with their public key */
+async function tmApprove(t){const fx=await fbInit();let reqs=[];try{reqs=await fx.list(`teams/${t.id}/requests`)}catch(e){return}
+  for(const r of reqs){const inv=await fx.get(`teams/${t.id}/invites/${String(r.data.email||'').toLowerCase()}`);if(!inv){await fx.del(`teams/${t.id}/requests/${r.id}`);continue}
+    const pk=await fx.get('publicKeys/'+r.id);if(!pk||!pk.pub||String(pk.email).toLowerCase()!==inv.email)continue;
+    await fx.set(`teams/${t.id}/keys/${r.id}`,Object.assign({kv:t.kv},await ecWrap(await tmRawKey(t.id),pk.pub)));
+    const d=await fx.get('teams/'+t.id);const uids=[...new Set([...(d.memberUids||[]),r.id])];const mem=Object.assign({},d.members,{[r.id]:{email:inv.email,name:String(r.data.name||'').slice(0,80),role:'member'}});
+    await fx.set('teams/'+t.id,{memberUids:uids,members:mem},true);await fx.del(`teams/${t.id}/invites/${inv.email}`);await fx.del(`teams/${t.id}/requests/${r.id}`);
+    t.uids=uids;t.m=mem;t.members=uids.length;toast(`${inv.email} joined ${t.name}.`)}}
+/* removing someone changes the team key and re-encrypts the team's scripts, so the old key no longer opens new versions */
+async function tmRemove(t,uidX){const fx=await fbInit();const d=await fx.get('teams/'+t.id);if(!d||d.owner!==GA.user.sub)return;
+  const oldKey=TEAMS.keys[t.id];const raw=rnd(32);const nk=await aesKey(raw,true);const kv=(d.kv||1)+1;const uids=(d.memberUids||[]).filter(x=>x!==uidX);const mem=Object.assign({},d.members);delete mem[uidX];
+  const col=`teams/${t.id}/projects`;const items=await fx.list(col);const plain=[];for(const it of items){const o=await csGet(col,it.id,it.data,'t:'+t.id);if(o)plain.push(o)}
+  await fx.del(`teams/${t.id}/keys/${uidX}`);
+  for(const u of uids){const pk=u===GA.user.sub?{pub:SV.pub}:await fx.get('publicKeys/'+u);if(pk&&pk.pub)await fx.set(`teams/${t.id}/keys/${u}`,Object.assign({kv},await ecWrap(raw,pk.pub)))}
+  await fx.set('teams/'+t.id,{memberUids:uids,members:mem,kv},true);TEAMS.keys[t.id]=nk;TEAMS.kv[t.id]=kv;
+  for(const o of plain)await csPut(col,o);gaLog('remove',{why:String((d.members[uidX]||{}).email||'').slice(0,40)});await csTeams();void oldKey}
+
+/* ---------- notepad (encrypted with the vault key) ---------- */
+const NT={open:null,t:0};
+function ntAll(){return lsGet('notes')||{}}
+async function ntList(){if(!SV.vk)return null;const all=ntAll();const out=[];for(const [id,n] of Object.entries(all)){if(n.del)continue;try{const o=await openJson(SV.vk,n);out.push(Object.assign({id,u:n.u},o))}catch(e){}}return out.sort((a,b)=>b.u-a.u)}
+async function ntSave(id,title,body){const all=ntAll();all[id]=Object.assign({u:Date.now()},await sealJson(SV.vk,{title:String(title).slice(0,200),body:String(body).slice(0,200000)}));lsSet('notes',all);csSoon(3000)}
+function ntDelete(id){const all=ntAll();if(all[id])all[id]={u:Date.now(),del:1};lsSet('notes',all);csSoon(1500)}
+async function ntSync(){if(!SV.vk)return;const fx=await fbInit();const col=`users/${GA.user.sub}/notes`;const all=ntAll();const rem={};(await fx.list(col)).forEach(x=>rem[x.id]=x.data);let ch=false;
+  for(const [id,r] of Object.entries(rem)){const l=all[id];if(!l||(+r.u||0)>(+l.u||0)){all[id]=r.del?{u:r.u,del:1}:{u:r.u,iv:r.iv,ct:r.ct,z:r.z};ch=true}}
+  for(const [id,l] of Object.entries(all)){const r=rem[id];if(!r||(+l.u||0)>(+r.u||0))await fx.set(`${col}/${id}`,l.del?{u:l.u,del:1}:{u:l.u,iv:l.iv,ct:l.ct,z:l.z||0})}
+  if(ch){lsSet('notes',all);if(page==='notes'&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.nt-ed')))render(true)}}
+R.notes=()=>{if(!(GA.fb&&GA.user))return {html:pageHead('Notepad','Sign in to use the encrypted notepad.'),exp:null};
+  if(!SV.vk)return {html:pageHead('Notepad','Quick private notes, end-to-end encrypted.')+`<div class="empty"><b>${SV.cfg?'Your vault is locked':'Set up your vault first'}</b>${SV.cfg?'Unlock it to read and write notes.':'Notes are encrypted with your vault passphrase.'}<div style="margin-top:12px"><button class="btn pri" data-act="vault">${SV.cfg?'Unlock vault':'Set up vault'}</button></div></div>`,exp:null};
+  setTimeout(ntPaint,0);return {html:`<div class="ph"><div class="grow"><h1>Notepad</h1><p><span class="nt-lock"><i class="ic i-lock" aria-hidden="true"></i> End-to-end encrypted</span> Quick private notes that sync to your other devices.</p></div><div class="acts"><button class="btn pri" data-act="ntNew">New note</button></div></div><div class="nt" id="ntBox"><p class="muted">Opening…</p></div>`,exp:null}};
+async function ntPaint(){const box=$('#ntBox');if(!box)return;const seq=NT.seq=(NT.seq||0)+1;const list=await ntList()||[];if(seq!==NT.seq||!box.isConnected)return; /* a newer paint started */
+  const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('.nt-ed')&&box.querySelector('.nt-ed')&&box.dataset.open===NT.open)return; /* never replace the note being typed */
+  if(!NT.open&&list[0])NT.open=list[0].id;const cur=list.find(x=>x.id===NT.open);box.dataset.open=NT.open||'';
+  box.innerHTML=`<ul class="nt-list" aria-label="Notes">${list.length?list.map(n=>`<li><button type="button" class="nt-i${n.id===NT.open?' on':''}" data-nt="${esc(n.id)}" aria-pressed="${n.id===NT.open}"><b>${esc(n.title||'Untitled note')}</b><span>${esc(String(n.body||'').slice(0,80))}</span><time>${esc(gaWhen(n.u))}</time></button></li>`).join(''):'<li class="muted small" style="padding:12px">No notes yet.</li>'}</ul>
+    <div class="nt-ed">${cur?`<input id="ntT" class="fb-i" aria-label="Note title" placeholder="Title" value="${esc(cur.title||'')}"><textarea id="ntB" aria-label="Note" placeholder="Write anything…">${esc(cur.body||'')}</textarea><div class="nt-f"><span class="small muted" id="ntS">Saved · encrypted</span><button class="btn sm ghost danger" data-act="ntDel">Delete note</button></div>`:'<div class="empty"><b>No note open</b>Press New note to start.</div>'}</div>`;
+  const sv=()=>{clearTimeout(NT.t);$('#ntS').textContent='Saving…';const li=box.querySelector('.nt-i.on');if(li){li.querySelector('b').textContent=$('#ntT').value||'Untitled note';li.querySelector('span').textContent=$('#ntB').value.slice(0,80)}NT.t=setTimeout(async()=>{await ntSave(NT.open,$('#ntT').value,$('#ntB').value);const s=$('#ntS');if(s)s.textContent='Saved · encrypted'},500)};
+  if(cur){$('#ntT').oninput=sv;$('#ntB').oninput=sv}
+  box.querySelectorAll('[data-nt]').forEach(b=>b.onclick=async()=>{if(NT.t){clearTimeout(NT.t);NT.t=0;if($('#ntT'))await ntSave(NT.open,$('#ntT').value,$('#ntB').value)}NT.open=b.dataset.nt;ntPaint()})}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='vault'){await svUnlockAsk({});if(page==='notes')render(true);return}
+  if(a==='ntNew'){if(!SV.vk&&!(await svUnlockAsk({})))return;const id=uid();await ntSave(id,'','');NT.open=id;if(page!=='notes')go('notes');else ntPaint();setTimeout(()=>{const t=$('#ntT');if(t)t.focus()},60);return}
+  if(a==='ntDel'){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Confirm delete';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Delete note'}},3500);return}ntDelete(NT.open);NT.open=null;ntPaint();return}});
+
+/* ---------- account window: profile, vault, teams, activity ---------- */
+function fbAccount(){const acts=(lsGet('activity')||[]).slice(0,40);const m=gaIdleMin();const u=GA.user;
+  const teams=TEAMS.list,inv=TEAMS.invites||[];
+  openModal(`<div class="modal-h"><h2>Account &amp; security</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b ga-acct">
+    <div class="ga-who">${u.picture?`<img src="${esc(u.picture)}" alt="" referrerpolicy="no-referrer">`:`<span class="ga-ini big" aria-hidden="true">${esc((u.name||u.email)[0].toUpperCase())}</span>`}<div><b>${esc(u.name)}</b><div class="small muted">${esc(u.email)}${u.verified||!(u.providers||[]).includes('password')?'':' · not verified'}</div></div><button class="btn" id="gaOut">Sign out</button></div>
+    ${!u.verified&&(u.providers||[]).includes('password')?`<div class="ga-row fb-ver"><span class="small">Verify your email to use teams.</span><button class="btn sm" id="fbVer">Send verification email</button><button class="btn sm ghost" id="fbVerChk">I've verified</button></div>`:''}
+    <div class="ga-row"><span id="gaSyncLine" class="small">${esc(CS.msg||'Not synced yet')}</span>${CS.last?`<span class="small muted">Last synced ${esc(gaWhen(CS.last))}</span>`:''}<button class="btn sm" id="fbSync">Sync now</button></div>
+    <h3>Vault</h3><p class="small muted">${SV.cfg?SV.vk?'Unlocked on this device until you sign out.':'Locked. Private scripts, team scripts and notes stay closed until you unlock it.':'Not set up. Set it up to keep private scripts and notes end-to-end encrypted.'}</p>
+    <div class="ga-row">${SV.cfg?SV.vk?'<button class="btn sm" id="svChg">Change vault passphrase</button>':'<button class="btn sm pri" id="svUn">Unlock vault</button>':'<button class="btn sm pri" id="svNew">Set up vault</button>'}</div>
+    <h3>Teams</h3>${inv.length?`<ul class="tm-l">${inv.map((x,i)=>`<li><span><b>${esc(x.name)}</b> <span class="small muted">invited by ${esc(x.by)}</span></span><button class="btn sm pri" data-tacc="${i}">Join</button></li>`).join('')}</ul>`:''}
+    ${teams.length?`<ul class="tm-l">${teams.map(t=>`<li class="tm-t"><div class="tm-top"><b>${esc(t.name)}</b><span class="small muted">${t.members} member${t.members===1?'':'s'}${t.isOwner?' · you own this team':''}${TEAMS.keys[t.id]?'':' · locked'}</span></div>
+      <ul class="tm-m">${Object.entries(t.m||{}).map(([id,x])=>`<li><span>${esc(x.name||x.email)} <span class="small muted">${esc(x.email||'')}${x.role==='owner'?' · owner':''}</span></span>${t.isOwner&&id!==GA.user.sub?`<button class="btn sm ghost danger" data-trm="${esc(t.id)}|${esc(id)}">Remove</button>`:''}</li>`).join('')}</ul>
+      ${t.isOwner?`<div class="ga-row"><input class="fb-i" type="email" placeholder="crew@studio.com" aria-label="Email to invite to ${esc(t.name)}" data-tinv-in="${esc(t.id)}"><button class="btn sm" data-tinv="${esc(t.id)}">Invite</button></div><p class="small muted">They join after accepting, the next time your ScriptDesk is online.</p>`:''}</li>`).join('')}</ul>`:'<p class="small muted">No teams yet. A team shares encrypted scripts with the people you invite.</p>'}
+    <div class="ga-row"><input class="fb-i" id="tmName" placeholder="Team name" aria-label="New team name"><button class="btn sm" id="tmNew">Create team</button></div>
+    <h3>Auto sign-out</h3><label class="ga-row"><span class="small">Sign out after no activity for</span><select id="gaIdle">${GA_IDLE_OPTS.map(v=>`<option value="${v}"${v===m?' selected':''}>${v?v<60?v+' minutes':v/60+(v===60?' hour':' hours'):'Never'}</option>`).join('')}</select></label>
+    <h3>Sign-in activity</h3><ol class="ga-act">${acts.length?acts.map(x=>`<li class="${/fail|denied/.test(x.t)?'bad':''}"><b>${esc(GA_ACT_TXT[x.t]||x.t)}</b><span>${esc(x.dn||'device')}${x.dev===G_DEV?' (this device)':''}${x.first?' · first time on this device':''}${x.why?' · '+esc(x.why):''}</span><time>${esc(gaWhen(x.at))}</time></li>`).join(''):'<li class="muted small">Nothing yet.</li>'}</ol>
+    <p class="ga-msg" id="fbAm" role="alert"></p></div>`);
+  const msg=t=>{const e=$('#fbAm');if(e)e.textContent=t};
+  $('#gaOut').onclick=()=>{closeModal();gaSignOut('out')};
+  $('#gaIdle').onchange=e=>{const v=+e.target.value;lsSet('idle',GA_IDLE_OPTS.includes(v)?v:30);GA_IDLE.last=Date.now();toast(v?`You will be signed out after ${e.target.selectedOptions[0].textContent} with no activity.`:'Auto sign-out is off.')};
+  $('#fbSync').onclick=()=>csSync('manual');
+  if($('#fbVer'))$('#fbVer').onclick=async()=>{try{const fx=await fbInit();await fx.verify();msg('Verification email sent to '+u.email+'.')}catch(e){msg(fbErr(e))}};
+  if($('#fbVerChk'))$('#fbVerChk').onclick=async()=>{try{const fx=await fbInit();const n=await fx.reload();GA.user.verified=n.verified;if(n.verified){toast('Email verified.');fbAccount()}else msg('Not verified yet. Open the link in the email first.')}catch(e){msg(fbErr(e))}};
+  if($('#svUn'))$('#svUn').onclick=async()=>{closeModal();await svUnlockAsk({});fbAccount()};
+  if($('#svNew'))$('#svNew').onclick=async()=>{closeModal();await svSetupAsk();fbAccount()};
+  if($('#svChg'))$('#svChg').onclick=()=>svChangeAsk();
+  $('#tmNew').onclick=async()=>{const n=$('#tmName').value.trim();if(!n){msg('Name the team first.');return}try{closeModal();const id=await tmCreate(n);if(id)toast('Team '+n+' created.');fbAccount()}catch(e){fbAccount();msg(e.code==='unverified'?'Verify your email before creating a team.':'Could not create the team. Check the connection.')}};
+  document.querySelectorAll('[data-tacc]').forEach(b=>b.onclick=async()=>{const x=inv[+b.dataset.tacc];try{closeModal();if(await tmAccept(x))toast(`Request sent. You join ${x.name} the next time its owner's ScriptDesk is online.`,6000);fbAccount()}catch(e){fbAccount();msg(e.code==='unverified'?'Verify your email before joining a team.':'Could not send the request.')}});
+  document.querySelectorAll('[data-tinv]').forEach(b=>b.onclick=async()=>{const t=teams.find(x=>x.id===b.dataset.tinv);const i=document.querySelector(`[data-tinv-in="${CSS.escape(t.id)}"]`);try{await tmInvite(t,i.value);msg('Invitation saved for '+i.value.trim()+'. Ask them to sign in to ScriptDesk with that email and press Join.');i.value=''}catch(e){msg(e.code==='email'?'Enter a valid email.':'Could not invite. Check the connection.')}});
+  document.querySelectorAll('[data-trm]').forEach(b=>b.onclick=async()=>{if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Confirm remove';return}const [tid,ux]=b.dataset.trm.split('|');const t=teams.find(x=>x.id===tid);b.disabled=true;b.textContent='Removing and re-encrypting…';try{await tmRemove(t,ux);fbAccount();toast('Removed. The team key was changed and team scripts re-encrypted.')}catch(e){msg('Could not remove. Check the connection.');b.disabled=false}})}
+function svChangeAsk(){openModal(`<div class="modal-h"><h2>Change vault passphrase</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b sv-m">
+  <label class="fb-l" for="svC0">Current passphrase</label><input class="fb-i mono" id="svC0" type="password" autocomplete="current-password">
+  <label class="fb-l" for="svC1">New passphrase</label><input class="fb-i mono" id="svC1" type="password" autocomplete="new-password"><label class="fb-l" for="svC2">Confirm new passphrase</label><input class="fb-i mono" id="svC2" type="password" autocomplete="new-password">
+  <p class="ga-msg" id="svCm" role="alert"></p><div class="bacts"><button class="btn" data-close>Cancel</button><button class="btn pri" id="svCgo">Change</button></div></div>`);
+  $('#svCgo').onclick=async()=>{const m=t=>$('#svCm').textContent=t;const a=$('#svC1').value;if(a.length<12)return m('Use at least 12 characters.');if(a!==$('#svC2').value)return m('The new passphrases are different.');
+    try{await svChange($('#svC0').value,a);closeModal();toast('Vault passphrase changed.')}catch(e){m('The current passphrase is not right, or you are offline.')}}}
+
+function moveAsk(pid){const ie=(lsGet('index')||[]).find(x=>x.id===pid);const cur=ie&&ie.space||'me';const opts=[['v','Just me · private & encrypted'],...TEAMS.list.filter(t=>t.mine&&TEAMS.keys[t.id]).map(t=>['t:'+t.id,'Team · '+t.name+' · encrypted']),['me','My account · not encrypted']];
+  openModal(`<div class="modal-h"><h2>Move screenplay</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b"><p class="small muted">Now: ${esc(spLabel(cur))}</p><div class="sp-g">${opts.map(([v,l])=>`<button type="button" class="sp-c${v===cur?' on':''}" data-mv="${esc(v)}"${v===cur?' disabled':''}><b>${esc(l)}</b></button>`).join('')}</div>
+  <p class="small muted">Moving to a team shares it with every member. Moving out of encryption makes the stored copy readable by the database.</p></div>`);
+  document.querySelectorAll('[data-mv]').forEach(b=>b.onclick=async()=>{closeModal();if(await csMove(pid,b.dataset.mv))render(true)})}
 
 /* ================= Boot ================= */
 (async function boot(){

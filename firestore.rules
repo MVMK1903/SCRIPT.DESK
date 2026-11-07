@@ -1,0 +1,75 @@
+rules_version = '2';
+// ScriptDesk database rules. Paste into Firebase console > Firestore Database > Rules (or `firebase deploy --only firestore:rules`).
+// Private and team scripts are encrypted on the device before they reach the database, so these rules are the second
+// lock: they make sure nobody can even read someone else's encrypted data, change a team they do not own, or add
+// themselves to a team.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isUser(uid) { return signedIn() && request.auth.uid == uid; }
+    function verified() { return signedIn() && request.auth.token.email_verified == true; }
+    function myEmail() { return request.auth.token.email.lower(); }
+
+    // Each account's own data: projects (and their chunks), notes, sign-in activity, vault record.
+    match /users/{uid} {
+      allow read, write: if isUser(uid);
+      match /{rest=**} {
+        allow read, write: if isUser(uid);
+      }
+    }
+
+    // Public keys let a team owner hand the team key to a new member. Anyone signed in may read them; only the
+    // owner may write their own, and only with their own sign-in email.
+    match /publicKeys/{uid} {
+      allow read: if signedIn();
+      allow create, update: if isUser(uid) && request.resource.data.email == myEmail()
+                            && request.resource.data.keys().hasOnly(['email', 'name', 'pub', 'at']);
+      allow delete: if isUser(uid);
+    }
+
+    match /teams/{tid} {
+      function team() { return get(/databases/$(database)/documents/teams/$(tid)).data; }
+      function isMember() { return signedIn() && request.auth.uid in team().memberUids; }
+      function isOwner() { return signedIn() && team().owner == request.auth.uid; }
+
+      allow read: if signedIn() && request.auth.uid in resource.data.memberUids;
+      allow create: if verified() && request.resource.data.owner == request.auth.uid
+                    && request.resource.data.memberUids == [request.auth.uid];
+      allow update: if signedIn() && resource.data.owner == request.auth.uid
+                    && request.resource.data.owner == resource.data.owner
+                    && request.auth.uid in request.resource.data.memberUids;
+      allow delete: if signedIn() && resource.data.owner == request.auth.uid;
+
+      // The team key, wrapped separately for each member. Only that member can read their copy.
+      match /keys/{uid} {
+        allow read: if isUser(uid);
+        allow write: if isOwner();
+      }
+      // Team scripts (encrypted). Members only.
+      match /projects/{pid} {
+        allow read, write: if isMember();
+        match /{rest=**} {
+          allow read, write: if isMember();
+        }
+      }
+      // Invitations: the owner writes them; the invited email can read its own.
+      match /invites/{email} {
+        allow read: if isOwner() || (verified() && resource.data.email == myEmail());
+        allow write: if isOwner() && request.resource.data.email == email;
+        allow delete: if isOwner();
+      }
+      // Joining: someone with a verified email that was invited asks to join; the owner's app adds them.
+      match /requests/{uid} {
+        allow read: if isOwner() || isUser(uid);
+        allow create: if isUser(uid) && verified() && request.resource.data.email == myEmail()
+                      && exists(/databases/$(database)/documents/teams/$(tid)/invites/$(myEmail()));
+        allow delete: if isOwner() || isUser(uid);
+      }
+    }
+
+    // Lets people find invitations addressed to their own verified email across all teams.
+    match /{path=**}/invites/{email} {
+      allow read: if verified() && resource.data.email == myEmail();
+    }
+  }
+}

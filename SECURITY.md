@@ -2,7 +2,52 @@
 
 How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026.
 
-## Google sign-in
+## Accounts (Firebase)
+
+When the build has a Firebase project (the `FIREBASE_CONFIG` setting), the installed apps and the web app open on a
+sign-in screen: **Sign in** or **Create account** with email and password, **Forgot password?**, or **Continue with Google**.
+
+- Passwords are handled by Firebase Authentication, never by ScriptDesk, and never stored on the device.
+  New passwords need at least 8 characters with letters and numbers. Firebase slows down repeated wrong passwords.
+- **Forgot password** sends Google's reset email. The screen gives the same answer whether or not the email has an
+  account, so it cannot be used to find out who uses ScriptDesk.
+- **Email verification** is sent when an account is created. Teams need a verified email.
+- **Google:** a Google pop-up on the web; on the desktop, the browser sign-in described below, which only passes an
+  identity token to Firebase (no Drive access, nothing stored).
+- Sessions stay signed in until **Sign out** or **auto sign-out** (below).
+
+## End-to-end encrypted vault
+
+- Every new screenplay asks **Where should this live?**: *Just me · private & encrypted*, a *team* (encrypted for the team),
+  or *My account · not encrypted*. Existing scripts can be moved from the Projects page.
+- Private scripts, team scripts and notepad notes are encrypted **on the device** (AES-256-GCM) before they are saved to
+  the device or sent to Firebase. The database only holds unreadable data; the title of a private script is not sent either.
+- The vault key is protected by a **vault passphrase** that only the user knows (PBKDF2-SHA-256, 600,000 rounds). ScriptDesk
+  can generate a strong one. **If the passphrase is lost, the private scripts and notes cannot be recovered**, by the
+  user or by ScriptDesk. The passphrase can be changed while the vault is unlocked.
+- The vault unlocks once per session and locks at sign-out. Five wrong passphrases in a row add a growing wait, and
+  wrong passphrases appear in the activity log.
+- Private and team scripts are never written to the Documents folder as readable files, and their backups are
+  passphrase-encrypted `.scriptdesk` files.
+- The AI breakdown, translation and other AI features still send scene text to the AI service chosen in Settings.
+
+## Teams
+
+- A verified account creates a team and invites people by email. The invited person signs in with that email, unlocks or
+  sets up their vault and presses **Join**. The owner's ScriptDesk adds them the next time it is online.
+- Each team has its own key. It is handed to each member wrapped with that member's public key (ECDH P-256), so only
+  members can open team scripts. The database rules also stop anyone else from reading them.
+- **Removing a member changes the team key and re-encrypts the team's scripts**, so the old key no longer opens new
+  versions. Copies already on the removed person's devices cannot be taken back.
+- Two people editing the same team script between syncs both keep their work: one becomes a "(copy from another
+  device)". Editing is not live, character by character.
+
+## Database rules
+
+`firestore.rules` (deploy it, see setup) limits each account to its own data, lets only members read team scripts, only
+owners change teams or hand out keys, and only invited, verified emails ask to join.
+
+## Google sign-in without Firebase (Google Drive sync)
 
 - **Required in the installed apps and the web app** once the build has Google sign-in set up (see "Setting up Google sign-in").
   The Claude version uses the Claude account instead. The phone apps do not have Google sign-in yet.
@@ -23,9 +68,10 @@ How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026.
 
 - Each Google account has its own projects on the device (separate storage keys). The projects that were on a device
   before sign-in existed move into the first account that signs in.
-- The sign-in screen guards the app, but it is **not encryption**: someone with access to the Windows user account or the
-  browser profile can read the saved projects on disk. Protect the computer itself with a Windows/macOS password.
-  (The earlier passphrase encryption was removed at the owner's request on 4 Nov 2026.)
+- Private and team scripts and notes are stored on the device encrypted with the vault key. Scripts set to
+  *My account · not encrypted* are only guarded by the sign-in screen, which is **not encryption**: someone with access to
+  the Windows user account or browser profile could read them on disk. Protect the computer itself with a password.
+  (The old whole-app passphrase was removed on 4 Nov 2026; the per-script vault replaced it on 7 Nov 2026.)
 - AI service keys are stored on the device, per account, and are never sent to Google Drive.
 
 ## Google Drive sync
@@ -59,7 +105,23 @@ How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026.
   refused without asking.
 - **Spreadsheets** are only written, never read, so the known SheetJS read-side issues do not apply.
 
-## Setting up Google sign-in
+## Setting up accounts (Firebase)
+
+1. https://console.firebase.google.com → **Add project** (Google Analytics not needed).
+2. **Build → Authentication → Get started.** Turn on **Email/Password** and **Google**. Under *Settings → Authorized
+   domains* add `mvmk1903.github.io` for the web app.
+3. **Build → Firestore Database → Create database** (production mode, a region near you, for example `asia-south1`).
+   Open the **Rules** tab, paste the contents of `firestore.rules`, and **Publish**. Under **Indexes → Single field**, add
+   an exemption for collection group `invites`, field `email`, with collection-group scope (or run
+   `firebase deploy --only firestore` in this folder).
+4. **Project settings → Your apps → Web app (</>)**, register "ScriptDesk", and copy the `firebaseConfig` block.
+5. GitHub → repository → Settings → Secrets and variables → Actions → new secret **`FIREBASE_CONFIG`** with that block.
+6. For Google sign-in in the **desktop app**, also do the Google Cloud steps below in the same project (Firebase creates
+   it in Google Cloud), add the Desktop client ID in Firebase *Authentication → Sign-in method → Google → Safelist client IDs*.
+
+Firebase's free Spark plan covers a production team comfortably (50,000 reads and 20,000 writes a day, 1 GB stored).
+
+## Setting up Google sign-in without Firebase
 
 1. Google Cloud console → create a project → APIs & Services → enable **Google Drive API**.
 2. OAuth consent screen: app name ScriptDesk, user type External, add your email. Scopes: `openid`, `email`, `profile`,

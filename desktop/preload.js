@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('sdDisk', {
 // Google sign-in: the page can start a sign-in, ask for a short-lived access token, and sign out. The refresh token never reaches the page.
 contextBridge.exposeInMainWorld('sdGoogle', {
   session: () => ipcRenderer.invoke('sd:g:session'),
-  signIn: (hint) => ipcRenderer.invoke('sd:g:signin', hint),
+  signIn: (hint, mode) => ipcRenderer.invoke('sd:g:signin', hint, mode),
   cancel: () => ipcRenderer.invoke('sd:g:cancel'),
   token: () => ipcRenderer.invoke('sd:g:token'),
   signOut: () => ipcRenderer.invoke('sd:g:signout')

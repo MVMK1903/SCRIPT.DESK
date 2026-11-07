@@ -93,6 +93,23 @@ def load_illustrations():
     print('scene images OK:', len(scenes))
     return {'scenes': scenes, 'svgs': svgs, 'items': items, 'fallback': man['fallback'], 'cats': [dict(id=c, **man['categoryInfo'][c]) for c in man['categories']]}
 
+def firebase_config():
+    """Firebase web settings for ScriptDesk accounts: from the FIREBASE_CONFIG environment variable (CI secret) or
+    config/firebase.json. They are public identifiers (access is controlled by firestore.rules), not passwords."""
+    raw = os.environ.get('FIREBASE_CONFIG', '').strip()
+    path = os.path.join(ROOT, 'config', 'firebase.json')
+    if not raw and os.path.isfile(path):
+        raw = open(path, encoding='utf-8').read()
+    if not raw:
+        return None
+    try:
+        c = json.loads(raw)
+    except ValueError:
+        m = re.search(r'\{.*\}', raw, re.S)  # also accept the "const firebaseConfig = {...}" snippet from the console
+        c = json.loads(re.sub(r'(\w+)\s*:', r'"\1":', m.group(0)).replace("'", '"')) if m else {}
+    keep = {k: str(c[k]) for k in ('apiKey', 'authDomain', 'projectId', 'appId', 'storageBucket', 'messagingSenderId') if c.get(k)}
+    return keep if keep.get('apiKey') and keep.get('projectId') else None
+
 def csp(page):
     """Content Security Policy for the installed apps and the web app. Only the page's own inline scripts (by hash), the
     pinned library CDNs and Google sign-in may run scripts, so text hidden in an imported script or a project file can
@@ -101,13 +118,13 @@ def csp(page):
     hashes = ["'sha256-%s'" % base64.b64encode(hashlib.sha256(m.encode('utf-8')).digest()).decode()
               for m in re.findall(r'<script>(.*?)</script>', page, re.S)]
     pol = ("default-src 'self'; "
-           "script-src 'self' " + ' '.join(hashes) + " https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com; "
+           "script-src 'self' " + ' '.join(hashes) + " https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com; "
            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; "
            "font-src 'self' data: https://fonts.gstatic.com; "
            "img-src 'self' data: blob: https:; "
            "connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; "
            "worker-src 'self' blob: https://cdnjs.cloudflare.com; "
-           "frame-src https://accounts.google.com; "
+           "frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app; "
            "media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'")
     return '<meta http-equiv="Content-Security-Policy" content="%s">' % pol
 
@@ -134,6 +151,10 @@ def main():
     # Inline the local SVG illustrations (src/illustrations + manifest.json) so the single-file app needs no image files.
     app = app.replace('/*ILLUS*/{}', json.dumps(load_illustrations(), ensure_ascii=False, separators=(',', ':')))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
+    fbc = firebase_config()
+    if fbc:
+        import html as _h
+        page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="sd-firebase" content="' + _h.escape(json.dumps(fbc, separators=(',', ':')), quote=True) + '">', 1)
     page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + csp(page), 1)
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:

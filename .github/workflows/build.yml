@@ -19,6 +19,10 @@ on:
         options: [all, windows, mac, desktop, android, iphone, web]
         default: all
 
+# ScriptDesk accounts: the Firebase web settings (Firebase console > Project settings > Your apps > Config)
+env:
+  FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+
 permissions:
   contents: write
   pages: write

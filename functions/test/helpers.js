@@ -36,7 +36,7 @@ const firestore = {
     return q;
   },
   runTransaction(fn) { // one at a time, like a real transaction under contention
-    const run = chain.then(() => fn({ get: (r) => r.get(), set: (r, d) => { store.set(r.path, structuredClone(d)); } }));
+    const run = chain.then(() => fn({ get: (r) => r.get(), set: (r, d) => { store.set(r.path, structuredClone(d)); }, update: (r, d) => { store.set(r.path, { ...store.get(r.path), ...d }); }, delete: (r) => { store.delete(r.path); } }));
     chain = run.catch(() => {});
     return run;
   },

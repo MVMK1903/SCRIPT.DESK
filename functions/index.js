@@ -90,16 +90,22 @@ exports.otpVerify = onCall(OPTS, async (req) => {
   const { uid, pid, code: raw } = need(req);
   const code = raw.replace(/\D/g, '');
   const ref = codeRef(uid, pid);
-  const d = (await ref.get()).data();
-  if (!d || Date.now() > d.exp) throw new HttpsError('deadline-exceeded', 'The code has expired. Send a new one.');
-  if ((d.tries || 0) >= MAX_TRIES) throw new HttpsError('resource-exhausted', 'Too many wrong codes. Send a new one.');
-  const ok = code.length === 6 && crypto.timingSafeEqual(hash(d.salt, code), Buffer.from(d.h, 'hex'));
-  if (!ok) {
-    await ref.update({ tries: (d.tries || 0) + 1 });
+  // The try is counted and the code checked in one transaction, so many requests at once still only get MAX_TRIES.
+  const verdict = await db.runTransaction(async (tx) => {
+    const d = (await tx.get(ref)).data();
+    if (!d || Date.now() > d.exp) return 'expired';
+    if ((d.tries || 0) >= MAX_TRIES) return 'tries';
+    const ok = code.length === 6 && crypto.timingSafeEqual(hash(d.salt, code), Buffer.from(d.h, 'hex'));
+    if (ok) tx.delete(ref);
+    else tx.update(ref, { tries: (d.tries || 0) + 1 });
+    return ok ? 'ok' : 'wrong';
+  });
+  if (verdict === 'expired') throw new HttpsError('deadline-exceeded', 'The code has expired. Send a new one.');
+  if (verdict === 'tries') throw new HttpsError('resource-exhausted', 'Too many wrong codes. Send a new one.');
+  if (verdict === 'wrong') {
     await log(uid, 'otpfail', 'email');
     throw new HttpsError('permission-denied', 'That code is not right.');
   }
-  await ref.delete();
   const key = await keyFor(uid, pid);
   await log(uid, 'otpok', 'email');
   return { key };

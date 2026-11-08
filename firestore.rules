@@ -18,10 +18,11 @@ service cloud.firestore {
       }
     }
 
-    // Public keys let a team owner hand the team key to a new member. Anyone signed in may read them; only the
-    // owner may write their own, and only with their own sign-in email.
+    // Public keys let a team owner hand the team key to a new member. A verified account may read one key if it knows
+    // the account id, but nobody can list them all; only the owner may write their own, and only with their own email.
     match /publicKeys/{uid} {
-      allow read: if signedIn();
+      allow get: if verified();
+      allow list: if false;
       allow create, update: if isUser(uid) && request.resource.data.email == myEmail()
                             && request.resource.data.keys().hasOnly(['email', 'name', 'pub', 'at']);
       allow delete: if isUser(uid);

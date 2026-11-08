@@ -140,3 +140,55 @@ test('no password or reset link is ever logged', async () => {
   const all = h.logs.join('\n');
   for (const s of [PW, 'Zebra1234', 'reset.example', 'verify.example', 'nope']) assert.equal(all.includes(s), false, s);
 });
+
+test('OTP: many wrong codes sent at once still only use five tries, then even the right code is refused', async () => {
+  const auth = { uid: 'u1', token: { email: 'a@b.com', email_verified: true } };
+  await otpCreate({ data: { pid: 'p1' }, auth });
+  await otpSend({ data: { pid: 'p1' }, auth });
+  const code = (h.mails.at(-1).text.match(/\b(\d{6})\b/) || [])[1];
+  assert.ok(code, 'the emailed code can be found');
+  const wrongCode = code === '111111' ? '222222' : '111111';
+  const out = await Promise.allSettled(Array.from({ length: 12 }, () => otpVerify({ data: { pid: 'p1', code: wrongCode }, auth })));
+  const codes = out.map((o) => o.reason.code);
+  assert.equal(codes.filter((c) => c === 'permission-denied').length, 5);
+  assert.equal(codes.filter((c) => c === 'resource-exhausted').length, 7);
+  assert.equal((await fails(otpVerify({ data: { pid: 'p1', code }, auth }))).code, 'resource-exhausted');
+});
+
+test('OTP: the right code works once', async () => {
+  const auth = { uid: 'u1', token: { email: 'a@b.com', email_verified: true } };
+  await otpCreate({ data: { pid: 'p2' }, auth });
+  await otpSend({ data: { pid: 'p2' }, auth });
+  const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+  assert.equal(typeof (await otpVerify({ data: { pid: 'p2', code }, auth })).key, 'string');
+  assert.equal((await fails(otpVerify({ data: { pid: 'p2', code }, auth }))).code, 'deadline-exceeded');
+});
+
+test('sign-up: an address already registered gets at most one email every 10 minutes', async () => {
+  addUser('old@b.com');
+  for (let i = 0; i < 3; i++) assert.deepEqual(await signupGate(h.req({ email: 'old@b.com', password: 'Abcdef12' }, {})), { ok: true });
+  assert.equal(h.mails.filter((m) => m.to === 'old@b.com').length, 1);
+});
+
+test('sign-up always waits at least 3 seconds, new email or not', async () => {
+  addUser('old@b.com');
+  await signupGate(h.req({ email: 'new1@b.com', password: 'Abcdef12' }));
+  await signupGate(h.req({ email: 'old@b.com', password: 'Abcdef12' }));
+  assert.equal(h.delays.filter((d) => d >= 2900).length, 2);
+});
+
+test('lock: the lock email and the wait run together, so the answer takes the same time with or without an account', async () => {
+  addUser();
+  for (let i = 0; i < 5; i++) await fails(login('a@b.com', 'nope'));
+  assert.equal(h.delays.at(-1), 5000);
+  h.delays.length = 0;
+  for (let i = 0; i < 5; i++) await fails(login('ghost@b.com', 'nope', '8.8.8.' + i));
+  assert.equal(h.delays.at(-1), 5000);
+});
+
+test('attempt counters carry an expiry date for the Firestore TTL policy', async () => {
+  await fails(login('a@b.com', 'nope'));
+  const docs = [...h.store.entries()].filter(([k]) => k.startsWith('authLimits/'));
+  assert.ok(docs.length >= 2);
+  for (const [, v] of docs) assert.ok(v.expireAt instanceof Date && v.expireAt.getTime() > Date.now());
+});

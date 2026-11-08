@@ -63,7 +63,8 @@ function gSignIn(win, hint, mode) {
     const srv = http.createServer(async (req, res) => {
       const u = new URL(req.url, 'http://127.0.0.1');
       if (u.pathname !== '/callback') { res.writeHead(404); res.end(); return; }
-      const ok = u.searchParams.get('state') === state && !!u.searchParams.get('code');
+      if (u.searchParams.get('state') !== state) { res.writeHead(400, { 'Cache-Control': 'no-store' }); res.end(); return; } // not our answer: ignore it
+      const ok = !!u.searchParams.get('code');
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'" });
       res.end(G_PAGE(ok));
       if (done) return;

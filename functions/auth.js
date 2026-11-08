@@ -26,6 +26,9 @@ const IP_WINDOW_MS = 60000;
 const SIGNUP_MAX = 5;                           // sign-ups per address per hour
 const SIGNUP_WINDOW_MS = 3600000;
 const MAX_DELAY_MS = 5000;
+const SIGNUP_MIN_MS = 3000;                     // sign-up always takes at least this long, new email or not
+const MAIL_GAP_MS = 10 * 60000;                 // at most one sign-up email per address in this time
+const keepUntil = (ms) => new Date(Date.now() + ms); // for the Firestore TTL policy on authLimits.expireAt
 
 const db = () => admin.firestore();
 const sha = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
@@ -44,7 +47,7 @@ async function hit(key, max, windowMs) {
     const now = Date.now();
     const fresh = d.start && now - d.start < windowMs;
     const n = fresh ? d.n + 1 : 1;
-    tx.set(ref, { start: fresh ? d.start : now, n });
+    tx.set(ref, { start: fresh ? d.start : now, n, expireAt: keepUntil(windowMs * 2) });
     return n <= max;
   });
 }
@@ -62,10 +65,10 @@ async function reserve(ref) {
     const base = now - (d.at || 0) >= LOCK_MS ? 0 : d.n || 0;
     const n = base + 1;
     if (n > LOCK_AFTER) {
-      tx.set(ref, { n: LOCK_AFTER, until: now + LOCK_MS, at: now });
+      tx.set(ref, { n: LOCK_AFTER, until: now + LOCK_MS, at: now, expireAt: keepUntil(LOCK_MS * 2) });
       return { ok: false, n: LOCK_AFTER };
     }
-    tx.set(ref, { n, until: 0, at: now });
+    tx.set(ref, { n, until: 0, at: now, expireAt: keepUntil(LOCK_MS * 2) });
     return { ok: true, n };
   });
 }
@@ -134,9 +137,11 @@ exports.loginGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] 
     return { ok: true };
   }
   if (slot.n >= LOCK_AFTER) {
-    await ref.set({ n: LOCK_AFTER, until: Date.now() + LOCK_MS, at: Date.now() });
+    await ref.set({ n: LOCK_AFTER, until: Date.now() + LOCK_MS, at: Date.now(), expireAt: keepUntil(LOCK_MS * 2) });
     logger.warn('loginGate: account paused after wrong passwords', { acct: sha(email).slice(0, 8), ip });
-    await sendLockNotice(email);
+    // the email is sent while the usual wait runs, so an address with an account and one without answer equally slowly
+    await Promise.all([sendLockNotice(email), sleep(delayFor(slot.n))]);
+    throw wrong();
   }
   await sleep(delayFor(slot.n));
   throw wrong();
@@ -153,7 +158,9 @@ exports.signupGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD]
     logger.warn('signupGate: too many sign-ups from one address', { ip });
     throw new HttpsError('resource-exhausted', 'Try again later.');
   }
+  const started = Date.now();
   const { email, password, name } = p.data;
+  const mayMail = await hit(`mail_${sha(email)}`, 1, MAIL_GAP_MS); // no mail floods to someone else's address
   let existing = null;
   try {
     existing = await admin.auth().getUserByEmail(email);
@@ -162,13 +169,15 @@ exports.signupGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD]
   }
   try {
     if (existing) {
-      const link = await admin.auth().generatePasswordResetLink(email);
-      await mail(
+      if (mayMail) {
+        const link = await admin.auth().generatePasswordResetLink(email);
+        await mail(
         email,
         'ScriptDesk: you already have an account',
         `Someone, maybe you, tried to create a ScriptDesk account with this email, which already has one.\n\n` +
           `Sign in as usual, or reset your password:\n${link}\n\nIf this was not you, you can ignore this email.`
-      );
+        );
+      }
     } else {
       await admin.auth().createUser({ email, password, emailVerified: false, ...(name ? { displayName: name } : {}) });
       const link = await admin.auth().generateEmailVerificationLink(email);
@@ -178,6 +187,7 @@ exports.signupGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD]
     logger.error('signupGate failed', { reason: (e && e.code) || 'error' });
     throw new HttpsError('internal', 'Could not create the account. Try again.');
   }
+  await sleep(Math.max(0, SIGNUP_MIN_MS - (Date.now() - started))); // same time taken whether the email was new or not
   return { ok: true }; // the same answer whether the email was new or not
 });
 

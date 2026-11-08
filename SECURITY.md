@@ -39,12 +39,24 @@ Password sign-in and sign-up go through ScriptDesk's server functions (`function
 - **Passwords stay with Firebase.** ScriptDesk does not store or hash passwords (Firebase Authentication uses a salted,
   memory-hard scrypt hash). The server only passes a password to Firebase to check it, and it is never written to a log
   (`scripts/check_logs.py` fails the build if a log call names a password, token, code or link).
+- **Counters expire:** every try counter carries an `expireAt` date. In the Firebase console go to Firestore, **TTL**, **Create
+  policy**, collection group `authLimits`, field `expireAt`, so old counters delete themselves.
+- **Public keys:** a verified account can read one public key if it knows the account id; nobody can list them.
+- **OTP tries:** the try count and the code check happen in one database transaction, so many requests at once still only
+  get five tries.
+- **Sign-up emails:** one email per address per 10 minutes, and every sign-up takes the same time (at least 3 seconds).
+- **Independent review (8 Nov 2026):** found the points above, now fixed, and three open items: the Identity Platform / App
+  Check gap above; the content security policy still allows the two library CDNs and any https address for connections
+  (needed for user-chosen AI services and the web app); and the desktop app still lets its own page reach any https
+  address (same reason). Self-hosting the libraries for the web app would close the first.
 - **Verified email:** making an OTP lock, asking for a code, and teams need a verified email.
 - **Profile:** when an account is created the server writes `profiles/{uid}` (plan and preferences only, never a password or
   token). The owner can read it and change preferences, but not the plan. When an account is deleted the server removes
   its data, public key and OTP keys (teams the person owns are left for their members).
 - **Limits you should know about:** Firebase's own sign-in address is public, so a determined attacker can still call it
-  directly (Firebase slows repeated wrong passwords there). The lockout protects sign-in through the app. If the server
+  directly and skip the lockout (Firebase slows repeated wrong passwords there). The lockout protects sign-in through the app.
+  Closing that gap needs Firebase's Identity Platform upgrade and a "before sign-in" blocking function, or App Check; both
+  are billing and setup decisions, so they are not done yet. If the server
   part is not deployed (or cannot be reached), the app falls back to signing in with Firebase directly.
 - Anyone can make five wrong tries on a known email and pause that account for 15 minutes. That is the cost of any
   lockout; the lockout email tells the owner, and the pause ends by itself.

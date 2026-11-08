@@ -173,6 +173,7 @@ def main():
     app = app.replace('/*ILLUS*/{}', json.dumps(load_illustrations(), ensure_ascii=False, separators=(',', ':')))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
     fbc = firebase_config()
+    print('firebase accounts: ON for project ' + fbc['projectId'] if fbc else 'firebase accounts: OFF (no FIREBASE_CONFIG)')
     if fbc:
         import html as _h
         page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="sd-firebase" content="' + _h.escape(json.dumps(fbc, separators=(',', ':')), quote=True) + '">', 1)

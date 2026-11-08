@@ -96,10 +96,13 @@ def load_illustrations():
 def firebase_config():
     """Firebase web settings for ScriptDesk accounts: from the FIREBASE_CONFIG environment variable (CI secret) or
     config/firebase.json. They are public identifiers (access is controlled by firestore.rules), not passwords."""
-    raw = os.environ.get('FIREBASE_CONFIG', '').strip()
-    path = os.path.join(ROOT, 'config', 'firebase.json')
-    if not raw and os.path.isfile(path):
-        raw = open(path, encoding='utf-8').read()
+    # config/firebase.public.json (kept in the repository: Firebase web settings are public) wins over the CI secret
+    raw = ''
+    for name in ('firebase.public.json', 'firebase.json'):
+        path = os.path.join(ROOT, 'config', name)
+        if not raw and os.path.isfile(path):
+            raw = open(path, encoding='utf-8').read().strip()
+    raw = raw or os.environ.get('FIREBASE_CONFIG', '').strip()
     if not raw:
         return None
     try:
@@ -109,6 +112,8 @@ def firebase_config():
         # single or double quotes. Only key: "value" pairs are read.
         c = dict(re.findall(r'''["']?(\w+)["']?\s*:\s*["']([^"'\r\n]*)["']''', raw))
     keep = {k: str(c[k]) for k in ('apiKey', 'authDomain', 'projectId', 'appId', 'storageBucket', 'messagingSenderId') if c.get(k)}
+    if keep.get('apiKey') and not re.fullmatch(r'AIza[0-9A-Za-z_-]{35}', keep['apiKey']):
+        raise SystemExit('FIREBASE_CONFIG: the apiKey does not look like a Firebase web key (AIza + 35 characters). Copy the config again.')
     return keep if keep.get('apiKey') and keep.get('projectId') else None
 
 def csp_policy(page):

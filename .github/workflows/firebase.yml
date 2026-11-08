@@ -45,6 +45,7 @@ jobs:
           python3 - <<'PY'
           import os, re, json
           raw = os.environ['FC']
+          if os.path.isfile('config/firebase.public.json'): raw = open('config/firebase.public.json').read()
           m = re.search(r'apiKey["\']?\s*:\s*["\']([^"\']+)["\']', raw)
           if not m: raise SystemExit('FIREBASE_CONFIG has no apiKey')
           open('functions/.env', 'w').write('WEB_API_KEY=' + m.group(1) + '\n')

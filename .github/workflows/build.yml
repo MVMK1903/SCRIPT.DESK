@@ -75,9 +75,18 @@ jobs:
         run: python3 -c "import json,os;json.dump({'desktopClientId':os.environ.get('GID',''),'desktopClientSecret':os.environ.get('GSECRET','')},open('desktop/google.json','w'));print('google desktop sign-in is '+('ON' if os.environ.get('GID') and os.environ.get('GSECRET') else 'OFF (secrets missing)'))"
       - run: npm install
         working-directory: desktop
-      - run: npm run dist
+      # The packaging tools are downloaded from GitHub at build time, which now and then answers 504. The downloads are
+      # cached between tries, so each try gets further; give it up to four.
+      - name: Build the installer (retries on a network hiccup)
+        shell: bash
         working-directory: desktop
         env: { CSC_IDENTITY_AUTO_DISCOVERY: 'false' }
+        run: |
+          for try in 1 2 3 4; do
+            npm run dist && exit 0
+            echo "attempt $try failed, waiting before the next one"; sleep 30
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: ScriptDesk-${{ runner.os }}

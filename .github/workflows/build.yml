@@ -72,7 +72,7 @@ jobs:
         env:
           GID: ${{ secrets.GOOGLE_DESKTOP_CLIENT_ID }}
           GSECRET: ${{ secrets.GOOGLE_DESKTOP_CLIENT_SECRET }}
-        run: python3 -c "import json,os;json.dump({'desktopClientId':os.environ.get('GID',''),'desktopClientSecret':os.environ.get('GSECRET','')},open('desktop/google.json','w'))"
+        run: python3 -c "import json,os;json.dump({'desktopClientId':os.environ.get('GID',''),'desktopClientSecret':os.environ.get('GSECRET','')},open('desktop/google.json','w'));print('google desktop sign-in is '+('ON' if os.environ.get('GID') and os.environ.get('GSECRET') else 'OFF (secrets missing)'))"
       - run: npm install
         working-directory: desktop
       - run: npm run dist

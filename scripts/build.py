@@ -105,8 +105,9 @@ def firebase_config():
     try:
         c = json.loads(raw)
     except ValueError:
-        m = re.search(r'\{.*\}', raw, re.S)  # also accept the "const firebaseConfig = {...}" snippet from the console
-        c = json.loads(re.sub(r'(\w+)\s*:', r'"\1":', m.group(0)).replace("'", '"')) if m else {}
+        # also accept the "const firebaseConfig = {...}" snippet from the console, as pasted: comments, trailing commas,
+        # single or double quotes. Only key: "value" pairs are read.
+        c = dict(re.findall(r'''["']?(\w+)["']?\s*:\s*["']([^"'\r\n]*)["']''', raw))
     keep = {k: str(c[k]) for k in ('apiKey', 'authDomain', 'projectId', 'appId', 'storageBucket', 'messagingSenderId') if c.get(k)}
     return keep if keep.get('apiKey') and keep.get('projectId') else None
 

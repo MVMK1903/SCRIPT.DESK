@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VeCCPUAdXqKELpbvlNMX1cHn+CA2acqxsZf+7A5kSFc=' 'sha256-6NQaFhNwgJvqZ/KiXcVSfGXSEuTB2rQPgQA/6XzzlYs=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-VeCCPUAdXqKELpbvlNMX1cHn+CA2acqxsZf+7A5kSFc=' 'sha256-WRK7SOVT3Wz30Yj0AL2AXPXGOPa/JMBWSLqsGH04CcY=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1401,6 +1401,13 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 .otp-m p{line-height:1.5}.otp-m .ic{width:16px;height:16px;vertical-align:-3px}
 .otp-ch{display:grid;gap:8px;margin:12px 0}
 .otp-c{font-family:ui-monospace,Consolas,monospace;font-size:26px!important;letter-spacing:.45em;text-align:center;max-width:260px}
+.otp-bx{display:flex;gap:10px;justify-content:center;margin:12px 0 6px}
+.otp-b{width:46px;height:56px;padding:0;text-align:center;font:600 24px ui-monospace,"Cascadia Mono",Consolas,monospace;color:var(--fg);background:var(--glass-hi);border:1px solid var(--glass-line);border-radius:14px;box-sizing:border-box;transition:border-color .15s,box-shadow .15s,transform .15s}
+.otp-b:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent);transform:translateY(-1px)}
+.otp-bx.bad .otp-b{border-color:#d9534f;animation:otpShake .35s}
+@keyframes otpShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (max-width:380px){.otp-bx{gap:6px}.otp-b{width:40px;height:50px;font-size:21px}}
+@media (prefers-reduced-motion:reduce){.otp-b,.otp-bx.bad .otp-b{transition:none;animation:none}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
@@ -5863,35 +5870,49 @@ function otpAsk(pid,title){return new Promise(res=>{const u=GA.user;let via='',d
     <div class="otp-ch" id="otpCh"><button type="button" class="ga-btn" data-otp="email"><span><b>Email a code</b><small>to ${esc(memail)}</small></span></button>
       ${phone&&otpSmsOk()?`<button type="button" class="ga-btn" data-otp="sms"><span><b>Send an SMS code</b><small>to ${esc(mphone)}</small></span></button>`:''}</div>
     ${!phone&&otpSmsOk()?'<p class="small muted">Add a mobile number in Account &amp; security to get codes by SMS too.</p>':''}${phone&&!otpSmsOk()?'<p class="small muted">SMS codes work in the web app. Here, use the email code.</p>':''}
-    <div id="otpIn" hidden><label class="fb-l" for="otpC">6-digit code</label><input class="fb-i otp-c" id="otpC" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="••••••">
+    <div id="otpIn" hidden><span class="fb-l">6-digit code. It opens by itself once entered.</span>${otpBoxesHtml('otpC')}
       <p class="small muted" id="otpTo"></p><div class="bacts"><button class="btn ghost" id="otpRe">Send again</button><button class="btn pri" id="otpGo">Open script</button></div></div>
     <p class="ga-msg" id="otpM" role="alert"></p><div id="fbRecap"></div></div>`);
+  const ob=otpBoxes('otpC',()=>go());
   const ov=$('#ov'),m=(t,info)=>{const e=$('#otpM');if(!e)return;e.textContent=t;e.classList.toggle('info',!!info)};
   const tick=()=>{const b=$('#otpRe');if(!b)return;const s=Math.ceil((cool-Date.now())/1000);if(s>0){b.disabled=true;b.textContent=`Send again (${s})`;ct=setTimeout(tick,1000)}else{b.disabled=false;b.textContent='Send again'}};
   const send=async(kind)=>{via=kind;m(kind==='sms'?'Sending SMS…':'Sending email…',1);document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=true);
     try{const fx=await fbInit();
       if(kind==='email'){const r=await fx.call('otpSend',{pid});$('#otpTo').textContent=`Sent to ${r.to}. It works for ${r.minutes||5} minutes. Check spam if it is not there.`}
       else{await fx.phoneReauth(phone,'fbRecap');$('#otpTo').textContent=`SMS sent to ${mphone}.`}
-      $('#otpIn').hidden=false;m('');cool=Date.now()+30000;tick();$('#otpC').focus()}
+      $('#otpIn').hidden=false;m('');cool=Date.now()+30000;tick();ob.clear()}
     catch(e){m(otpErr(e))}finally{document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=false)}};
-  const go=async()=>{const code=$('#otpC').value.replace(/\D/g,'');if(code.length!==6){m('Enter the 6 digits.');return}const g=$('#otpGo');g.disabled=true;m('Checking…',1);
+  const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=$('#otpGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
     try{const fx=await fbInit();let r;if(via==='sms'){await fx.phoneConfirm(code);r=await fx.call('otpSms',{pid})}else r=await fx.call('otpVerify',{pid,code});
       OTPK[pid]=await otpKeyFromB64(r.key);done=true;clearTimeout(ct);closeModal();res(true)}
-    catch(e){g.disabled=false;m(otpErr(e));$('#otpC').select()}};
+    catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
   document.querySelectorAll('[data-otp]').forEach(b=>b.onclick=()=>send(b.dataset.otp));
-  $('#otpRe').onclick=()=>send(via);$('#otpGo').onclick=go;$('#otpC').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,6);if(e.target.value.length===6)go()};
+  $('#otpRe').onclick=()=>send(via);$('#otpGo').onclick=go;
   new MutationObserver((r,o)=>{if(!ov.isConnected){o.disconnect();clearTimeout(ct);if(!done)res(false)}}).observe(document.body,{childList:true,subtree:true})})}
 /* register a mobile number for SMS codes (web app) */
 function otpPhoneAsk(){openModal(`<div class="modal-h"><h2>Mobile number for codes</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b otp-m">
   <p class="small muted">Codes to open locked scripts can come by SMS to this number. Include the country code.</p>
   <label class="fb-l" for="phN">Mobile number</label><input class="fb-i" id="phN" type="tel" autocomplete="tel" placeholder="+91 98765 43210">
   <div class="bacts"><button class="btn pri" id="phSend">Send SMS code</button></div>
-  <div id="phIn" hidden><label class="fb-l" for="phC">6-digit code</label><input class="fb-i otp-c" id="phC" inputmode="numeric" autocomplete="one-time-code" maxlength="6"><div class="bacts"><button class="btn pri" id="phGo">Confirm</button></div></div>
+  <div id="phIn" hidden><span class="fb-l">6-digit code</span>${otpBoxesHtml('phC')}<div class="bacts"><button class="btn pri" id="phGo">Confirm</button></div></div>
   <p class="ga-msg" id="phM" role="alert"></p><div id="fbRecap"></div></div>`);
+  const pb=otpBoxes('phC',()=>$('#phGo').click());
   const m=(t,i)=>{const e=$('#phM');e.textContent=t;e.classList.toggle('info',!!i)};
   $('#phSend').onclick=async()=>{const n='+'+$('#phN').value.replace(/[^\d]/g,'');if(n.length<11){m(OTP_ERR['auth/invalid-phone-number']);return}$('#phSend').disabled=true;m('Sending…',1);
-    try{const fx=await fbInit();await fx.phoneLink(n,'fbRecap');$('#phIn').hidden=false;m('Code sent.',1);$('#phC').focus()}catch(e){m(otpErr(e))}finally{$('#phSend').disabled=false}};
-  $('#phGo').onclick=async()=>{try{const fx=await fbInit();await fx.phoneConfirm($('#phC').value.replace(/\D/g,''));const u=await fx.reload();GA.user.phone=u.phone||'';closeModal();toast('Mobile number saved for SMS codes.');gaLog('phone');fbAccount()}catch(e){m(otpErr(e))}}}
+    try{const fx=await fbInit();await fx.phoneLink(n,'fbRecap');$('#phIn').hidden=false;m('Code sent.',1);pb.focus()}catch(e){m(otpErr(e))}finally{$('#phSend').disabled=false}};
+  $('#phGo').onclick=async()=>{const b=$('#phGo');if(b.disabled)return;const code=pb.val();if(code.length!==6){m('Enter the 6 digits.');return}b.disabled=true;
+    try{const fx=await fbInit();await fx.phoneConfirm(code);const u=await fx.reload();GA.user.phone=u.phone||'';closeModal();toast('Mobile number saved for SMS codes.');gaLog('phone');fbAccount()}catch(e){m(otpErr(e));pb.shake();pb.clear()}finally{b.disabled=false}}}
+/* six boxes for a one-time code: type or paste digits, they move on by themselves, Backspace goes back, and the last digit sends it */
+function otpBoxesHtml(id){return `<div class="otp-bx" id="${id}" role="group" aria-label="6-digit code">${[0,1,2,3,4,5].map(i=>`<input class="otp-b" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="${i?'off':'one-time-code'}" aria-label="Digit ${i+1} of 6">`).join('')}</div>`}
+function otpBoxes(id,onDone){const w=$('#'+id),b=[...w.querySelectorAll('input')];
+  const val=()=>b.map(x=>x.value).join('');
+  const fill=(s,from)=>{const d=s.replace(/\D/g,'').slice(0,6-from);d.split('').forEach((c,k)=>b[from+k].value=c);const n=Math.min(from+d.length,5);b[n].focus();if(val().length===6)onDone(val())};
+  b.forEach((x,i)=>{
+    x.oninput=()=>{const d=x.value.replace(/\D/g,'');if(d.length>1){x.value='';fill(d,i);return}x.value=d;if(d&&i<5)b[i+1].focus();if(val().length===6)onDone(val())};
+    x.onkeydown=e=>{if(e.key==='Backspace'&&!x.value&&i>0){b[i-1].value='';b[i-1].focus()}else if(e.key==='ArrowLeft'&&i>0){b[i-1].focus()}else if(e.key==='ArrowRight'&&i<5){b[i+1].focus()}};
+    x.onpaste=e=>{e.preventDefault();x.value='';fill((e.clipboardData||window.clipboardData).getData('text'),0)};
+    x.onfocus=()=>x.select()});
+  return{val,focus:()=>b[0].focus(),clear:()=>{b.forEach(x=>x.value='');b[0].focus()},shake:()=>{w.classList.remove('bad');void w.offsetWidth;w.classList.add('bad')}}}
 
 /* ================= Boot ================= */
 (async function boot(){

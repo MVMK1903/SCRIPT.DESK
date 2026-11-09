@@ -5361,7 +5361,7 @@ function gaGate(note){if(fbOn())return fbGate(note);return new Promise(async res
 /* a failed sign-in is noted in the last account's log on this device */
 function gaFailLog(last,code){if(!last||!last.ns)return;const k='scriptdesk.v2.'+last.ns+'.activity';try{const a=JSON.parse(localStorage.getItem(k)||'[]');a.unshift({t:'fail',at:Date.now(),dev:G_DEV,dn:gaDevice(),why:String(code).slice(0,40)});localStorage.setItem(k,JSON.stringify(a.slice(0,GA_ACT_MAX)))}catch(e){}}
 async function gaEnter(prof,mode,quiet,pre){const ns=gaNs(prof.sub,pre);const first=!localStorage.getItem('scriptdesk.auth.migrated');
-  if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;GA.fresh=!quiet;
+  if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;
   const prev=gaLastGet();gaLastSet({ns,sub:GA.user.sub,email:GA.user.email,name:GA.user.name,picture:GA.user.picture,on:mode==='online'?Date.now():(prev&&prev.on)||0,signedOut:false});
   if(mode==='online'&&!quiet){const seen=(lsGet('activity')||[]).some(x=>x.dev===G_DEV);gaLog('in',seen?null:{first:1})}
   else if(mode==='online'&&quiet&&!(lsGet('activity')||[]).length)gaLog('in');
@@ -5931,7 +5931,7 @@ function otpBoxes(id,onDone){const w=$('#'+id),b=[...w.querySelectorAll('input')
   if(SEC.on)await secGate();
   {let note='';try{note=sessionStorage.getItem('scriptdesk.auth.note')||'';sessionStorage.removeItem('scriptdesk.auth.note')}catch(e){}await gaGate(note)}
   try{await DISK.init();DISK.sched(true)}catch(e){}
-  if(GA.user&&GA.fresh)page='home'; /* just signed in: start on Home */
+  page='home'; /* every time the app opens, start on Home */
   render();
   const lastId=lsGet('last');
   if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}

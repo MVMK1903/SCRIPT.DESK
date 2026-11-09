@@ -1,7 +1,7 @@
 <title>ScriptDesk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 <style>
 /* ScriptDesk look (v2, see "v2 design" block): minimalist Apple-style surfaces, one blue accent, white script pages.
    Older neumorphic rules below are kept for structure; the v2 block at the end of this sheet overrides their look.
@@ -1408,13 +1408,169 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 @media (max-width:380px){.otp-bx{gap:6px}.otp-b{width:40px;height:50px;font-size:21px}}
 @media (prefers-reduced-motion:reduce){.otp-b,.otp-bx.bad .otp-b{transition:none;animation:none}}
 @media (prefers-reduced-motion:reduce){.content.swap,.modal,.toast,.msheet .nav{animation:none!important}}
+/* ===== Looks (themes). Sandhya is the default: dusk indigo, frosted glass, one warm glow per screen, dusk colours that each mean one thing.
+   Savera is the light version, Night Set is extra dark for dark locations, Classic keeps the earlier glass look. ===== */
+.ic-b{display:contents}
+:root[data-look="sandhya"],:root[data-look="night"],:root[data-look="savera"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --sd-coral:#ff8a7a;--sd-teal:#5fd1be;--sd-lilac:#b9a4f0;--sd-peach:#ffc9a3;--sd-sky:#7fb6ff;--sd-sun:#ffd36e;--sd-violet:#8a82d6;--sd-ink:#1d1a3a;
+  --sd-glow:linear-gradient(90deg,#ffd36e,#ffb27a);--sd-glow-sh:0 10px 26px -10px rgba(255,178,122,.65)}
+:root[data-look="sandhya"]{
+  --canvas:transparent;--bg:#211f45;--bg-2:#26244f;--panel:#211f45;--panel-2:#26244f;--raise:rgba(255,255,255,.12);
+  --fill:rgba(255,255,255,.07);--fill-2:rgba(255,255,255,.12);--line:rgba(255,255,255,.11);--line-2:rgba(255,255,255,.07);--hair:rgba(255,255,255,.14);
+  --fg:#f4f2ff;--muted:#bfbcdd;--faint:#9a97c2;
+  --accent:#b9a4f0;--accent-hi:#cbb9ff;--accent-ink:#1d1a3a;--accent-soft:rgba(185,164,240,.18);--accent-line:rgba(185,164,240,.5);--accent-text:#d3c6ff;
+  --glass:rgba(255,255,255,.07);--glass-hi:rgba(46,42,92,.92);--glass-line:rgba(255,255,255,.13);
+  --glass-sh:0 14px 36px rgba(8,6,30,.38),0 1px 2px rgba(0,0,0,.2);
+  --pill-on:rgba(255,255,255,.14);--pill-on-ink:#ffffff;--pill-glow:inset 0 0 0 1px rgba(255,255,255,.14);
+  --backdrop:radial-gradient(900px 620px at 6% -6%,rgba(91,79,176,.95) 0%,rgba(91,79,176,0) 64%),radial-gradient(800px 560px at 104% 18%,rgba(47,111,134,.85) 0%,rgba(47,111,134,0) 62%),radial-gradient(900px 700px at 70% 112%,rgba(176,74,106,.35) 0%,rgba(176,74,106,0) 60%),linear-gradient(170deg,#1b1a3a 0%,#18173a 60%,#1d1838 100%);
+  background:#1b1a3a}
+:root[data-look="night"]{
+  --canvas:transparent;--bg:#121a1e;--bg-2:#16211f;--panel:#121a1e;--panel-2:#16211f;--raise:rgba(255,255,255,.08);
+  --fill:rgba(255,255,255,.05);--fill-2:rgba(255,255,255,.09);--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.05);--hair:rgba(255,255,255,.1);
+  --fg:#d9e2df;--muted:#9fb0ab;--faint:#7f918c;
+  --accent:#6fa9a3;--accent-hi:#8cc4bd;--accent-ink:#0c1114;--accent-soft:rgba(111,169,163,.16);--accent-line:rgba(111,169,163,.45);--accent-text:#9ed2cb;
+  --glass:rgba(255,255,255,.04);--glass-hi:rgba(22,33,38,.96);--glass-line:rgba(255,255,255,.08);--glass-sh:0 10px 30px rgba(0,0,0,.5);
+  --pill-on:rgba(255,255,255,.1);--pill-on-ink:#ffffff;--pill-glow:inset 0 0 0 1px rgba(255,255,255,.1);
+  --backdrop:radial-gradient(800px 600px at 0% 0%,rgba(22,36,43,.9) 0%,rgba(22,36,43,0) 60%),linear-gradient(170deg,#0c1114 0%,#0e1417 100%);
+  background:#0c1114}
+:root[data-look="savera"]{
+  --canvas:transparent;--bg:#fffaf5;--bg-2:#fff3ea;--panel:#fffaf5;--panel-2:#fff3ea;--raise:#ffffff;
+  --fill:rgba(120,80,140,.07);--fill-2:rgba(120,80,140,.12);--line:rgba(110,80,130,.16);--line-2:rgba(110,80,130,.1);--hair:rgba(110,80,130,.2);
+  --fg:#241c3a;--muted:#5c5270;--faint:#73698a;
+  --accent:#6d55c9;--accent-hi:#7d66d8;--accent-ink:#ffffff;--accent-soft:rgba(109,85,201,.12);--accent-line:rgba(109,85,201,.38);--accent-text:#5a42b8;
+  --glass:rgba(255,255,255,.62);--glass-hi:rgba(255,255,255,.9);--glass-line:rgba(255,255,255,.85);--glass-sh:0 10px 30px rgba(120,80,110,.12),0 1px 2px rgba(120,80,110,.06);
+  --pill-on:rgba(109,85,201,.13);--pill-on-ink:#4b34a8;--pill-glow:inset 0 0 0 1px rgba(109,85,201,.18);
+  --backdrop:radial-gradient(900px 640px at 0% -8%,#e9ddff 0%,rgba(233,221,255,0) 62%),radial-gradient(900px 640px at 104% 10%,#ffd9c4 0%,rgba(255,217,196,0) 60%),radial-gradient(900px 700px at 60% 112%,#d7f3ee 0%,rgba(215,243,238,0) 60%),linear-gradient(170deg,#fff4e6 0%,#fdf1f0 60%,#f5f1ff 100%);
+  background:#fff4e6}
+:root[data-look="sandhya"] body{background-color:#1b1a3a}:root[data-look="night"] body{background-color:#0c1114}:root[data-look="savera"] body{background-color:#fff4e6}
+:root[data-look="sandhya"] #galock{background:#1b1a3a}:root[data-look="night"] #galock{background:#0c1114}:root[data-look="savera"] #galock{background:#fff4e6}
+/* headings get the display face */
+:root[data-look] .ph h1,:root[data-look] .film #fTitle,:root[data-look] .hm-h h1,:root[data-look] .brand b{font-family:var(--f-display)!important;letter-spacing:-.02em}
+:root[data-look="sandhya"] .ph h1,:root[data-look="night"] .ph h1,:root[data-look="savera"] .ph h1{font-weight:800!important}
+/* one warm glow for the main action */
+:root[data-look="sandhya"] .btn.pri,:root[data-look="night"] .btn.pri,:root[data-look="savera"] .btn.pri{background:var(--sd-glow)!important;color:#2a1d0a!important;border-color:rgba(255,255,255,.4)!important;box-shadow:var(--sd-glow-sh)!important}
+:root[data-look="sandhya"] .btn.pri:hover,:root[data-look="night"] .btn.pri:hover,:root[data-look="savera"] .btn.pri:hover{filter:brightness(1.05)}
+:root[data-look="night"] .btn.pri{background:linear-gradient(90deg,#c9a24f,#c98a5a)!important;color:#0c1114!important}
+:root[data-look="sandhya"] .btn,:root[data-look="night"] .btn,:root[data-look="savera"] .btn{border-radius:999px!important}
+:root[data-look="sandhya"] .card,:root[data-look="sandhya"] .tw,:root[data-look="sandhya"] .banner,:root[data-look="sandhya"] .cs-top,:root[data-look="sandhya"] .cs-sec,:root[data-look="sandhya"] .empty,:root[data-look="sandhya"] .side,:root[data-look="savera"] .card,:root[data-look="savera"] .tw,:root[data-look="savera"] .side,:root[data-look="night"] .card,:root[data-look="night"] .tw,:root[data-look="night"] .side{border-radius:22px!important}
+:root[data-look="sandhya"] .t th{background:#262452!important}:root[data-look="night"] .t th{background:#16211f!important}:root[data-look="savera"] .t th{background:#fff1e6!important}
+:root[data-look="sandhya"] #bTheme{background:var(--sd-glow)!important;color:#2a1d0a!important;border-color:rgba(255,255,255,.4)!important;border-radius:50%!important}
+:root[data-look="savera"] #bTheme{background:linear-gradient(135deg,#b9a4f0,#ff8a7a)!important;color:#fff!important;border-radius:50%!important}
+:root[data-look="night"] #bTheme{background:#16242b!important;color:#9ed2cb!important;border-radius:50%!important}
+@media (min-width:821px){:root[data-look="sandhya"] .wr-bar{background:rgba(33,31,69,.96)!important}:root[data-look="night"] .wr-bar{background:rgba(18,26,30,.97)!important}:root[data-look="savera"] .wr-bar{background:rgba(255,248,240,.96)!important}}
+@media (max-width:820px){
+  :root[data-look="sandhya"]{--strip:#1b1a3a}:root[data-look="night"]{--strip:#0c1114}:root[data-look="savera"]{--strip:#fff4e6}
+  :root[data-look="sandhya"] .bbar{background:#24224c!important}:root[data-look="night"] .bbar{background:#121a1e!important}:root[data-look="savera"] .bbar{background:#fffaf5!important}
+  :root[data-look="sandhya"] .msheet .nav{background:#1f1d43!important}:root[data-look="night"] .msheet .nav{background:#0f1619!important}:root[data-look="savera"] .msheet .nav{background:#fff8f1!important}}
+/* menu icons become colour badges: one colour per section, one symbol */
+:root[data-look="sandhya"] .nav .ic-b,:root[data-look="night"] .nav .ic-b,:root[data-look="savera"] .nav .ic-b{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;flex:none;background:var(--bc,var(--sd-violet))}
+:root[data-look] .nav .ic-b .ic{width:16px!important;height:16px!important;color:var(--sd-ink)!important}
+:root[data-look="night"] .nav .ic-b{background:color-mix(in srgb,var(--bc,#6fa9a3) 55%,#0c1114)}
+:root[data-look] .nav button[aria-current="page"] .ic-b{box-shadow:0 0 0 3px rgba(255,255,255,.18),0 0 18px -2px var(--bc)}
+.nav .ng[data-g="Main"]{--bc:#8a82d6}.nav .ng[data-g="Script"]{--bc:#7fb6ff}.nav .ng[data-g="Single line order"]{--bc:#ffd36e}.nav .ng[data-g="Lists"]{--bc:#b9a4f0}.nav .ng[data-g="Breakdown"]{--bc:#ff8a7a}.nav .ng[data-g="Shooting"]{--bc:#5fd1be}.nav .ng[data-g="Budget"]{--bc:#ffc9a3}
+.nav button[data-page="costume"]{--bc:#ff8a7a}.nav button[data-page="artprops"]{--bc:#ffc9a3}.nav button[data-page="home"]{--bc:#ffd36e}
+:root[data-look="sandhya"] .hm-h h1 span,:root[data-look="savera"] .hm-h h1 span,:root[data-look="night"] .hm-h h1 span{background:linear-gradient(90deg,#ff8a7a,#ffc9a3)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+:root[data-look="savera"] .hm-h h1 span{background:linear-gradient(90deg,#e0604f,#b9744a)!important;-webkit-background-clip:text!important;background-clip:text!important}
+/* Costume looks, continuity photos and art department */
+.wd-sync{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin:-4px 0 14px}.wd-sync i{width:8px;height:8px;border-radius:50%;background:#ffb27a;box-shadow:0 0 10px #ffb27a}
+.wd-who{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.wd-chip{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:8px 14px;border-radius:14px;border:1px solid var(--glass-line);background:var(--glass);color:var(--fg);font:600 13.5px var(--f-ui);cursor:pointer}
+.wd-chip span{font-size:11px;font-weight:500;color:var(--muted)}.wd-chip[aria-pressed="true"]{background:#ff8a7a;color:#1d1a3a;border-color:#ff8a7a}.wd-chip[aria-pressed="true"] span{color:#3b2430}
+.wd-cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+@media (max-width:1100px){.wd-cols{grid-template-columns:1fr}}
+.wd-drop{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:16px 18px;border:2px dashed color-mix(in srgb,var(--accent) 55%,transparent);border-radius:18px;background:color-mix(in srgb,var(--accent) 7%,transparent);margin-bottom:14px;transition:background .15s,border-color .15s}
+.wd-drop svg{width:30px;height:30px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wd-drop .grow{min-width:200px;display:flex;flex-direction:column;gap:2px}.wd-drop b{font-size:15px}.wd-drop span{font-size:12.5px;color:var(--muted)}
+.wd-drop.over{background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:var(--accent)}
+.wd-drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wd-bar,.wd-sheet-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 12px}
+.wd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.wd-t{position:relative;margin:0;border-radius:14px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-line)}
+.wd-t img,.wd-t .ph-i{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.wd-t.on{outline:3px solid #ffd36e;outline-offset:-3px}
+.wd-t figcaption{padding:7px 10px;font-size:12.5px;min-height:1.4em;outline:none;color:var(--fg)}
+.wd-t figcaption:empty::before,.wd-mkt figcaption:empty::before{content:attr(data-ph);color:var(--faint)}
+.wd-pick{position:absolute;left:8px;top:8px;width:28px;height:28px;border-radius:50%;border:2px solid #fff;background:rgba(20,18,50,.35);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.wd-pick[aria-pressed="true"]{background:#ffd36e;border-color:#ffd36e}.wd-pick[aria-pressed="true"]::after{content:"";position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid #1d1a3a;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.wd-x{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(20,18,50,.55);color:#fff;font-size:17px;line-height:1;cursor:pointer;opacity:.85}
+.wd-x:hover,.wd-x:focus-visible{opacity:1;background:#d9534f}
+.wd-side{display:flex;flex-direction:column;gap:12px}.wd-h3{margin:0;font:700 15px var(--f-display)}
+.wd-lk,.wd-sc,.ad-card,.ad-g{background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;padding:14px;box-shadow:var(--glass-sh);display:flex;flex-direction:column;gap:10px}
+.wd-lk-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.wd-lk-h .grow{flex:1}
+.wd-no{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 8px;border-radius:8px;background:#ff8a7a;color:#1d1a3a;font:800 13px var(--f-ui)}
+.wd-ok{font-size:11.5px;font-weight:700;color:#10332c;background:#5fd1be;border-radius:999px;padding:3px 9px}
+.wd-who-n{font:800 17px var(--f-display)}
+.wd-strip{display:flex;gap:6px;overflow-x:auto}.wd-strip .ph-s{width:62px;height:78px;object-fit:cover;border-radius:10px;flex:none;background:var(--fill)}
+.wd-f{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.wd-f input,.wd-f textarea,.wd-f select,.ad-new input,.ad-new select{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:12px;border:1px solid var(--glass-line);background:var(--fill);color:var(--fg);font:500 14px var(--f-ui);resize:vertical}
+.wd-f input:focus,.wd-f textarea:focus,.ad-new input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.wd-form{display:flex;flex-direction:column;gap:12px}
+.wd-mk{display:flex;flex-wrap:wrap;gap:8px}.wd-mkt{position:relative;margin:0;width:84px}.wd-mkt .ph-s{width:84px;height:84px;object-fit:cover;border-radius:12px;display:block;background:var(--fill)}.wd-mkt figcaption{font-size:11px;outline:none;padding-top:3px}
+.wd-mkt .wd-x{width:22px;height:22px;font-size:13px;right:3px;top:3px}
+.wd-add{width:84px;height:84px;border-radius:12px;border:2px dashed var(--glass-line);background:transparent;color:var(--muted);font:600 11.5px var(--f-ui);cursor:pointer;padding:6px}
+.wd-scs{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.wd-desc{margin:0;font-size:13.5px;line-height:1.5}
+.wd-shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}.wd-dev{color:#ffb27a}
+.ph-miss{opacity:.4}
+/* A4 preview: always white paper */
+.a4w{overflow-x:auto;padding:4px 0 20px}
+.a4{width:794px;min-height:1123px;margin:0 auto;box-sizing:border-box;background:#fff;color:#141a2e;padding:44px 48px;display:flex;flex-direction:column;gap:10px;border-radius:4px;box-shadow:0 18px 50px rgba(0,0,0,.25);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color-scheme:light}
+.a4-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#434c6b;border-bottom:2px solid #141a2e;padding-bottom:8px}
+.a4-ttl{display:flex;align-items:flex-end;gap:16px}.a4-ttl>div:first-child{flex:1}.a4-ttl small{font-size:12px;font-weight:700;letter-spacing:.08em;color:#2f5bff}.a4-ttl h2{margin:2px 0 0;font:800 32px/1.1 var(--f-display,inherit);color:#141a2e}
+.a4-r{text-align:right;font-size:14px;line-height:1.5}.a4-ok{color:#14612c;font-weight:600}
+.a4-p{margin:0;font-size:14.5px;line-height:1.5}.a4-box{margin:0;font-size:13px;line-height:1.5;background:#f3f5fb;border-radius:8px;padding:10px 12px}
+.a4-l{font-size:12px;font-weight:700;letter-spacing:.08em;color:#434c6b;margin-top:6px}.a4-hl{color:#8a6a00}
+.a4-g3,.a4-g4{display:grid;gap:10px}.a4-g3{grid-template-columns:repeat(3,1fr)}.a4-g4{grid-template-columns:repeat(4,1fr)}
+.a4 figure{margin:0}.a4-i{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px;background:#e6e9f2}.a4-g4 .a4-i{aspect-ratio:1}
+.a4 figcaption{font-size:12px;font-weight:600;margin-top:4px}.a4-e{grid-column:1/-1;margin:0;font-size:12.5px;color:#8a90a6;font-style:italic}
+.a4-t{width:100%;border-collapse:collapse;font-size:13px}.a4-t td{padding:6px 8px;border-bottom:1px solid #e3e7f2}.a4-n{text-align:right;font-weight:700;white-space:nowrap}.a4-ts{background:#fffaf0;outline:1.5px solid #d9a800;border-radius:6px}
+@media (max-width:840px){.a4{zoom:.62}}@media (max-width:520px){.a4{zoom:.44}}
+.a4-foot{margin-top:auto;border-top:1px solid #d3d8e8;padding-top:8px;font-size:12px;color:#434c6b}
+/* art department */
+.ad-wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.ad-wrap{grid-template-columns:1fr}.ad-list{flex-direction:row!important;overflow-x:auto;max-height:none!important}.ad-li{min-width:200px}}
+.ad-list{display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-line);max-height:72vh;overflow:auto;position:sticky;top:0}
+.ad-li{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border-radius:12px;border:0;background:transparent;color:var(--fg);font:inherit;cursor:pointer}
+.ad-li b{font-size:13.5px}.ad-li span{font-size:11.5px;color:var(--muted)}.ad-li[aria-current="true"]{background:var(--pill-on);box-shadow:inset 3px 0 0 #ffc9a3}
+.ad-li:hover:not([aria-current="true"]){background:var(--fill)}
+.ad-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ad-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.ad-top .grow{flex:1;min-width:220px}.ad-h{margin:0;font:800 28px/1.1 var(--f-display)}
+.ad-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.ad-ph .wd-t img{aspect-ratio:4/3}
+.ad-gs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start}
+.ad-gh{display:flex;align-items:center;gap:8px}.ad-gh b{font:800 16px var(--f-display)}.ad-gh span{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--fill-2)}
+.ad-g p{margin:0}
+.ad-script{border:2px solid #d9a800!important;background:color-mix(in srgb,#ffd36e 12%,var(--glass))!important}.ad-script .ad-gh span{background:#ffd36e;color:#3a2c00}
+.ad-artist .ad-gh span{background:#7fb6ff;color:#0b2447}
+.ad-it{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap;position:relative}
+.ad-it .grow{flex:1;min-width:120px}.ad-n{font-size:14px;font-weight:600}
+.ad-th{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;background:var(--fill)}
+.ad-thadd{border:1.5px dashed var(--glass-line);color:var(--muted);font-size:18px;cursor:pointer}
+.ad-sc{display:flex;gap:4px;flex-wrap:wrap}.ad-chip{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:7px;background:#7fb6ff;color:#0b2447}
+.ad-x{position:static;width:26px;height:26px;font-size:15px}
+.ad-new{display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}.ad-new input{flex:1;min-width:120px}.ad-new .ad-ss{max-width:110px}.ad-new select{width:auto}
+/* the sliding pill behind tabs is solid, so the chosen tab's words stay readable */
+:root[data-look="sandhya"] .fx-goo i,:root[data-look="sandhya"] .gx-ind{background:#b9a4f0!important}
+:root[data-look="savera"] .fx-goo i,:root[data-look="savera"] .gx-ind{background:#e5dcff!important}
+:root[data-look="night"] .fx-goo i,:root[data-look="night"] .gx-ind{background:#2a4a46!important}
+:root[data-look="sandhya"] .seg button[aria-pressed="true"],:root[data-look="sandhya"] .wr-types button[aria-pressed="true"],:root[data-look="sandhya"] .gx-tabs button[aria-pressed="true"]{color:#1d1a3a!important}
+:root[data-look="savera"] .seg button[aria-pressed="true"],:root[data-look="savera"] .wr-types button[aria-pressed="true"],:root[data-look="savera"] .gx-tabs button[aria-pressed="true"]{color:#3b2a8f!important}
+:root[data-look="night"] .seg button[aria-pressed="true"],:root[data-look="night"] .wr-types button[aria-pressed="true"],:root[data-look="night"] .gx-tabs button[aria-pressed="true"]{color:#ffffff!important}
+/* look picker */
+.lk-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.lk-c{display:flex;flex-direction:column;gap:8px;text-align:left;padding:10px;border-radius:18px;border:1.5px solid var(--glass-line);background:var(--glass);color:var(--fg);font:inherit;cursor:pointer}
+.lk-c i{display:block;height:74px;border-radius:12px}.lk-c b{font:800 16px var(--f-display,inherit)}.lk-c span{font-size:12.5px;color:var(--muted);line-height:1.4}
+.lk-c[aria-checked="true"]{border-color:#ffd36e;box-shadow:0 0 0 3px rgba(255,211,110,.3)}
+.lk-c:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
-<script>try{var t=localStorage.getItem("scriptdesk.theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
 <div class="shell">
   <header class="appbar">
     <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="sdGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a84ff"/><stop offset="1" stop-color="#673de6"/></linearGradient></defs><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><g class="stick"><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></g></svg><b>Script<span>Desk</span></b></div>
-    <button class="btn sm ghost icon i-sun" data-ic id="bTheme" title="Switch between light and dark" aria-label="Switch between light and dark"></button>
+    <button class="btn sm ghost icon i-sun" data-ic id="bTheme" title="Choose your look" aria-label="Choose your look"></button>
   </header>
   <aside class="side">
     <nav class="nav" id="nav" aria-label="Reports"></nav>
@@ -2349,7 +2505,7 @@ function costumeRows(){const rows=[];const prev={},seenC={};
       const change=txt&&prev[key]&&prev[key].toLowerCase()!==txt.toLowerCase();if(txt)prev[key]=txt;
       const mk=s.makeup.filter(m=>{const p=m.split(/\s+[–—-]\s+/)[0];return norm(p)===norm(name)||(A(key)&&(A(key).aliases||[]).some(al=>norm(al)===norm(p)))}).map(m=>m.split(/\s+[–—-]\s+/).slice(1).join(' – ')||m).join('; ');
       rows.push({s,key,name,txt,num,change,mk})})});return rows}
-R.costume=()=>{const mode=VIEW.cmode||'scene';const rows=costumeRows();
+R.costume=()=>{const mode=VIEW.cmode||'scene';if(['looks','photos','sheet'].includes(mode))return wdPage();const rows=costumeRows();
   const cols=[{h:'Sc No',w:7},{h:'Effect / Time',w:13},{h:'Location',w:20},{h:'Timeline',w:11},{h:'Artist',w:18},{h:'Costume',w:40},{h:'Costume no.',w:9},{h:'Makeup / look',w:28},{h:'Change',w:8}];
   const er=r=>[r.s.no,eff(r.s),r.s.loc,r.s.timeline,r.name,r.txt,r.num,r.mk,r.change?'Yes':''];
   const tr=r=>`<tr data-q="${esc((r.name+' '+r.s.no+' '+r.txt).toLowerCase())}"><td class="no" data-l="Sc No">${esc(r.s.no)}</td><td data-l="Artist" style="font-weight:600">${esc(r.name)}</td><td data-l="Costume">${ce(`data-cs="${r.s.id}" data-ca="${esc(r.key)}"`,r.txt,'','Costume')}</td><td data-l="No.">${r.num?`<span class="tag ${r.change?'warn':''}">${r.num}${r.change?' · change':''}</span>`:''}</td><td data-l="Makeup / look" class="small">${esc(r.mk)}</td></tr>`;
@@ -2359,15 +2515,15 @@ R.costume=()=>{const mode=VIEW.cmode||'scene';const rows=costumeRows();
     body=order.map(n=>gRow(n,by.get(n).length,5)+by.get(n).map(tr).join('')).join('');exRows=order.flatMap(n=>[{group:n},...by.get(n).map(er)])}
   else{const by=new Map();rows.forEach(r=>{if(!by.has(r.s.id))by.set(r.s.id,[]);by.get(r.s.id).push(r)});
     body=P.scenes.filter(s=>by.has(s.id)).map(s=>gRow(`Sc ${s.no} · ${eff(s)} · ${s.loc}${s.timeline?' · '+s.timeline:''}`,null,5)+by.get(s.id).map(tr).join('')).join('');exRows=P.scenes.filter(s=>by.has(s.id)).flatMap(s=>[{group:`Sc ${s.no} · ${eff(s)} · ${s.loc}`},...by.get(s.id).map(er)])}
-  return {html:pageHead('Costume continuity','Each artist\'s costume per scene. C1, C2… number each costume per artist; "change" marks a new costume from their previous scene.',segm('cmode',[['scene','Scene-wise'],['artist','Artist-wise']])+searchBox())+
+  return {html:pageHead('Costume continuity','Each artist\'s costume per scene. C1, C2… number each costume per artist; "change" marks a new costume from their previous scene.',segm('cmode',CMODES)+searchBox())+
   (rows.length?`<div class="tw"><table class="t rt">${head}<tbody>${body}</tbody></table></div>`:`<div class="empty"><b>No costumes yet</b>Costumes appear after the AI breakdown, or type them into Script breakdown.</div>`),
   exp:{orient:'landscape',sheets:[{name:'Costume continuity',cols,rows:exRows}]}}};
-R.artprops=()=>{const mode=VIEW.apmode||'overall';
-  if(mode==='scene'){const sc=P.scenes;return {html:pageHead('Art / props breakdown','Scene-wise. Separate items with commas.',segm('apmode',[['overall','Overall'],['scene','Scene-wise']])+searchBox())+
+R.artprops=()=>{const mode=VIEW.apmode||'overall';if(mode==='blocks'||mode==='sheet')return adPage();
+  if(mode==='scene'){const sc=P.scenes;return {html:pageHead('Art / props breakdown','Scene-wise. Separate items with commas.',segm('apmode',AMODES)+searchBox())+
     `<div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Location</th><th>Effect</th><th>Setup</th><th>Props</th><th>Art / set dressing</th><th>Special props</th></tr></thead><tbody>${sc.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+s.props.join(' ')+' '+s.art.join(' ')).toLowerCase())}"><td class="no" data-l="Sc No">${esc(s.no)}</td><td class="loc" data-l="Location">${esc(s.loc)}</td><td class="eff" data-l="Effect">${effHtml(s)}</td><td data-l="Setup">${sv(s,'setup',s.setup)}</td><td data-l="Props">${sv(s,'props',listStr(s,'props'))}</td><td data-l="Art / set">${sv(s,'art',listStr(s,'art'))}</td><td data-l="Special props">${sv(s,'spl_props',listStr(s,'spl_props'))}</td></tr>`).join('')}</tbody></table></div>`,
     exp:{orient:'landscape',sheets:[{name:'Art-props scene-wise',cols:[{h:'Sc No',w:7},{h:'Location',w:20},{h:'Effect',w:12},{h:'Setup',w:22},{h:'Props',w:40},{h:'Art / set dressing',w:40},{h:'Special props',w:26}],rows:sc.map(s=>[s.no,s.loc,eff(s),s.setup,listStr(s,'props'),listStr(s,'art'),listStr(s,'spl_props')])}]}}}
   const secs=[['props','Props'],['spl_props','Special props'],['art','Art / set dressing']].map(([k,l])=>({k,l,items:itemIndex(k).sort((a,b)=>b.sc.length-a.sc.length||a.name.localeCompare(b.name))}));
-  return {html:pageHead('Art / props breakdown','Overall list for the whole script. Rename an item to change it everywhere; clear it to remove it.',segm('apmode',[['overall','Overall'],['scene','Scene-wise']])+searchBox())+
+  return {html:pageHead('Art / props breakdown','Overall list for the whole script. Rename an item to change it everywhere; clear it to remove it.',segm('apmode',AMODES)+searchBox())+
   `<div class="stats">${secs.map(x=>`<div class="stat"><b>${x.items.length}</b><span>${x.l}</span></div>`).join('')}</div><div class="tw"><table class="t rt"><thead><tr><th>Item</th><th>No. of scenes</th><th>Scene numbers</th></tr></thead><tbody>${secs.map(x=>gRow(x.l,null,3)+(x.items.map(it=>`<tr data-q="${esc(it.name.toLowerCase())}"><td data-l="Item">${ce(`data-item="${esc(it.name)}" data-cat="${x.k}"`,it.name,'',x.l)}</td><td class="num" data-l="Scenes">${it.sc.length}</td><td data-l="Scene numbers">${esc(it.sc.join(', '))}</td></tr>`).join('')||'<tr><td class="faint nol" colspan="3">None</td></tr>')).join('')}</tbody></table></div>`,
   exp:{orient:'portrait',sheets:[{name:'Art-props overall',cols:[{h:'Item',w:40},{h:'No. of scenes',w:10},{h:'Scene numbers',w:50}],rows:secs.flatMap(x=>[{group:x.l},...x.items.map(it=>[it.name,it.sc.length,it.sc.join(', ')])])}]}}};
 R.profiles=()=>{const prim=sortedArtists().filter(a=>a.tier==='Primary');
@@ -3008,6 +3164,231 @@ function sidesMount(){const c=$('#content');const V=VIEW.sides;if(!V||!c.querySe
 async function sidesPdf(){const V=VIEW.sides;const S=SCH();const day=S.days.find(d=>d.id===V.day);const sc=day?dayScenes(day):P.scenes.filter(s=>V.pick.includes(s.id));if(!sc.length)return;
   const els=sidesEls(sc.map(s=>s.no));const lab=day?dayLabel(day):'Selected scenes';const hdr=`SIDES · ${lab} · Sc ${sc.map(s=>s.no).join(', ')}`;
   const doc=await wrPdf({els,hl:new Set(V.cast),header:hdr,noTitle:true,marks:false});const nm=(P.title||'Script').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'_Sides'+(day?'_Day'+(dayNums()[day.id]||''):'')+'.pdf';await saveFile(nm,await pdfOut(doc))}
+/* ---- Photos for looks, continuity and the art department.
+   The pictures stay on this device (IndexedDB), encrypted when the vault is on; the project keeps only small notes about them (id, caption, scene), so it stays light enough to sync.
+   Each photo is marked "on this device" until team photo sync is switched on. ---- */
+const PH={mem:new Map(),
+  async put(dataUrl){if(!/^data:image\/(jpeg|png|webp);base64,/.test(dataUrl))throw new Error('not an image');const id=uid();let v=dataUrl;
+    if(SEC.on){if(!SEC.dek)throw new Error('locked');v={__enc:await aesEnc(SEC.dek,dataUrl)}}
+    const ok=await IDB.set('ph.'+id,v);if(ok===false)throw new Error('not saved');this.mem.set(id,dataUrl);return id},
+  async get(id){if(!id)return null;if(this.mem.has(id))return this.mem.get(id);let v=null;try{v=await IDB.get('ph.'+id)}catch(e){return null}
+    if(v&&v.__enc){if(!SEC.dek)return null;try{v=await aesDec(SEC.dek,v.__enc)}catch(e){return null}}
+    if(typeof v!=='string'||!/^data:image\//.test(v))return null;this.mem.set(id,v);return v},
+  async del(id){this.mem.delete(id);try{await IDB.del('ph.'+id)}catch(e){}}};
+const PH_Q={small:520,standard:900,high:1500};
+function phMeta(id,o){return Object.assign({id,at:Date.now(),by:meName(),sync:0},o||{})}
+function meName(){const u=(typeof GA!=='undefined'&&GA.user)||null;return String((u&&(u.name||u.email))||'Me').slice(0,60)}
+function phImg(m,alt,cls){return `<img class="${cls||'ph-i'}" data-ph="${esc(m.id)}" alt="${esc(alt||m.cap||'Photo')}" loading="lazy">`}
+async function phHydrate(root){const els=[...(root||document).querySelectorAll('img[data-ph]:not([src])')];for(const el of els){const d=await PH.get(el.dataset.ph);if(d)el.src=d;else{el.classList.add('ph-miss');el.alt='Photo is on another device'}}}
+async function phAddFiles(files){const ids=[];for(const f of files){if(!f||!/^image\//.test(f.type||'image/'))continue;try{ids.push(await PH.put(await shrinkImage(f,1600)))}catch(e){toast(e&&e.message==='locked'?'Unlock your vault to add photos.':'A picture could not be added.')}}return ids}
+function phCamera(){return new Promise(res=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.setAttribute('capture','environment');i.onchange=()=>res([...(i.files||[])]);i.click()})}
+function scList(str){return uniq(String(str||'').split(/[\s,;]+/).map(U).filter(Boolean))}
+function phWaiting(){const all=[];const W=P&&P.wd,A=P&&P.ad;if(W){Object.values(W.refs||{}).forEach(l=>all.push(...l));(W.locks||[]).forEach(k=>{all.push(...(k.refs||[]),...(k.mk||[]))});all.push(...(W.set||[]))}
+  if(A)Object.values(A.blocks||{}).forEach(b=>{Object.values(b.photos||{}).forEach(l=>all.push(...l));Object.values(b.pph||{}).forEach(x=>all.push(x))});return all.filter(m=>m&&!m.sync).length}
+function phNote(){const n=phWaiting();return n?`<p class="wd-sync"><i aria-hidden="true"></i>${n} photo${n===1?' is':'s are'} saved on this device. They reach your team when team photo sync is switched on.</p>`:''}
+function dropZone(kind,extra){return `<div class="wd-drop" data-wddrop="${kind}" tabindex="0" aria-label="Drop pictures here"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg><div class="grow"><b>Drop pictures here</b><span>Drag them in from any website or folder, paste a copied picture, or add from your camera.</span></div><button class="btn sm" data-wd="add" data-k="${kind}"${extra||''}>Choose files</button><button class="btn sm" data-wd="cam" data-k="${kind}"${extra||''}>Take photo</button></div>`}
+/* ---- Costumes: look boards, locked looks, continuity photos, A4 sheets ---- */
+const CMODES=[['scene','Scene-wise'],['artist','Artist-wise'],['looks','Look boards'],['photos','Continuity photos'],['sheet','A4 sheets']];
+function WD(){if(!P.wd||typeof P.wd!=='object')P.wd={refs:{},locks:[],set:[]};const W=P.wd;W.refs=W.refs||{};W.locks=W.locks||[];W.set=W.set||[];return W}
+function wdArtists(){const rows=costumeRows();const names=uniq(rows.map(r=>r.name));const pri=n=>{const a=findArtist(n);return a&&a.tier==='Primary'?0:1};
+  const all=uniq([...names,...sortedArtists().map(a=>a.name)]);return all.sort((a,b)=>pri(a)-pri(b))}
+function wdNums(name){const m=new Map();costumeRows().filter(r=>r.name===name&&r.num).forEach(r=>{if(!m.has(r.num))m.set(r.num,{no:r.num,txt:r.txt,sc:[]});m.get(r.num).sc.push(r.s.no)});return [...m.values()]}
+function wdLocksOf(name){return WD().locks.filter(k=>k.artist===name).sort((a,b)=>String(a.no).localeCompare(String(b.no),undefined,{numeric:true}))}
+function wdLockFor(name,sno){return wdLocksOf(name).find(k=>scList(k.scenes).includes(U(sno)))||null}
+function wdHead(){const mode=VIEW.cmode;return pageHead('Costume continuity',mode==='looks'?'Gather references for each artist, then lock a look as C1, C2… and pick the scenes it belongs to.':mode==='photos'?'On set: open a scene, see the locked look, and add continuity photos for each artist.':'Each locked look as an A4 page with the look, accessories, makeup and set photos, ready to share.',segm('cmode',CMODES)+(mode!=='sheet'?searchBox():''))}
+function wdPage(){const mode=VIEW.cmode;const html=mode==='looks'?wdLooks():mode==='photos'?wdPhotos():wdSheet();
+  const W=WD();const exp={orient:'landscape',sheets:[{name:'Locked looks',cols:[{h:'Artist',w:18},{h:'Look',w:7},{h:'Description',w:40},{h:'Scenes',w:24},{h:'Makeup and hair',w:36},{h:'Locked by',w:16},{h:'Photos',w:8}],rows:W.locks.map(k=>[k.artist,k.no,k.desc,scList(k.scenes).join(', '),k.mkText||'',k.by,(k.refs||[]).length+(k.mk||[]).length])}]};
+  return {html:wdHead()+phNote()+html,exp}}
+function wdPickArtist(names){const cur=names.includes(VIEW.wdA)?VIEW.wdA:names[0];VIEW.wdA=cur;return cur}
+function wdArtistBar(names,cur){return `<div class="wd-who" role="group" aria-label="Artist">${names.map(n=>`<button class="wd-chip" data-wdart="${esc(n)}" aria-pressed="${n===cur}">${esc(n)}<span>${(WD().refs[n]||[]).length+wdLocksOf(n).length?((WD().refs[n]||[]).length+' refs · '+wdLocksOf(n).length+' locked'):''}</span></button>`).join('')}</div>`}
+function wdLooks(){const names=wdArtists();if(!names.length)return `<div class="empty"><b>No artists yet</b>Artists appear after the AI breakdown, or add them in No. of artists.</div>`;
+  const cur=wdPickArtist(names);const refs=WD().refs[cur]||[];const sel=new Set(VIEW.wdSel||[]);const locks=wdLocksOf(cur);
+  const tiles=refs.map(m=>`<figure class="wd-t${sel.has(m.id)?' on':''}" data-q="${esc((cur+' '+(m.cap||'')).toLowerCase())}">${phImg(m,m.cap)}<button class="wd-pick" data-wdsel="${esc(m.id)}" aria-pressed="${sel.has(m.id)}" aria-label="Select this picture"></button><figcaption contenteditable="true" spellcheck="false" data-wdcap="ref|${esc(cur)}|${esc(m.id)}" data-ph="Add a note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-wddel="ref|${esc(cur)}|${esc(m.id)}" aria-label="Remove picture">×</button></figure>`).join('');
+  const next='C'+(Math.max(0,...wdNums(cur).map(x=>+x.no.slice(1)||0),...locks.map(k=>+String(k.no).slice(1)||0))+1);
+  const lockCards=locks.map(k=>`<article class="wd-lk" data-q="${esc((cur+' '+k.no+' '+(k.desc||'')).toLowerCase())}"><div class="wd-lk-h"><b class="wd-no">${esc(k.no)}</b><span class="wd-ok">Locked by ${esc(k.by||'')}</span><span class="grow"></span><button class="btn sm" data-wdgo="sheet|${esc(k.id)}">A4 sheet</button><button class="btn sm ghost danger" data-wdun="${esc(k.id)}">Unlock</button></div>
+    <div class="wd-strip">${(k.refs||[]).map(m=>phImg(m,m.cap,'ph-s')).join('')||'<span class="faint small">No look photos</span>'}</div>
+    <label class="wd-f">Look<input data-wdk="${esc(k.id)}|desc" value="${esc(k.desc||'')}" placeholder="Red saree, brown shawl"></label>
+    <label class="wd-f">Scenes<input data-wdk="${esc(k.id)}|scenes" value="${esc(scList(k.scenes).join(', '))}" placeholder="14, 16, 22"></label>
+    <label class="wd-f">Makeup and hair<textarea rows="2" data-wdk="${esc(k.id)}|mkText" placeholder="Smudged kajal, loose bun, no lipstick">${esc(k.mkText||'')}</textarea></label>
+    <div class="wd-mk">${(k.mk||[]).map(m=>`<figure class="wd-mkt">${phImg(m,m.cap,'ph-s')}<figcaption contenteditable="true" spellcheck="false" data-wdcap="mk|${esc(k.id)}|${esc(m.id)}" data-ph="Note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-wddel="mk|${esc(k.id)}|${esc(m.id)}" aria-label="Remove makeup reference">×</button></figure>`).join('')}<button class="wd-add" data-wd="mk" data-id="${esc(k.id)}">+ Makeup reference</button></div></article>`).join('');
+  return wdArtistBar(names,cur)+`<div class="wd-cols"><section class="wd-main">${dropZone('ref')}
+    <div class="wd-bar"><span class="small muted">${refs.length} reference${refs.length===1?'':'s'}${sel.size?' · '+sel.size+' selected':''}</span><span class="grow"></span><button class="btn sm pri" data-wd="lock" ${sel.size?'':'disabled'}>Lock ${sel.size||''} selected as a look</button></div>
+    ${refs.length?`<div class="wd-grid">${tiles}</div>`:`<div class="empty"><b>No references for ${esc(cur)} yet</b>Drop pictures above. Then select the ones the director chooses and lock them as ${esc(next)}.</div>`}</section>
+    <aside class="wd-side"><h3 class="wd-h3">Locked looks</h3>${lockCards||`<p class="small muted">Select pictures on the board and press <b>Lock as a look</b>. Then pick the scenes it belongs to.</p>`}</aside></div>`}
+function wdLockModal(){const cur=VIEW.wdA;const nums=wdNums(cur);const locks=wdLocksOf(cur);const taken=new Set(locks.map(k=>k.no));
+  const nextN=Math.max(0,...nums.map(x=>+x.no.slice(1)||0),...locks.map(k=>+String(k.no).slice(1)||0))+1;const opts=[...nums.filter(x=>!taken.has(x.no)),{no:'C'+nextN,txt:'',sc:[]}];
+  openModal(`<div class="modal-h"><h2>Lock a look for ${esc(cur)}</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b wd-form">
+    <label class="wd-f">Costume number<select id="wdNo">${opts.map(o=>`<option value="${esc(o.no)}" data-txt="${esc(o.txt)}" data-sc="${esc(o.sc.join(', '))}">${esc(o.no)}${o.txt?' · '+esc(o.txt):' · new look'}</option>`).join('')}</select></label>
+    <label class="wd-f">Look<input id="wdDesc" value="${esc(opts[0].txt)}" placeholder="Red saree, brown shawl, red bangles"></label>
+    <label class="wd-f">Scenes<input id="wdSc" value="${esc(opts[0].sc.join(', '))}" placeholder="14, 16, 22"></label>
+    <label class="wd-f">Locked by<input id="wdBy" value="${esc(meName())}"></label>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:6px"><button class="btn" data-close>Cancel</button><button class="btn pri" id="wdLockGo">Lock look</button></div></div>`);
+  const s=$('#wdNo');s.onchange=()=>{const o=s.selectedOptions[0];if(o.dataset.txt)$('#wdDesc').value=o.dataset.txt;$('#wdSc').value=o.dataset.sc||$('#wdSc').value};
+  $('#wdLockGo').onclick=()=>{const W=WD();const sel=new Set(VIEW.wdSel||[]);const refs=(W.refs[cur]||[]).filter(m=>sel.has(m.id));
+    const valid=new Set(P.scenes.map(x=>U(x.no)));const sc=scList($('#wdSc').value);const bad=sc.filter(x=>!valid.has(x));
+    if(bad.length){toast('These scenes are not in the script: '+bad.join(', '));return}
+    snapshot();W.locks.push({id:uid(),artist:cur,no:s.value,desc:$('#wdDesc').value.trim().slice(0,300),scenes:sc.join(', '),by:$('#wdBy').value.trim().slice(0,60)||meName(),at:Date.now(),refs:refs.map(m=>Object.assign({},m)),mk:[],mkText:''});
+    VIEW.wdSel=[];touch();closeModal();render(true);toast(s.value+' locked for '+cur+'.')}}
+function wdPhotos(){const sc=P.scenes;if(!sc.length)return `<div class="empty"><b>No scenes yet</b>Import a script first.</div>`;
+  const cur=sc.find(s=>s.id===VIEW.wdS)||sc[0];VIEW.wdS=cur.id;const names=uniq([...cur.artists.map(aName),...(cur.costumes||[]).map(c=>c.a?aName(c.a):c.n)]).filter(Boolean);const i=sc.indexOf(cur);
+  const nav=`<div class="sb-nav"><button class="btn sm" data-wdsgo="${sc[i-1]?sc[i-1].id:''}" ${i?'':'disabled'} aria-label="Previous scene">‹</button><select class="mini" data-wdssel aria-label="Scene">${sc.map(s=>`<option value="${s.id}"${s===cur?' selected':''}>Scene ${esc(s.no)} · ${esc(s.loc||'')}</option>`).join('')}</select><button class="btn sm" data-wdsgo="${sc[i+1]?sc[i+1].id:''}" ${sc[i+1]?'':'disabled'} aria-label="Next scene">›</button><span class="small muted">${esc(sceneHeadText(cur))}</span></div>`;
+  const W=WD();const cards=names.map(n=>{const k=wdLockFor(n,cur.no);const shots=W.set.filter(x=>x.artist===n&&U(x.scene)===U(cur.no));const row=costumeRows().find(r=>r.s.id===cur.id&&r.name===n);
+    return `<article class="wd-sc" data-q="${esc(n.toLowerCase())}"><div class="wd-lk-h"><b class="wd-who-n">${esc(n)}</b>${k?`<span class="wd-no">${esc(k.no)}</span><span class="wd-ok">Locked by ${esc(k.by||'')}</span>`:row&&row.num?`<span class="wd-no">${esc(row.num)}</span><span class="small muted">not locked yet</span>`:'<span class="small muted">no look yet</span>'}<span class="grow"></span><button class="btn sm pri" data-wd="shot" data-a="${esc(n)}">Take photo</button><button class="btn sm" data-wd="shotf" data-a="${esc(n)}">From files</button></div>
+      <p class="wd-desc">${esc((k&&k.desc)||(row&&row.txt)||'')}${k&&k.mkText?`<br><span class="muted">Makeup: ${esc(k.mkText)}</span>`:''}</p>
+      ${k&&(k.refs||[]).length?`<div class="wd-strip">${k.refs.map(m=>phImg(m,m.cap,'ph-s')).join('')}</div>`:''}
+      <div class="wd-shots">${shots.map(x=>`<figure class="wd-t">${phImg(x,'Scene '+x.scene+' take '+x.take)}<figcaption><b>Take ${esc(String(x.take||''))}</b> · ${esc(new Date(x.at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))}${x.sync?'':' · <span class="wd-dev">on this device</span>'}</figcaption><button class="wd-x" data-wddel="set||${esc(x.id)}" aria-label="Remove photo">×</button></figure>`).join('')||'<p class="small muted">No set photos for this scene yet.</p>'}</div></article>`}).join('');
+  return nav+(names.length?`<div class="wd-scs">${cards}</div>`:`<div class="empty"><b>No artists in this scene</b></div>`)}
+function wdSheet(){const names=wdArtists().filter(n=>wdLocksOf(n).length);if(!names.length)return `<div class="empty"><b>No locked looks yet</b>Lock a look in Look boards first. Each locked look becomes an A4 page.</div>`;
+  const cur=names.includes(VIEW.wdA)?VIEW.wdA:names[0];VIEW.wdA=cur;const locks=wdLocksOf(cur);const k=locks.find(x=>x.id===VIEW.wdL)||locks[0];VIEW.wdL=k.id;const q=VIEW.wdQ||'standard';
+  const set=wdSetFor(k);
+  return wdArtistBar(names,cur)+`<div class="wd-sheet-bar"><div class="seg" role="group" aria-label="Look">${locks.map(x=>`<button data-wdl="${esc(x.id)}" aria-pressed="${x===k}">${esc(x.no)}</button>`).join('')}</div><span class="small muted">Photo quality</span><div class="seg" role="group" aria-label="Photo quality">${[['small','Small'],['standard','Standard'],['high','High']].map(([v,l])=>`<button data-wdq="${v}" aria-pressed="${q===v}">${l}</button>`).join('')}</div><span class="grow"></span><button class="btn" data-wd="pdfall">All ${esc(cur)} looks</button><button class="btn pri" data-wd="pdf">Download A4 PDF</button></div>
+  <div class="a4w"><div class="a4" aria-label="A4 preview">
+    <div class="a4-top"><span>${esc(P.production||'')}</span><span>${esc(P.title||'')}</span><span>${esc(new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}))}</span></div>
+    <div class="a4-ttl"><div><small>COSTUME SHEET</small><h2>${esc(cur)} · ${esc(k.no)}</h2></div><div class="a4-r">Scenes <b>${esc(scList(k.scenes).join(', '))}</b><br><span class="a4-ok">Locked by ${esc(k.by||'')}</span></div></div>
+    ${k.desc?`<p class="a4-p">${esc(k.desc)}</p>`:''}
+    <div class="a4-l">LOOK</div><div class="a4-g3">${(k.refs||[]).slice(0,3).map(m=>`<figure>${phImg(m,m.cap,'a4-i')}<figcaption>${esc(m.cap||'')}</figcaption></figure>`).join('')||'<p class="a4-e">No look photos</p>'}</div>
+    ${(k.refs||[]).length>3?`<div class="a4-l">ACCESSORIES AND DETAILS</div><div class="a4-g4">${k.refs.slice(3,7).map(m=>`<figure>${phImg(m,m.cap,'a4-i')}<figcaption>${esc(m.cap||'')}</figcaption></figure>`).join('')}</div>`:''}
+    <div class="a4-l">MAKEUP AND HAIR</div>${k.mkText?`<p class="a4-p">${esc(k.mkText)}</p>`:''}<div class="a4-g4">${(k.mk||[]).slice(0,4).map(m=>`<figure>${phImg(m,m.cap,'a4-i')}<figcaption>${esc(m.cap||'')}</figcaption></figure>`).join('')||'<p class="a4-e">No makeup references</p>'}</div>
+    <div class="a4-l">SET PHOTOS (CONTINUITY)</div><div class="a4-g4">${set.slice(0,8).map(x=>`<figure>${phImg(x,'Scene '+x.scene)}<figcaption>Scene ${esc(x.scene)} · take ${esc(String(x.take||''))}</figcaption></figure>`).join('')||'<p class="a4-e">No set photos yet</p>'}</div>
+    <div class="a4-foot"><span>ScriptDesk · Costume continuity</span></div></div></div>`}
+function wdSetFor(k){const sc=new Set(scList(k.scenes));return WD().set.filter(x=>x.artist===k.artist&&sc.has(U(x.scene))).sort((a,b)=>a.at-b.at)}
+function wdFind(path){const [kind,owner,id]=String(path).split('|');const W=WD();
+  if(kind==='ref'){const l=W.refs[owner]||[];return [l,l.find(m=>m.id===id)]}
+  if(kind==='mk'){const k=W.locks.find(x=>x.id===owner);const l=k?(k.mk=k.mk||[]):[];return [l,l.find(m=>m.id===id)]}
+  if(kind==='set'){return [W.set,W.set.find(m=>m.id===id)]}return [[],null]}
+async function wdAdd(kind,files,o){if(!files.length)return;const ids=await phAddFiles(files);if(!ids.length)return;const W=WD();snapshot();
+  if(kind==='ref'){const n=VIEW.wdA;W.refs[n]=W.refs[n]||[];ids.forEach(id=>W.refs[n].push(phMeta(id)))}
+  else if(kind==='mk'){const k=W.locks.find(x=>x.id===o.id);if(!k)return;k.mk=k.mk||[];ids.forEach(id=>k.mk.push(phMeta(id)))}
+  else if(kind==='set'){const cur=scById(VIEW.wdS);if(!cur)return;let take=Math.max(0,...W.set.filter(x=>x.artist===o.a&&U(x.scene)===U(cur.no)).map(x=>+x.take||0));
+    const k=wdLockFor(o.a,cur.no);ids.forEach(id=>W.set.push(phMeta(id,{artist:o.a,scene:String(cur.no),take:++take,look:k?k.no:''})))}
+  else if(kind.startsWith('ad')){adAdd(kind,ids);return}
+  touch();render(true);toast(ids.length===1?'Photo added.':ids.length+' photos added.')}
+async function wdClick(t){const W=WD();
+  if(t.dataset.wdart){VIEW.wdA=t.dataset.wdart;VIEW.wdSel=[];VIEW.wdL='';render(true);return true}
+  if(t.dataset.wdsel){const s=new Set(VIEW.wdSel||[]);s.has(t.dataset.wdsel)?s.delete(t.dataset.wdsel):s.add(t.dataset.wdsel);VIEW.wdSel=[...s];render(true);return true}
+  if(t.dataset.wdl){VIEW.wdL=t.dataset.wdl;render(true);return true}
+  if(t.dataset.wdq){VIEW.wdQ=t.dataset.wdq;render(true);return true}
+  if(t.dataset.wdsgo!==undefined){if(t.dataset.wdsgo){VIEW.wdS=t.dataset.wdsgo;render()}return true}
+  if(t.dataset.wdgo){const [m,id]=t.dataset.wdgo.split('|');VIEW.cmode=m;VIEW.wdL=id;render();return true}
+  if(t.dataset.wdun){if(!t.dataset.armed){t.dataset.armed=1;t.textContent='Confirm unlock';return true}snapshot();W.locks=W.locks.filter(k=>k.id!==t.dataset.wdun);touch();render(true);return true}
+  if(t.dataset.wddel){if(!t.dataset.armed){t.dataset.armed=1;t.textContent='✓';t.setAttribute('aria-label','Press again to remove');return true}const [l,m]=wdFind(t.dataset.wddel);if(!m)return true;snapshot();l.splice(l.indexOf(m),1);
+    const used=JSON.stringify(P.wd||{})+JSON.stringify(P.ad||{});if(!used.includes('"'+m.id+'"'))PH.del(m.id);touch();render(true);return true}
+  const a=t.dataset.wd;if(!a)return false;
+  if(a==='add'||a==='cam'){const files=a==='cam'?await phCamera():await pickImages(true);await wdAdd(t.dataset.k,files,{});return true}
+  if(a==='mk'){await wdAdd('mk',await pickImages(true),{id:t.dataset.id});return true}
+  if(a==='shot'||a==='shotf'){await wdAdd('set',a==='shot'?await phCamera():await pickImages(true),{a:t.dataset.a});return true}
+  if(a==='lock'){wdLockModal();return true}
+  if(a==='pdf'||a==='pdfall'){const locks=a==='pdf'?wdLocksOf(VIEW.wdA).filter(k=>k.id===VIEW.wdL):wdLocksOf(VIEW.wdA);await wdPdf(locks);return true}
+  return false}
+function wdMount(){const c=$('#content');phHydrate(c);
+  c.querySelectorAll('[data-wdcap]').forEach(el=>el.addEventListener('blur',()=>{const [,m]=wdFind(el.dataset.wdcap);const v=el.innerText.trim().slice(0,200);if(m&&v!==(m.cap||'')){m.cap=v;touch()}}));
+  c.querySelectorAll('[data-wdk]').forEach(el=>el.addEventListener('change',()=>{const [id,f]=el.dataset.wdk.split('|');const k=WD().locks.find(x=>x.id===id);if(!k)return;let v=el.value.trim().slice(0,f==='mkText'?600:300);
+    if(f==='scenes'){const valid=new Set(P.scenes.map(x=>U(x.no)));const sc=scList(v);const bad=sc.filter(x=>!valid.has(x));if(bad.length){toast('These scenes are not in the script: '+bad.join(', '));el.value=scList(k.scenes).join(', ');return}v=sc.join(', ')}
+    snapshot();k[f]=v;touch()}));
+  const sel=c.querySelector('[data-wdssel]');sel&&sel.addEventListener('change',()=>{VIEW.wdS=sel.value;render()});
+  dropMount(c)}
+function dropMount(c){const z=c.querySelector('[data-wddrop]');if(!z)return;const kind=z.dataset.wddrop;
+  ['dragenter','dragover'].forEach(ev=>c.addEventListener(ev,e=>{if([...(e.dataTransfer&&e.dataTransfer.types||[])].includes('Files')){e.preventDefault();z.classList.add('over')}}));
+  c.addEventListener('dragleave',e=>{if(e.target===z||!c.contains(e.relatedTarget))z.classList.remove('over')});
+  c.addEventListener('drop',e=>{const f=[...(e.dataTransfer&&e.dataTransfer.files||[])].filter(x=>/^image\//.test(x.type));if(!f.length)return;e.preventDefault();z.classList.remove('over');wdAdd(kind,f,{})})}
+document.addEventListener('paste',e=>{if(!P)return;const z=document.querySelector('#content [data-wddrop]');if(!z)return;const el=e.target;if(el&&(el.isContentEditable||/^(INPUT|TEXTAREA)$/.test(el.tagName)))return;
+  const f=[...((e.clipboardData&&e.clipboardData.files)||[])].filter(x=>/^image\//.test(x.type));if(!f.length)return;e.preventDefault();wdAdd(z.dataset.wddrop,f,{})});
+/* ---- A4 PDF pages with photos ---- */
+async function fitImg(id,w,h,maxPx){const d=await PH.get(id);if(!d)return null;return new Promise(res=>{const im=new Image();im.onload=()=>{const r=w/h;let sw=im.width,sh=im.height,sx=0,sy=0;if(sw/sh>r){sw=sh*r;sx=(im.width-sw)/2}else{sh=sw/r;sy=(im.height-sh)/2}
+  const k=Math.min(1,maxPx/Math.max(sw,sh));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(sw*k));c.height=Math.max(1,Math.round(sh*k));const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,sx,sy,sw,sh,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.8))};im.onerror=()=>res(null);im.src=d})}
+function a4Doc(){const {jsPDF}=window.jspdf;return new jsPDF({unit:'pt',format:'a4',orientation:'portrait'})}
+function a4Header(doc,kind,title,right1,right2){const M=40,W=595;doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(67,76,107);doc.text(String(P.production||''),M,40);doc.text(String(P.title||''),W/2,40,{align:'center'});doc.text(new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),W-M,40,{align:'right'});
+  doc.setDrawColor(20,26,46);doc.setLineWidth(1.4);doc.line(M,47,W-M,47);doc.setTextColor(47,91,255);doc.setFontSize(9);doc.text(kind,M,70);doc.setTextColor(20,26,46);doc.setFontSize(24);doc.text(doc.splitTextToSize(title,330)[0],M,94);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);if(right1)doc.text(doc.splitTextToSize(right1,190)[0],W-M,82,{align:'right'});if(right2){doc.setTextColor(20,97,44);doc.text(doc.splitTextToSize(right2,190)[0],W-M,96,{align:'right'});doc.setTextColor(20,26,46)}return 112}
+function a4Label(doc,y,txt,col){const M=40;doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(...(col||[67,76,107]));doc.text(txt,M,y);doc.setTextColor(20,26,46);return y+8}
+async function a4Photos(doc,y,items,cols,h,maxPx,capFn){const M=40,W=595,gap=10,cw=(W-2*M-gap*(cols-1))/cols;let i=0;
+  for(const m of items){const x=M+(i%cols)*(cw+gap),yy=y+Math.floor(i/cols)*(h+24);doc.setFillColor(230,233,242);doc.rect(x,yy,cw,h,'F');const d=await fitImg(m.id,cw,h,maxPx);if(d){try{doc.addImage(d,'JPEG',x,yy,cw,h,undefined,'FAST')}catch(e){}}
+    doc.setFont('helvetica','normal');doc.setFontSize(8.5);const cap=capFn?capFn(m):(m.cap||'');if(cap)doc.text(doc.splitTextToSize(cap,cw)[0],x,yy+h+11);i++}
+  return y+Math.ceil(Math.max(1,i)/cols)*(h+24)}
+function a4Text(doc,y,txt,size){const M=40;doc.setFont('helvetica','normal');doc.setFontSize(size||10.5);const ls=doc.splitTextToSize(String(txt||''),595-2*M).slice(0,6);ls.forEach((l,i)=>doc.text(l,M,y+i*14));return y+ls.length*14+4}
+function a4Foot(doc,txt){const M=40,n=doc.getNumberOfPages();for(let p=1;p<=n;p++){doc.setPage(p);doc.setDrawColor(211,216,232);doc.setLineWidth(.6);doc.line(M,806,555,806);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(67,76,107);doc.text(txt,M,820);doc.text('Page '+p+' of '+n,555,820,{align:'right'})}}
+function a4Need(doc,y,need){if(y+need>790){doc.addPage();return 60}return y}
+async function wdPdf(locks){if(!locks.length){toast('Lock a look first.');return}try{await loadScript(CDN.jspdf)}catch(e){toast('PDF tools need internet the first time. Connect and try again.');return}
+  const q=PH_Q[VIEW.wdQ||'standard'];const doc=a4Doc();let first=true;
+  for(const k of locks){if(!first)doc.addPage();first=false;let y=a4Header(doc,'COSTUME SHEET',k.artist+' · '+k.no,'Scenes '+scList(k.scenes).join(', '),k.by?'Locked by '+k.by:'');
+    if(k.desc)y=a4Text(doc,y+6,k.desc,11);
+    y=a4Label(doc,y+8,'LOOK');y=await a4Photos(doc,y+4,(k.refs||[]).slice(0,3),3,190,q);
+    if((k.refs||[]).length>3){y=a4Need(doc,y,140);y=a4Label(doc,y+4,'ACCESSORIES AND DETAILS');y=await a4Photos(doc,y+4,k.refs.slice(3,7),4,96,q)}
+    y=a4Need(doc,y,150);y=a4Label(doc,y+4,'MAKEUP AND HAIR');if(k.mkText)y=a4Text(doc,y+8,k.mkText);if((k.mk||[]).length)y=await a4Photos(doc,y+2,k.mk.slice(0,4),4,96,q);
+    const set=wdSetFor(k);if(set.length){y=a4Need(doc,y,150);y=a4Label(doc,y+4,'SET PHOTOS (CONTINUITY)');y=await a4Photos(doc,y+4,set.slice(0,8),4,104,q,x=>'Scene '+x.scene+' · take '+x.take)}}
+  a4Foot(doc,'ScriptDesk · Costume continuity');
+  const nm=[P.title||'Film','Costume',locks[0].artist,locks.length===1?locks[0].no:'All_looks'].join('_').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'.pdf';await saveFile(nm,await pdfOut(doc))}
+/* ---- Art department: blocks (real location or built set), photos and info, script / ambience / artist props ---- */
+const AMODES=[['overall','Overall'],['scene','Scene-wise'],['blocks','Blocks and photos'],['sheet','A4 sheets']];
+const AD_G=[['script','Script props','Named in the script. Must be on set, continuity matters.'],['amb','Ambience props','Set dressing that fills the place. Not in the script.'],['artist','Artist props','Carried or used by an artist, with the scenes where each is used.']];
+const AD_T=[['loc','Real location photos'],['design','Set design and sketches'],['dress','Dressing references']];
+function AD(){if(!P.ad||typeof P.ad!=='object')P.ad={blocks:{}};P.ad.blocks=P.ad.blocks||{};return P.ad}
+function adB(loc,make){const A=AD();let b=A.blocks[loc];if(!b){b={kind:'real',info:{},photos:{loc:[],design:[],dress:[]},extra:[],grp:{},hide:[],pph:{}};if(make)A.blocks[loc]=b}
+  b.info=b.info||{};b.photos=b.photos||{};AD_T.forEach(([k])=>b.photos[k]=b.photos[k]||[]);b.extra=b.extra||[];b.grp=b.grp||{};b.hide=b.hide||[];b.pph=b.pph||{};return b}
+function adItems(g,b){const m=new Map();const add=(name,grp,sc,src)=>{const key=name.toLowerCase();if(!m.has(key))m.set(key,{name,grp,sc:[],src});m.get(key).sc.push(...sc)};
+  g.scenes.forEach(s=>{[...(s.props||[]),...(s.spl_props||[])].forEach(n=>add(n,'script',[s.no],'bd'));(s.art||[]).forEach(n=>add(n,'amb',[s.no],'bd'))});
+  b.extra.forEach(x=>add(x.name,x.g,scList(x.scenes),'x'));
+  return [...m.values()].filter(it=>!b.hide.includes(it.name.toLowerCase())).map(it=>{const ex=b.extra.find(x=>x.name.toLowerCase()===it.name.toLowerCase());return Object.assign(it,{grp:b.grp[it.name.toLowerCase()]||it.grp,sc:uniq(it.sc.map(String)),who:ex?ex.who:'',note:ex?ex.note:'',xid:ex?ex.id:''})})}
+function adPage(){const mode=VIEW.apmode;const gs=locGroups();const head=pageHead('Art / props breakdown',mode==='blocks'?'Each block is a location or set. Keep its photos and details, and see script props, ambience props and artist props apart.':'Each block as an A4 page with photos, details and the three prop lists.',segm('apmode',AMODES)+(mode==='blocks'?searchBox('Find a prop'):''));
+  if(!gs.length)return {html:head+`<div class="empty"><b>No locations yet</b>Import a script first.</div>`,exp:null};
+  const cur=gs.find(g=>g.loc===VIEW.adB)||gs[0];VIEW.adB=cur.loc;const b=adB(cur.loc);const items=adItems(cur,b);
+  const exp={orient:'landscape',sheets:[{name:'Art department',cols:[{h:'Block',w:24},{h:'Type',w:12},{h:'Group',w:14},{h:'Item',w:32},{h:'Artist',w:16},{h:'Scenes',w:24}],rows:gs.flatMap(g=>{const bb=adB(g.loc);return adItems(g,bb).map(it=>[g.loc,bb.kind==='set'?'Built set':'Real location',AD_G.find(x=>x[0]===it.grp)[1],it.name,it.who||'',it.sc.join(', ')])})}]};
+  return {html:head+phNote()+(mode==='sheet'?adSheet(gs,cur,b,items):adBlocks(gs,cur,b,items)),exp}}
+function adList(gs,cur){return `<nav class="ad-list" aria-label="Blocks">${gs.map(g=>{const b=adB(g.loc);const n=adItems(g,b).length;return `<button class="ad-li" data-adb="${esc(g.loc)}" aria-current="${g===cur}"><b>${esc(g.loc)}</b><span>${b.kind==='set'?'Built set':'Real location'} · ${n} prop${n===1?'':'s'} · ${g.scenes.length} scene${g.scenes.length===1?'':'s'}</span></button>`}).join('')}</nav>`}
+function adBlocks(gs,cur,b,items){const tab=VIEW.adT||'loc';const ph=b.photos[tab]||[];const L=cur.loc;
+  const info=[['addr','Address','Street, area, city'],['owner','Owner and phone','Name · phone'],['power','Power','Hall only, generator for terrace'],['notes','Shoot notes','Quiet after 9 pm, permission letter with production']];
+  const artists=sortedArtists().map(a=>a.name);
+  const grp=([g,l,d])=>{const list=items.filter(it=>it.grp===g);return `<section class="ad-g ad-${g}"><div class="ad-gh"><b>${l}</b><span>${list.length}</span></div><p class="small muted">${d}</p>
+    ${list.map(it=>`<div class="ad-it" data-q="${esc((it.name+' '+it.who).toLowerCase())}">${b.pph[it.name.toLowerCase()]?phImg(b.pph[it.name.toLowerCase()],it.name,'ad-th'):`<button class="ad-th ad-thadd" data-adph="${esc(it.name)}" aria-label="Add a photo of ${esc(it.name)}">+</button>`}
+      <div class="grow"><div class="ad-n">${esc(it.name)}</div>${g==='artist'?`<div class="small muted">${esc(it.who||'Pick the artist')}</div>`:''}</div>
+      <div class="ad-sc">${it.sc.map(n=>`<span class="ad-chip">${esc(n)}</span>`).join('')}</div>
+      <select class="mini" data-adgrp="${esc(it.name)}" aria-label="Group for ${esc(it.name)}">${AD_G.map(([k,l2])=>`<option value="${k}"${k===it.grp?' selected':''}>${l2.split(' ')[0]}</option>`).join('')}</select>
+      <button class="wd-x ad-x" data-adhide="${esc(it.name)}" aria-label="Remove ${esc(it.name)} from this block">×</button></div>`).join('')||'<p class="small faint">None yet.</p>'}
+    <form class="ad-new" data-adnew="${g}"><input name="n" placeholder="Add ${l.toLowerCase().replace(' props',' prop')}" aria-label="New ${l.toLowerCase()}" maxlength="80">${g==='artist'?`<select name="w" class="mini" aria-label="Artist"><option value="">Artist</option>${artists.map(a=>`<option>${esc(a)}</option>`).join('')}</select>`:''}<input name="s" placeholder="Scenes" aria-label="Scenes" maxlength="80" class="ad-ss"><button class="btn sm">Add</button></form></section>`};
+  return `<div class="ad-wrap">${adList(gs,cur)}<div class="ad-main">
+    <div class="ad-top"><div class="grow"><h2 class="ad-h">${esc(L)}</h2><p class="small muted">Scenes ${esc(cur.scenes.map(s=>s.no).join(', '))} · ${esc([...cur.ie].join(' / '))} · ${esc([...cur.tm].join(', '))}</p></div>
+      <div class="seg" role="group" aria-label="Block type"><button data-adkind="real" aria-pressed="${b.kind!=='set'}">Real location</button><button data-adkind="set" aria-pressed="${b.kind==='set'}">Built set</button></div><button class="btn sm" data-adgo="sheet">A4 sheet</button></div>
+    <section class="ad-card"><div class="seg" role="group" aria-label="Photos">${AD_T.map(([k,l])=>`<button data-adt="${k}" aria-pressed="${tab===k}">${l} · ${(b.photos[k]||[]).length}</button>`).join('')}</div>
+      ${dropZone('ad:'+tab)}
+      ${ph.length?`<div class="wd-grid ad-ph">${ph.map(m=>`<figure class="wd-t">${phImg(m,m.cap)}<figcaption contenteditable="true" spellcheck="false" data-adcap="${esc(tab)}|${esc(m.id)}" data-ph="Add a note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-addel="${esc(tab)}|${esc(m.id)}" aria-label="Remove photo">×</button></figure>`).join('')}</div>`:''}
+      <div class="ad-info">${info.map(([k,l,ph2])=>`<label class="wd-f">${l}<input data-adinfo="${k}" value="${esc(b.info[k]||'')}" placeholder="${ph2}" maxlength="300"></label>`).join('')}</div></section>
+    <div class="ad-gs">${AD_G.map(grp).join('')}</div></div></div>`}
+function adSheet(gs,cur,b,items){const q=VIEW.wdQ||'standard';const photos=[...b.photos.loc,...b.photos.design,...b.photos.dress].slice(0,4);
+  const tbl=(g,l)=>{const list=items.filter(it=>it.grp===g);return `<div class="a4-l${g==='script'?' a4-hl':''}">${l.toUpperCase()}</div><table class="a4-t${g==='script'?' a4-ts':''}"><tbody>${list.map(it=>`<tr><td>${esc(it.name)}${it.who?` <span class="muted">· ${esc(it.who)}</span>`:''}</td><td class="a4-n">${esc(it.sc.join(', '))}</td></tr>`).join('')||'<tr><td class="a4-e">None</td><td></td></tr>'}</tbody></table>`};
+  return `<div class="wd-sheet-bar"><select class="mini" data-adbsel aria-label="Block">${gs.map(g=>`<option${g===cur?' selected':''}>${esc(g.loc)}</option>`).join('')}</select><span class="small muted">Photo quality</span><div class="seg" role="group" aria-label="Photo quality">${[['small','Small'],['standard','Standard'],['high','High']].map(([v,l])=>`<button data-wdq="${v}" aria-pressed="${q===v}">${l}</button>`).join('')}</div><span class="grow"></span><button class="btn" data-ad="pdfall">All blocks</button><button class="btn pri" data-ad="pdf">Download A4 PDF</button></div>
+  <div class="a4w"><div class="a4"><div class="a4-top"><span>${esc(P.production||'')}</span><span>${esc(P.title||'')}</span><span>${esc(new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}))}</span></div>
+    <div class="a4-ttl"><div><small>ART DEPARTMENT SHEET</small><h2>${esc(cur.loc)}</h2></div><div class="a4-r">Scenes <b>${esc(cur.scenes.map(s=>s.no).join(', '))}</b><br><span class="a4-ok">${b.kind==='set'?'Built set':'Real location'}</span></div></div>
+    ${Object.values(b.info).some(Boolean)?`<p class="a4-box">${[['addr','Address'],['owner','Owner'],['power','Power'],['notes','Notes']].filter(([k])=>b.info[k]).map(([k,l])=>`<b>${l}:</b> ${esc(b.info[k])}`).join(' · ')}</p>`:''}
+    <div class="a4-l">LOCATION AND SET PHOTOS</div><div class="a4-g4">${photos.map(m=>`<figure>${phImg(m,m.cap,'a4-i')}<figcaption>${esc(m.cap||'')}</figcaption></figure>`).join('')||'<p class="a4-e">No photos yet</p>'}</div>
+    ${AD_G.map(([g,l])=>tbl(g,l)).join('')}<div class="a4-foot"><span>ScriptDesk · Art department</span></div></div></div>`}
+async function adPdf(gs){try{await loadScript(CDN.jspdf)}catch(e){toast('PDF tools need internet the first time. Connect and try again.');return}const q=PH_Q[VIEW.wdQ||'standard'];const doc=a4Doc();let first=true;
+  for(const g of gs){const b=adB(g.loc);const items=adItems(g,b);if(!first)doc.addPage();first=false;let y=a4Header(doc,'ART DEPARTMENT SHEET',g.loc,'Scenes '+g.scenes.map(s=>s.no).join(', '),b.kind==='set'?'Built set':'Real location');
+    const inf=[['addr','Address'],['owner','Owner'],['power','Power'],['notes','Notes']].filter(([k])=>b.info[k]).map(([k,l])=>l+': '+b.info[k]).join('   ·   ');if(inf)y=a4Text(doc,y+6,inf,9.5);
+    const photos=[...b.photos.loc,...b.photos.design,...b.photos.dress].slice(0,4);if(photos.length){y=a4Label(doc,y+8,'LOCATION AND SET PHOTOS');y=await a4Photos(doc,y+4,photos,4,100,q)}
+    for(const [k,l] of AD_G){const list=items.filter(it=>it.grp===k);y=a4Need(doc,y,60);y=a4Label(doc,y+16,l.toUpperCase(),k==='script'?[138,106,0]:k==='artist'?[47,91,255]:[67,76,107]);
+      if(!list.length){doc.setFont('helvetica','italic');doc.setFontSize(9);doc.text('None',40,y+8);y+=16;continue}
+      for(const it of list){y=a4Need(doc,y,18);if(k==='script'){doc.setFillColor(255,247,214);doc.rect(40,y,515,16,'F')}doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.text(doc.splitTextToSize(it.name+(it.who?' · '+it.who:''),380)[0],46,y+11);doc.setFont('helvetica','bold');doc.text(it.sc.join(', '),549,y+11,{align:'right'});doc.setDrawColor(227,231,242);doc.line(40,y+16,555,y+16);y+=17}}}
+  a4Foot(doc,'ScriptDesk · Art department');const nm=[P.title||'Film','Art',gs.length===1?gs[0].loc:'All_blocks'].join('_').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'.pdf';await saveFile(nm,await pdfOut(doc))}
+function adAdd(kind,ids){const b=adB(VIEW.adB,true);snapshot();if(kind==='adph'){b.pph[VIEW.adPh]=phMeta(ids[0])}else{const t=kind.split(':')[1]||'loc';ids.forEach(id=>b.photos[t].push(phMeta(id)))}touch();render(true);toast(ids.length===1?'Photo added.':ids.length+' photos added.')}
+async function adClick(t){if(t.dataset.adb){VIEW.adB=t.dataset.adb;render();return true}
+  if(t.dataset.adt){VIEW.adT=t.dataset.adt;render(true);return true}
+  if(t.dataset.adgo){VIEW.apmode=t.dataset.adgo;render();return true}
+  if(t.dataset.adkind){const b=adB(VIEW.adB,true);snapshot();b.kind=t.dataset.adkind;touch();render(true);return true}
+  if(t.dataset.adph){VIEW.adPh=t.dataset.adph.toLowerCase();await wdAdd('adph',(await pickImages(false)).slice(0,1),{});return true}
+  if(t.dataset.adhide){if(!t.dataset.armed){t.dataset.armed=1;t.textContent='✓';return true}const b=adB(VIEW.adB,true);snapshot();const n=t.dataset.adhide.toLowerCase();b.extra=b.extra.filter(x=>x.name.toLowerCase()!==n);if(!b.hide.includes(n))b.hide.push(n);touch();render(true);return true}
+  if(t.dataset.addel){if(!t.dataset.armed){t.dataset.armed=1;t.textContent='✓';return true}const [tab,id]=t.dataset.addel.split('|');const b=adB(VIEW.adB,true);snapshot();b.photos[tab]=b.photos[tab].filter(m=>m.id!==id);PH.del(id);touch();render(true);return true}
+  if(t.dataset.ad==='pdf'||t.dataset.ad==='pdfall'){const gs=locGroups();await adPdf(t.dataset.ad==='pdf'?gs.filter(g=>g.loc===VIEW.adB):gs);return true}
+  if(t.dataset.wdq){VIEW.wdQ=t.dataset.wdq;render(true);return true}
+  if(t.dataset.wd==='add'||t.dataset.wd==='cam'){const files=t.dataset.wd==='cam'?await phCamera():await pickImages(true);await wdAdd(t.dataset.k,files,{});return true}
+  return false}
+function adMount(){const c=$('#content');phHydrate(c);dropMount(c);
+  const bs=c.querySelector('[data-adbsel]');bs&&bs.addEventListener('change',()=>{VIEW.adB=bs.value;render()});
+  c.querySelectorAll('[data-adinfo]').forEach(el=>el.addEventListener('change',()=>{const b=adB(VIEW.adB,true);snapshot();b.info[el.dataset.adinfo]=el.value.trim().slice(0,300);touch()}));
+  c.querySelectorAll('[data-adcap]').forEach(el=>el.addEventListener('blur',()=>{const [tab,id]=el.dataset.adcap.split('|');const b=adB(VIEW.adB,true);const m=b.photos[tab].find(x=>x.id===id);const v=el.innerText.trim().slice(0,200);if(m&&v!==(m.cap||'')){m.cap=v;touch()}}));
+  c.querySelectorAll('[data-adgrp]').forEach(el=>el.addEventListener('change',()=>{const b=adB(VIEW.adB,true);snapshot();b.grp[el.dataset.adgrp.toLowerCase()]=el.value;touch();render(true)}));
+  c.querySelectorAll('[data-adnew]').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();const n=f.n.value.trim().slice(0,80);if(!n){f.n.focus();return}
+    const valid=new Set(P.scenes.map(x=>U(x.no)));const sc=scList(f.s.value);const bad=sc.filter(x=>!valid.has(x));if(bad.length){toast('These scenes are not in the script: '+bad.join(', '));return}
+    const b=adB(VIEW.adB,true);snapshot();const g=f.dataset.adnew;b.hide=b.hide.filter(x=>x!==n.toLowerCase());b.extra.push({id:uid(),g,name:n,who:f.w?f.w.value:'',scenes:sc.join(', '),note:''});b.grp[n.toLowerCase()]=g;touch();render(true)}))}
 /* ---- Catalog: locations, props, wardrobe and more, with photos ---- */
 const CAT_T=[['location','Location'],['prop','Prop'],['wardrobe','Wardrobe'],['set','Set dressing'],['vehicle','Vehicle'],['animal','Animal'],['sfx','Special effect'],['other','Other']];
 const CAT_SRC={prop:['props','spl_props'],set:['art','spl_sets'],vehicle:['vehicles'],animal:['animals'],sfx:['sfx','vfx']};
@@ -4275,7 +4656,7 @@ document.addEventListener('dragover',e=>{if(!DRAG)return;const z=e.target.closes
 document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closest&&e.target.closest('[data-dropday]');if(!z)return;e.preventDefault();const row=e.target.closest('tr[data-drag]');const sid=DRAG;DRAG=null;
   const before=row&&row.dataset.drag!==sid?row.dataset.drag:null;const to=z.dataset.dropday||null;const s=scById(sid);if(!s)return;snapshot();placeScene(sid,to,before);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)});
 
-function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.hide&&p.hide())return;if(p.g!==g){if(g)h+='</div>';g=p.g;h+=`<h6>${esc(g)}</h6><div class="ng">`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic i-${p.id}" aria-hidden="true"></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
+function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.hide&&p.hide())return;if(p.g!==g){if(g)h+='</div>';g=p.g;h+=`<h6>${esc(g)}</h6><div class="ng" data-g="${esc(g)}">`}h+=`<button data-page="${p.id}" aria-current="${page===p.id?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
 /* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
 const RATE_SRC='Telugu Film Chamber of Commerce and Telugu Film Industry Employees Federation, "General conditions and wages" agreement dated 01-07-2022 (valid 01-07-2022 to 30-06-2025; stunt wages to 30-03-2025 as printed)';
 /* [union, role / item, rupees, unit, pdf page, note] */
@@ -4691,7 +5072,7 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample?`<div class="banner"><span><b>Sample project.</b> An example script so you can see every report.</span><button class="btn sm pri" data-act="import">Import script</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 const SB_KEYS=[['de','Day exterior'],['di','Day interior'],['ne','Night exterior'],['ni','Night interior']];
 /* the stripboard colour code every production office uses: yellow day exterior, white day interior, green night exterior, blue night interior */
@@ -4731,7 +5112,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.delart){if(t.dataset.armed){snapshot();const id=t.dataset.delart;const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(id)){s.artists=s.artists.filter(x=>x!==id);ids.push(s.id)}s.costumes=s.costumes.filter(c=>c.a!==id)});const dn=aName(id);P.artists=P.artists.filter(a=>a.id!==id);delete P.profiles[id];logChange(`Artist ${dn} deleted`,'artistName');touch(ids);render(true);return}t.dataset.armed=1;t.textContent='Confirm';return}
   if(t.dataset.rerun){runAll({only:[t.dataset.rerun]});return}
   if(t.dataset.prof){profileJob(t.dataset.prof);return}
-  if(page==='outline'&&olClick(t))return;if(page==='storyboard'&&await sbClick(t))return;if(page==='tasks'&&tkClick(t))return;if(page==='av'&&avClick(t))return;
+  if(page==='outline'&&olClick(t))return;if(page==='storyboard'&&await sbClick(t))return;if(page==='costume'&&await wdClick(t))return;if(page==='artprops'&&await adClick(t))return;if(page==='tasks'&&tkClick(t))return;if(page==='av'&&avClick(t))return;
   const act=t.dataset.act;
   if(act==='import')openImport();
   if(act==='bbAdd')bbAdd();if(act==='bbTidy')bbTidy();if(act==='bbZoomIn')bbZoom(1.15);if(act==='bbZoomOut')bbZoom(1/1.15);if(act==='bbToOutline')bbToOutline();if(act==='olAuto')olAuto();if(act==='wmSet')wmSettings();if(act==='aiBeats')aiFill('beats');if(act==='aiOutline')aiFill('outline');if(act==='aiCatalog')aiFill('catalog');if(act==='aiTasks')aiFill('tasks');if(act==='sbPdf')sbPdf();if(act==='sidesPdf')sidesPdf();if(act==='catFill')catFill();if(act==='catNew')catEdit();
@@ -4754,8 +5135,15 @@ $('#bRun').onclick=()=>runAll();
 (function a2hs(){try{if(!STANDALONE||NATIVE||!/iPhone|iPad|iPod/.test(navigator.userAgent)||navigator.standalone||localStorage.getItem('scriptdesk.a2hs'))return;
   const d=document.createElement('div');d.className='a2hs';d.innerHTML='<span>Add ScriptDesk to your iPhone: tap Share, then Add to Home Screen. It then works offline.</span><button class="btn sm ghost" aria-label="Dismiss">Got it</button>';
   d.querySelector('button').onclick=()=>{d.remove();try{localStorage.setItem('scriptdesk.a2hs','1')}catch(e){}};document.body.appendChild(d)}catch(e){}})();
-function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('scriptdesk.theme',t)}catch(e){}const b=$('#bTheme');b.classList.toggle('i-sun',t==='dark');b.classList.toggle('i-moon',t==='light');const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='dark'?'#1c1f26':'#e4e7ec'}
-$('#bTheme').onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('scriptdesk.theme',t)}catch(e){}const b=$('#bTheme');b.classList.toggle('i-sun',t==='dark');b.classList.toggle('i-moon',t==='light');const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=LOOK_BAR[curLook()]||(t==='dark'?'#1c1f26':'#e4e7ec')}
+/* Looks: Sandhya (default), Savera, Night Set, Classic light, Classic dark */
+const LOOKS=[['sandhya','Sandhya','Dusk indigo with soft glows. The default.','linear-gradient(135deg,#5b4fb0,#1b1a3a 60%,#2f6f86)'],['savera','Savera','Light. Morning cream with the same colours.','linear-gradient(135deg,#fff4e6,#ffd9c4 60%,#e9ddff)'],['night','Night Set','Extra dark and dim, for shooting in dark locations.','linear-gradient(135deg,#0c1114,#16242b)'],['classic-light','Classic light','The earlier blue glass look.','linear-gradient(135deg,#edf2fb,#b9d1fb 60%,#fbd9c6)'],['classic-dark','Classic dark','The earlier look, dark.','linear-gradient(135deg,#0b1020,#2e54be 60%,#190f16)']];
+const LOOK_BAR={sandhya:'#1b1a3a',night:'#0c1114',savera:'#fff4e6'};
+function curLook(){const k=document.documentElement.dataset.look;return k||('classic-'+(document.documentElement.dataset.theme==='dark'?'dark':'light'))}
+function setLook(k){if(!LOOKS.some(x=>x[0]===k))k='sandhya';const cl=k.startsWith('classic-');if(cl)delete document.documentElement.dataset.look;else document.documentElement.dataset.look=k;try{localStorage.setItem('scriptdesk.look',cl?'classic':k)}catch(e){}setTheme(cl?k.slice(8):(k==='savera'?'light':'dark'))}
+function lookPicker(){const cur=curLook();openModal(`<div class="modal-h"><h2>Choose your look</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><div class="lk-g" role="radiogroup" aria-label="App look">${LOOKS.map(([k,n,d,g])=>`<button class="lk-c" role="radio" data-look="${k}" aria-checked="${cur===k}"><i style="background:${g}"></i><b>${esc(n)}</b><span>${esc(d)}</span></button>`).join('')}</div><p class="small muted" style="margin-top:12px">Script pages and A4 downloads always stay on white paper.</p></div>`);
+  document.querySelectorAll('.lk-c').forEach(b=>b.onclick=()=>{setLook(b.dataset.look);document.querySelectorAll('.lk-c').forEach(x=>x.setAttribute('aria-checked',x===b?'true':'false'))})}
+$('#bTheme').onclick=lookPicker;$('#bTheme').title='Choose your look';$('#bTheme').setAttribute('aria-label','Choose your look');
 setTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
 $('#bUndo').onclick=undo;
 $('#bChecks').onclick=openChecks;

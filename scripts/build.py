@@ -36,6 +36,14 @@ HEAD = '''<!doctype html>
 <body>
 '''
 
+def load_home():
+    """Demo pictures for the Home page (src/home/*.webp), inlined as data addresses so the app stays one file."""
+    import base64, glob
+    out = {}
+    for f in sorted(glob.glob(os.path.join(ROOT, 'src', 'home', '*.webp'))):
+        out[os.path.basename(f)[:-5]] = 'data:image/webp;base64,' + base64.b64encode(open(f, 'rb').read()).decode()
+    return out
+
 def load_illustrations():
     """Validate every illustration against the central manifest and return what the app needs. Fails the build on any problem."""
     import re
@@ -177,6 +185,7 @@ def main():
         json.dump(files, open(os.path.join(WWW, 'vendor', 'manifest.json'), 'w'))
     # Inline the local SVG illustrations (src/illustrations + manifest.json) so the single-file app needs no image files.
     app = app.replace('/*ILLUS*/{}', json.dumps(load_illustrations(), ensure_ascii=False, separators=(',', ':')))
+    app = app.replace('/*HOME*/{}', json.dumps(load_home(), separators=(',', ':')))
     page = HEAD.format(vendor='<meta name="sd-vendor" content="1">\n' if vendor else '') + app + '\n</body>\n</html>\n'
     fbc = firebase_config()
     print('firebase accounts: ON for project ' + fbc['projectId'] if fbc else 'firebase accounts: OFF (no FIREBASE_CONFIG)')

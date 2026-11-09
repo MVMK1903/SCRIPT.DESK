@@ -533,6 +533,24 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-install{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
 .i-download{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
 .i-settings{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M18 6h2 M4 12h4 M12 12h8 M4 18h12 M20 18h0 M16 4v4 M10 10v4 M18 16v4'/%3E%3C/svg%3E")}
+.i-home{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 11l8-7 8 7M6 10v10h12V10M10 20v-6h4v6'/%3E%3C/svg%3E")}
+/* Home page: the ScriptDesk name, then each part of the app shown with a real picture and what it does */
+.hm{max-width:1040px;margin:0 auto;padding:8px 4px 40px}
+.hm-h{text-align:center;padding:34px 0 26px}
+.hm-h .hm-logo{width:64px;height:64px;color:var(--fg)}
+.hm-h h1{margin:10px 0 0;font-size:clamp(40px,7vw,68px);letter-spacing:-.03em;line-height:1.02}
+.hm-h h1 span{background:linear-gradient(135deg,#0a84ff,#673de6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hm-h .btn{margin-top:18px}
+.hm-f{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:center;margin:34px 0}
+.hm-f:nth-of-type(even){grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.hm-f:nth-of-type(even) .hm-pic{order:2}
+.hm-pic{margin:0;border-radius:18px;overflow:hidden;border:1px solid var(--glass-line);background:var(--glass-hi);box-shadow:0 18px 44px rgba(20,30,60,.16);transition:transform .35s var(--spring),box-shadow .35s}
+.hm-pic:hover{transform:translateY(-3px);box-shadow:0 24px 54px rgba(20,30,60,.22)}
+.hm-bar{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid var(--glass-line)}.hm-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.hm-pic img{display:block;width:100%;height:auto}
+.hm-t h2{margin:0 0 6px;font-size:22px;letter-spacing:-.01em}.hm-t .hm-s{margin:0 0 12px;color:var(--muted);font-size:15px}
+.hm-t ul{margin:0 0 16px;padding-left:18px;display:grid;gap:7px;font-size:14px;line-height:1.5}
+@media (max-width:760px){.hm-f,.hm-f:nth-of-type(even){grid-template-columns:1fr;gap:14px;margin:26px 0}.hm-f:nth-of-type(even) .hm-pic{order:0}}
+@media (prefers-reduced-motion:reduce){.hm-pic,.hm-pic:hover{transition:none;transform:none}}
 .i-projects{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h6l2 2h10v11H3z'/%3E%3C/svg%3E")}
 .i-warn{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 2 20h20z M12 10v5 M12 18v.01'/%3E%3C/svg%3E")}
 .i-check{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")}
@@ -1452,6 +1470,7 @@ const SCN_RE=/^\s*(?:SCENE|SCN|SC)\s*\.?\s*(?:NO|NUMBER|NUM|#)?\s*[.:#\-]*\s*(\d
 const SCN_IN_RE=/^\s*(?:సీన్|సీను|దృశ్యం|సన్నివేశం|दृश्य|सीन|காட்சி|രംഗം|ದೃಶ್ಯ)\s*(?:నెం|నంబర్|నెంబర్|सं|संख्या|எண்)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)\s*[.:)\-–]*\s*(.*)$/i;
 const NOT_CHAR=/^(CUT TO|FADE|DISSOLVE|INTERCUT|INTER CUT|CONTINUED|CONT'?D|THE END|BLACK|SONG|MONTAGE|SUPER|TITLE|FLASH ?BACK|BACK TO|END OF|INTERVAL|LATER|MORNING|NIGHT|DAY|EXT|INT|SCENE|SMASH CUT|MATCH CUT|V\.?O\.?|O\.?S\.?)\b/;
 const PAGES=[
+ {g:'Main',id:'home',nav:'Home',t:'Home'},
  {g:'Main',id:'write',nav:'Write script',t:'Write script'},
  {g:'Main',id:'notes',nav:'Notepad',t:'Notepad',hide:()=>!(GA.fb&&GA.user)},
  {g:'Main',id:'script',nav:'Full script',t:'Full script'},
@@ -4652,8 +4671,20 @@ R.scenic=()=>{const sc=P.scenes,have=sc.filter(s=>s.scenic).length;
   `<div class="tw"><table class="t rt scenic"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Scenic paragraph</th></tr></thead><tbody>${sc.map(s=>`<tr data-q="${esc((s.no+' '+s.loc+' '+eff(s)+' '+(s.scenic||'')+' '+s.desc).toLowerCase())}"><td data-l="Sc No" class="nol"><b>${esc(s.no)}</b> <button class="btn sm ghost" data-pa="scenicOne" data-sid="${s.id}" aria-label="Rewrite scene ${esc(s.no)} with AI" title="Rewrite this scene with AI">↻</button></td><td data-l="Effect / Time">${effHtml(s)}</td><td data-l="Location" class="left">${esc(s.loc)}</td><td data-l="Scenic paragraph" class="left" style="min-width:340px">${ce(`data-pk="scp" data-sid="${s.id}"`,s.scenic||'','',`Scenic paragraph for scene ${s.no}`)}</td></tr>`).join('')}</tbody></table></div>`,
   exp:{orient:'landscape',sheets:[{name:'Scenic order',cols:[{h:'Sc No',w:8},{h:'Effect / Time',w:13},{h:'Location',w:24},{h:'Scenic paragraph',w:110}],rows:sc.map(s=>[s.no,eff(s),s.loc,s.scenic||''])}]}}};
 let lastExp=null;
+const HOME_IMG=/*HOME*/{};
+const HOME_ITEMS=[
+ {k:'slo',go:'slo',t:'Single line order',s:'Every scene on one line, ready to plan the shoot from.',d:['Scene number, location, day or night, what happens and who is in it, side by side.','Colour coded: yellow day exterior, white day interior, green night exterior, blue night interior.','Click any cell to change it. Every other report updates with it.']},
+ {k:'breakdown',go:'breakdown',t:'Script breakdown',s:'One sheet for each scene with everything it needs.',d:['Setup, artistes, extras and juniors, props, art and set, costumes, makeup, vehicles, animals, VFX, SFX, stunts and songs.','AI fills the sheets from the script. You correct them in place.','Send the whole breakdown to Excel or PDF.']},
+ {k:'costume',go:'costume',t:'Costume continuity',s:'What every artist wears in every scene, with changes marked.',d:['Costumes are numbered per artist (C1, C2) and a change is flagged where a new costume starts.','Makeup and look notes sit beside each scene.','See it scene by scene or artist by artist.']},
+ {k:'artprops',go:'artprops',t:'Art and props',s:'One list of every prop and set item, with the scenes that use it.',d:['Props, special props and art or set dressing counted across the whole script.','Rename an item once and it changes everywhere.','Scene numbers show when each item must be on set.']},
+ {k:'sloLoc',go:'sloLoc',t:'Location-wise order',s:'The same scenes grouped by location, so one place is shot in one go.',d:['Scenes for each location sit together in script order.','Merge locations that are spelled differently.','Exterior and interior, day and night, at a glance.']},
+ {k:'profiles',go:'profiles',t:'Character profiles',s:'Who each character is and how they change through the film.',d:['AI reads the whole script and writes a description for every artist.','Each profile shows where the character starts, the turning points and where they end.','Everything stays editable.']},
+ {k:'structure',go:'structure',t:'Story structure',s:'See the shape of the story and where each scene sits in it.',d:['Three-act structure with a story arc showing how tension rises to the climax.','Acts and beats laid out in order.','Click a stage to edit it.']}];
+R.home=()=>({html:`<section class="hm"><header class="hm-h"><svg class="hm-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></svg><h1>Script<span>Desk</span></h1><button class="btn pri" data-page="projects">Open my projects</button></header>`+
+  HOME_ITEMS.map(f=>`<article class="hm-f"><figure class="hm-pic"><div class="hm-bar" aria-hidden="true"><i></i><i></i><i></i></div><img src="${HOME_IMG[f.k]||''}" width="900" height="531" loading="lazy" alt="${esc(f.t)} in ScriptDesk, shown with a sample film"></figure><div class="hm-t"><h2>${esc(f.t)}</h2><p class="hm-s">${esc(f.s)}</p><ul>${f.d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button class="btn sm" data-page="${f.go}">Open ${esc(f.t)}</button></div></article>`).join('')+`</section>`,exp:null});
 function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();wxApplyView();
+  if(page==='home'){c.innerHTML=R.home().html;lastExp=null;$('#bCur').textContent='Home';syncTabs();syncTop();document.body.dataset.page=page;c.scrollTop=0;return}
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
   syncTop();
   if(!P.scenes.length&&page!=='artists'&&page!=='notes'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
@@ -5330,7 +5361,7 @@ function gaGate(note){if(fbOn())return fbGate(note);return new Promise(async res
 /* a failed sign-in is noted in the last account's log on this device */
 function gaFailLog(last,code){if(!last||!last.ns)return;const k='scriptdesk.v2.'+last.ns+'.activity';try{const a=JSON.parse(localStorage.getItem(k)||'[]');a.unshift({t:'fail',at:Date.now(),dev:G_DEV,dn:gaDevice(),why:String(code).slice(0,40)});localStorage.setItem(k,JSON.stringify(a.slice(0,GA_ACT_MAX)))}catch(e){}}
 async function gaEnter(prof,mode,quiet,pre){const ns=gaNs(prof.sub,pre);const first=!localStorage.getItem('scriptdesk.auth.migrated');
-  if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;
+  if(first)await gaMigrate(ns);gaUseNs(ns);GA.user={sub:String(prof.sub),email:prof.email,name:prof.name,picture:prof.picture||''};GA.mode=mode;GA.fresh=!quiet;
   const prev=gaLastGet();gaLastSet({ns,sub:GA.user.sub,email:GA.user.email,name:GA.user.name,picture:GA.user.picture,on:mode==='online'?Date.now():(prev&&prev.on)||0,signedOut:false});
   if(mode==='online'&&!quiet){const seen=(lsGet('activity')||[]).some(x=>x.dev===G_DEV);gaLog('in',seen?null:{first:1})}
   else if(mode==='online'&&quiet&&!(lsGet('activity')||[]).length)gaLog('in');
@@ -5900,12 +5931,13 @@ function otpBoxes(id,onDone){const w=$('#'+id),b=[...w.querySelectorAll('input')
   if(SEC.on)await secGate();
   {let note='';try{note=sessionStorage.getItem('scriptdesk.auth.note')||'';sessionStorage.removeItem('scriptdesk.auth.note')}catch(e){}await gaGate(note)}
   try{await DISK.init();DISK.sched(true)}catch(e){}
+  if(GA.user&&GA.fresh)page='home'; /* just signed in: start on Home */
   render();
   const lastId=lsGet('last');
   if(lastId){const p=await loadProject(lastId);if(p){P=p;render()}}
   if(!P){const idx=lsGet('index')||[];if(idx.length){const p=await loadProject(idx[0].id);if(p){P=p;render()}}}
   if(!P){const idx=lsGet('index')||[];for(const x of idx){if(x.space==='o')continue;const p=await loadProject(x.id);if(p){P=p;break}}if(P)render()}
-  if(!P){if((lsGet('index')||[]).some(x=>x.space&&x.space!=='me')){page='projects';render()}else{P=sampleProject();saveLocal();render()}}
+  if(!P){if((lsGet('index')||[]).some(x=>x.space&&x.space!=='me')){if(page!=='home')page='projects';render()}else{P=sampleProject();saveLocal();render()}}
   if(STANDALONE){AI.checked=true;$('#bSettings').hidden=false;refreshAI();setSync('ok',(navigator.onLine===false?'Offline · ':'')+'Saved on this device');syncTop();gaAfterBoot();return}
   const [smp,db,usr]=await Promise.all([window.claude.use('sample').catch(()=>null),window.claude.use('db').catch(()=>null),window.claude.use('user').catch(()=>null)]);
   AI.sample=smp;AI.checked=true;if(smp){try{AI.limits=await smp.limits()}catch(e){AI.limits=null}}

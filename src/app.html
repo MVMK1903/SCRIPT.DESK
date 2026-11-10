@@ -5668,7 +5668,12 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
     <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> ${p.key&&cur!=='custom'?'<button class="btn sm" id="sCheck">Check free vs paid</button> ':''}<span class="small muted" id="sLoadMsg"></span></div><div id="sChk"></div>`;
     $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found.`+(p.probe?'':' Click the Model box to pick one.'):'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0];if(ids.length&&p.probe)runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
-    const ck=$('#sCheck');if(ck)ck.onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');if(!ids.length){$('#sLoadMsg').textContent='No models found.';return}runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
+    const ck=$('#sCheck');if(ck)ck.onclick=async()=>{collect();if(!c.keys[cur]){$('#sLoadMsg').textContent='Paste your API key first, then press Check free vs paid.';return}
+      if(checking){$('#sLoadMsg').textContent='A check is already running. Wait for it to finish.';return}
+      $('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');if(!ids.length){$('#sLoadMsg').textContent='No models found.';return}
+      /* OpenRouter: every model ending in :free is free by definition, and testing them one by one would use up the 50 free requests a day */
+      if(cur==='openrouter'){const key=ckey(),free=ids.filter(i=>/:free$/.test(i)).sort((a,b)=>accScore({provider:cur,model:b})-accScore({provider:cur,model:a}));c.checks=c.checks||{};c.checks[key]={free,busy:[],paid:[],err:[],at:Date.now()};lsSet('ai',c);chkUI();$('#sLoadMsg').textContent=`${free.length} free models (the ones ending :free). No test needed, so your daily free requests are kept.`;return}
+      runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
     chkUI()};
   /* Free vs paid: send one tiny test request per model and sort the models by what this key can actually use */
   const ckey=()=>cur+':'+(c.keys[cur]||'').slice(-6)+':'+(c.base[cur]||'');

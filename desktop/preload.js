@@ -3,6 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('sdDisk', {
   root: () => ipcRenderer.invoke('sd:root'),
   write: (rel, payload) => ipcRenderer.invoke('sd:write', rel, payload),
+  read: (rel) => ipcRenderer.invoke('sd:read', rel),
+  del: (rel) => ipcRenderer.invoke('sd:del', rel),
   open: () => ipcRenderer.invoke('sd:open')
 });
 // Google sign-in: the page can start a sign-in, ask for a short-lived access token, and sign out. The refresh token never reaches the page.

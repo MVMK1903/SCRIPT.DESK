@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-m1q29U66Hm9R1n+OuHHapV45M2A0ErtLKzsjWl1M8+I=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-iOPQbiuJnTItn/elkiyW0ucDuHZgAs1o3odI26pL4jA=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1563,13 +1563,45 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
 .ad-g p{margin:0}
 .ad-script{border:2px solid #d9a800!important;background:color-mix(in srgb,#ffd36e 12%,var(--glass))!important}.ad-script .ad-gh span{background:#ffd36e;color:#3a2c00}
 .ad-artist .ad-gh span{background:#7fb6ff;color:#0b2447}
-.ad-it{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap;position:relative}
-.ad-it .grow{flex:1;min-width:120px}.ad-n{font-size:14px;font-weight:600}
-.ad-th{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;background:var(--fill)}
-.ad-thadd{border:1.5px dashed var(--glass-line);color:var(--muted);font-size:18px;cursor:pointer}
-.ad-sc{display:flex;gap:4px;flex-wrap:wrap}.ad-chip{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:7px;background:#7fb6ff;color:#0b2447}
-.ad-x{position:static;width:26px;height:26px;font-size:15px}
-.ad-new{display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}.ad-new input{flex:1;min-width:120px}.ad-new .ad-ss{max-width:110px}.ad-new select{width:auto}
+.ad-gd{margin:0;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.ad-plus{margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid var(--glass-line);background:var(--fill);color:var(--fg);font:400 20px/1 var(--f-ui);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s,transform .12s}
+.ad-plus:hover{background:var(--fill-2)}.ad-plus[aria-expanded="true"]{background:var(--accent);color:var(--accent-ink);transform:rotate(45deg)}
+.ad-rows{display:flex;flex-direction:column}
+/* one prop = one line that never wraps: photo, name, scenes, group, remove */
+.ad-it{display:grid;grid-template-columns:38px minmax(0,1fr) auto auto 26px;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.ad-it:first-child{border-top:0}
+.ad-th{width:38px;height:38px;border-radius:10px;flex:none;padding:0;overflow:hidden;background:var(--fill);border:1.5px dashed var(--glass-line);color:var(--faint);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .12s,color .12s}
+.ad-th:hover,.ad-th:focus-visible{border-color:var(--accent);color:var(--accent)}
+.ad-th.has{border-style:solid;border-color:var(--glass-line)}
+.ad-thi{width:100%;height:100%;object-fit:cover;display:block}
+.ad-ci{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.ad-nm{min-width:0}.ad-n{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-sub{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ad-sc{display:flex;gap:3px;flex-wrap:nowrap}
+.ad-chip{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:7px;background:#7fb6ff;color:#0b2447;white-space:nowrap}
+.ad-chip.more{background:var(--fill-2);color:var(--muted)}.ad-chip.none{background:transparent;color:var(--faint);padding:2px 2px}
+.ad-gsel{appearance:none;-webkit-appearance:none;border:0;border-radius:8px;padding:3px 7px;font:700 11.5px var(--f-ui);background:var(--fill-2);color:var(--muted);cursor:pointer;max-width:92px;opacity:0;transition:opacity .12s,background .12s,color .12s}
+.ad-it:hover .ad-gsel,.ad-gsel:focus-visible,.ad-gsel:focus{opacity:1}
+.ad-gsel:hover,.ad-gsel:focus-visible{background:var(--accent-soft);color:var(--accent-text)}
+@media (hover:none){.ad-gsel{opacity:.55}}
+.ad-del{width:26px;height:26px;border-radius:50%;border:0;background:transparent;color:var(--faint);font-size:17px;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s,background .12s,color .12s}
+.ad-it:hover .ad-del,.ad-del:focus-visible{opacity:1}.ad-del:hover{background:#d9534f;color:#fff}
+@media (hover:none){.ad-del{opacity:.6}}
+.ad-none{margin:4px 0 0;font-size:13px;color:var(--faint)}
+.ad-new{display:flex;flex-direction:column;gap:7px;padding:10px;margin:2px 0 6px;border-radius:14px;background:var(--fill);border:1px solid var(--glass-line)}
+.ad-new input,.ad-new select{width:100%;box-sizing:border-box}
+.ad-nr{display:flex;gap:7px}.ad-nr input{flex:1;min-width:0}
+.ad-det{border-top:1px solid var(--line);padding-top:8px}
+.ad-det summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);list-style:none;padding:3px 0}
+.ad-det summary::-webkit-details-marker{display:none}
+.ad-det summary::before{content:"▸";display:inline-block;margin-right:7px;transition:transform .15s}
+.ad-det[open] summary::before{transform:rotate(90deg)}
+.ad-det summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wd-sum{margin:0;font-size:13.5px;line-height:1.5}
+.wd-det{border-top:0;padding-top:0}
+.wd-det[open]{display:flex;flex-direction:column;gap:8px}
+.wd-det summary{margin-bottom:2px}
+.wd-un{align-self:flex-start}
 /* the sliding pill behind tabs is solid, so the chosen tab's words stay readable */
 :root[data-look="sandhya"] .fx-goo i,:root[data-look="sandhya"] .gx-ind{background:#b9a4f0!important}
 :root[data-look="savera"] .fx-goo i,:root[data-look="savera"] .gx-ind{background:#e5dcff!important}
@@ -1749,6 +1781,17 @@ const DISK={mode:null,on:false,handle:null,msg:'',t:0,safe:s=>String(s||'film').
       else if(this.mode==='cap'){const F=window.Capacitor.Plugins.Filesystem;await F.writeFile(Object.assign({path:'ScriptDesk/'+rel,directory:'DOCUMENTS',recursive:true},text?{data,encoding:'utf8'}:{data:b64(data)}))}
       else{const {d,file}=await this.fsaDir(rel);const w=await (await d.getFileHandle(file,{create:true})).createWritable();await w.write(data);await w.close()}
       this.msg='';return true}catch(e){this.msg=e&&e.message==='needs permission'?'Allow access to the folder (press Save now)':'Could not write to the folder';this.err=this.msg;return false}},
+  async read(rel){if(!this.mode)return null;try{
+      if(this.mode==='electron')return window.sdDisk.read?await window.sdDisk.read(rel):null;
+      if(this.mode==='cap'){const F=window.Capacitor.Plugins.Filesystem;const r=await F.readFile({path:'ScriptDesk/'+rel,directory:'DOCUMENTS'});return r&&r.data||null}
+      const parts=rel.split('/').filter(Boolean),file=parts.pop();let d=this.handle;if(!d)return null;
+      for(const q of parts)d=await d.getDirectoryHandle(q,{create:false});
+      const f=await (await d.getFileHandle(file,{create:false})).getFile();return b64(new Uint8Array(await f.arrayBuffer()))}catch(e){return null}},
+  async erase(rel){if(!this.mode)return;try{
+      if(this.mode==='electron'){window.sdDisk.del&&await window.sdDisk.del(rel);return}
+      if(this.mode==='cap'){await window.Capacitor.Plugins.Filesystem.deleteFile({path:'ScriptDesk/'+rel,directory:'DOCUMENTS'});return}
+      const parts=rel.split('/').filter(Boolean),file=parts.pop();let d=this.handle;if(!d)return;
+      for(const q of parts)d=await d.getDirectoryHandle(q,{create:false});await d.removeEntry(file)}catch(e){}},
   sched(now){if(!this.on||!P||!this.mode)return;if(P.space&&P.space!=='me')return; /* private and team scripts are never written to disk as readable files */clearTimeout(this.t);this.t=setTimeout(()=>this.saveProject(),now?50:2000)},
   async saveProject(){if(!this.on||!P||P.sample)return false;const dir='Projects/'+this.safe(P.title)+'__'+P.id.slice(0,6)+'/';const json=JSON.stringify(P);
     let body=json,txt=P.scenes.map(s=>headingLine(s)+'\n\n'+s.text).join('\n\n');let name='project.scriptdesk.json',tn='script.txt';
@@ -3186,14 +3229,24 @@ async function sidesPdf(){const V=VIEW.sides;const S=SCH();const day=S.days.find
 /* ---- Photos for looks, continuity and the art department.
    The pictures stay on this device (IndexedDB), encrypted when the vault is on; the project keeps only small notes about them (id, caption, scene), so it stays light enough to sync.
    Each photo is marked "on this device" until team photo sync is switched on. ---- */
+/* Pictures live on this computer, in Documents/ScriptDesk/Photos/<project>/, as ordinary .jpg files you can open,
+   copy and back up yourself. Browsers with no folder access keep them in the browser's own store instead. */
 const PH={mem:new Map(),
-  async put(dataUrl){if(!/^data:image\/(jpeg|png|webp);base64,/.test(dataUrl))throw new Error('not an image');const id=uid();let v=dataUrl;
-    if(SEC.on){if(!SEC.dek)throw new Error('locked');v={__enc:await aesEnc(SEC.dek,dataUrl)}}
-    const ok=await IDB.set('ph.'+id,v);if(ok===false)throw new Error('not saved');this.mem.set(id,dataUrl);return id},
-  async get(id){if(!id)return null;if(this.mem.has(id))return this.mem.get(id);let v=null;try{v=await IDB.get('ph.'+id)}catch(e){return null}
+  path(id){return 'Photos/'+String(id).split('_')[0]+'/'+id+'.jpg'},
+  async put(dataUrl){if(!/^data:image\/(jpeg|png|webp);base64,/.test(dataUrl))throw new Error('not an image');
+    const id=String((P&&P.id)||'misc').slice(0,6)+'_'+uid();
+    let onDisk=false;
+    if(DISK.on&&DISK.mode){try{onDisk=await DISK.write(this.path(id),unb64(dataUrl.split(',')[1]))}catch(e){onDisk=false}}
+    if(!onDisk){let v=dataUrl;
+      if(SEC.on){if(!SEC.dek)throw new Error('locked');v={__enc:await aesEnc(SEC.dek,dataUrl)}}
+      const ok=await IDB.set('ph.'+id,v);if(ok===false)throw new Error('not saved')}
+    this.mem.set(id,dataUrl);return id},
+  async get(id){if(!id)return null;if(this.mem.has(id))return this.mem.get(id);
+    if(DISK.mode){try{const b=await DISK.read(this.path(id));if(b){const d='data:image/jpeg;base64,'+b;this.mem.set(id,d);return d}}catch(e){}}
+    let v=null;try{v=await IDB.get('ph.'+id)}catch(e){return null}
     if(v&&v.__enc){if(!SEC.dek)return null;try{v=await aesDec(SEC.dek,v.__enc)}catch(e){return null}}
     if(typeof v!=='string'||!/^data:image\//.test(v))return null;this.mem.set(id,v);return v},
-  async del(id){this.mem.delete(id);try{await IDB.del('ph.'+id)}catch(e){}}};
+  async del(id){this.mem.delete(id);if(DISK.mode){try{await DISK.erase(this.path(id))}catch(e){}}try{await IDB.del('ph.'+id)}catch(e){}}};
 const PH_Q={small:520,standard:900,high:1500};
 function phMeta(id,o){return Object.assign({id,at:Date.now(),by:meName(),sync:0},o||{})}
 function meName(){const u=(typeof GA!=='undefined'&&GA.user)||null;return String((u&&(u.name||u.email))||'Me').slice(0,60)}
@@ -3204,7 +3257,8 @@ function phCamera(){return new Promise(res=>{const i=document.createElement('inp
 function scList(str){return uniq(String(str||'').split(/[\s,;]+/).map(U).filter(Boolean))}
 function phWaiting(){const all=[];const W=P&&P.wd,A=P&&P.ad;if(W){Object.values(W.refs||{}).forEach(l=>all.push(...l));(W.locks||[]).forEach(k=>{all.push(...(k.refs||[]),...(k.mk||[]))});all.push(...(W.set||[]))}
   if(A)Object.values(A.blocks||{}).forEach(b=>{Object.values(b.photos||{}).forEach(l=>all.push(...l));Object.values(b.pph||{}).forEach(x=>all.push(x))});return all.filter(m=>m&&!m.sync).length}
-function phNote(){const n=phWaiting();return n?`<p class="wd-sync"><i aria-hidden="true"></i>${n} photo${n===1?' is':'s are'} saved on this device. They reach your team when team photo sync is switched on.</p>`:''}
+function phNote(){const n=phWaiting();if(!n)return '';const where=DISK.on&&DISK.mode?'in your ScriptDesk folder on this computer':'on this device';
+  return `<p class="wd-sync"><i aria-hidden="true"></i>${n} photo${n===1?' is':'s are'} saved ${where}. They reach your team when team photo sync is switched on.</p>`}
 function dropZone(kind,extra){return `<div class="wd-drop" data-wddrop="${kind}" tabindex="0" aria-label="Drop pictures here"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v4h16v-4"/></svg><div class="grow"><b>Drop pictures here</b><span>Drag them in from any website or folder, paste a copied picture, or add from your camera.</span></div><button class="btn sm" data-wd="add" data-k="${kind}"${extra||''}>Choose files</button><button class="btn sm" data-wd="cam" data-k="${kind}"${extra||''}>Take photo</button></div>`}
 /* ---- Costumes: look boards, locked looks, continuity photos, A4 sheets ---- */
 const CMODES=[['scene','Scene-wise'],['artist','Artist-wise'],['looks','Look boards'],['photos','Continuity photos'],['sheet','A4 sheets']];
@@ -3224,11 +3278,14 @@ function wdLooks(){const names=wdArtists();if(!names.length)return `<div class="
   const cur=wdPickArtist(names);const refs=WD().refs[cur]||[];const sel=new Set(VIEW.wdSel||[]);const locks=wdLocksOf(cur);
   const tiles=refs.map(m=>`<figure class="wd-t${sel.has(m.id)?' on':''}" data-q="${esc((cur+' '+(m.cap||'')).toLowerCase())}">${phImg(m,m.cap)}<button class="wd-pick" data-wdsel="${esc(m.id)}" aria-pressed="${sel.has(m.id)}" aria-label="Select this picture"></button><figcaption contenteditable="true" spellcheck="false" data-wdcap="ref|${esc(cur)}|${esc(m.id)}" data-ph="Add a note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-wddel="ref|${esc(cur)}|${esc(m.id)}" aria-label="Remove picture">×</button></figure>`).join('');
   const next='C'+(Math.max(0,...wdNums(cur).map(x=>+x.no.slice(1)||0),...locks.map(k=>+String(k.no).slice(1)||0))+1);
-  const lockCards=locks.map(k=>`<article class="wd-lk" data-q="${esc((cur+' '+k.no+' '+(k.desc||'')).toLowerCase())}"><div class="wd-lk-h"><b class="wd-no">${esc(k.no)}</b><span class="wd-ok">Locked by ${esc(k.by||'')}</span><span class="grow"></span><button class="btn sm" data-wdgo="sheet|${esc(k.id)}">A4 sheet</button><button class="btn sm ghost danger" data-wdun="${esc(k.id)}">Unlock</button></div>
+  const lockCards=locks.map(k=>`<article class="wd-lk" data-q="${esc((cur+' '+k.no+' '+(k.desc||'')).toLowerCase())}"><div class="wd-lk-h"><b class="wd-no">${esc(k.no)}</b><span class="wd-ok">Locked by ${esc(k.by||'')}</span><span class="grow"></span><button class="btn sm" data-wdgo="sheet|${esc(k.id)}">A4 sheet</button></div>
     <div class="wd-strip">${(k.refs||[]).map(m=>phImg(m,m.cap,'ph-s')).join('')||'<span class="faint small">No look photos</span>'}</div>
+    <p class="wd-sum">${k.desc?esc(k.desc):'<span class="faint">No description yet</span>'}<br><span class="muted">Scenes ${esc(scList(k.scenes).join(', '))||'—'}${k.mkText?' · '+esc(k.mkText):''}</span></p>
+    <details class="ad-det wd-det"><summary>Edit look</summary>
     <label class="wd-f">Look<input data-wdk="${esc(k.id)}|desc" value="${esc(k.desc||'')}" placeholder="Red saree, brown shawl"></label>
     <label class="wd-f">Scenes<input data-wdk="${esc(k.id)}|scenes" value="${esc(scList(k.scenes).join(', '))}" placeholder="14, 16, 22"></label>
     <label class="wd-f">Makeup and hair<textarea rows="2" data-wdk="${esc(k.id)}|mkText" placeholder="Smudged kajal, loose bun, no lipstick">${esc(k.mkText||'')}</textarea></label>
+    <button class="btn sm ghost danger wd-un" data-wdun="${esc(k.id)}">Unlock this look</button></details>
     <div class="wd-mk">${(k.mk||[]).map(m=>`<figure class="wd-mkt">${phImg(m,m.cap,'ph-s')}<figcaption contenteditable="true" spellcheck="false" data-wdcap="mk|${esc(k.id)}|${esc(m.id)}" data-ph="Note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-wddel="mk|${esc(k.id)}|${esc(m.id)}" aria-label="Remove makeup reference">×</button></figure>`).join('')}<button class="wd-add" data-wd="mk" data-id="${esc(k.id)}">+ Makeup reference</button></div></article>`).join('');
   return wdArtistBar(names,cur)+`<div class="wd-cols"><section class="wd-main">${dropZone('ref')}
     <div class="wd-bar"><span class="small muted">${refs.length} reference${refs.length===1?'':'s'}${sel.size?' · '+sel.size+' selected':''}</span><span class="grow"></span><button class="btn sm pri" data-wd="lock" ${sel.size?'':'disabled'}>Lock ${sel.size||''} selected as a look</button></div>
@@ -3357,20 +3414,25 @@ function adList(gs,cur){return `<nav class="ad-list" aria-label="Blocks">${gs.ma
 function adBlocks(gs,cur,b,items){const tab=VIEW.adT||'loc';const ph=b.photos[tab]||[];const L=cur.loc;
   const info=[['addr','Address','Street, area, city'],['owner','Owner and phone','Name · phone'],['power','Power','Hall only, generator for terrace'],['notes','Shoot notes','Quiet after 9 pm, permission letter with production']];
   const artists=sortedArtists().map(a=>a.name);
-  const grp=([g,l,d])=>{const list=items.filter(it=>it.grp===g);return `<section class="ad-g ad-${g}"><div class="ad-gh"><b>${l}</b><span>${list.length}</span></div><p class="small muted">${d}</p>
-    ${list.map(it=>`<div class="ad-it" data-q="${esc((it.name+' '+it.who).toLowerCase())}">${b.pph[it.name.toLowerCase()]?phImg(b.pph[it.name.toLowerCase()],it.name,'ad-th'):`<button class="ad-th ad-thadd" data-adph="${esc(it.name)}" aria-label="Add a photo of ${esc(it.name)}">+</button>`}
-      <div class="grow"><div class="ad-n">${esc(it.name)}</div>${g==='artist'?`<div class="small muted">${esc(it.who||'Pick the artist')}</div>`:''}</div>
-      <div class="ad-sc">${it.sc.map(n=>`<span class="ad-chip">${esc(n)}</span>`).join('')}</div>
-      <select class="mini" data-adgrp="${esc(it.name)}" aria-label="Group for ${esc(it.name)}">${AD_G.map(([k,l2])=>`<option value="${k}"${k===it.grp?' selected':''}>${l2.split(' ')[0]}</option>`).join('')}</select>
-      <button class="wd-x ad-x" data-adhide="${esc(it.name)}" aria-label="Remove ${esc(it.name)} from this block">×</button></div>`).join('')||'<p class="small faint">None yet.</p>'}
-    <form class="ad-new" data-adnew="${g}"><input name="n" placeholder="Add ${l.toLowerCase().replace(' props',' prop')}" aria-label="New ${l.toLowerCase()}" maxlength="80">${g==='artist'?`<select name="w" class="mini" aria-label="Artist"><option value="">Artist</option>${artists.map(a=>`<option>${esc(a)}</option>`).join('')}</select>`:''}<input name="s" placeholder="Scenes" aria-label="Scenes" maxlength="80" class="ad-ss"><button class="btn sm">Add</button></form></section>`};
+  const CAM='<svg class="ad-ci" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h3.2l1.6-2.4h8.4L18.8 8H21v12H3z"/><circle cx="12" cy="13.6" r="3.6"/></svg>';
+  const chips=sc=>{const a=sc.slice(0,3).map(n=>`<span class="ad-chip">${esc(n)}</span>`).join('');return a+(sc.length>3?`<span class="ad-chip more" title="${esc(sc.join(', '))}">+${sc.length-3}</span>`:'')||'<span class="ad-chip none">—</span>'};
+  const grp=([g,l,d])=>{const list=items.filter(it=>it.grp===g);const open=VIEW.adNew===g;const one=l.toLowerCase().replace(' props',' prop');
+    return `<section class="ad-g ad-${g}"><div class="ad-gh"><b>${l}</b><span>${list.length}</span><button class="ad-plus" data-adshow="${g}" aria-expanded="${open}" aria-label="Add ${esc(one)}">+</button></div><p class="ad-gd">${d}</p>
+    ${open?`<form class="ad-new" data-adnew="${g}"><input name="n" placeholder="${esc(one.charAt(0).toUpperCase()+one.slice(1))} name" aria-label="New ${esc(one)}" maxlength="80" autofocus>${g==='artist'?`<select name="w" aria-label="Artist"><option value="">Which artist</option>${artists.map(a=>`<option>${esc(a)}</option>`).join('')}</select>`:''}<div class="ad-nr"><input name="s" placeholder="Scenes, e.g. 14, 16" aria-label="Scenes" maxlength="80"><button class="btn sm pri">Add</button><button type="button" class="btn sm ghost" data-adshow="">Cancel</button></div></form>`:''}
+    <div class="ad-rows">${list.map(it=>{const key=it.name.toLowerCase();const ph=b.pph[key];
+      return `<div class="ad-it" data-q="${esc((it.name+' '+it.who).toLowerCase())}">
+      <button class="ad-th${ph?' has':''}" data-adph="${esc(it.name)}" aria-label="${ph?'Change':'Add'} a photo of ${esc(it.name)}">${ph?phImg(ph,it.name,'ad-thi'):CAM}</button>
+      <div class="ad-nm"><div class="ad-n">${esc(it.name)}</div>${g==='artist'?`<div class="ad-sub">${esc(it.who||'Pick the artist')}</div>`:''}</div>
+      <div class="ad-sc">${chips(it.sc)}</div>
+      <select class="ad-gsel" data-adgrp="${esc(it.name)}" aria-label="Group for ${esc(it.name)}">${AD_G.map(([k,l2])=>`<option value="${k}"${k===it.grp?' selected':''}>${l2.replace(' props','')}</option>`).join('')}</select>
+      <button class="ad-del" data-adhide="${esc(it.name)}" aria-label="Remove ${esc(it.name)} from this block">×</button></div>`}).join('')||`<p class="ad-none">Nothing here yet.${g==='script'?' Script props come from the AI breakdown.':''}</p>`}</div></section>`};
   return `<div class="ad-wrap">${adList(gs,cur)}<div class="ad-main">
     <div class="ad-top"><div class="grow"><h2 class="ad-h">${esc(L)}</h2><p class="small muted">Scenes ${esc(cur.scenes.map(s=>s.no).join(', '))} · ${esc([...cur.ie].join(' / '))} · ${esc([...cur.tm].join(', '))}</p></div>
       <div class="seg" role="group" aria-label="Block type"><button data-adkind="real" aria-pressed="${b.kind!=='set'}">Real location</button><button data-adkind="set" aria-pressed="${b.kind==='set'}">Built set</button></div><button class="btn sm" data-adgo="sheet">A4 sheet</button></div>
     <section class="ad-card"><div class="seg" role="group" aria-label="Photos">${AD_T.map(([k,l])=>`<button data-adt="${k}" aria-pressed="${tab===k}">${l} · ${(b.photos[k]||[]).length}</button>`).join('')}</div>
       ${dropZone('ad:'+tab)}
       ${ph.length?`<div class="wd-grid ad-ph">${ph.map(m=>`<figure class="wd-t">${phImg(m,m.cap)}<figcaption contenteditable="true" spellcheck="false" data-adcap="${esc(tab)}|${esc(m.id)}" data-ph="Add a note">${esc(m.cap||'')}</figcaption><button class="wd-x" data-addel="${esc(tab)}|${esc(m.id)}" aria-label="Remove photo">×</button></figure>`).join('')}</div>`:''}
-      <div class="ad-info">${info.map(([k,l,ph2])=>`<label class="wd-f">${l}<input data-adinfo="${k}" value="${esc(b.info[k]||'')}" placeholder="${ph2}" maxlength="300"></label>`).join('')}</div></section>
+      <details class="ad-det"${Object.values(b.info).some(Boolean)?' open':''}><summary>Location details${Object.values(b.info).filter(Boolean).length?` · ${Object.values(b.info).filter(Boolean).length} filled`:''}</summary><div class="ad-info">${info.map(([k,l,ph2])=>`<label class="wd-f">${l}<input data-adinfo="${k}" value="${esc(b.info[k]||'')}" placeholder="${ph2}" maxlength="300"></label>`).join('')}</div></details></section>
     <div class="ad-gs">${AD_G.map(grp).join('')}</div></div></div>`}
 function adSheet(gs,cur,b,items){const q=VIEW.wdQ||'standard';const photos=[...b.photos.loc,...b.photos.design,...b.photos.dress].slice(0,4);
   const tbl=(g,l)=>{const list=items.filter(it=>it.grp===g);return `<div class="a4-l${g==='script'?' a4-hl':''}">${l.toUpperCase()}</div><table class="a4-t${g==='script'?' a4-ts':''}"><tbody>${list.map(it=>`<tr><td>${esc(it.name)}${it.who?` <span class="muted">· ${esc(it.who)}</span>`:''}</td><td class="a4-n">${esc(it.sc.join(', '))}</td></tr>`).join('')||'<tr><td class="a4-e">None</td><td></td></tr>'}</tbody></table>`};
@@ -3390,6 +3452,7 @@ async function adPdf(gs){try{await loadScript(CDN.jspdf)}catch(e){toast('PDF too
   a4Foot(doc,'ScriptDesk · Art department');const nm=[P.title||'Film','Art',gs.length===1?gs[0].loc:'All_blocks'].join('_').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')+'.pdf';await saveFile(nm,await pdfOut(doc))}
 function adAdd(kind,ids){const b=adB(VIEW.adB,true);snapshot();if(kind==='adph'){b.pph[VIEW.adPh]=phMeta(ids[0])}else{const t=kind.split(':')[1]||'loc';ids.forEach(id=>b.photos[t].push(phMeta(id)))}touch();render(true);toast(ids.length===1?'Photo added.':ids.length+' photos added.')}
 async function adClick(t){if(t.dataset.adb){VIEW.adB=t.dataset.adb;render();return true}
+  if(t.dataset.adshow!==undefined){VIEW.adNew=t.dataset.adshow===VIEW.adNew?'':t.dataset.adshow;render(true);return true}
   if(t.dataset.adt){VIEW.adT=t.dataset.adt;render(true);return true}
   if(t.dataset.adgo){VIEW.apmode=t.dataset.adgo;render();return true}
   if(t.dataset.adkind){const b=adB(VIEW.adB,true);snapshot();b.kind=t.dataset.adkind;touch();render(true);return true}
@@ -3407,7 +3470,7 @@ function adMount(){const c=$('#content');phHydrate(c);dropMount(c);
   c.querySelectorAll('[data-adgrp]').forEach(el=>el.addEventListener('change',()=>{const b=adB(VIEW.adB,true);snapshot();b.grp[el.dataset.adgrp.toLowerCase()]=el.value;touch();render(true)}));
   c.querySelectorAll('[data-adnew]').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();const n=f.n.value.trim().slice(0,80);if(!n){f.n.focus();return}
     const valid=new Set(P.scenes.map(x=>U(x.no)));const sc=scList(f.s.value);const bad=sc.filter(x=>!valid.has(x));if(bad.length){toast('These scenes are not in the script: '+bad.join(', '));return}
-    const b=adB(VIEW.adB,true);snapshot();const g=f.dataset.adnew;b.hide=b.hide.filter(x=>x!==n.toLowerCase());b.extra.push({id:uid(),g,name:n,who:f.w?f.w.value:'',scenes:sc.join(', '),note:''});b.grp[n.toLowerCase()]=g;touch();render(true)}))}
+    const b=adB(VIEW.adB,true);snapshot();const g=f.dataset.adnew;b.hide=b.hide.filter(x=>x!==n.toLowerCase());b.extra.push({id:uid(),g,name:n,who:f.w?f.w.value:'',scenes:sc.join(', '),note:''});b.grp[n.toLowerCase()]=g;VIEW.adNew='';touch();render(true)}))}
 /* ---- Catalog: locations, props, wardrobe and more, with photos ---- */
 const CAT_T=[['location','Location'],['prop','Prop'],['wardrobe','Wardrobe'],['set','Set dressing'],['vehicle','Vehicle'],['animal','Animal'],['sfx','Special effect'],['other','Other']];
 const CAT_SRC={prop:['props','spl_props'],set:['art','spl_sets'],vehicle:['vehicles'],animal:['animals'],sfx:['sfx','vfx']};

@@ -9,6 +9,19 @@ const crypto = require('crypto');
 const ROOT = () => path.join(app.getPath('documents'), 'ScriptDesk');
 ipcMain.handle('sd:root', () => ROOT());
 ipcMain.handle('sd:open', () => shell.openPath(ROOT()));
+ipcMain.handle('sd:read', (e, rel) => {
+  const root = ROOT();
+  const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
+  if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  try { return fs.readFileSync(target).toString('base64'); } catch (err) { return null; }
+});
+ipcMain.handle('sd:del', (e, rel) => {
+  const root = ROOT();
+  const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
+  if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  try { fs.unlinkSync(target); } catch (err) { }
+  return true;
+});
 ipcMain.handle('sd:write', (e, rel, payload) => {
   const root = ROOT();
   const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));

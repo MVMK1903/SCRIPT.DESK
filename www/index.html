@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-iOPQbiuJnTItn/elkiyW0ucDuHZgAs1o3odI26pL4jA=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-bCSnAKbsT4ga3pxLXrRk0kbqcuo0uqwPChwdZ9VoJ5A=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -6151,20 +6151,40 @@ function askSpace(){return new Promise(res=>{if(!(GA.fb&&GA.user))return res('me
 
 /* ---------- encrypted copies on this device ---------- */
 /* private and team scripts are kept on the device encrypted with the vault key, never as readable text */
-const boxKey=(space,id)=>space==='o'?OTPK[id]||null:SV.vk;
-async function secureLocalSave(o){const k=boxKey(o.space,o.id);if(!k)return false;const box=Object.assign({__sd:1,id:o.id,space:o.space,updated:o.updated,title:o.title},await sealJson(k,o));
+/* ---------- a key of its own for every private screenplay ----------
+   Each "Just me" screenplay is sealed with its own random key. That key is wrapped to your account's
+   identity key, so one project's key opens that project and nothing else. Screenplays made before this
+   still open with the older vault key, and move to their own key the next time they are saved.
+   Team screenplays keep the team key, because everyone in the team has to be able to open them. */
+const PK={};
+async function pkOpen(id,w){if(PK[id])return PK[id];if(!w||!SV.priv)return null;
+  try{PK[id]=await aesKey(await ecUnwrap(w));return PK[id]}catch(e){return null}}
+async function pkMake(o){if(o.pk)return pkOpen(o.id,o.pk);if(!SV.pub||!SV.vk)return null;
+  try{const raw=rnd(32);const w=await ecWrap(raw,SV.pub);PK[o.id]=await aesKey(raw);o.pk=w;return PK[o.id]}catch(e){return null}}
+/* the key for one screenplay: its own key when it has one, otherwise the older shared key */
+async function boxKey(space,id,w){if(space==='o')return OTPK[id]||null;
+  if(String(space).startsWith('t:'))return TEAMS.keys[space.slice(2)]||null;
+  return (w?await pkOpen(id,w):null)||SV.vk}
+async function secureLocalSave(o){let k;
+  if(o.space==='v')k=await pkMake(o);
+  if(!k)k=await boxKey(o.space,o.id,o.pk);
+  if(!k)return false;const box=Object.assign({__sd:1,id:o.id,space:o.space,updated:o.updated,title:o.title,pk:o.pk||null},await sealJson(k,o));
   lsSet('p.'+o.id,box);return IDB.set('p.'+o.id,box)}
-async function secureLocalOpen(box){if(!box||!box.__sd)return box;const k=boxKey(box.space,box.id);if(!k)return null;try{return await openJson(k,box)}catch(e){return null}}
+async function secureLocalOpen(box){if(!box||!box.__sd)return box;const k=await boxKey(box.space,box.id,box.pk);if(!k)return null;
+  try{return await openJson(k,box)}catch(e){}
+  /* a half-finished change of key: the older key still opens it */
+  if(box.pk&&SV.vk){try{return await openJson(SV.vk,box)}catch(e){}}
+  return null}
 
 /* ---------- cloud sync through Firestore ---------- */
 const CS={busy:false,again:false,timer:0,last:0,msg:''};
 const CS_CHUNK=700000;
 const csCol=s=>String(s).startsWith('t:')?`teams/${s.slice(2)}/projects`:`users/${GA.user.sub}/projects`;
 function csSoon(ms){if(!(GA.fb&&GA.user))return;clearTimeout(CS.timer);CS.timer=setTimeout(()=>csSync('save'),ms||4000)}
-async function csKey(sp){if(sp==='v')return SV.vk;if(String(sp).startsWith('t:'))return TEAMS.keys[sp.slice(2)]||null;return null}
-async function csPack(o){const sp=spOf(o);if(sp==='o'){const box=await csBox(o.id);if(!box)throw Object.assign(new Error('locked'),{code:'locked'});return {sp,d:JSON.stringify({iv:box.iv,ct:box.ct,z:box.z}),meta:{u:+box.updated||0,sp:'o',kv:0,by:GA.user.sub,t:'',z:box.z||0}}}const key=await csKey(sp);let d;
+async function csKey(sp,id,w){if(sp==='v')return (id&&w?await pkOpen(id,w):null)||SV.vk;if(String(sp).startsWith('t:'))return TEAMS.keys[sp.slice(2)]||null;return null}
+async function csPack(o){const sp=spOf(o);if(sp==='o'){const box=await csBox(o.id);if(!box)throw Object.assign(new Error('locked'),{code:'locked'});return {sp,d:JSON.stringify({iv:box.iv,ct:box.ct,z:box.z}),meta:{u:+box.updated||0,sp:'o',kv:0,by:GA.user.sub,t:'',z:box.z||0}}}let key=sp==='v'?await pkMake(o):null;if(!key)key=await csKey(sp,o.id,o.pk);let d;
   if(spSecure(sp)){if(!key)throw Object.assign(new Error('locked'),{code:'locked'});d=JSON.stringify(await sealJson(key,o))}else d=b64(await gz(te.encode(JSON.stringify(o))));
-  return {sp,d,meta:{u:+o.updated||0,sp:sp.startsWith('t:')?'t':sp,kv:sp.startsWith('t:')?TEAMS.kv[sp.slice(2)]||1:0,by:GA.user.sub,t:spSecure(sp)?'':String(o.title||'').slice(0,120),z:typeof CompressionStream!=='undefined'?1:0}}}
+  return {sp,d,meta:{u:+o.updated||0,sp:sp.startsWith('t:')?'t':sp,kv:sp.startsWith('t:')?TEAMS.kv[sp.slice(2)]||1:0,by:GA.user.sub,t:spSecure(sp)?'':String(o.title||'').slice(0,120),z:typeof CompressionStream!=='undefined'?1:0,pk:sp==='v'&&o.pk?o.pk:null}}}
 async function csPut(col,o){const fx=await fbInit();const p=await csPack(o);const n=Math.max(1,Math.ceil(p.d.length/CS_CHUNK));
   for(let i=0;i<n;i++)await fx.set(`${col}/${o.id}/c/${i}`,{d:p.d.slice(i*CS_CHUNK,(i+1)*CS_CHUNK)});
   await fx.set(`${col}/${o.id}`,Object.assign(p.meta,{n}));
@@ -6174,7 +6194,9 @@ async function csBox(id){let a=lsGet('p.'+id);const b=await IDB.get('p.'+id);if(
 async function csGet(col,pid,meta,sp){const fx=await fbInit();let d='';for(let i=0;i<(meta.n||1);i++){const c=await fx.get(`${col}/${pid}/c/${i}`);if(!c)throw new Error('missing chunk');d+=String(c.d||'')}
   if(meta.sp==='o'){const x=JSON.parse(d);const old=(lsGet('index')||[]).find(i=>i.id===pid);return {__box:1,id:pid,space:'o',updated:+meta.u||0,title:old&&old.title||'Locked script',iv:x.iv,ct:x.ct,z:x.z}}
   let o;if(meta.sp==='me'||!meta.sp){o=JSON.parse(td.decode(meta.z===0?unb64(d):await gz(unb64(d),1)))}
-  else{const key=await csKey(sp);if(!key)return null;o=await openJson(key,JSON.parse(d))}
+  else{const key=await csKey(sp,pid,meta&&meta.pk);if(!key)return null;const box=JSON.parse(d);
+    try{o=await openJson(key,box)}catch(e){if(!(meta&&meta.pk&&SV.vk))throw e;o=await openJson(SV.vk,box)}
+    if(meta&&meta.pk)o.pk=meta.pk}
   if(!gdValid(o)||o.id!==pid)return null;o.space=sp;return o}
 async function csDel(col,pid){const fx=await fbInit();for(let i=0;i<60;i++){const x=await fx.get(`${col}/${pid}/c/${i}`);if(!x)break;await fx.del(`${col}/${pid}/c/${i}`)}await fx.del(`${col}/${pid}`)}
 async function csStoreLocal(o){if(o.__box){const box=Object.assign({__sd:1},o);delete box.__box;lsSet('p.'+o.id,box);await IDB.set('p.'+o.id,box);o={id:o.id,title:o.title,updated:o.updated,space:'o',scenes:[]}}
@@ -6190,7 +6212,7 @@ async function csSync(reason){if(!(GA.fb&&GA.user)||GA.mode==='offline'&&navigat
       for(const pid of Object.keys(remote)){const r=remote[pid],ru=+r.u||0,l=local[pid],base=m[pid]||0,lu=l?+l.updated||0:0;
         const rsp=r.sp==='t'?sp:r.sp==='v'?'v':r.sp==='o'?'o':'me';
         if(l&&ru<=base)continue;if(l&&ru===lu){m[pid]=ru;continue}
-        if(spSecure(rsp)&&rsp!=='o'&&!(await csKey(rsp))){locked++;continue}
+        if(spSecure(rsp)&&rsp!=='o'&&!(await csKey(rsp,r.id,r.pk))){locked++;continue}
         const o=await csGet(col,pid,r,rsp);if(!o)continue;
         if(l&&lu>base&&o.__box){m[pid]=ru;continue} /* a locked script changed on two devices: this device's version is kept */
         if(l&&lu>base){const c=JSON.parse(JSON.stringify(o));c.id=uid();c.title=(o.title||'Untitled')+' (copy from another device, '+new Date(ru||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+')';c.updated=Date.now();await csStoreLocal(c);added++;m[pid]=ru;continue}

@@ -1445,6 +1445,9 @@ select.mini{border-radius:8px!important}.wx-bar,.wx-bar i{border-radius:1px!impo
   --backdrop:radial-gradient(900px 640px at 0% -8%,#e9ddff 0%,rgba(233,221,255,0) 62%),radial-gradient(900px 640px at 104% 10%,#ffd9c4 0%,rgba(255,217,196,0) 60%),radial-gradient(900px 700px at 60% 112%,#d7f3ee 0%,rgba(215,243,238,0) 60%),linear-gradient(170deg,#fff4e6 0%,#fdf1f0 60%,#f5f1ff 100%);
   background:#fff4e6}
 :root[data-look="sandhya"] body{background-color:#1b1a3a}:root[data-look="night"] body{background-color:#0c1114}:root[data-look="savera"] body{background-color:#fff4e6}
+/* the open list of every dropdown uses the theme's own solid colours, so names stay readable (light text on a white list was invisible) */
+select option,select optgroup{background-color:var(--bg-2,var(--bg,#fff));color:var(--fg,#111)}
+select option:checked,select option:hover{background-color:#ffd36e;color:#241c3a}
 :root[data-look="sandhya"] #galock{background:#1b1a3a}:root[data-look="night"] #galock{background:#0c1114}:root[data-look="savera"] #galock{background:#fff4e6}
 /* headings get the display face */
 :root[data-look] .ph h1,:root[data-look] .film #fTitle,:root[data-look] .hm-h h1,:root[data-look] .brand b{font-family:var(--f-display)!important;letter-spacing:-.02em}

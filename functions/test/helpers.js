@@ -5,6 +5,7 @@ const Module = require('module');
 
 const store = new Map();           // Firestore: path -> data
 const users = new Map();           // Firebase Auth: email -> { uid, password, disabled }
+const phones = new Map();          // Firebase Auth: uid -> registered mobile
 const mails = [];                  // sent emails
 const logs = [];                   // every logger call, as text
 const delays = [];                 // every wait the functions asked for
@@ -50,6 +51,7 @@ const adminStub = {
   initializeApp() {},
   firestore: fsFn,
   auth: () => ({
+    async getUser(uid) { return { uid, phoneNumber: phones.get(uid) }; },
     async getUserByEmail(e) { if (!users.has(e)) throw authErr('auth/user-not-found'); return { uid: users.get(e).uid, email: e }; },
     async createUser({ email, password, displayName }) { users.set(email, { uid: 'u' + users.size, password, displayName, verified: false }); return {}; },
     async generatePasswordResetLink(e) { if (!users.has(e)) throw authErr('auth/user-not-found'); return `https://reset.example/${e}`; },
@@ -80,5 +82,5 @@ global.fetch = async (url, init) => {
 };
 
 const req = (data, extra) => ({ data, rawRequest: { ip: '1.2.3.4' }, ...(extra || {}) });
-const reset = () => { store.clear(); users.clear(); mails.length = 0; logs.length = 0; delays.length = 0; state.checks = 0; state.now = realNow(); };
-module.exports = { store, users, mails, logs, delays, state, req, reset, HttpsError };
+const reset = () => { phones.clear(); store.clear(); users.clear(); mails.length = 0; logs.length = 0; delays.length = 0; state.checks = 0; state.now = realNow(); };
+module.exports = { phones, store, users, mails, logs, delays, state, req, reset, HttpsError };

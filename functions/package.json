@@ -10,5 +10,5 @@
     "nodemailer": "^6.9.16",
     "zod": "^3.25.76"
   },
-  "scripts": { "test": "node --test test/auth.test.js" }
+  "scripts": { "test": "node --test test/auth.test.js test/loginotp.test.js" }
 }

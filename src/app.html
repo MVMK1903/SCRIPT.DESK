@@ -6012,10 +6012,49 @@ async function fbSignup(fx,email,pass,name){
   try{await fx.call('signupGate',{email,password:pass,...(name?{name}:{})});return null}
   catch(err){const c=err&&err.code;if(FB_NOSERVER(c))return fx.create(email,pass,name);if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/signup-server'};throw err}}
 
+/* ---------- sign-in code: after the password or Google, a one-time code on EVERY sign-in ----------
+   The code comes to the account email (sent at once), or by SMS on the web app when a mobile number is registered.
+   Once the server has answered once, the app never opens without a code, and never opens offline. Before the server
+   is set up, the screen steps aside so nobody is locked out of their own scripts. */
+const LOGIN_OTP_KEY='scriptdesk.otp.on';
+const loginOtpOn=()=>{try{return localStorage.getItem(LOGIN_OTP_KEY)==='1'}catch(e){return false}};
+const LOGIN_OTP_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable'||c==='functions/internal';
+function loginOtp(fx,u){return new Promise(res=>{
+  if(window.__FB_NO_LOGIN_OTP)return res(true);
+  const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';
+  const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','lo-h');
+  d.innerHTML=`<div class="ga-card fb-card"><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>
+    <h1 id="lo-h">Enter your sign-in code</h1><p class="ga-sub" id="loTo">Sending a code to your email…</p>
+    <span class="fb-l">6-digit code. It signs you in once entered.</span>${otpBoxesHtml('loC')}
+    <button type="button" class="ga-btn pri" id="loGo"><span><b>Sign in</b></span></button>
+    <div class="bacts"><button type="button" class="ga-link" id="loRe">Send again</button>${phone&&otpSmsOk()?`<button type="button" class="ga-link" id="loSms">SMS to ${esc(mphone)} instead</button>`:''}<button type="button" class="ga-link" id="loOut">Use a different account</button></div>
+    <p class="ga-msg" id="loM" role="alert"></p><div id="fbRecap"></div></div>`;
+  document.body.appendChild(d);
+  let via='email',cool=0,ct=0,fin=false;const ob=otpBoxes('loC',()=>go());
+  const m=(t,info)=>{const e=d.querySelector('#loM');e.textContent=t;e.classList.toggle('info',!!info)};
+  const end=ok=>{if(fin)return;fin=true;clearTimeout(ct);d.remove();res(ok)};
+  const tick=()=>{const b=d.querySelector('#loRe');if(!b)return;const s=Math.ceil((cool-Date.now())/1000);if(s>0){b.disabled=true;b.textContent=`Send again (${s})`;ct=setTimeout(tick,1000)}else{b.disabled=false;b.textContent='Send again'}};
+  const send=async kind=>{via=kind;m(kind==='sms'?'Sending SMS…':'Sending email…',1);
+    try{if(kind==='email'){const r=await fx.call('loginOtpSend',{});d.querySelector('#loTo').textContent=`Code sent to ${r.to}. It works for ${r.minutes||5} minutes. Check spam if it is not there.`}
+      else{await fx.phoneReauth(phone,'fbRecap');d.querySelector('#loTo').textContent=`SMS sent to ${mphone}.`}
+      m('');cool=Date.now()+30000;tick();ob.clear();ob.focus()}
+    catch(e){const c=e&&e.code;
+      if(kind==='email'&&LOGIN_OTP_NOSERVER(c)&&!loginOtpOn()){toast('The sign-in code needs the ScriptDesk server, which is not set up yet. Signing in with your password only.',7000);end(true);return}
+      m(LOGIN_OTP_NOSERVER(c)?'Could not reach the ScriptDesk server. Check your internet connection and send again.':otpErr(e))}};
+  const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=d.querySelector('#loGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
+    try{if(via==='sms'){await fx.phoneConfirm(code);await fx.call('loginOtpSms',{})}else await fx.call('loginOtpVerify',{code});
+      try{localStorage.setItem(LOGIN_OTP_KEY,'1')}catch(e){}end(true)}
+    catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
+  d.querySelector('#loGo').onclick=go;d.querySelector('#loRe').onclick=()=>send(via);
+  const sb=d.querySelector('#loSms');if(sb)sb.onclick=()=>send('sms');
+  d.querySelector('#loOut').onclick=()=>end(false);
+  send('email')})}
+
 /* ---------- sign-in screen: Sign in / Create account, forgot password, Google ---------- */
 function fbGate(note){return new Promise(async res=>{let fx;
   try{fx=await fbInit()}catch(e){return res(gaGateOffline(note))}
-  const u=await fx.waitUser();if(u){await fbEnter(u,'online',true);return res()}
+  const enter=async(u,quiet)=>{if(!(await loginOtp(fx,u))){try{await fx.signOut()}catch(e){}return false}await fbEnter(u,'online',quiet);return true};
+  const u=await fx.waitUser();if(u){if(await enter(u,true))return res();note=''}
   const last=gaLastGet();const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','ga-h');
   let tab='in',msg='',info=note||'',busy=false;const v={e:last&&last.email||'',p:'',n:''};
   const draw=()=>{d.innerHTML=`<form class="ga-card fb-card" novalidate><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>
@@ -6031,7 +6070,7 @@ function fbGate(note){return new Promise(async res=>{let fx;
     <p class="ga-msg" role="alert">${msg?esc(msg):''}</p>
     <p class="ga-fine">Private scripts are end-to-end encrypted on this device before they are saved. ${GA.desk?'Google sign-in opens in your web browser.':''}</p></form>`};
   const keep=()=>{const g=id=>d.querySelector(id);if(g('#fbE'))v.e=g('#fbE').value.trim();if(g('#fbP'))v.p=g('#fbP').value;if(g('#fbN'))v.n=g('#fbN').value.trim()};
-  const done=async u=>{d.remove();await fbEnter(u,'online');res()};
+  const done=async u=>{d.style.display='none';if(await enter(u,false)){d.remove();res();return}d.style.display='';busy=false;v.p='';tab='in';msg='';info='Signed out. Sign in again to get a new code.';draw()};
   const fail=(e,where)=>{busy=false;msg=fbErr(e);if(where==='in'&&last&&last.ns)gaFailLog(last,e&&e.code||'error');draw();const f=d.querySelector('#fbP')||d.querySelector('#fbE');if(f)f.focus()};
   d.addEventListener('click',async e=>{const b=e.target.closest('[data-fb]');if(!b||b.disabled)return;keep();const a=b.dataset.fb;
     if(a==='eye'){const i=d.querySelector('#fbP');const show=i.type==='password';i.type=show?'text':'password';b.textContent=show?'Hide':'Show';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',show?'Hide password':'Show password');return}
@@ -6052,7 +6091,7 @@ function fbGate(note){return new Promise(async res=>{let fx;
   draw();document.body.appendChild(d);const f=d.querySelector(v.e?'#fbP':'#fbE');if(f)f.focus()})}
 /* Firebase could not load (offline at first start): keep the last account usable offline for a few days */
 function gaGateOffline(note){const last=gaLastGet();return new Promise(async res=>{
-  if(last&&!last.signedOut&&/^f/.test(last.ns||'')&&Date.now()-(last.on||0)<G_OFFLINE_DAYS*864e5){await gaEnter({sub:last.sub,email:last.email,name:last.name,picture:last.picture},'offline',true,'f');gaLog('offline');GA.fb=true;return res()}
+  if(last&&!last.signedOut&&!loginOtpOn()&&/^f/.test(last.ns||'')&&Date.now()-(last.on||0)<G_OFFLINE_DAYS*864e5){await gaEnter({sub:last.sub,email:last.email,name:last.name,picture:last.picture},'offline',true,'f');gaLog('offline');GA.fb=true;return res()}
   const d=document.createElement('div');d.id='galock';d.innerHTML=`<div class="ga-card"><h1>Connect to sign in</h1><p class="ga-sub">ScriptDesk needs the internet to sign you in. Connect, then try again.</p><button class="ga-btn pri" data-r><span><b>Try again</b></span></button></div>`;
   d.querySelector('[data-r]').onclick=()=>location.reload();document.body.appendChild(d)})}
 async function fbEnter(u,mode,quiet){GA.fb=true;await gaEnter({sub:u.uid,email:u.email,name:u.name||u.email.split('@')[0],picture:u.picture||''},mode,quiet,'f');GA.user.verified=!!u.verified;GA.user.providers=u.providers||[];GA.user.phone=u.phone||'';

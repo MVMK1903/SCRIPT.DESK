@@ -16,6 +16,7 @@ const db = admin.firestore();
 const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
 const { otpInput } = require('./validate');
 Object.assign(exports, require('./auth')); // sign-in gate, safe sign-up, account triggers
+Object.assign(exports, require('./loginotp')); // one-time code on every sign-in
 
 const CODE_MINUTES = 5;
 const MAX_TRIES = 5;

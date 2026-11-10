@@ -195,6 +195,18 @@ def main():
     hdr = headers_file(page)
     page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + csp(page), 1)
     open(os.path.join(WWW, '_headers'), 'w', encoding='utf-8').write(hdr)
+    # Firebase Hosting reads its headers from firebase.json, so keep its CSP (with the inline-script hash) in step.
+    try:
+        fj_path = os.path.join(ROOT, 'firebase.json')
+        fj = json.load(open(fj_path, encoding='utf-8'))
+        csp_line = next(l.split(': ', 1)[1].strip() for l in hdr.splitlines() if l.strip().startswith('Content-Security-Policy:'))
+        for rule in fj.get('hosting', {}).get('headers', []):
+            for hd in rule.get('headers', []):
+                if hd.get('key') == 'Content-Security-Policy':
+                    hd['value'] = csp_line
+        open(fj_path, 'w', encoding='utf-8').write(json.dumps(fj, indent=2) + '\n')
+    except (OSError, StopIteration, ValueError):
+        pass
     open(os.path.join(WWW, 'index.html'), 'w', encoding='utf-8').write(page)
     try:
         ver = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], cwd=ROOT).decode().strip()

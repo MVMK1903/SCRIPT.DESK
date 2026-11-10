@@ -1,0 +1,43 @@
+name: Publish the ScriptDesk website (Firebase Hosting)
+
+# Run by hand: Actions tab -> Publish the ScriptDesk website -> Run workflow.
+# Hosting is free on Firebase's Spark plan, so this does NOT need the paid Blaze plan.
+# Needs one repository secret:
+#   FIREBASE_SERVICE_ACCOUNT - JSON key of a service account with the "Firebase Hosting Admin" role
+# And, if config/firebase.public.json is not in the repository, also:
+#   FIREBASE_CONFIG - the Firebase web config, so accounts work on the website
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Build the website from src/
+        env:
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+        run: python scripts/build.py
+      - name: Check no log prints a password or code
+        run: python scripts/check_logs.py
+      - name: Sign in to Google Cloud
+        shell: bash
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then echo "::error::Add the FIREBASE_SERVICE_ACCOUNT secret first (Settings -> Secrets and variables -> Actions)."; exit 1; fi
+          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+          echo "PROJECT_ID=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['project_id'])" "$RUNNER_TEMP/sa.json")" >> "$GITHUB_ENV"
+      - name: Publish
+        run: npx -y firebase-tools@latest deploy --only hosting --project "$PROJECT_ID" --non-interactive
+      - name: Where it is
+        run: echo "The website is live at https://$PROJECT_ID.web.app"
+      - if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

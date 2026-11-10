@@ -5965,7 +5965,10 @@ function fbInit(){if(FBX.ready)return FBX.ready;
     const auth=AU.initializeAuth(app,Object.assign({persistence:[AU.indexedDBLocalPersistence,AU.browserLocalPersistence]},GA.desk?{}:{popupRedirectResolver:AU.browserPopupRedirectResolver}));
     const db=FS.getFirestore(app);
     const Uo=u=>u&&{uid:u.uid,email:String(u.email||'').toLowerCase(),name:u.displayName||'',picture:u.photoURL||'',verified:!!u.emailVerified,phone:u.phoneNumber||'',providers:(u.providerData||[]).map(p=>p.providerId)};
-    const fns=FN.getFunctions(app,'asia-south1');let conf=null;const recap=id=>new AU.RecaptchaVerifier(auth,id,{size:'invisible'});
+    const fns=FN.getFunctions(app,'asia-south1');let conf=null,rcv=null;
+    /* a fresh security-check box every time: reusing the same element makes Firebase say "reCAPTCHA has already been rendered" */
+    const recap=id=>{try{if(rcv)rcv.clear()}catch(e){}rcv=null;const old=document.getElementById(id);if(old){const n=document.createElement('div');n.id=id;old.replaceWith(n)}
+      rcv=new AU.RecaptchaVerifier(auth,id,{size:'invisible'});return rcv};
     const dref=p=>FS.doc(db,p),cref=p=>FS.collection(db,p);
     Object.assign(FBX,{
       waitUser:()=>new Promise(r=>{const un=AU.onAuthStateChanged(auth,u=>{un();r(Uo(u))})}),
@@ -5983,9 +5986,9 @@ function fbInit(){if(FBX.ready)return FBX.ready;
       list:async p=>(await FS.getDocs(cref(p))).docs.map(d=>({id:d.id,data:d.data()})),
       where:async(p,f,op,v,group)=>(await FS.getDocs(FS.query(group?FS.collectionGroup(db,p):cref(p),FS.where(f,op,v)))).docs.map(d=>({id:d.id,path:d.ref.path,data:d.data()})),
       call:async(name,data)=>(await FN.httpsCallable(fns,name)(data)).data,
-      phoneLink:async(n,el)=>{conf=await AU.linkWithPhoneNumber(auth.currentUser,n,recap(el))},
-      phoneReauth:async(n,el)=>{conf=await AU.reauthenticateWithPhoneNumber(auth.currentUser,n,recap(el))},
-      phoneConfirm:async code=>{if(!conf)throw {code:'auth/code-expired'};await conf.confirm(code);conf=null;await auth.currentUser.getIdToken(true)}});
+      phoneLink:async(n,el)=>{try{conf=await AU.linkWithPhoneNumber(auth.currentUser,n,recap(el))}catch(e){try{if(rcv)rcv.clear()}catch(x){}rcv=null;throw e}},
+      phoneReauth:async(n,el)=>{try{conf=await AU.reauthenticateWithPhoneNumber(auth.currentUser,n,recap(el))}catch(e){try{if(rcv)rcv.clear()}catch(x){}rcv=null;throw e}},
+      phoneConfirm:async code=>{if(!conf)throw {code:'auth/code-expired'};await conf.confirm(code);conf=null;try{if(rcv)rcv.clear()}catch(e){}rcv=null;await auth.currentUser.getIdToken(true)}});
     return FBX})();
   FBX.ready.catch(()=>{FBX.ready=null});return FBX.ready}
 /* Sign-in failures all say the same words, so a wrong password, an unknown email, a paused account and a turned-off account cannot be told apart. */

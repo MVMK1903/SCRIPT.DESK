@@ -5592,7 +5592,7 @@ const usedToday=e=>e.used&&e.used.d===dayKey()?e.used.n:0;
 const entryCap=e=>e.cap||DAILY_CAP[e.provider]||0;
 const overCap=e=>{const cap=entryCap(e);return !!cap&&usedToday(e)>=cap};
 function poolEntries(c){c=c||aiCfg();return (c.pool||[]).filter(e=>e.on!==false&&entryReady(e))}
-function entryCfg(e,m){const L=entryModels(e),use=m||L[0]||'';return {provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{[e.provider]:{default:use,complex:use===L[0]?(e.complex||''):''}}}}
+function entryCfg(e,m){const L=entryModels(e),use=m||L[0]||'';return {provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{[e.provider]:{default:use,complex:use===L[0]&&e.complex&&!(e.dead||[]).includes(e.complex)?e.complex:''}}}}
 /* change a saved entry safely: read the newest settings, change that one entry, save */
 function poolPatch(id,fn){const cc=aiCfg();const x=(cc.pool||[]).find(z=>z.id===id);if(!x)return null;fn(x);lsSet('ai',cc);return x}
 const coolLeft=(k,now)=>{const x=COOL[k];return x&&x.until>now?x:null};
@@ -5605,7 +5605,8 @@ function poolCands(c){const now=Date.now(),min=c.minAcc==null?75:c.minAcc,all=[]
 const REST_WHY={rate_limited:'rate limit reached',daily_limit:'free allowance used up for now',bad_key:'key was rejected',bad_model:'model not available',no_model:'no model chosen',no_credit:'no credit left',needs_plan:'needs a paid plan',cors_blocked:'blocked by the browser',ollama_down:'not running',upstream_error:'connection problem'};
 const restTxt=(cl,now)=>{const sec=Math.ceil((cl.until-now)/1000);return (sec>=90?Math.round(sec/60)+' min':sec+'s')+(REST_WHY[cl.why]?' · '+REST_WHY[cl.why]:'')};
 function failFor(e,m,x){const code=x&&x.code,now=Date.now();
-  if(code==='bad_model'||code==='needs_plan'||code==='no_model'){const drop=z=>{z.dead=[...new Set([...(z.dead||[]),m])].slice(-300);if(z.model===m)z.model='';z.models=(z.models||[]).filter(y=>y!==m)};drop(e);poolPatch(e.id,drop);return}
+  if(code==='bad_model'||code==='needs_plan'||code==='no_model'){const drop=z=>{z.dead=[...new Set([...(z.dead||[]),m])].slice(-300);if(z.model===m)z.model='';if(z.complex===m)z.complex='';z.models=(z.models||[]).filter(y=>y!==m)};drop(e);poolPatch(e.id,drop);
+    {const cc=aiCfg(),mc=cc.model&&cc.model[e.provider];if(mc&&(mc.default===m||mc.complex===m)){if(mc.default===m)mc.default='';if(mc.complex===m)mc.complex='';lsSet('ai',cc)}}return}
   if(code==='bad_key'||code==='no_credit'){COOL[e.id]={until:now+36e5,why:code};return}
   if(code==='cors_blocked'||code==='ollama_down'||code==='ollama_origin'){COOL[e.id]={until:now+6e5,why:code};return}
   /* limits are per model on most free services, so only this model rests; a wait of half an hour or more means its free allowance is used up */
@@ -5633,19 +5634,20 @@ async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
   throw last||{code:'no_key'}}
 /* Find the free models that work with one key: list them, try the most accurate first with a tiny request, spaced out
    so the free limit is not hit, and stop once a handful work. OpenRouter's ":free" models and local Ollama need no test. */
+const svcSaid=x=>x&&x.message&&x.code!=='pool_resting'?` (The service said: "${cut(String(x.message),160)}")`:'';
 const SKIP_MODEL=/embed|rerank|whisper|\btts\b|speech|audio|guard|safety|moderat|reward|retriev|bge-|\be5-|clip|ocr|transcri|-vl-|vision|image|flux|stable-diffusion|sdxl/i;
 async function findFreeModels(e,say,signal){const p=PROVIDERS[e.provider];
   let ids=await listModels({provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{}});
   ids=[...new Set(ids)].filter(i=>!SKIP_MODEL.test(i)).sort((a,b)=>accScore({provider:e.provider,model:b})-accScore({provider:e.provider,model:a}));
   if(e.provider==='openrouter')return {free:ids.filter(i=>/:free$/.test(i)).slice(0,12),paid:[],busy:[],dead:[],total:ids.length};
   if(e.provider==='ollama')return {free:ids,paid:[],busy:[],dead:[],total:ids.length};
-  const want=5,maxProbe=Math.min(ids.length,16),gap=p.probeGap||1500,r={free:[],paid:[],busy:[],dead:[],total:ids.length};
+  const want=5,maxProbe=Math.min(ids.length,16),gap=p.probeGap||1500,r={free:[],paid:[],busy:[],dead:[],total:ids.length,said:''};
   for(let i=0;i<maxProbe&&r.free.length<want;i++){if(signal&&signal.aborted)break;const m=ids[i];
     if(say)say(`Testing ${m} (${i+1} of ${maxProbe}). ${r.free.length} working so far…`);let res='dead';
     for(let a=0;a<2;a++){try{await callOnce('Reply with the single word OK.',{probe:1,maxOut:16},entryCfg(e,m),p);res='free';break}
       catch(x){const k=x&&x.code;if(k==='empty_completion'||k==='max_tokens'){res='free';break}if(k==='needs_plan'||k==='no_credit'){res='paid';break}
         if(k==='bad_key'||k==='cors_blocked'||k==='offline')throw x;
-        if(k==='rate_limited'){res='busy';if(a===0){await sleep(Math.min(20000,Math.max(5000,(x.wait||0)*1000)));continue}break}res='dead';break}}
+        if(k==='rate_limited'){res='busy';if(a===0){await sleep(Math.min(20000,Math.max(5000,(x.wait||0)*1000)));continue}break}if(!r.said&&x&&x.message)r.said=String(x.message);res='dead';break}}
     r[res].push(m);if(i+1<maxProbe)await sleep(gap)}
   return r}
 function aiReady(){const c0=aiCfg();if(poolOn(c0))return poolEntries(c0).length>0;const c=c0,p=PROVIDERS[c.provider];if(!p)return false;const model=(c.model[c.provider]||{}).default||(c.provider==='ollama'?'':p.models.default);if(!model)return false;return !p.key||c.provider==='custom'||!!c.keys[c.provider]}
@@ -5757,10 +5759,12 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     const say=t=>{FIND[id]=t;const r=document.querySelector(`.pool-row[data-id="${CSS.escape(id)}"] .pool-st`);if(r)r.textContent=t};
     try{const r=await findFreeModels(e,say);Object.keys(COOL).forEach(k=>{if(k===id||k.startsWith(id+'|'))delete COOL[k]});
       const ok=[...r.free,...r.busy.filter(m=>!r.free.includes(m))];
-      editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(!z)return;z.models=ok;z.dead=[...new Set([...(z.dead||[]).filter(m=>!ok.includes(m)),...r.paid,...r.dead])].slice(-300);if(z.model&&!ok.includes(z.model)&&(r.paid.includes(z.model)||r.dead.includes(z.model)))z.model='';z.checked=Date.now()});
+      editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(!z)return;z.models=ok;z.dead=[...new Set([...(z.dead||[]).filter(m=>!ok.includes(m)),...r.paid,...r.dead])].slice(-300);const D=new Set([...r.paid,...r.dead]);if(z.model&&!ok.includes(z.model)&&D.has(z.model))z.model='';if(z.complex&&D.has(z.complex))z.complex='';z.checked=Date.now();
+        /* the Model boxes must not keep a model this key cannot use, or Save and Test would bring it back */
+        const tm=cc.model&&cc.model[e.provider];if(tm){if(D.has(tm.default))tm.default='';if(D.has(tm.complex))tm.complex='';c.model[e.provider]=Object.assign({},tm);if(e.provider===cur&&$('#sModel')){$('#sModel').value=tm.default||'';$('#sModel2').value=tm.complex||''}}});
       msg(ok.length?`${svc(e)}: ${r.free.length} free model${r.free.length===1?'':'s'} work${r.free.length===1?'s':''}`+(r.busy.length?`, ${r.busy.length} more probably (a limit was hit while testing)`:'')+`. Using ${ok[0]} first.`
-        :`${svc(e)}: none of the ${Math.min(r.total,16)} models tried answered for free with this key (${r.paid.length} need a paid plan). Try again later, or connect another service.`)}
-    catch(x){msg(`${svc(e)}: ${errMsg(x)}`)}finally{delete FIND[id];poolUI()}};
+        :`${svc(e)}: none of the ${Math.min(r.total,16)} models tried answered for free with this key (${r.paid.length} need a paid plan).`+(r.said?` The service said: "${cut(r.said,160)}".`:'')+' Check that the key is right and active on the service\'s website, try again later, or connect another service.')}
+    catch(x){msg(`${svc(e)}: ${errMsg(x)}`+svcSaid(x))}finally{delete FIND[id];poolUI()}};
   $('#sPool').onclick=ev=>{const row=ev.target.closest('.pool-row');if(!row)return;const id=row.dataset.id;
     const pin=ev.target.closest('button[data-pin]');if(pin){const m=pin.dataset.pin;editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(z)z.model=z.model===m?'':m});return}
     const b=ev.target.closest('button[data-act]');if(!b)return;const a=b.dataset.act;
@@ -5777,7 +5781,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     msg(`${svc(e)} connected. Finding its free models…`+(p.key?' You can paste another key meanwhile.':''));runFind(e.id)};
   $('#sTestAll').onclick=async()=>{const L=aiCfg().pool||[];if(!L.length){msg('Connect a key first.');return}msg('Testing every key…');
     await Promise.all(L.map(async e=>{const m=entryModels(e)[0];if(!m){TST[e.id]='no models: press Find free models';poolUI();return}TST[e.id]='testing '+m+'…';poolUI();
-      try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e,m),PROVIDERS[e.provider]);TST[e.id]='✓ works with '+m}catch(x){failFor(e,m,x);TST[e.id]='✗ '+m+': '+errMsg(x)}poolUI()}));
+      try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e,m),PROVIDERS[e.provider]);TST[e.id]='✓ works with '+m}catch(x){failFor(e,m,x);TST[e.id]='✗ '+m+': '+errMsg(x)+svcSaid(x)}poolUI()}));
     msg('Done.');setTimeout(()=>{for(const k in TST)delete TST[k];poolUI()},20000)};
   body();poolUI();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
@@ -5785,12 +5789,14 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
      are found again), and a model typed in the Model box is pinned so it is tried first. */
   const syncPool=()=>{const mc=c.model[cur]||{},key=c.keys[cur]||'',same=(aiCfg().pool||[]).filter(e=>e.provider===cur);let note='',refind='';
     if(same.length===1){const e=same[0];const newKey=PROVIDERS[cur].key&&key&&key!==e.key;
-      editPool(cc=>{const z=cc.pool.find(y=>y.id===e.id);if(!z)return;if(newKey){z.key=key;z.models=[];z.dead=[]}if(mc.default){z.model=mc.default;z.dead=(z.dead||[]).filter(m=>m!==mc.default)}z.complex=mc.complex||z.complex||'';if(c.base[cur])z.base=c.base[cur];z.on=true});
-      note=newKey?` ${svc(e)} now uses the new key; finding its free models…`:mc.default?` ${svc(e)} will try ${mc.default} first.`:'';if(newKey)refind=e.id}
+      editPool(cc=>{const z=cc.pool.find(y=>y.id===e.id);if(!z)return;if(newKey){z.key=key;z.models=[];z.dead=[]}if(mc.default&&!(z.dead||[]).includes(mc.default))z.model=mc.default;z.complex=mc.complex||z.complex||'';if(c.base[cur])z.base=c.base[cur];z.on=true});
+      const deadPin=mc.default&&!newKey&&(e.dead||[]).includes(mc.default);if(deadPin){c.model[cur]={default:'',complex:mc.complex===mc.default?'':(mc.complex||'')};if($('#sModel'))$('#sModel').value=''}
+      note=newKey?` ${svc(e)} now uses the new key; finding its free models…`:deadPin?` ${mc.default} is not available on this key, so it was left out.`:mc.default?` ${svc(e)} will try ${mc.default} first.`:'';
+      if(newKey||!(e.models||[]).length)refind=e.id}
     else if(poolOn(c)&&!same.length&&aiReady())note=' Your AI keys are on, so the AI uses them: press "Connect key" to add this service.';
     return {note,refind}};
   $('#sSave').onclick=()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Connect key" to find free models.'))+note);if(refind)runFind(refind)};
-  $('#sTest').onclick=async()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+(refind?'':note))}poolUI()}}
+  $('#sTest').onclick=async()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+svcSaid(e)+(refind?'':note))}poolUI()}}
 
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});

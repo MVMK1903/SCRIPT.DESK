@@ -243,6 +243,7 @@ a{color:var(--accent)}
 .mchip.na{cursor:default;box-shadow:none;opacity:.5}
 .mchip.paid::before{content:"PAID";font-size:9.5px;font-weight:800;margin-right:6px;text-decoration:none;display:inline-block}
 .pool-opt{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.mchip.pin{outline:2px solid #ffd36e;outline-offset:1px}.pool-models{margin-top:4px}.pool-models summary{cursor:pointer}.pool-models>div{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .pool-opt select{width:auto!important;background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--fg)}
 @media (max-width:560px){.pool-row{flex-wrap:wrap}.pool-main{flex-basis:100%}}
 .btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
@@ -1987,8 +1988,8 @@ async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Re
   return out.join('\n\n')}
 
 /* ================= AI ================= */
-const ERRS={pool_resting:'All your AIs are resting after errors. Open Settings and press Save or Test to try again, or choose another model.',no_key:'Choose an AI service in Settings to use AI (free options available). Everything else works without it.',no_model:'Choose an AI model in Settings first (use "Load models").',ollama_down:'ScriptDesk cannot reach Ollama on this computer. Open the Ollama app (install it free from ollama.com), then try again.',ollama_origin:'Ollama blocked ScriptDesk. See Settings → Ollama for the one-line fix, then restart Ollama.',bad_key:'Your API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'That AI model was not found. Pick another in Settings (use "Load models").',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'The AI service\'s usage limit is reached for now. Try again later, or switch to another service in Settings.',cors_blocked:'The browser blocked the connection to this AI service. Use the ScriptDesk desktop or Android app for this service, or pick another one in Settings.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
-const FATAL=['pool_resting','no_key','cors_blocked','no_model','ollama_down','ollama_origin','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
+const ERRS={pool_nomodels:'Your AI keys have no working free models left. Open Settings and press "Find free models" on a key, or connect another key.',pool_resting:'All your AIs are resting after errors. Open Settings and press Save or Test to try again, or choose another model.',no_key:'Choose an AI service in Settings to use AI (free options available). Everything else works without it.',no_model:'Choose an AI model in Settings first (use "Load models").',ollama_down:'ScriptDesk cannot reach Ollama on this computer. Open the Ollama app (install it free from ollama.com), then try again.',ollama_origin:'Ollama blocked ScriptDesk. See Settings → Ollama for the one-line fix, then restart Ollama.',bad_key:'Your API key was not accepted. Check it in Settings.',offline:'You are offline. The AI step needs internet; everything else works offline.',no_credit:'Your Anthropic account is out of credit. Add credit at console.anthropic.com, then retry.',bad_model:'That AI model was not found. Pick another in Settings (use "Load models").',not_granted:'Claude access was not allowed for this page, so AI features are off. Everything else still works.',sampling_disabled:'Claude is not available for this account.',rate_limited:'The AI service\'s usage limit is reached for now. Try again later, or switch to another service in Settings.',cors_blocked:'The browser blocked the connection to this AI service. Use the ScriptDesk desktop or Android app for this service, or pick another one in Settings.',session_expired:'Your Claude session expired. Sign in again, then retry.',refused:'Claude declined part of this script. Fill those scenes in by hand.',invalid_json:'An AI reply could not be read. Use "Retry failed scenes".',prompt_too_large:'A scene is too long for the AI. Split it in Full script.',empty_completion:'The AI returned nothing for some scenes. Retry them.',upstream_error:'A connection problem interrupted the AI. Retry failed scenes.'};
+const FATAL=['pool_nomodels','pool_resting','no_key','cors_blocked','no_model','ollama_down','ollama_origin','bad_key','offline','no_credit','bad_model','not_granted','sampling_disabled','rate_limited','session_expired','not_declared','capability_disabled','capability_removed'];
 function errMsg(e){return (e&&e.code==='pool_resting'&&e.message)||(e&&ERRS[e.code])||(e&&e.message&&!e.code?e.message:'Something went wrong with the AI step. Retry failed scenes.')}
 function startJob(label,total){JOB={label,done:0,total,ctl:new AbortController(),fatal:null};renderJob();return JOB}
 function endJob(){JOB=null;renderJob()}
@@ -5527,7 +5528,7 @@ const PROVIDERS={
     help:'Free key: openrouter.ai/settings/keys. The default "openrouter/free" picks an available free model for you; or press "Load models" and pick one ending in ":free" (for example Nemotron 3 Super 120B or Gemma 4 31B). Free use is about 20 requests a minute and 50 a day (1,000 a day after you buy $10 of credit), enough for roughly one feature script. Free models may log what you send.'},
   claude:{group:'paid',batchMax:4,name:'Claude · Anthropic',tag:'Paid',key:true,keyHint:'sk-ant-…',base:'https://api.anthropic.com',budget:150000,workers:2,models:{quick:'claude-haiku-5-5',default:'claude-sonnet-5-5',complex:'claude-opus-5-5'},keyUrl:'https://console.anthropic.com/settings/keys',
     help:'Best quality for Telugu and Tinglish scripts. Billed per use to your Anthropic account (console.anthropic.com).'},
-  nvidia:{group:'free',name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:'nvidia/nemotron-3-super-120b-a12b'},keyUrl:'https://build.nvidia.com/',
+  nvidia:{group:'free',probeGap:2200,name:'NVIDIA · build.nvidia.com',tag:'Free trial key',key:true,keyHint:'nvapi-…',base:'https://integrate.api.nvidia.com/v1',budget:30000,maxOut:4096,workers:1,models:{default:'nvidia/nemotron-3-super-120b-a12b'},keyUrl:'https://build.nvidia.com/',
     help:'Free key for 100+ open models (DeepSeek V4, Kimi, MiniMax, Nemotron 3, gpt-oss and more) running on NVIDIA servers. Sign in at build.nvidia.com, open any model and press "Get API Key" (starts with nvapi-). Paste it here, press "Load models" and pick one; large ones such as DeepSeek or Qwen are the most accurate. Free use allows about 40 requests a minute and is meant for testing; ScriptDesk waits and retries when it hits the limit. Your script is sent to NVIDIA.'},
   cloudflare:{group:'free',name:'Cloudflare Workers AI',tag:'Free daily allowance',key:true,keyHint:'Cloudflare API token',base:'https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/v1',editBase:1,budget:20000,maxOut:4096,workers:1,models:{default:'@cf/openai/gpt-oss-120b'},keyUrl:'https://dash.cloudflare.com/profile/api-tokens',
     help:'Free daily allowance with a Cloudflare account. Create an API token with "Workers AI" permission, paste it here, and replace YOUR_ACCOUNT_ID in the Address with your account ID (shown in the Cloudflare dashboard). Free allowance is 10,000 "neurons" a day, shared by all models; gpt-oss-120b, Llama 3.3 70B and Nemotron 3 are good starts. Some large models need a paid plan.'},
@@ -5540,9 +5541,9 @@ const PROVIDERS={
   modelscope:{group:'free',name:'ModelScope · free daily calls',tag:'Free daily calls',key:true,keyHint:'ModelScope access token',base:'https://api-inference.modelscope.cn/v1',editBase:1,budget:30000,maxOut:4096,workers:1,models:{default:''},keyUrl:'https://modelscope.cn/my/myaccesstoken',
     help:'Free open models (Qwen, DeepSeek and more) from Alibaba\'s ModelScope, about 2,000 calls a day shared by all models, with smaller caps per model. Sign up at modelscope.cn, create an access token, paste it here, press "Load models" and pick one. Sign-up may ask for a phone number or a linked Alibaba Cloud account.'},
   llm7:{group:'free',name:'LLM7 · no key needed',tag:'Free · no sign-up',key:false,base:'https://api.llm7.io/v1',editBase:1,budget:20000,maxOut:4096,workers:1,models:{default:''},keyUrl:'https://llm7.io',
-    help:'A free public service that needs no key, about 60 requests an hour. Press "Load models" and pick one. Privacy: nothing identifies you, but your script text goes to a service run by a third party, so use it only for scripts you are happy to share. Quality varies by model; keep it as a back-up in the AI pool.'},
+    help:'A free public service that needs no key, about 60 requests an hour. Press "Connect key" and the free models are found for you. Privacy: nothing identifies you, but your script text goes to a service run by a third party, so use it only for scripts you are happy to share. Quality varies by model; keep it as a back-up among your AI keys.'},
   pollinations:{group:'free',name:'Pollinations · no key needed',tag:'Free · no sign-up',key:false,base:'https://text.pollinations.ai/openai',editBase:1,budget:20000,maxOut:4096,workers:1,models:{default:'openai'},keyUrl:'https://pollinations.ai',
-    help:'A free public service that needs no key and no sign-up, limited per internet address. The model name "openai" lets the service choose. Privacy: your script text goes to a service run by a third party, so use it only for scripts you are happy to share. Quality varies; keep it as a back-up in the AI pool.'},
+    help:'A free public service that needs no key and no sign-up, limited per internet address. The model name "openai" lets the service choose. Privacy: your script text goes to a service run by a third party, so use it only for scripts you are happy to share. Quality varies; keep it as a back-up among your AI keys.'},
   openai:{group:'paid',jsonMode:1,name:'OpenAI',tag:'Paid',key:true,keyHint:'sk-…',base:'https://api.openai.com/v1',budget:120000,workers:2,models:{default:''},keyUrl:'https://platform.openai.com/api-keys',
     help:'Billed per use to your OpenAI account. Press "Load models" and pick one.'},
   deepseek:{group:'paid',jsonMode:1,name:'DeepSeek',tag:'Paid · low cost',key:true,keyHint:'sk-…',base:'https://api.deepseek.com/v1',budget:120000,maxOut:8000,workers:2,models:{default:'deepseek-chat'},keyUrl:'https://platform.deepseek.com/api_keys',
@@ -5561,7 +5562,7 @@ const PGROUPS={local:'On this computer · offline',free:'Free keys',paid:'Paid k
 function aiCfg(){let c=lsGet('ai');if(!c){c={provider:'claude',keys:{},base:{},model:{}};const old=lsGet('apikey');if(old){c.keys.claude=old;const m=lsGet('models')||{};c.model.claude={default:m.default||'',complex:m.complex||''}}else c.provider='ollama'}
   c.keys=c.keys||{};c.base=c.base||{};c.model=c.model||{};return c}
 const apiKey=()=>{const c=aiCfg();return c.keys[c.provider]||''};
-ERRS.needs_plan='This model needs a paid plan on your account. In Settings press "Check free vs paid" and pick one from the Free list.';
+ERRS.needs_plan='This model needs a paid plan on your account. In Settings press "Find free models" on that key.';
 /* AI pool: several saved keys/services; the best-scoring ready one is used, others take over on limits or errors */
 const COOL={};let POOLRR=0,POOLLAST='';
 function accScore(e){const m=String(e.model||(PROVIDERS[e.provider]||{models:{}}).models.default||'').toLowerCase(),pv=e.provider;
@@ -5573,30 +5574,80 @@ function accScore(e){const m=String(e.model||(PROVIDERS[e.provider]||{models:{}}
   if(/kimi|k2|glm-[45]|qwen3?.*(235|480|max|397)|llama.*405|gpt-oss.*120|mistral-large|nemotron.*(ultra|253|340)|minimax/.test(m))return 86;
   const b=m.match(/(\d+(?:\.\d+)?)\s*b\b/);if(b){const n=parseFloat(b[1]);return n>=100?82:n>=60?76:n>=30?70:n>=14?62:n>=7?52:42}
   return pv==='gemini'?84:60}
+/* AI pool, rebuilt. One pool entry is one KEY (or one keyless service). Each key keeps a ranked list of the free
+   models that work with it, found by "Find free models". Every request goes to the best ready (key, model) pair; when a
+   model fails or its free limit runs out, the next model on the same key is tried, then the next key. Models that do not
+   exist or need a paid plan are dropped from that key for good (until the next "Find free models"). */
 const poolOn=c=>c.usePool!==false&&(c.pool||[]).some(e=>e.on!==false);
-function entryReady(e){const p=PROVIDERS[e.provider];if(!p)return false;if(!(e.model||p.models.default))return false;return !p.key||e.provider==='custom'||!!e.key}
-function poolEntries(c){c=c||aiCfg();const all=(c.pool||[]).filter(e=>e.on!==false&&entryReady(e)),min=c.minAcc==null?75:c.minAcc,ok=all.filter(e=>accScore(e)>=min);return ok.length?ok:all}
-function entryCfg(e){return {provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{[e.provider]:{default:e.model||'',complex:e.complex||''}}}}
-function poolPick(list,tried){const now=Date.now(),av=list.filter(e=>!tried.has(e.id)&&!(COOL[e.id]&&COOL[e.id].until>now));if(!av.length)return null;
-  av.sort((a,b)=>accScore(b)-accScore(a));const top=accScore(av[0]),tier=av.filter(e=>accScore(e)>=top-6);return tier[POOLRR++%tier.length]}
-const REST_WHY={rate_limited:'rate limit reached',bad_key:'key was rejected',bad_model:'model not available',no_model:'no model chosen',no_credit:'no credit left',needs_plan:'needs a paid plan',cors_blocked:'blocked by the browser',ollama_down:'not running'};
+const dayKey=()=>new Date().toISOString().slice(0,10);
+const DAILY_CAP={openrouter:50,requesty:200,modelscope:2000};
+const MKEY=(e,m)=>e.id+'|'+m;
+let POOLMODEL='';
+function entryModels(e){const p=PROVIDERS[e.provider]||{models:{}},dead=new Set(e.dead||[]),L=[];
+  if(e.model&&!dead.has(e.model))L.push(e.model);
+  for(const m of (e.models||[]))if(m&&!dead.has(m)&&!L.includes(m))L.push(m);
+  if(!L.length&&p.models.default&&!dead.has(p.models.default))L.push(p.models.default);return L}
+function entryReady(e){const p=PROVIDERS[e.provider];if(!p)return false;if(!entryModels(e).length)return false;return !p.key||e.provider==='custom'||!!e.key}
+const usedToday=e=>e.used&&e.used.d===dayKey()?e.used.n:0;
+const entryCap=e=>e.cap||DAILY_CAP[e.provider]||0;
+const overCap=e=>{const cap=entryCap(e);return !!cap&&usedToday(e)>=cap};
+function poolEntries(c){c=c||aiCfg();return (c.pool||[]).filter(e=>e.on!==false&&entryReady(e))}
+function entryCfg(e,m){const L=entryModels(e),use=m||L[0]||'';return {provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{[e.provider]:{default:use,complex:use===L[0]?(e.complex||''):''}}}}
+/* change a saved entry safely: read the newest settings, change that one entry, save */
+function poolPatch(id,fn){const cc=aiCfg();const x=(cc.pool||[]).find(z=>z.id===id);if(!x)return null;fn(x);lsSet('ai',cc);return x}
+const coolLeft=(k,now)=>{const x=COOL[k];return x&&x.until>now?x:null};
+function poolCands(c){const now=Date.now(),min=c.minAcc==null?75:c.minAcc,all=[];
+  for(const e of poolEntries(c)){if(coolLeft(e.id,now)||overCap(e))continue;
+    for(const m of entryModels(e)){if(coolLeft(MKEY(e,m),now))continue;all.push({e,m,s:accScore({provider:e.provider,model:m})})}}
+  const ok=all.filter(x=>x.s>=min),L=ok.length?ok:all;L.sort((a,b)=>b.s-a.s);if(!L.length)return L;
+  /* spread work over equally good pairs on different keys */
+  const top=L[0].s,tier=L.filter(x=>x.s>=top-6),rest=L.slice(tier.length),k=POOLRR++%tier.length;return tier.slice(k).concat(tier.slice(0,k),rest)}
+const REST_WHY={rate_limited:'rate limit reached',daily_limit:'free allowance used up for now',bad_key:'key was rejected',bad_model:'model not available',no_model:'no model chosen',no_credit:'no credit left',needs_plan:'needs a paid plan',cors_blocked:'blocked by the browser',ollama_down:'not running',upstream_error:'connection problem'};
 const restTxt=(cl,now)=>{const sec=Math.ceil((cl.until-now)/1000);return (sec>=90?Math.round(sec/60)+' min':sec+'s')+(REST_WHY[cl.why]?' · '+REST_WHY[cl.why]:'')};
-function coolFor(e,x){const code=x&&x.code,now=Date.now();let ms=15e3;
-  if(code==='rate_limited')ms=Math.max(30e3,(x.wait||0)*1000);else if(code==='no_credit')ms=36e5;
-  else if(code==='bad_key'||code==='bad_model'||code==='no_model'||code==='needs_plan')ms=36e5;
-  else if(code==='cors_blocked'||code==='ollama_down'||code==='ollama_origin')ms=6e5;
-  COOL[e.id]={until:now+ms,why:code}}
-async function poolCall(prompt,opts,c){const list=poolEntries(c);let last=null;
-  for(let round=0;round<6;round++){const tried=new Set();
-    for(;;){const e=poolPick(list,tried);if(!e)break;tried.add(e.id);let o=opts;
-      for(let a=0;a<2;a++){try{const r=await callOnce(prompt,o,entryCfg(e),PROVIDERS[e.provider]);POOLLAST=e.id;delete COOL[e.id];return r}
+function failFor(e,m,x){const code=x&&x.code,now=Date.now();
+  if(code==='bad_model'||code==='needs_plan'||code==='no_model'){const drop=z=>{z.dead=[...new Set([...(z.dead||[]),m])].slice(-300);if(z.model===m)z.model='';z.models=(z.models||[]).filter(y=>y!==m)};drop(e);poolPatch(e.id,drop);return}
+  if(code==='bad_key'||code==='no_credit'){COOL[e.id]={until:now+36e5,why:code};return}
+  if(code==='cors_blocked'||code==='ollama_down'||code==='ollama_origin'){COOL[e.id]={until:now+6e5,why:code};return}
+  /* limits are per model on most free services, so only this model rests; a wait of half an hour or more means its free allowance is used up */
+  if(code==='rate_limited'){const ms=Math.max(30e3,(x.wait||0)*1000);COOL[MKEY(e,m)]={until:now+ms,why:ms>=18e5?'daily_limit':code};return}
+  COOL[MKEY(e,m)]={until:now+15e3,why:code||'upstream_error'}}
+function coolFor(e,x){failFor(e,entryModels(e)[0]||'',x)}
+function poolRestMsg(c){const now=Date.now(),ids=new Set((c.pool||[]).filter(e=>e.on!==false).map(e=>e.id));
+  const capped=(c.pool||[]).filter(e=>e.on!==false&&overCap(e));
+  const cl=Object.entries(COOL).filter(([k,v])=>ids.has(k.split('|')[0])&&v.until>now).map(([,v])=>v).sort((a,b)=>a.until-b.until)[0];
+  if(cl)return `All your AI keys are resting: ${restTxt(cl,now)}. Add another free key in Settings, or press Test there to try again now.`;
+  if(capped.length)return 'Your free keys have used today\'s allowance. Add another free key in Settings, or try again tomorrow.';return ''}
+async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
+  const ROUNDS=4;for(let round=0;round<ROUNDS;round++){
+    for(;;){const L=poolCands(c).filter(x=>!tried.has(MKEY(x.e,x.m)));if(!L.length)break;const {e,m}=L[0];tried.add(MKEY(e,m));let o=opts;
+      for(let a=0;a<2;a++){try{const r=await callOnce(prompt,o,entryCfg(e,m),PROVIDERS[e.provider]);POOLLAST=e.id;POOLMODEL=m;delete COOL[MKEY(e,m)];delete COOL[e.id];
+          poolPatch(e.id,z=>{const d=dayKey();z.used=z.used&&z.used.d===d?{d,n:z.used.n+1}:{d,n:1};z.last=m});return r}
         catch(x){if(x&&x.code==='max_tokens'&&!o._small){o=Object.assign({},o,{maxOut:4096,_small:1});continue}
-          if(x&&x.code==='cancelled')throw x;if(opts.signal&&opts.signal.aborted)throw {code:'cancelled'};last=x;coolFor(e,x);break}}}
-    const now=Date.now(),ts=list.map(e=>COOL[e.id]&&COOL[e.id].until).filter(t=>t>now);if(!ts.length)break;
-    const wait=Math.ceil((Math.min(...ts)-now)/1000);if(wait>120)break;
+          if(x&&x.code==='cancelled')throw x;if(opts.signal&&opts.signal.aborted)throw {code:'cancelled'};last=x;failFor(e,m,x);break}}}
+    const now=Date.now(),ids=new Set(poolEntries(c).map(e=>e.id)),ts=Object.entries(COOL).filter(([k,v])=>ids.has(k.split('|')[0])&&v.until>now).map(([,v])=>v.until);if(!ts.length)break;
+    const wait=Math.ceil((Math.min(...ts)-now)/1000);if(wait>120||round===ROUNDS-1)break;tried.clear();
     if(JOB){const old=JOB.label;JOB.label=`All your AIs are busy, trying again in ${wait}s`;renderJob();await sleepAbort(wait*1000,opts.signal);JOB.label=old;renderJob()}else await sleepAbort(wait*1000,opts.signal)}
-  if(!last){const now=Date.now(),cl=list.map(e=>COOL[e.id]).filter(x=>x&&x.until>now).sort((a,b)=>a.until-b.until)[0];if(cl)throw {code:'pool_resting',message:`All your AIs are resting: ${restTxt(cl,now)}. Open Settings and press Save or Test to try again, or choose another model.`}}
+  const rm=poolRestMsg(aiCfg());if(rm&&(!last||last.code==='rate_limited'))throw {code:'pool_resting',message:rm};
+  if(last&&last.code==='rate_limited')throw {code:'pool_resting',message:'All your AI keys are at their free limits right now. Wait a minute and try again, or connect another free key in Settings.'};
+  if(!last&&!poolEntries(aiCfg()).length)throw {code:'pool_nomodels'};
   throw last||{code:'no_key'}}
+/* Find the free models that work with one key: list them, try the most accurate first with a tiny request, spaced out
+   so the free limit is not hit, and stop once a handful work. OpenRouter's ":free" models and local Ollama need no test. */
+const SKIP_MODEL=/embed|rerank|whisper|\btts\b|speech|audio|guard|safety|moderat|reward|retriev|bge-|\be5-|clip|ocr|transcri|-vl-|vision|image|flux|stable-diffusion|sdxl/i;
+async function findFreeModels(e,say,signal){const p=PROVIDERS[e.provider];
+  let ids=await listModels({provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{}});
+  ids=[...new Set(ids)].filter(i=>!SKIP_MODEL.test(i)).sort((a,b)=>accScore({provider:e.provider,model:b})-accScore({provider:e.provider,model:a}));
+  if(e.provider==='openrouter')return {free:ids.filter(i=>/:free$/.test(i)).slice(0,12),paid:[],busy:[],dead:[],total:ids.length};
+  if(e.provider==='ollama')return {free:ids,paid:[],busy:[],dead:[],total:ids.length};
+  const want=5,maxProbe=Math.min(ids.length,16),gap=p.probeGap||1500,r={free:[],paid:[],busy:[],dead:[],total:ids.length};
+  for(let i=0;i<maxProbe&&r.free.length<want;i++){if(signal&&signal.aborted)break;const m=ids[i];
+    if(say)say(`Testing ${m} (${i+1} of ${maxProbe}). ${r.free.length} working so far…`);let res='dead';
+    for(let a=0;a<2;a++){try{await callOnce('Reply with the single word OK.',{probe:1,maxOut:16},entryCfg(e,m),p);res='free';break}
+      catch(x){const k=x&&x.code;if(k==='empty_completion'||k==='max_tokens'){res='free';break}if(k==='needs_plan'||k==='no_credit'){res='paid';break}
+        if(k==='bad_key'||k==='cors_blocked'||k==='offline')throw x;
+        if(k==='rate_limited'){res='busy';if(a===0){await sleep(Math.min(20000,Math.max(5000,(x.wait||0)*1000)));continue}break}res='dead';break}}
+    r[res].push(m);if(i+1<maxProbe)await sleep(gap)}
+  return r}
 function aiReady(){const c0=aiCfg();if(poolOn(c0))return poolEntries(c0).length>0;const c=c0,p=PROVIDERS[c.provider];if(!p)return false;const model=(c.model[c.provider]||{}).default||(c.provider==='ollama'?'':p.models.default);if(!model)return false;return !p.key||c.provider==='custom'||!!c.keys[c.provider]}
 function aiBudget(){if(!STANDALONE)return 150000;const c=aiCfg();if(poolOn(c))return Math.min(...poolEntries(c).map(e=>(PROVIDERS[e.provider]||{budget:30000}).budget));const p=PROVIDERS[c.provider];return p?p.budget:30000}
 function aiWorkers(){if(!STANDALONE)return 2;const c=aiCfg();if(poolOn(c))return Math.max(1,Math.min(3,poolEntries(c).length));const p=PROVIDERS[c.provider];return p?p.workers:1}
@@ -5634,7 +5685,7 @@ async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[
   else if(prov==='ollama'||prov==='ollamacloud'){if(j.error)throw {code:'upstream_error',message:String(j.error)};text=(j.message||{}).content||'';trunc=j.done_reason==='length'}
   else{const ch=(j.choices||[])[0]||{};text=(ch.message||{}).content||'';trunc=ch.finish_reason==='length';if(j.error)throw {code:'upstream_error',message:String(j.error.message||j.error)}}
   text=text.replace(/<think>[\s\S]*?<\/think>/g,'');if(!text.trim())throw {code:'empty_completion'};return {text,truncated:trunc,modelTierApplied:tier}}
-async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg();if(poolOn(c)){if(!poolEntries(c).length)throw {code:'no_key'};return poolCall(prompt,opts,c)}const p=PROVIDERS[c.provider];if(!p)throw {code:'no_key'};
+async function aiCall(prompt,opts){opts=opts||{};const c=aiCfg();if(poolOn(c)){if(!poolEntries(c).length)throw {code:'pool_nomodels'};return poolCall(prompt,opts,c)}const p=PROVIDERS[c.provider];if(!p)throw {code:'no_key'};
   if(p.key&&c.provider!=='custom'&&!c.keys[c.provider])throw {code:'no_key'};
   if(c.provider!=='ollama'&&!/localhost|127\.0\.0\.1/.test(c.base[c.provider]||p.base)&&navigator.onLine===false)throw {code:'offline'};
   for(let attempt=0;;attempt++){try{return await callOnce(prompt,opts,c,p)}catch(e){
@@ -5667,13 +5718,13 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   <div class="fieldbox"><label for="sProv">AI service</label><select id="sProv" style="background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:7px 10px">${Object.entries(PGROUPS).map(([g,gl])=>`<optgroup label="${esc(gl)}">${Object.entries(PROVIDERS).filter(([,v])=>v.group===g).map(([k,v])=>`<option value="${k}" ${k===cur?'selected':''}>${esc(v.name)}  —  ${esc(v.tag)}</option>`).join('')}</optgroup>`).join('')}</select></div>
   <div class="fieldbox"><button class="btn" data-sec="open">Saving &amp; backups: your hard disk and older encrypted backups</button><button class="btn" data-act="wmSet">PDF watermark: ask me at the next download</button></div>
   <div id="sBody"></div>
-  <div class="pool-box"><h3>Your AI pool <span class="small muted">· several keys, switching automatically</span></h3>
-    <p class="small muted" style="margin:0 0 8px;line-height:1.5">Fill in a service above, then press <b>Add to AI pool</b>. Add as many free keys as you like, even several for the same service. ScriptDesk uses the most accurate AI first, spreads work across equally good ones, and moves to the next one when a free limit is reached. Free allowances are never truly unlimited, but a pool of keys multiplies them.</p>
+  <div class="pool-box"><h3>Your AI keys <span class="small muted">· free models found and switched automatically</span></h3>
+    <p class="small muted" style="margin:0 0 8px;line-height:1.5">Choose a service above, paste its free key and press <b>Connect key</b>. ScriptDesk tests which free models work with that key and ranks them. Every request goes to the best one. When a model or a free limit runs out, it moves to the next model, then to your next key. Connect as many free keys as you like, even several for one service. Free allowances are never truly unlimited, but several keys multiply them.</p>
     <div id="sPool"></div>
     <div class="pool-opt"><label for="sMin" class="small">Only use AIs rated at least</label><select id="sMin"><option value="0">Any</option><option value="60">Decent · 60</option><option value="75">Good · 75</option><option value="85">High · 85</option><option value="90">Top only · 90</option></select><button class="btn sm" id="sTestAll">Test all</button></div>
-    <p class="small muted" style="margin:6px 0 0">Ratings are an estimate from the model's size and family. If none of your AIs reaches the minimum, the best one you have is used.</p></div>
+    <p class="small muted" style="margin:6px 0 0">Ratings are an estimate from the model's size and family. If no model reaches the minimum, the best one you have is used. Click a model under "Models on this key" to try it first.</p></div>
   <label class="small" style="display:flex;gap:10px;align-items:flex-start;line-height:1.5"><input type="checkbox" id="sThorough" ${thorough()?'checked':''} style="margin-top:3px"><span><b>Double-check every scene</b> (recommended for free and open-source AI). The AI reads each scene a second time and adds characters, props and details it missed. Takes about twice as long and uses more of a free allowance.</span></label>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sAdd">Add to AI pool</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn pri" id="sSave">Save</button><button class="btn" id="sAdd">Connect key</button><button class="btn" id="sTest">Test</button><span class="small" id="sMsg"></span></div>
   <p class="small muted">The AI is used only for finding scenes, the breakdown, character profiles, story structure and reading scanned pages. Keys are stored only on this device. Everything else in ScriptDesk is free, open source and works offline.</p>
   <div class="banner info small" style="display:block;line-height:1.55"><b>Have a Claude subscription?</b> Apps outside Claude can only reach Claude with an API key. To use your subscription instead, open ScriptDesk inside Claude: <a href="https://claude.ai/artifact/E9UvNpxLmvFjyudnWrKGs6" target="_blank" rel="noopener">Open ScriptDesk in Claude</a> (sign in with your Claude account).</div>
   ${installed?'':`<div class="banner info" style="margin-top:6px">${isIOS?'To install on iPhone or iPad: tap Share, then "Add to Home Screen".':'To install: use "Install app" at the top, or your browser menu → Install ScriptDesk / Add to Home screen.'}</div>`}
@@ -5683,65 +5734,64 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     $('#sBody').innerHTML=`<div class="banner info small" style="display:block;line-height:1.55">${p.help}${p.keyUrl?` <a href="${p.keyUrl}" target="_blank" rel="noopener">${cur==='ollama'?'Download Ollama':cur==='ollamacloud'?'Get a free Ollama key':'Get a key'}</a>`:''}</div>
     ${p.key?`<div class="fieldbox"><label for="sKey">API key${cur==='custom'?' (if needed)':''}</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="${esc(p.keyHint||'')}" value="${esc(c.keys[cur]||'')}"></div>`:''}
     ${cur==='ollama'||cur==='custom'||p.editBase?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
-    <div class="two"><div class="fieldbox"><label for="sModel">Model</label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
+    <div class="two"><div class="fieldbox"><label for="sModel">Model <span class="small muted">(optional: leave empty and Connect key finds free ones)</span></label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
-    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> ${p.key&&cur!=='custom'?'<button class="btn sm" id="sCheck">Check free vs paid</button> ':''}<span class="small muted" id="sLoadMsg"></span></div><div id="sChk"></div>`;
-    $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found.`+(p.probe?'':' Click the Model box to pick one.'):'No models found.';if(ids.length&&!$('#sModel').value)$('#sModel').value=ids[0];if(ids.length&&p.probe)runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
-    const ck=$('#sCheck');if(ck)ck.onclick=async()=>{collect();if(!c.keys[cur]){$('#sLoadMsg').textContent='Paste your API key first, then press Check free vs paid.';return}
-      if(checking){$('#sLoadMsg').textContent='A check is already running. Wait for it to finish.';return}
-      $('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');if(!ids.length){$('#sLoadMsg').textContent='No models found.';return}
-      /* OpenRouter: every model ending in :free is free by definition, and testing them one by one would use up the 50 free requests a day */
-      if(cur==='openrouter'){const key=ckey(),free=ids.filter(i=>/:free$/.test(i)).sort((a,b)=>accScore({provider:cur,model:b})-accScore({provider:cur,model:a}));c.checks=c.checks||{};c.checks[key]={free,busy:[],paid:[],err:[],at:Date.now()};lsSet('ai',c);chkUI();$('#sLoadMsg').textContent=`${free.length} free models (the ones ending :free). No test needed, so your daily free requests are kept.`;return}
-      runCheck(ids)}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
-    chkUI()};
-  /* Free vs paid: send one tiny test request per model and sort the models by what this key can actually use */
-  const ckey=()=>cur+':'+(c.keys[cur]||'').slice(-6)+':'+(c.base[cur]||'');
-  const chkUI=()=>{const el=$('#sChk');if(!el)return;const r=(c.checks||{})[ckey()];if(!r){el.innerHTML='';return}
-    const chip=(m,cls)=>`<button type="button" class="mchip ${cls}" data-m="${esc(m)}" title="rating ${accScore({provider:cur,model:m})}">${esc(m)}</button>`,dead=m=>`<span class="mchip paid">${esc(m)}</span>`,na=m=>`<span class="mchip na">${esc(m)}</span>`;
-    el.innerHTML=`<div class="mgrp free"><h4>Free with your key <span>${r.free.length}</span></h4><div>${r.free.map(m=>chip(m,'free')).join('')||'<span class="small muted">None found. Try again later if a limit was hit.</span>'}</div></div>`+
-      (r.busy.length?`<div class="mgrp"><h4>Limit hit while checking, probably free <span>${r.busy.length}</span></h4><div>${r.busy.map(m=>chip(m,'busy')).join('')}</div></div>`:'')+
-      (r.paid.length?`<div class="mgrp paid"><h4>Needs a paid plan <span>${r.paid.length}</span></h4><div>${r.paid.map(dead).join('')}</div></div>`:'')+
-      (r.err.length?`<div class="mgrp"><h4>Not available <span>${r.err.length}</span></h4><div>${r.err.map(na).join('')}</div></div>`:'')+
-      '<p class="small muted" style="margin:6px 0 0">Tap a free model to use it. The test sends one tiny request per model, so it uses almost none of your allowance.</p>';
-    el.onclick=ev=>{const b=ev.target.closest('button[data-m]');if(b){$('#sModel').value=b.dataset.m;$('#sLoadMsg').textContent='Selected '+b.dataset.m+'. Press Save or Add to AI pool.'}}};
-  let checking=false;
-  const runCheck=async ids=>{if(checking)return;checking=true;const prov=cur,key=ckey(),list=ids.slice(0,60),r={free:[],busy:[],paid:[],err:[],at:Date.now()};
-    try{for(let i=0;i<list.length;i++){if(!$('#sChk')||cur!==prov){return}$('#sLoadMsg').textContent=`Checking which are free… ${i+1}/${list.length}`;
-      const m=list[i];let res='err';
-      for(let a=0;a<2;a++){try{await callOnce('Reply with the single word OK.',{probe:1,maxOut:16},entryCfg({provider:prov,key:c.keys[prov]||'',base:c.base[prov]||'',model:m}),PROVIDERS[prov]);res='free';break}
-        catch(x){const k=x&&x.code;if(k==='empty_completion'||k==='max_tokens'){res='free';break}if(k==='needs_plan'||k==='no_credit'){res='paid';break}
-          if(k==='bad_key'){$('#sLoadMsg').textContent=errMsg(x);return}if(k==='rate_limited'){res='busy';if(a===0)await new Promise(z=>setTimeout(z,2500));continue}res='err';break}}
-      r[res].push(m)}
-      r.free.sort((a,b)=>accScore({provider:prov,model:b})-accScore({provider:prov,model:a}));c.checks=c.checks||{};c.checks[key]=r;lsSet('ai',c);chkUI();
-      $('#sLoadMsg').textContent=`${r.free.length} free, ${r.paid.length} need a paid plan.`+(r.busy.length?` ${r.busy.length} hit a limit while checking.`:'')}
-    finally{checking=false}};
+    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div><div id="sChk"></div>`;
+    $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found.`+(p.probe?'':' Click the Model box to pick one.'):'No models found.';}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
+  };
+  /* Your AI keys: one row per key, its free models, today's use, and its state */
+  const FIND={},TST={};
   const collect=()=>{Object.keys(COOL).forEach(k=>delete COOL[k]);const th=$('#sThorough');if(th)c.thorough=th.checked;c.provider=cur;const k=$('#sKey');if(k)c.keys[cur]=k.value.trim();const b=$('#sBase');if(b)c.base[cur]=b.value.trim();c.model[cur]={default:$('#sModel').value.trim(),complex:$('#sModel2').value.trim()};};
-  const TST={};
-  const poolUI=()=>{const L=c.pool||[],now=Date.now();$('#sMin').value=String(c.minAcc==null?75:c.minAcc);
-    $('#sPool').innerHTML=L.length?L.map(e=>{const p=PROVIDERS[e.provider]||{name:e.provider},cl=COOL[e.id],rest=cl&&cl.until>now,sc=accScore(e),
-      st=TST[e.id]||(!entryReady(e)?'needs a key or model':e.on===false?'off':rest?`resting ${restTxt(cl,now)}`:POOLLAST===e.id?'last used':'ready');
-      return `<div class="pool-row${e.on===false?' off':''}" data-id="${esc(e.id)}"><div class="pool-main"><b>${esc(p.name.split(' · ')[0])} · ${esc(e.model||p.models.default||'?')}</b><span class="small muted">${e.key?'key …'+esc(e.key.slice(-4))+' · ':''}<span class="pool-sc">rating ${sc}</span> · ${esc(st)}</span></div>
-        <button class="btn sm" data-act="tog">${e.on===false?'Turn on':'Turn off'}</button><button class="btn sm" data-act="del" aria-label="Remove">Remove</button></div>`}).join(''):'<p class="small muted" style="margin:0 0 8px">Nothing in the pool yet. Until you add one, the service chosen above is used on its own.</p>'};
-  const savePool=()=>{lsSet('ai',c);refreshAI();poolUI()};
-  $('#sPool').onclick=ev=>{const b=ev.target.closest('button[data-act]');if(!b)return;const id=b.closest('.pool-row').dataset.id,i=(c.pool||[]).findIndex(x=>x.id===id);if(i<0)return;
-    if(b.dataset.act==='del'){c.pool.splice(i,1);delete COOL[id]}else c.pool[i].on=c.pool[i].on===false;savePool()};
-  $('#sMin').onchange=()=>{c.minAcc=+$('#sMin').value;savePool()};
-  $('#sAdd').onclick=()=>{collect();const p=PROVIDERS[cur],mc=c.model[cur]||{},e={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),provider:cur,key:c.keys[cur]||'',base:c.base[cur]||'',model:mc.default||p.models.default||'',complex:mc.complex||'',on:true};
-    if(!entryReady(e)){msg(p.key&&cur!=='custom'&&!e.key?'Paste a key first.':'Pick a model first (press "Load models").');return}
-    {const r=(c.checks||{})[ckey()];if(r&&r.paid.includes(e.model)){msg('That model needs a paid plan on your account. Pick one from the Free list.');return}}
-    c.pool=c.pool||[];if(c.pool.some(x=>x.provider===e.provider&&x.key===e.key&&x.model===e.model&&x.base===e.base)){msg('That one is already in the pool.');return}
-    c.pool.push(e);c.usePool=true;savePool();if(p.key&&$('#sKey')){$('#sKey').value='';c.keys[cur]=''}msg(`Added. ${poolEntries(c).length} AI${poolEntries(c).length>1?'s':''} ready in the pool.`+(p.key?' You can paste another key now.':''))};
-  $('#sTestAll').onclick=async()=>{const L=c.pool||[];if(!L.length){msg('Add an AI to the pool first.');return}msg('Testing…');
-    await Promise.all(L.map(async e=>{TST[e.id]='testing…';poolUI();try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e),PROVIDERS[e.provider]);TST[e.id]='✓ works'}catch(x){TST[e.id]='✗ '+errMsg(x)}poolUI()}));msg('Done.');setTimeout(()=>{for(const k in TST)delete TST[k];if($('#sPool'))poolUI()},20000)};
+  const editPool=fn=>{const cc=aiCfg();cc.pool=cc.pool||[];fn(cc);lsSet('ai',cc);c.pool=cc.pool;c.usePool=cc.usePool;c.minAcc=cc.minAcc;refreshAI();poolUI()};
+  const svc=e=>(PROVIDERS[e.provider]||{name:e.provider}).name.split(' · ')[0];
+  const poolUI=()=>{if(!$('#sPool'))return;const L=aiCfg().pool||[],now=Date.now();$('#sMin').value=String(c.minAcc==null?75:c.minAcc);
+    $('#sPool').innerHTML=L.length?L.map(e=>{const M=entryModels(e),kc=coolLeft(e.id,now),cap=entryCap(e),u=usedToday(e),p=PROVIDERS[e.provider]||{};
+      const st=FIND[e.id]||TST[e.id]||(e.on===false?'off':!p.key||e.provider==='custom'||e.key?(!M.length?'no working models yet: press Find free models':kc?`resting ${restTxt(kc,now)}`:overCap(e)?'today\'s free allowance used':POOLLAST===e.id?'last used':'ready'):'needs a key');
+      const chips=M.map(m=>{const mc=coolLeft(MKEY(e,m),now);return `<button type="button" class="mchip ${mc?'busy':'free'}${m===e.model?' pin':''}" data-pin="${esc(m)}" title="${m===e.model?'Pinned: tried first. Click to unpin.':'Click to try this one first.'} Rating ${accScore({provider:e.provider,model:m})}.${mc?' Resting '+restTxt(mc,now)+'.':''}">${m===e.model?'★ ':''}${esc(m)}</button>`}).join('');
+      return `<div class="pool-row${e.on===false?' off':''}" data-id="${esc(e.id)}"><div class="pool-main"><b>${esc(svc(e))}${e.key?' · key …'+esc(e.key.slice(-4)):''}</b>
+        <span class="small muted">${M.length} free model${M.length===1?'':'s'}${M.length?' · using '+esc((()=>{const free=M.filter(m=>!coolLeft(MKEY(e,m),now));return e.last&&free.includes(e.last)?e.last:free[0]||M[0]})()):''} · ${u} request${u===1?'':'s'} today${cap?' of '+cap:''} · <span class="pool-st">${esc(st)}</span></span>
+        ${M.length?`<details class="pool-models"><summary class="small">Models on this key</summary><div>${chips}</div></details>`:''}</div>
+        <button class="btn sm" data-act="find"${FIND[e.id]?' disabled':''}>Find free models</button><button class="btn sm" data-act="tog">${e.on===false?'Turn on':'Turn off'}</button><button class="btn sm" data-act="del" aria-label="Remove this key">Remove</button></div>`}).join('')
+      :'<p class="small muted" style="margin:0 0 8px">No keys connected yet. Until you connect one, the service chosen above is used on its own.</p>'};
+  const runFind=async id=>{if(FIND[id])return;const e=(aiCfg().pool||[]).find(z=>z.id===id);if(!e)return;FIND[id]='finding free models…';poolUI();
+    const say=t=>{FIND[id]=t;const r=document.querySelector(`.pool-row[data-id="${CSS.escape(id)}"] .pool-st`);if(r)r.textContent=t};
+    try{const r=await findFreeModels(e,say);Object.keys(COOL).forEach(k=>{if(k===id||k.startsWith(id+'|'))delete COOL[k]});
+      const ok=[...r.free,...r.busy.filter(m=>!r.free.includes(m))];
+      editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(!z)return;z.models=ok;z.dead=[...new Set([...(z.dead||[]).filter(m=>!ok.includes(m)),...r.paid,...r.dead])].slice(-300);if(z.model&&!ok.includes(z.model)&&(r.paid.includes(z.model)||r.dead.includes(z.model)))z.model='';z.checked=Date.now()});
+      msg(ok.length?`${svc(e)}: ${r.free.length} free model${r.free.length===1?'':'s'} work${r.free.length===1?'s':''}`+(r.busy.length?`, ${r.busy.length} more probably (a limit was hit while testing)`:'')+`. Using ${ok[0]} first.`
+        :`${svc(e)}: none of the ${Math.min(r.total,16)} models tried answered for free with this key (${r.paid.length} need a paid plan). Try again later, or connect another service.`)}
+    catch(x){msg(`${svc(e)}: ${errMsg(x)}`)}finally{delete FIND[id];poolUI()}};
+  $('#sPool').onclick=ev=>{const row=ev.target.closest('.pool-row');if(!row)return;const id=row.dataset.id;
+    const pin=ev.target.closest('button[data-pin]');if(pin){const m=pin.dataset.pin;editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(z)z.model=z.model===m?'':m});return}
+    const b=ev.target.closest('button[data-act]');if(!b)return;const a=b.dataset.act;
+    if(a==='find'){runFind(id);return}
+    if(a==='del'){editPool(cc=>{cc.pool=cc.pool.filter(y=>y.id!==id)});Object.keys(COOL).forEach(k=>{if(k===id||k.startsWith(id+'|'))delete COOL[k]});return}
+    if(a==='tog')editPool(cc=>{const z=cc.pool.find(y=>y.id===id);if(z)z.on=z.on===false})};
+  $('#sMin').onchange=()=>{editPool(cc=>{cc.minAcc=+$('#sMin').value})};
+  $('#sAdd').onclick=()=>{collect();const p=PROVIDERS[cur],mc=c.model[cur]||{},key=c.keys[cur]||'',base=c.base[cur]||'';
+    if(p.key&&cur!=='custom'&&!key){msg('Paste the key first, then press Connect key.');return}
+    const dup=(aiCfg().pool||[]).find(x=>x.provider===cur&&(x.key||'')===key&&(x.base||'')===base);
+    if(dup){if(mc.default)editPool(cc=>{const z=cc.pool.find(y=>y.id===dup.id);if(z)z.model=mc.default});msg('That key is already connected. Finding its free models again…');runFind(dup.id);return}
+    const e={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),provider:cur,key,base,model:mc.default||'',complex:mc.complex||'',models:[],on:true};
+    editPool(cc=>{cc.pool.push(e);cc.usePool=true});if(p.key&&$('#sKey')){$('#sKey').value='';c.keys[cur]=''}
+    msg(`${svc(e)} connected. Finding its free models…`+(p.key?' You can paste another key meanwhile.':''));runFind(e.id)};
+  $('#sTestAll').onclick=async()=>{const L=aiCfg().pool||[];if(!L.length){msg('Connect a key first.');return}msg('Testing every key…');
+    await Promise.all(L.map(async e=>{const m=entryModels(e)[0];if(!m){TST[e.id]='no models: press Find free models';poolUI();return}TST[e.id]='testing '+m+'…';poolUI();
+      try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e,m),PROVIDERS[e.provider]);TST[e.id]='✓ works with '+m}catch(x){failFor(e,m,x);TST[e.id]='✗ '+m+': '+errMsg(x)}poolUI()}));
+    msg('Done.');setTimeout(()=>{for(const k in TST)delete TST[k];poolUI()},20000)};
   body();poolUI();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
-  /* With an AI pool, the pool is what answers. So Save and Test also bring the pool's entry for this service up to date (new key, new model), and say so if this service is not in the pool. */
-  const syncPool=()=>{const mc=c.model[cur]||{},same=(c.pool||[]).filter(e=>e.provider===cur),haveKey=!PROVIDERS[cur].key||cur==='custom'||!!c.keys[cur];let note='';
-    if(same.length===1&&haveKey&&(mc.default||PROVIDERS[cur].models.default)){const e=same[0];e.key=c.keys[cur]||e.key||'';e.model=mc.default||PROVIDERS[cur].models.default;e.complex=mc.complex||'';e.base=c.base[cur]||e.base||'';e.on=true;note=` The pool entry for ${PROVIDERS[cur].name.split(' · ')[0]} now uses this key and model.`}
-    else if(poolOn(c)&&!same.length&&aiReady())note=' Your AI pool is on, so the AI uses the pool: press "Add to AI pool" to include this service.';
-    return note};
-  $('#sSave').onclick=()=>{collect();const note=syncPool();lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))+note)};
-  $('#sTest').onclick=async()=>{collect();const note=syncPool();lsSet('ai',c);refreshAI();poolUI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.'+note)}catch(e){msg(errMsg(e)+note)}}}
+  /* Save and Test also bring this service's key in the pool up to date: a new key replaces the old one (and its models
+     are found again), and a model typed in the Model box is pinned so it is tried first. */
+  const syncPool=()=>{const mc=c.model[cur]||{},key=c.keys[cur]||'',same=(aiCfg().pool||[]).filter(e=>e.provider===cur);let note='',refind='';
+    if(same.length===1){const e=same[0];const newKey=PROVIDERS[cur].key&&key&&key!==e.key;
+      editPool(cc=>{const z=cc.pool.find(y=>y.id===e.id);if(!z)return;if(newKey){z.key=key;z.models=[];z.dead=[]}if(mc.default){z.model=mc.default;z.dead=(z.dead||[]).filter(m=>m!==mc.default)}z.complex=mc.complex||z.complex||'';if(c.base[cur])z.base=c.base[cur];z.on=true});
+      note=newKey?` ${svc(e)} now uses the new key; finding its free models…`:mc.default?` ${svc(e)} will try ${mc.default} first.`:'';if(newKey)refind=e.id}
+    else if(poolOn(c)&&!same.length&&aiReady())note=' Your AI keys are on, so the AI uses them: press "Connect key" to add this service.';
+    return {note,refind}};
+  $('#sSave').onclick=()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Connect key" to find free models.'))+note);if(refind)runFind(refind)};
+  $('#sTest').onclick=async()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+(refind?'':note))}poolUI()}}
+
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});
 window.addEventListener('appinstalled',()=>{installEvt=null;$('#bInstall').hidden=true;toast('ScriptDesk installed. It works offline.')});

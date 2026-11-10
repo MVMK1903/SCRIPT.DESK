@@ -1,5 +1,5 @@
 /* ScriptDesk service worker: lets the installed app open and work fully offline. */
-const VERSION = 'scriptdesk-b76a3b1';
+const VERSION = 'scriptdesk-cbbd73d';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil((async () => {

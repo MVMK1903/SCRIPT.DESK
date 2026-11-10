@@ -194,6 +194,7 @@ function allowAI() {
     if (r.o) { h['Access-Control-Allow-Credentials'] = ['true']; h['Vary'] = ['Origin']; }
     h['Access-Control-Allow-Headers'] = [r.rh || 'authorization, content-type, x-api-key, x-goog-api-key, anthropic-version, anthropic-dangerous-direct-browser-access, http-referer, x-title'];
     h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, PATCH, DELETE, OPTIONS'];
+    h['Access-Control-Expose-Headers'] = ['retry-after, x-ratelimit-reset-requests, x-ratelimit-reset-tokens, x-ratelimit-remaining-requests'];
     cb(d.method === 'OPTIONS' ? { responseHeaders: h, statusLine: 'HTTP/1.1 204 No Content' } : { responseHeaders: h });
   });
 }

@@ -5228,6 +5228,13 @@ function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no loca
 /* ================= Export ================= */
 async function saveFile(filename,data){if(data==null)return;try{DISK.exportCopy(filename,data)}catch(e){}if(STANDALONE){try{await standaloneSave(filename,data)}catch(e){if(!(e&&e.name==='AbortError'))toast('The file could not be saved. Try again.')}return}const dl=await capDownloads();if(!dl){toast('Downloads are not available in this view.');return}
   try{await dl.save({filename,data});toast('Saved '+filename)}catch(e){const c=e&&e.code;if(c==='declined')return;if(c==='rate_limited')toast('A save prompt is already open.');else if(c==='rejected_extension'||c==='extension_not_enabled')toast('This file type cannot be saved in this view.');else toast('The file could not be saved. Try again.')}}
+function mimeOf(n){return ({xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',pdf:'application/pdf',json:'application/json',txt:'text/plain',fdx:'application/xml',fountain:'text/plain',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',csv:'text/csv',zip:'application/zip'})[String(n).split('.').pop().toLowerCase()]||'application/octet-stream'}
+/* Saving outside Claude: phone apps hand the file to the share sheet, the Windows / Mac app and browsers show the normal save prompt. */
+async function standaloneSave(filename,data){const blob=data instanceof Blob?data:new Blob([data],{type:mimeOf(filename)});
+  if(NATIVE){const pl=window.Capacitor.Plugins;const w=await pl.Filesystem.writeFile({path:filename,data:await blobB64(blob),directory:'CACHE'});await pl.Share.share({title:filename,url:w.uri,dialogTitle:'Save or share '+filename});return}
+  const file=new File([blob],filename,{type:blob.type});
+  if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);toast('Saved '+filename)}
 let _dl;async function capDownloads(){if(_dl!==undefined)return _dl;try{_dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){_dl=null}return _dl}
 function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_${rep.replace(/[^\w]+/g,'_')}.${ext}`}
 async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');return}const name=PG[page]?PG[page].t:'Report';

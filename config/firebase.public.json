@@ -4,5 +4,6 @@
   "projectId": "scriptdesk-3bed2",
   "storageBucket": "scriptdesk-3bed2.firebasestorage.app",
   "messagingSenderId": "92605570010",
-  "appId": "1:92605570010:web:af45a40ce5169c5a65bee3"
+  "appId": "1:92605570010:web:af45a40ce5169c5a65bee3",
+  "server": false
 }

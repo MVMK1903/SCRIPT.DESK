@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-i/5edxflPZGRzMEfuCgCZq4tQg+6J0+XHUU0OCjn7E4=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-7+7TjO6Yjigm+8I1jsEzf3gM7+21HynROMaQkATN0vY=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -5973,6 +5973,7 @@ async function gaAfterBoot(){if(!GA.user)return;
    it cannot be recovered if the passphrase is lost. Team scripts use a team key that is handed to each member wrapped
    with their own public key (ECDH P-256), so only members can open it. Notes in the notepad use the vault key. */
 const FB_CFG=(()=>{try{const m=document.querySelector('meta[name="sd-firebase"]');const c=m?JSON.parse(m.content):null;return c&&c.apiKey&&c.projectId?c:null}catch(e){return null}})();
+const FB_SERVER=!!window.__FB_FAKE||!!(FB_CFG&&FB_CFG.server); /* the ScriptDesk server functions are deployed (set "server": true in config/firebase.public.json) */
 const FBV='13.2.0',FBU=`https://www.gstatic.com/firebasejs/${FBV}/`;
 const FBX={ready:null};
 function fbOn(){return GA.applies&&!!(FB_CFG||window.__FB_FAKE)}
@@ -6022,12 +6023,14 @@ const fbPassOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);
    app signs in with Firebase. If the server part is not set up or cannot be reached, Firebase's own protection still applies. */
 const FB_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable';
 async function fbLogin(fx,email,pass){
+  if(!FB_SERVER)return fx.signIn(email,pass);
   try{await fx.call('loginGate',{email,password:pass})}
   catch(err){const c=err&&err.code;if(FB_NOSERVER(c)||c==='auth/network-request-failed'){/* go on: Firebase checks it */}
     else if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/server'};else throw {code:'auth/invalid-credential'}}
   return fx.signIn(email,pass)}
 /* Sign-up is done by the server too, and answers the same way whether or not the email already has an account. */
 async function fbSignup(fx,email,pass,name){
+  if(!FB_SERVER)return fx.create(email,pass,name);
   try{await fx.call('signupGate',{email,password:pass,...(name?{name}:{})});return null}
   catch(err){const c=err&&err.code;if(FB_NOSERVER(c))return fx.create(email,pass,name);if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/signup-server'};throw err}}
 
@@ -6039,7 +6042,7 @@ const LOGIN_OTP_KEY='scriptdesk.otp.on';
 const loginOtpOn=()=>{try{return localStorage.getItem(LOGIN_OTP_KEY)==='1'}catch(e){return false}};
 const LOGIN_OTP_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable'||c==='functions/internal';
 function loginOtp(fx,u){return new Promise(res=>{
-  if(window.__FB_NO_LOGIN_OTP)return res(true);
+  if(window.__FB_NO_LOGIN_OTP||!FB_SERVER)return res(true);
   const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';
   const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','lo-h');
   d.innerHTML=`<div class="ga-card fb-card"><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>

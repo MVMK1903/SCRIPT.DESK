@@ -5954,6 +5954,7 @@ async function gaAfterBoot(){if(!GA.user)return;
    it cannot be recovered if the passphrase is lost. Team scripts use a team key that is handed to each member wrapped
    with their own public key (ECDH P-256), so only members can open it. Notes in the notepad use the vault key. */
 const FB_CFG=(()=>{try{const m=document.querySelector('meta[name="sd-firebase"]');const c=m?JSON.parse(m.content):null;return c&&c.apiKey&&c.projectId?c:null}catch(e){return null}})();
+const FB_SERVER=!!window.__FB_FAKE||!!(FB_CFG&&FB_CFG.server); /* the ScriptDesk server functions are deployed (set "server": true in config/firebase.public.json) */
 const FBV='13.2.0',FBU=`https://www.gstatic.com/firebasejs/${FBV}/`;
 const FBX={ready:null};
 function fbOn(){return GA.applies&&!!(FB_CFG||window.__FB_FAKE)}
@@ -6003,12 +6004,14 @@ const fbPassOk=p=>p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p);
    app signs in with Firebase. If the server part is not set up or cannot be reached, Firebase's own protection still applies. */
 const FB_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable';
 async function fbLogin(fx,email,pass){
+  if(!FB_SERVER)return fx.signIn(email,pass);
   try{await fx.call('loginGate',{email,password:pass})}
   catch(err){const c=err&&err.code;if(FB_NOSERVER(c)||c==='auth/network-request-failed'){/* go on: Firebase checks it */}
     else if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/server'};else throw {code:'auth/invalid-credential'}}
   return fx.signIn(email,pass)}
 /* Sign-up is done by the server too, and answers the same way whether or not the email already has an account. */
 async function fbSignup(fx,email,pass,name){
+  if(!FB_SERVER)return fx.create(email,pass,name);
   try{await fx.call('signupGate',{email,password:pass,...(name?{name}:{})});return null}
   catch(err){const c=err&&err.code;if(FB_NOSERVER(c))return fx.create(email,pass,name);if(c==='functions/internal'||c==='functions/deadline-exceeded')throw {code:'sd/signup-server'};throw err}}
 
@@ -6020,7 +6023,7 @@ const LOGIN_OTP_KEY='scriptdesk.otp.on';
 const loginOtpOn=()=>{try{return localStorage.getItem(LOGIN_OTP_KEY)==='1'}catch(e){return false}};
 const LOGIN_OTP_NOSERVER=c=>c==='functions/not-found'||c==='functions/unavailable'||c==='functions/internal';
 function loginOtp(fx,u){return new Promise(res=>{
-  if(window.__FB_NO_LOGIN_OTP)return res(true);
+  if(window.__FB_NO_LOGIN_OTP||!FB_SERVER)return res(true);
   const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';
   const d=document.createElement('div');d.id='galock';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','lo-h');
   d.innerHTML=`<div class="ga-card fb-card"><div class="ga-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="#2f6bff"/><rect x="4" y="5" width="24" height="7" rx="2" fill="#673de6"/></svg><b>ScriptDesk</b></div>

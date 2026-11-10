@@ -122,6 +122,10 @@ def firebase_config():
     keep = {k: str(c[k]) for k in ('apiKey', 'authDomain', 'projectId', 'appId', 'storageBucket', 'messagingSenderId') if c.get(k)}
     if keep.get('apiKey') and not re.fullmatch(r'AIza[0-9A-Za-z_-]{35}', keep['apiKey']):
         raise SystemExit('FIREBASE_CONFIG: the apiKey does not look like a Firebase web key (AIza + 35 characters). Copy the config again.')
+    # "server": true only once the ScriptDesk server functions are deployed (sign-in checks, sign-in code). A browser cannot tell
+    # a missing function from a broken one, so the app is told.
+    if str(c.get('server', '')).lower() in ('1', 'true', 'yes'):
+        keep['server'] = True
     return keep if keep.get('apiKey') and keep.get('projectId') else None
 
 def csp_policy(page):

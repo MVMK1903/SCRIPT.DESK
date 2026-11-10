@@ -5735,8 +5735,13 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     await Promise.all(L.map(async e=>{TST[e.id]='testing…';poolUI();try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},entryCfg(e),PROVIDERS[e.provider]);TST[e.id]='✓ works'}catch(x){TST[e.id]='✗ '+errMsg(x)}poolUI()}));msg('Done.');setTimeout(()=>{for(const k in TST)delete TST[k];if($('#sPool'))poolUI()},20000)};
   body();poolUI();
   $('#sProv').onchange=e=>{collect();cur=e.target.value;body();msg('')};
-  $('#sSave').onclick=()=>{collect();lsSet('ai',c);refreshAI();msg(aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))};
-  $('#sTest').onclick=async()=>{collect();lsSet('ai',c);refreshAI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.')}catch(e){msg(errMsg(e))}}}
+  /* With an AI pool, the pool is what answers. So Save and Test also bring the pool's entry for this service up to date (new key, new model), and say so if this service is not in the pool. */
+  const syncPool=()=>{const mc=c.model[cur]||{},same=(c.pool||[]).filter(e=>e.provider===cur),haveKey=!PROVIDERS[cur].key||cur==='custom'||!!c.keys[cur];let note='';
+    if(same.length===1&&haveKey&&(mc.default||PROVIDERS[cur].models.default)){const e=same[0];e.key=c.keys[cur]||e.key||'';e.model=mc.default||PROVIDERS[cur].models.default;e.complex=mc.complex||'';e.base=c.base[cur]||e.base||'';e.on=true;note=` The pool entry for ${PROVIDERS[cur].name.split(' · ')[0]} now uses this key and model.`}
+    else if(poolOn(c)&&!same.length&&aiReady())note=' Your AI pool is on, so the AI uses the pool: press "Add to AI pool" to include this service.';
+    return note};
+  $('#sSave').onclick=()=>{collect();const note=syncPool();lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Load models" and pick a model to use AI.'))+note)};
+  $('#sTest').onclick=async()=>{collect();const note=syncPool();lsSet('ai',c);refreshAI();poolUI();msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg('✓ Works.'+note)}catch(e){msg(errMsg(e)+note)}}}
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});
 window.addEventListener('appinstalled',()=>{installEvt=null;$('#bInstall').hidden=true;toast('ScriptDesk installed. It works offline.')});

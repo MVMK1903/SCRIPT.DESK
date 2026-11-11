@@ -5586,7 +5586,8 @@ let POOLMODEL='';
 function entryModels(e){const p=PROVIDERS[e.provider]||{models:{}},dead=new Set(e.dead||[]),L=[];
   if(e.model&&!dead.has(e.model))L.push(e.model);
   for(const m of (e.models||[]))if(m&&!dead.has(m)&&!L.includes(m))L.push(m);
-  if(!L.length&&p.models.default&&!dead.has(p.models.default))L.push(p.models.default);return L}
+  if(p.models.default&&!dead.has(p.models.default)&&!L.includes(p.models.default))L.push(p.models.default); /* the service's own tested default is always the last resort, as in the older versions */
+  return L}
 function entryReady(e){const p=PROVIDERS[e.provider];if(!p)return false;if(!entryModels(e).length)return false;return !p.key||e.provider==='custom'||!!e.key}
 const usedToday=e=>e.used&&e.used.d===dayKey()?e.used.n:0;
 const entryCap=e=>e.cap||DAILY_CAP[e.provider]||0;
@@ -5639,6 +5640,7 @@ const SKIP_MODEL=/embed|rerank|whisper|\btts\b|speech|audio|guard|safety|moderat
 async function findFreeModels(e,say,signal){const p=PROVIDERS[e.provider];
   let ids=await listModels({provider:e.provider,keys:{[e.provider]:e.key||''},base:{[e.provider]:e.base||''},model:{}});
   ids=[...new Set(ids)].filter(i=>!SKIP_MODEL.test(i)).sort((a,b)=>accScore({provider:e.provider,model:b})-accScore({provider:e.provider,model:a}));
+  const dm=p.models&&p.models.default;if(dm&&e.provider!=='openrouter'&&e.provider!=='ollama'){ids=ids.filter(i=>i!==dm);ids.unshift(dm)} /* test the known default first */
   if(e.provider==='openrouter')return {free:ids.filter(i=>/:free$/.test(i)).slice(0,12),paid:[],busy:[],dead:[],total:ids.length};
   if(e.provider==='ollama')return {free:ids,paid:[],busy:[],dead:[],total:ids.length};
   const want=5,maxProbe=Math.min(ids.length,16),gap=p.probeGap||1500,r={free:[],paid:[],busy:[],dead:[],total:ids.length,said:''};

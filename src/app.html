@@ -1911,7 +1911,10 @@ function detectScenes(text){
   text=String(text||'').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/ /g,' ').replace(/[​﻿]/g,'');
   const L=text.split('\n');const scenes=[];let cur=null;const front=[];
   const nextNon=(i)=>{for(let j=i+1;j<L.length&&j<i+5;j++){if(L[j].trim())return j}return -1};
-  for(let i=0;i<L.length;i++){const line=L[i];const t=line.trim();
+  for(let i=0;i<L.length;i++){let line=L[i];
+    /* scene numbers printed on both sides ("1 1 EXT. ..." or "1 EXT. ... 1") are read as one number */
+    line=line.replace(/^(\s*)(\d+[A-Z]?)[.)]?\s+\2[.)]?\s+(?=\S)/,'$1$2 ');{const mt=line.trim().match(/^(\d+[A-Z]?)[.)]?\s+((?:INT|EXT|I\/E|EST)\b.*?)\s+\1[.)]?$/i);if(mt)line=mt[1]+' '+mt[2]}
+    const t=line.trim();
     let m=t.length<=150?(t.match(SCN_RE)||t.match(SCN_IN_RE)):null;
     if(m&&!/^\s*\w+\s+\d+\s+[a-z]{3,}\s+[a-z]/.test(t)){
       const no=U(m[1]).replace(/\s+/g,' ').replace(/\s*(&|AND|,|\/)\s*/g,' & ');let rest=(m[2]||'').trim();let h={ie:'',time:'',loc:'',note:''};
@@ -5279,8 +5282,8 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       let r=detectScenes(text);
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
-      if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}finally{JOB=null}}
-      if(!r.scenes.length){info.textContent='No scenes could be found. Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".';btn.disabled=false;return}
+      let aiWhy='';if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
+      if(!r.scenes.length){info.textContent='No scenes could be found without the AI.'+(aiWhy?' The AI could not help: '+aiWhy:' Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".');btn.disabled=false;return}
       await flushNow();
       P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-dvLaOmhcYwuQ57iVJ7354yEIn09SMXkHEH6616iXL4Y=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-mRbStexLblr1+AQDVVW+QCOU1xJJ1gbWGR2jODcgch0=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1930,7 +1930,10 @@ function detectScenes(text){
   text=String(text||'').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/ /g,' ').replace(/[​﻿]/g,'');
   const L=text.split('\n');const scenes=[];let cur=null;const front=[];
   const nextNon=(i)=>{for(let j=i+1;j<L.length&&j<i+5;j++){if(L[j].trim())return j}return -1};
-  for(let i=0;i<L.length;i++){const line=L[i];const t=line.trim();
+  for(let i=0;i<L.length;i++){let line=L[i];
+    /* scene numbers printed on both sides ("1 1 EXT. ..." or "1 EXT. ... 1") are read as one number */
+    line=line.replace(/^(\s*)(\d+[A-Z]?)[.)]?\s+\2[.)]?\s+(?=\S)/,'$1$2 ');{const mt=line.trim().match(/^(\d+[A-Z]?)[.)]?\s+((?:INT|EXT|I\/E|EST)\b.*?)\s+\1[.)]?$/i);if(mt)line=mt[1]+' '+mt[2]}
+    const t=line.trim();
     let m=t.length<=150?(t.match(SCN_RE)||t.match(SCN_IN_RE)):null;
     if(m&&!/^\s*\w+\s+\d+\s+[a-z]{3,}\s+[a-z]/.test(t)){
       const no=U(m[1]).replace(/\s+/g,' ').replace(/\s*(&|AND|,|\/)\s*/g,' & ');let rest=(m[2]||'').trim();let h={ie:'',time:'',loc:'',note:''};
@@ -5298,8 +5301,8 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       let r=detectScenes(text);
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
-      if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}finally{JOB=null}}
-      if(!r.scenes.length){info.textContent='No scenes could be found. Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".';btn.disabled=false;return}
+      let aiWhy='';if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
+      if(!r.scenes.length){info.textContent='No scenes could be found without the AI.'+(aiWhy?' The AI could not help: '+aiWhy:' Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".');btn.disabled=false;return}
       await flushNow();
       P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}

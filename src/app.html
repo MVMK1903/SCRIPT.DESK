@@ -5619,6 +5619,16 @@ function poolRestMsg(c){const now=Date.now(),ids=new Set((c.pool||[]).filter(e=>
   const cl=Object.entries(COOL).filter(([k,v])=>ids.has(k.split('|')[0])&&v.until>now).map(([,v])=>v).sort((a,b)=>a.until-b.until)[0];
   if(cl)return `All your AI keys are resting: ${restTxt(cl,now)}. Add another free key in Settings, or press Test there to try again now.`;
   if(capped.length)return 'Your free keys have used today\'s allowance. Add another free key in Settings, or try again tomorrow.';return ''}
+/* one line per key: why it is not answering, so one empty paid key can never hide the real reason the free ones failed */
+function poolStatusMsg(c,last){const now=Date.now(),rows=[];
+  for(const e of (c.pool||[]).filter(z=>z.on!==false)){const p=PROVIDERS[e.provider]||{name:e.provider};const nm=String(p.name||e.provider).split(' · ')[0];let why='';
+    const ents=Object.entries(COOL).filter(([k,v])=>k.split('|')[0]===e.id&&v.until>now).map(([,v])=>v).sort((x,y)=>y.until-x.until);
+    if(!entryReady(e))why=p.key&&!e.key?'no key':'no working model (press Find free models)';
+    else if(overCap(e))why='today\'s free allowance used up';
+    else if(ents.length)why=restTxt(ents[0],now);
+    rows.push(nm+': '+(why||'not tried'))}
+  if(!rows.length)return '';
+  return 'No AI answered. '+rows.join(' · ')+'. Open Settings, turn off keys that have no credit, and press Test on a free key.'+svcSaid(last)}
 async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
   const ROUNDS=4;for(let round=0;round<ROUNDS;round++){
     for(;;){const L=poolCands(c).filter(x=>!tried.has(MKEY(x.e,x.m)));if(!L.length)break;const {e,m}=L[0];tried.add(MKEY(e,m));let o=opts;
@@ -5629,6 +5639,7 @@ async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
     const now=Date.now(),ids=new Set(poolEntries(c).map(e=>e.id)),ts=Object.entries(COOL).filter(([k,v])=>ids.has(k.split('|')[0])&&v.until>now).map(([,v])=>v.until);if(!ts.length)break;
     const wait=Math.ceil((Math.min(...ts)-now)/1000);if(wait>120||round===ROUNDS-1)break;tried.clear();
     if(JOB){const old=JOB.label;JOB.label=`All your AIs are busy, trying again in ${wait}s`;renderJob();await sleepAbort(wait*1000,opts.signal);JOB.label=old;renderJob()}else await sleepAbort(wait*1000,opts.signal)}
+  {const sm=poolStatusMsg(aiCfg(),last);if(sm&&last&&last.code!=='cancelled')throw {code:'pool_resting',message:sm}}
   const rm=poolRestMsg(aiCfg());if(rm&&(!last||last.code==='rate_limited'))throw {code:'pool_resting',message:rm};
   if(last&&last.code==='rate_limited')throw {code:'pool_resting',message:'All your AI keys are at their free limits right now. Wait a minute and try again, or connect another free key in Settings.'};
   if(!last&&!poolEntries(aiCfg()).length)throw {code:'pool_nomodels'};

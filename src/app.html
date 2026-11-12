@@ -5646,6 +5646,9 @@ async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
   throw last||{code:'no_key'}}
 /* Find the free models that work with one key: list them, try the most accurate first with a tiny request, spaced out
    so the free limit is not hit, and stop once a handful work. OpenRouter's ":free" models and local Ollama need no test. */
+const KEY_START={nvidia:['nvapi-','NVIDIA'],groq:['gsk_','Groq'],openrouter:['sk-or-','OpenRouter'],claude:['sk-ant-','Anthropic'],gemini:['AIza','Google Gemini']};
+/* a key that does not start the way this service's keys do is almost always a key copied from a different service */
+const keyShapeBad=(prov,key)=>{const k=KEY_START[prov];return k&&key&&!String(key).replace(/^[\s"'`]*(bearer\s+)?/i,'').startsWith(k[0])?`That does not look like a ${k[1]} key. ${k[1]} keys start with "${k[0]}". It may be a key from another service.`:''};
 const svcSaid=x=>x&&x.message&&x.code!=='pool_resting'?` (The service said: "${cut(String(x.message),160)}")`:'';
 const SKIP_MODEL=/embed|rerank|whisper|\btts\b|speech|audio|guard|safety|moderat|reward|retriev|bge-|\be5-|clip|ocr|transcri|-vl-|vision|image|flux|stable-diffusion|sdxl/i;
 async function findFreeModels(e,say,signal){const p=PROVIDERS[e.provider];
@@ -5790,6 +5793,7 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   $('#sMin').onchange=()=>{editPool(cc=>{cc.minAcc=+$('#sMin').value})};
   $('#sAdd').onclick=()=>{collect();const p=PROVIDERS[cur],mc=c.model[cur]||{},key=c.keys[cur]||'',base=c.base[cur]||'';
     if(p.key&&cur!=='custom'&&!key){msg('Paste the key first, then press Connect key.');return}
+    {const kb=keyShapeBad(cur,key);if(kb){msg(kb);return}}
     const dup=(aiCfg().pool||[]).find(x=>x.provider===cur&&(x.key||'')===key&&(x.base||'')===base);
     if(dup){if(mc.default)editPool(cc=>{const z=cc.pool.find(y=>y.id===dup.id);if(z)z.model=mc.default});msg('That key is already connected. Finding its free models again…');runFind(dup.id);return}
     const e={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),provider:cur,key,base,model:mc.default||'',complex:mc.complex||'',models:[],on:true};
@@ -5811,8 +5815,8 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
       if(newKey||!(e.models||[]).length)refind=e.id}
     else if(poolOn(c)&&!same.length&&aiReady())note=' Your AI keys are on, so the AI uses them: press "Connect key" to add this service.';
     return {note,refind}};
-  $('#sSave').onclick=()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Connect key" to find free models.'))+note);if(refind)runFind(refind)};
-  $('#sTest').onclick=async()=>{collect();const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+svcSaid(e)+(refind?'':note))}poolUI()}}
+  $('#sSave').onclick=()=>{collect();{const kb=keyShapeBad(cur,c.keys[cur]);if(kb){msg(kb);return}}const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Connect key" to find free models.'))+note);if(refind)runFind(refind)};
+  $('#sTest').onclick=async()=>{collect();{const kb=keyShapeBad(cur,c.keys[cur]);if(kb){msg(kb);return}}const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+svcSaid(e)+(refind?'':note))}poolUI()}}
 
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});

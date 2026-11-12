@@ -5678,7 +5678,7 @@ async function httpErr(r,provider){let m='';try{const j=await r.json();m=(j.erro
   if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===400&&/max_tokens|max_completion_tokens|maximum context|context length|too many tokens/i.test(m))return {code:'max_tokens',message:m};if(st===413)return {code:'prompt_too_large',message:m};
   if((provider==='ollama'||provider==='ollamacloud')&&(st===402||/usage credits|subscribe/i.test(m)))return {code:'needs_plan',message:m}; /* a model that needs a paid Ollama plan; other models on the key may still be free */
   if(st===402||/credit|balance|billing|quota exceeded for metric.*free/i.test(m))return {code:st===402?'no_credit':'rate_limited',message:m,wait:ra};
-  if(st===404||(st===400&&/model/i.test(m)))return {code:'bad_model',message:m};return {code:'upstream_error',message:m}}
+  if(st===404||st===410||(st===400&&/model/i.test(m)))return {code:'bad_model',message:m||(st===410?'This model was retired by the service.':'')}; /* 410 Gone: the service retired this model */return {code:'upstream_error',message:m}}
 async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=String(c.keys[prov]||'').replace(/^[\s"'`]*(authorization:\s*)?(bearer\s+)?/i,'').replace(/[\s"'`]+/g,''); /* a pasted key may carry quotes, spaces, a line break or a Bearer word */
   const base=(c.base[prov]||p.base).replace(/\/+$/,'');const tier=opts.modelTier||'default';
   const mc=c.model[prov]||{};const model=(tier==='complex'?(mc.complex||mc.default):tier==='quick'?(mc.quick||mc.default):mc.default)||p.models[tier]||p.models.default;

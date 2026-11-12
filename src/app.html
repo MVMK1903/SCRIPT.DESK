@@ -1657,7 +1657,7 @@ const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capa
 const LISTS={juniors:'Juniors / crowd',extras:'Extras',props:'Props',art:'Art / set dressing',makeup:'Makeup / hair',vehicles:'Vehicles',animals:'Animals',vfx:'VFX / CG',sfx:'SFX',spl_sets:'Special sets',spl_props:'Special props',equipment:'Special equipment',technicians:'Special technicians'};
 const LK=Object.keys(LISTS);
 const TIMES=['MOMENTS LATER','CONTINUOUS','MIDNIGHT','AFTERNOON','MORNING','EVENING','SUNRISE','SUNSET','MAGIC HOUR','NIGHT','DAWN','DUSK','NOON','AFTN','MRNG','EVNG','EVE','MNG','DAY','LATER','SAME TIME'];
-const IE_RE=/^\s*(?:\d+[A-Z]?[.)]?\s+)?(INT\.?\s*\/\s*EXT|EXT\.?\s*\/\s*INT|INT\s*\.\s*EXT|INT\s*-\s*EXT|I\s*\/\s*E|INT|EXT|EST)\b\.?\s*[\/\-–.]?\s*(.*)$/i;
+const IE_RE=/^\s*(?:\d+[A-Z]?[.)]?\s+)?(INT\.?\s*\/\s*EXT|EXT\.?\s*\/\s*INT|INT\s*\.\s*EXT|INT\s*-\s*EXT|I\s*[\/.]\s*E|E\s*[\/.]\s*I|INT|EXT|EST)\b\.?\s*[\/\-–.]?\s*(.*)$/i;
 const SCN_RE=/^\s*(?:SCENE|SCN|SC)\s*\.?\s*(?:NO|NUMBER|NUM|#)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,|AND|\/)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)(?![0-9])\s*[.:)\-–]*\s*(.*)$/i;
 const SCN_IN_RE=/^\s*(?:సీన్|సీను|దృశ్యం|సన్నివేశం|दृश्य|सीन|காட்சி|രംഗം|ದೃಶ್ಯ)\s*(?:నెం|నంబర్|నెంబర్|सं|संख्या|எண்)?\s*[.:#\-]*\s*(\d+(?:\s?[A-Z](?![A-Z]))?(?:\s*(?:&|,)\s*\d+(?:\s?[A-Z](?![A-Z]))?)*)\s*[.:)\-–]*\s*(.*)$/i;
 const NOT_CHAR=/^(CUT TO|FADE|DISSOLVE|INTERCUT|INTER CUT|CONTINUED|CONT'?D|THE END|BLACK|SONG|MONTAGE|SUPER|TITLE|FLASH ?BACK|BACK TO|END OF|INTERVAL|LATER|MORNING|NIGHT|DAY|EXT|INT|SCENE|SMASH CUT|MATCH CUT|V\.?O\.?|O\.?S\.?)\b/;
@@ -1905,15 +1905,25 @@ function parseRest(rest){let r=' '+U(rest).replace(/[–—]/g,'-')+' ';let time
   return {time,loc,note}}
 function parseIE(line){const t=line.trim();if(!t||t.length>140)return null;const m=t.match(IE_RE);if(!m)return null;
   const raw=m[1];const isUpper=raw===raw.toUpperCase();if(!isUpper&&t.length>70)return null;
-  let ie=U(raw).replace(/\s|\./g,'').replace('INT-EXT','INT/EXT').replace('INTEXT','INT/EXT');if(ie==='I/E'||ie==='EXT/INT')ie=ie==='I/E'?'INT/EXT':'EXT/INT';
+  let ie=U(raw).replace(/\s|\./g,'').replace('INT-EXT','INT/EXT').replace('INTEXT','INT/EXT');if(ie==='IE')ie='I/E';if(ie==='EI')ie='E/I';if(ie==='I/E'||ie==='E/I'||ie==='EXT/INT')ie=ie==='EXT/INT'?'EXT/INT':ie==='E/I'?'EXT/INT':'INT/EXT';
   const r=parseRest(m[2]||'');return Object.assign({ie},r)}
 function detectScenes(text){
   text=String(text||'').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/ /g,' ').replace(/[​﻿]/g,'');
+  /* "12.INT. ROOM" (number glued to the heading) is read as "12 INT. ROOM" */
+  text=text.replace(/^([ ]*)(\d+[A-Z]?)[.)](?=(?:INT|EXT|I\/E|E\/I|EST)\b)/gim,'$1$2 ');
+  /* when nearly every numbered heading prints its number twice ("11 EXT. ..." for scene 1, "1010 INT. ..." for scene 10), read each once */
+  {const re=/^([ ]*)(\d+[A-Z]?)([ ]+(?:INT|EXT|I\/E|E\/I|EST)\b)/gim;let tot=0,dbl=0,m2;const isD=n=>n.length%2===0&&n.slice(0,n.length/2)===n.slice(n.length/2);
+   while((m2=re.exec(text))){tot++;if(isD(m2[2]))dbl++}
+   if(tot>=5&&dbl>=tot*0.8)text=text.replace(re,(x,sp,n,rest)=>sp+(isD(n)?n.slice(0,n.length/2):n)+rest)}
+  /* scenes 1 to 9 can print as 11, 22 ... 99 while later numbers are normal: "22" right after scene 1 is scene 2 (a scene or two may be missing in between), but "11" after scene 10 is really 11 */
+  {let last=0;text=text.replace(/^([ ]*)(\d+)([A-Z]?)([ ]+(?:INT|EXT|I\/E|E\/I|EST)\b)/gim,(x,sp,n,sfx,rest)=>{let v=parseInt(n,10);
+    if(/^([1-9])\1$/.test(n)&&last<10&&parseInt(n[0],10)>last&&parseInt(n[0],10)<=last+3&&!sfx){v=parseInt(n[0],10);n=n[0]}
+    last=v;return sp+n+sfx+rest})}
   const L=text.split('\n');const scenes=[];let cur=null;const front=[];
   const nextNon=(i)=>{for(let j=i+1;j<L.length&&j<i+5;j++){if(L[j].trim())return j}return -1};
   for(let i=0;i<L.length;i++){let line=L[i];
     /* scene numbers printed on both sides ("1 1 EXT. ..." or "1 EXT. ... 1") are read as one number */
-    line=line.replace(/^(\s*)(\d+[A-Z]?)[.)]?\s+\2[.)]?\s+(?=\S)/,'$1$2 ');{const mt=line.trim().match(/^(\d+[A-Z]?)[.)]?\s+((?:INT|EXT|I\/E|EST)\b.*?)\s+\1[.)]?$/i);if(mt)line=mt[1]+' '+mt[2]}
+    line=line.replace(/^(\s*)(\d+[A-Z]?)[.)]?\s+\2[.)]?\s+(?=\S)/,'$1$2 ');{const mt=line.trim().match(/^(\d+[A-Z]?)[.)]?\s+((?:INT|EXT|I\/E|E\/I|EST)\b.*?)\s+\1[.)]?$/i);if(mt)line=mt[1]+' '+mt[2]}
     const t=line.trim();
     let m=t.length<=150?(t.match(SCN_RE)||t.match(SCN_IN_RE)):null;
     if(m&&!/^\s*\w+\s+\d+\s+[a-z]{3,}\s+[a-z]/.test(t)){
@@ -1925,12 +1935,15 @@ function detectScenes(text){
       if(h.ie&&!h.loc){const j=nextNon(i);if(j>0&&L[j].trim().length<60&&!/[.!?]$/.test(L[j].trim())&&!parseIE(L[j])&&!SCN_RE.test(L[j].trim())){h.loc=U(L[j].trim().replace(/[()]/g,' ').replace(/\s+/g,' '));heading+='  '+L[j].trim();i=j}}
       cur=newScene({no,ie:h.ie,time:h.time,loc:h.loc,notes:h.note,heading});cur._lines=[];scenes.push(cur);continue}
     const ie=parseIE(line);
-    if(ie&&(ie.loc||ie.time)&&U(t.split(/\s/)[0]).match(/^(\d+[A-Z]?[.)]?|INT|EXT|EST|I\/E|INT\.?\/EXT\.?|EXT\.?\/INT\.?|INT\.EXT\.?)/)){
+    if(ie&&(ie.loc||ie.time)&&U(t.split(/\s/)[0]).match(/^(\d+[A-Z]?[.)]?|INT|EXT|EST|I\/E|E\/I|INT\.?\/EXT\.?|EXT\.?\/INT\.?|INT\.EXT\.?)/)){
       const num=(t.match(/^(\d+[A-Z]?)[.)]?\s/)||[])[1]||'';
       cur=newScene({no:num,ie:ie.ie,time:ie.time,loc:ie.loc,notes:ie.note,heading:t});cur._lines=[];scenes.push(cur);continue}
     const bk=t.length<=170?t.match(/^(\d+[A-Z]?)\s+(\S.*?)\s+\1$/):null;
     if(bk&&!/^\(?(CONTINUED|CONT'?D|MORE)\b/i.test(bk[2])&&/^[A-Z][A-Z'’.:\-]+(\s|$)/.test(bk[2])){const tm=(U(bk[2]).match(/^(DAY|NIGHT|DAWN|DUSK|MORNING|EVENING|AFTERNOON|SUNRISE|SUNSET|MAGIC HOUR|CONTINUOUS|LATER)\b/)||[])[1]||'';
       cur=newScene({no:U(bk[1]),time:tm,heading:t,flags:['This heading has no INT/EXT or location. Add them in Scene list check.']});cur._lines=[];scenes.push(cur);continue}
+    {const nm=t.length<=110?t.match(/^(\d+[A-Z]?)[.)]?\s+([A-Z][A-Z0-9 ,.'’()&\/]*?)\s*[-–]\s*((?:DAY|NIGHT|MORNING|EVENING|AFTERNOON|DAWN|DUSK|SUNRISE|SUNSET|LATER|CONTINUOUS)(?:\s*\/\s*(?:DAY|NIGHT|MORNING|EVENING|AFTERNOON|DAWN|DUSK))?)$/):null;
+     /* "26  GROCERY SUPER MARKET, HYDERABAD - DAY/NIGHT": a numbered heading that has a place and a time but no INT or EXT */
+     if(nm&&nm[2].length>2&&!/^(CONTINUED|CONT'?D|MORE)\b/.test(nm[2])){cur=newScene({no:U(nm[1]),time:U(nm[3]).replace(/\s+/g,''),loc:U(nm[2]).replace(/\s+/g,' ').trim(),heading:t,flags:['This heading has no INT/EXT. Add it in Scene list check.']});cur._lines=[];scenes.push(cur);continue}}
     if(cur)cur._lines.push(line);else front.push(line)}
   const numbered=scenes.filter(s=>s.no).length;const mixed=numbered>=scenes.length/2;let last=0,lastNo='';const used=new Set(scenes.map(s=>U(s.no)).filter(Boolean));
   scenes.forEach(s=>{while(s._lines.length&&!s._lines[0].trim())s._lines.shift();while(s._lines.length&&!s._lines[s._lines.length-1].trim())s._lines.pop();

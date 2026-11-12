@@ -5675,6 +5675,7 @@ async function httpErr(r,provider){let m='';try{const j=await r.json();m=(j.erro
   if(/subscription|upgrade|paid plan|pro plan|requires? (a )?(paid|pro|premium)|payment required/i.test(m)&&st!==429)return {code:'needs_plan',message:m};
   if(st===401||(st===403&&provider!=='ollama')||/API_KEY_INVALID|invalid api key|invalid x-api-key/i.test(m))return {code:'bad_key',message:m};
   if(st===429)return {code:'rate_limited',message:m,wait:ra};if(st===400&&/max_tokens|max_completion_tokens|maximum context|context length|too many tokens/i.test(m))return {code:'max_tokens',message:m};if(st===413)return {code:'prompt_too_large',message:m};
+  if((provider==='ollama'||provider==='ollamacloud')&&(st===402||/usage credits|subscribe/i.test(m)))return {code:'rate_limited',message:'Ollama free usage is used up for now. It comes back later; meanwhile add a free Groq, Gemini or NVIDIA key. ('+m.slice(0,80)+')',wait:3600}; /* Ollama's free allowance resets, so it rests instead of being marked as having no credit */
   if(st===402||/credit|balance|billing|quota exceeded for metric.*free/i.test(m))return {code:st===402?'no_credit':'rate_limited',message:m,wait:ra};
   if(st===404||(st===400&&/model/i.test(m)))return {code:'bad_model',message:m};return {code:'upstream_error',message:m}}
 async function callOnce(prompt,opts,c,p){const prov=c.provider;const key=c.keys[prov]||'';const base=(c.base[prov]||p.base).replace(/\/+$/,'');const tier=opts.modelTier||'default';

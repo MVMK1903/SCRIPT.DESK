@@ -1715,7 +1715,7 @@ function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.me
 function lsDel(k){try{if(SEC.on&&PROT(k)){delete SEC.mem[k]}localStorage.removeItem(LSKEY+k)}catch(e){}}
 /* ---------- Security: encryption on this device (AES-256-GCM, key from your passphrase) ---------- */
 const SEC={on:false,unlocked:false,dek:null,cfg:null,mem:{},pend:{},chain:Promise.resolve()};
-const SEC_ITER=310000;
+const SEC_ITER=600000; /* for new .scriptdesk backups; old files carry their own count and still open */
 const PROT=k=>k==='index'||k==='ai'||k==='apikey'||k.startsWith('p.');
 try{const c=localStorage.getItem('scriptdesk.v2.sec');if(c){SEC.cfg=JSON.parse(c);SEC.on=true}}catch(e){}
 const b64=u=>{u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
@@ -1727,7 +1727,7 @@ const secUnwrap=(kek,w)=>crypto.subtle.unwrapKey('raw',unb64(w.ct),kek,{name:'AE
 const recNorm=s=>String(s||'').toUpperCase().replace(/[^A-Z2-7]/g,'');
 function newRecovery(){const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',b=rnd(20);let bits='';b.forEach(x=>bits+=x.toString(2).padStart(8,'0'));let o='';for(let i=0;i<160;i+=5)o+=A[parseInt(bits.slice(i,i+5),2)];return o.match(/.{4}/g).join('-')}
 async function secCfg(dek,pass,rec,old){const sp=rnd(16),sr=old?unb64(old.saltR):rnd(16);return {v:1,iter:SEC_ITER,saltP:b64(sp),wp:await secWrap(await secKek(pass,sp,SEC_ITER),dek),saltR:b64(sr),wr:rec?await secWrap(await secKek(recNorm(rec),sr,SEC_ITER),dek):old.wr}}
-async function secOpen(cfg,secret){const it=cfg.iter||SEC_ITER;try{return await secUnwrap(await secKek(secret,unb64(cfg.saltP),it),cfg.wp)}catch(e){}try{return await secUnwrap(await secKek(recNorm(secret),unb64(cfg.saltR),it),cfg.wr)}catch(e){}return null}
+async function secOpen(cfg,secret){const it=cfg.iter||310000; /* old files without a stored count used 310k */try{return await secUnwrap(await secKek(secret,unb64(cfg.saltP),it),cfg.wp)}catch(e){}try{return await secUnwrap(await secKek(recNorm(secret),unb64(cfg.saltR),it),cfg.wr)}catch(e){}return null}
 async function aesEnc(dek,str){const iv=rnd(12);return 'ENC1:'+b64(iv)+':'+b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},dek,new TextEncoder().encode(str)))}
 async function aesDec(dek,s){const p=String(s).split(':');return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},dek,unb64(p[2])))}
 function secPersist(k){if(SEC.pend[k])return;SEC.pend[k]=1;SEC.chain=SEC.chain.then(async()=>{SEC.pend[k]=0;try{if(SEC.mem[k]==null)return;localStorage.setItem(LSKEY+k,await aesEnc(SEC.dek,SEC.mem[k]))}catch(e){}})}
@@ -6122,7 +6122,7 @@ async function gaAfterBoot(){if(!GA.user)return;
    email + password (with password reset and email verification) or Google. Projects sync through Cloud Firestore.
    End-to-end encryption: a screenplay can be "Just me · private & encrypted" or belong to a team. Those are encrypted on
    the device with AES-256-GCM before they are stored or sent, so Firebase (and anyone with database access) only sees
-   unreadable data. The vault key is protected by a passphrase only the user knows (PBKDF2-SHA-256, 600,000 rounds);
+   unreadable data. The vault key is protected by a passphrase only the user knows (PBKDF2-SHA-256, 1,000,000 rounds);
    it cannot be recovered if the passphrase is lost. Team scripts use a team key that is handed to each member wrapped
    with their own public key (ECDH P-256), so only members can open it. Notes in the notepad use the vault key. */
 const FB_CFG=(()=>{try{const m=document.querySelector('meta[name="sd-firebase"]');const c=m?JSON.parse(m.content):null;return c&&c.apiKey&&c.projectId?c:null}catch(e){return null}})();
@@ -6278,8 +6278,11 @@ async function fbEnter(u,mode,quiet){GA.fb=true;await gaEnter({sub:u.uid,email:u
 
 /* ---------- vault: the passphrase-protected key for private scripts and notes ---------- */
 const SV={cfg:null,vk:null,priv:null,pub:null,fails:0,until:0};
-const SV_ITER=600000;
+const SV_ITER=1000000,SV_ITER_MIN=600000,SV_KDF='pbkdf2-sha256'; /* raised from 600k (OWASP floor); older vaults open at their stored count and upgrade on unlock */
 const te=new TextEncoder(),td=new TextDecoder();
+/* wrap the random vault key with the passphrase; read it back; both pure (no account/Firebase), so the KDF is testable */
+async function svWrapKey(raw,pass,iter){const salt=rnd(16);return {kdf:SV_KDF,iter,salt:b64(salt),wvk:await gcmEnc(await svKek(pass,salt,iter),raw)}}
+async function svUnwrapKey(c,pass){return new Uint8Array(await gcmDec(await svKek(pass,unb64(c.salt),c.iter||SV_ITER_MIN),c.wvk))}
 async function svKek(pass,salt,iter){const m=await crypto.subtle.importKey('raw',te.encode(String(pass).normalize('NFKC')),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
 async function gcmEnc(key,bytes){const iv=rnd(12);return {iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,bytes))}}
 async function gcmDec(key,o){return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},key,unb64(o.ct)))}
@@ -6291,15 +6294,17 @@ async function openJson(key,o){const b=await gcmDec(key,o);return JSON.parse(td.
 function svGenPass(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',b=rnd(25);let s='';b.forEach((x,i)=>{s+=A[x%32];if(i%5===4&&i<24)s+='-'});return s}
 async function svLoad(){SV.cfg=lsGet('vault')||null;if(GA.mode==='offline')return;try{const fx=await fbInit();const d=await fx.get('users/'+GA.user.sub);if(d&&d.vault){SV.cfg=d.vault;lsSet('vault',d.vault)}}catch(e){}}
 async function svCreate(pass){const raw=rnd(32);const vk=await aesKey(raw);const kp=await crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveKey']);
-  const priv=await crypto.subtle.exportKey('jwk',kp.privateKey),pub=await crypto.subtle.exportKey('jwk',kp.publicKey);const salt=rnd(16);
-  const cfg={v:1,iter:SV_ITER,salt:b64(salt),wvk:await gcmEnc(await svKek(pass,salt,SV_ITER),raw),wpriv:await sealJson(vk,priv),pub,at:Date.now()};
+  const priv=await crypto.subtle.exportKey('jwk',kp.privateKey),pub=await crypto.subtle.exportKey('jwk',kp.publicKey);
+  const cfg=Object.assign({v:1},await svWrapKey(raw,pass,SV_ITER),{wpriv:await sealJson(vk,priv),pub,at:Date.now()});
   const fx=await fbInit();await fx.set('users/'+GA.user.sub,{vault:cfg},true);
   await fx.set('publicKeys/'+GA.user.sub,{email:GA.user.email,name:GA.user.name,pub,at:Date.now()});
   lsSet('vault',cfg);SV.cfg=cfg;SV.vk=vk;SV.priv=await crypto.subtle.importKey('jwk',priv,{name:'ECDH',namedCurve:'P-256'},false,['deriveKey']);SV.pub=pub;gaLog('vault')}
-async function svOpen(pass){const c=SV.cfg;const raw=await gcmDec(await svKek(pass,unb64(c.salt),c.iter||SV_ITER),c.wvk);const vk=await aesKey(raw);
-  const priv=await openJson(vk,c.wpriv);SV.vk=vk;SV.priv=await crypto.subtle.importKey('jwk',priv,{name:'ECDH',namedCurve:'P-256'},false,['deriveKey']);SV.pub=c.pub}
-async function svChange(oldp,newp){const c=SV.cfg;const raw=await gcmDec(await svKek(oldp,unb64(c.salt),c.iter||SV_ITER),c.wvk);const salt=rnd(16);
-  const cfg=Object.assign({},c,{iter:SV_ITER,salt:b64(salt),wvk:await gcmEnc(await svKek(newp,salt,SV_ITER),raw),at:Date.now()});
+async function svOpen(pass){const c=SV.cfg;const raw=await svUnwrapKey(c,pass);const vk=await aesKey(raw);
+  const priv=await openJson(vk,c.wpriv);SV.vk=vk;SV.priv=await crypto.subtle.importKey('jwk',priv,{name:'ECDH',namedCurve:'P-256'},false,['deriveKey']);SV.pub=c.pub;
+  /* raise an older vault to the stronger passphrase step, using the key we just opened; if it fails the vault still opens next time */
+  if((c.iter||0)<SV_ITER||c.kdf!==SV_KDF){try{const cfg=Object.assign({},c,await svWrapKey(raw,pass,SV_ITER));const fx=await fbInit();await fx.set('users/'+GA.user.sub,{vault:cfg},true);lsSet('vault',cfg);SV.cfg=cfg;gaLog('vaultkdf')}catch(e){}}}
+async function svChange(oldp,newp){const c=SV.cfg;const raw=await svUnwrapKey(c,oldp);
+  const cfg=Object.assign({},c,await svWrapKey(raw,newp,SV_ITER),{at:Date.now()});
   const fx=await fbInit();await fx.set('users/'+GA.user.sub,{vault:cfg},true);lsSet('vault',cfg);SV.cfg=cfg;gaLog('vaultpass')}
 /* "Set up your vault": generate or choose a passphrase, confirm it, and say it is saved somewhere safe */
 function svSetupAsk(){return new Promise(res=>{let ok=false;

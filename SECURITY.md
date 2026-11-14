@@ -70,7 +70,7 @@ Password sign-in and sign-up go through ScriptDesk's server functions (`function
   or *My account · not encrypted*. Existing scripts can be moved from the Projects page.
 - Private scripts, team scripts and notepad notes are encrypted **on the device** (AES-256-GCM) before they are saved to
   the device or sent to Firebase. The database only holds unreadable data; the title of a private script is not sent either.
-- The vault key is protected by a **vault passphrase** that only the user knows (PBKDF2-SHA-256, 600,000 rounds). ScriptDesk
+- The vault key is protected by a **vault passphrase** that only the user knows (PBKDF2-SHA-256, 1,000,000 rounds; vaults made before v2.12.13 used 600,000 and are raised automatically the next time they unlock). ScriptDesk
   can generate a strong one. **If the passphrase is lost, the private scripts and notes cannot be recovered**, by the
   user or by ScriptDesk. The passphrase can be changed while the vault is unlocked.
 - The vault unlocks once per session and locks at sign-out. Five wrong passphrases in a row add a growing wait, and

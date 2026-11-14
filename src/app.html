@@ -2321,6 +2321,18 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
       catch(e){b.forEach(s=>{s.status='err'});if(e&&e.code==='cancelled'){}else if(FATAL.includes(e&&e.code))JOB.fatal=e;else soft=errMsg(e)}
       JOB.done+=b.length;renderJob();touch(b.map(s=>s.id));if(['script','breakdown','slo'].includes(page))render()}};
     await Promise.all(Array.from({length:aiWorkers()},worker));
+    /* scenes the AI skipped or that failed inside a batch: read each one on its own — a single short scene almost always succeeds even on a weak free model */
+    for(let pass=0;pass<2&&!JOB.fatal&&!JOB.ctl.signal.aborted;pass++){
+      const failed=pending.filter(s=>s.status==='err');if(!failed.length)break;
+      const fq=failed.slice();JOB.label=`Retrying ${failed.length} scene${failed.length===1?'':'s'} one by one`;JOB.total=failed.length;JOB.done=0;renderJob();
+      failed.forEach(s=>s.status='run');if(['script','breakdown','slo'].includes(page))render();
+      const rworker=async()=>{while(fq.length&&!JOB.fatal&&!JOB.ctl.signal.aborted){const s=fq.shift();
+        try{const res=await ask(breakdownPrompt([s]),{modelTier:'default'});const arr=Array.isArray(res&&res.scenes)?res.scenes:Array.isArray(res)?res:[];const r=arr.find(x=>x&&x.id===s.id)||arr[0];
+          if(r)applyBreakdown(s,r);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}}
+        catch(e){s.status='err';if(e&&e.code==='cancelled')return;if(FATAL.includes(e&&e.code)){JOB.fatal=e;return}soft=errMsg(e)}
+        JOB.done++;renderJob();touch([s.id]);if(['script','breakdown','slo'].includes(page))render()}};
+      await Promise.all(Array.from({length:Math.min(aiWorkers(),2)},rworker));
+    }
     P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});
     if(JOB.fatal)throw JOB.fatal;if(JOB.ctl.signal.aborted)throw {code:'cancelled'};
     if(thorough()){const done=pending.filter(s=>s.status==='done');JOB.label='Double-checking scenes';JOB.done=0;JOB.total=done.length;renderJob();await checkPass(done)}
@@ -2331,7 +2343,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     {const fk=fakeArtists();if(fk.length){const sids=removeArtists(fk.map(a=>a.id));logChange(`Removed ${fk.length} non-character name${fk.length===1?'':'s'} from the artist list: ${fk.map(a=>a.name).join(', ')}`,'artistName',true);touch(sids)}}
     const failed=P.scenes.filter(s=>s.status==='err').length;
     logChange(`AI breakdown: ${pending.length-failed} scene${pending.length-failed===1?'':'s'} read${failed?`, ${failed} failed`:''}`,'scenes',true);
-    toast(failed?`${failed} scene${failed>1?'s':''} failed. Use "Retry failed scenes" in Checks.`:soft||'Breakdown complete. Every report is ready to review and edit.',5000)
+    toast(failed?`${failed} scene${failed>1?'s':''} still failed after a retry. Open Checks and press "Retry failed scenes", or switch to a stronger AI in Settings.`:soft||'Breakdown complete. Every report is ready to review and edit.',5000)
   }catch(e){P.scenes.forEach(s=>{if(s.status==='run')s.status='new'});toast(e&&e.code==='cancelled'?'Stopped. Finished scenes are kept.':errMsg(e),5500)}
   finally{endJob();touch([]);render()}}
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-e2ll7C+bo1Bw7ZR6c9myx/Mjh7VTLVCulOqZ3rcyneg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-QBs0fWhig763DAsE38vk6gcw0onUYb9Qy2V9cIyx7X8=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2177,7 +2177,7 @@ ${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+'
 ${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`).join('\n\n')}`}
 function batchMax(){if(!STANDALONE)return 4;const c=aiCfg(),bm=e=>{const p=PROVIDERS[e.provider]||{};return p.batchMax||(e.provider==='ollama'?1:2)};if(poolOn(c))return Math.min(...poolEntries(c).map(bm));return bm(c)}
 function makeBatches(list){const out=[];let b=[],n=0;const mx=batchMax();list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=Math.min(mx,aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
-function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
+function applyBreakdown(s,r,last){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
   const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
   setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
   if(!s.loc&&r.loc)s.loc=U(r.loc);if(!s.ie&&r.ie)s.ie=U(r.ie);if(!s.time&&r.time)s.time=U(r.time);
@@ -2188,7 +2188,10 @@ function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?
   if(!L.costumes&&Array.isArray(r.costumes)){s.costumes=r.costumes.filter(c=>c&&c.costume).map(c=>{const a=findArtist(c.artist);return {a:a?a.id:null,n:a?'':U(c.artist),c:cleanItem(c.costume)}})}
   if(!L.fight){s.fight=r.fight&&r.fight.d?{unit:(s.fight&&s.fight.unit)||'',d:String(r.fight.d).trim(),a:arr(r.fight.artists).map(U).join(', '),f:cleanItem(r.fight.fighters),r:String(r.fight.needs||'').trim()}:null}
   if(!L.song){s.song=r.song&&r.song.d?{unit:(s.song&&s.song.unit)||'',d:String(r.song.d).trim()}:null}
-  s.flags=arr(r.flags).slice(0,5);s.status='done'}
+  s.flags=arr(r.flags).slice(0,5);s.status='done';
+  if(!L.desc&&!String(s.desc||'').trim()){
+    if(last){const ln=String(s.text||'').split('\n').map(x=>x.trim()).find(x=>x.length>12&&x!==x.toUpperCase());if(ln)s.desc=ln.slice(0,160)}
+    if(!String(s.desc||'').trim()){s.status='err';s.flags=['The AI left the description empty. Press Retry failed scenes.',...s.flags].slice(0,5)}}}
 function assignUnits(){let f=0,g=0,pf=false,pg=false;P.scenes.forEach(s=>{
   if(s.fight){if(!pf)f++;if(!s.locked.unit)s.fight.unit='THRILL-'+f;pf=true}else pf=false;
   if(s.song){if(!pg)g++;if(!s.locked.sunit)s.song.unit='SONG-'+g;pg=true}else pg=false})}
@@ -2336,7 +2339,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
     const queue=batches.slice();
     const worker=async()=>{while(queue.length&&!JOB.fatal&&!JOB.ctl.signal.aborted){const b=queue.shift();
       try{const res=await ask(breakdownPrompt(b),{modelTier:'default'});const arr=Array.isArray(res&&res.scenes)?res.scenes:Array.isArray(res)?res:[];
-        b.forEach((s,i)=>{const r=arr.find(x=>x&&x.id===s.id)||(arr.length===b.length?arr[i]:null);if(r)applyBreakdown(s,r);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}})}
+        b.forEach((s,i)=>{const r=arr.find(x=>x&&x.id===s.id)||(arr.length===b.length?arr[i]:null);if(r)applyBreakdown(s,r,true);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}})}
       catch(e){b.forEach(s=>{s.status='err'});if(e&&e.code==='cancelled'){}else if(FATAL.includes(e&&e.code))JOB.fatal=e;else soft=errMsg(e)}
       JOB.done+=b.length;renderJob();touch(b.map(s=>s.id));if(['script','breakdown','slo'].includes(page))render()}};
     await Promise.all(Array.from({length:aiWorkers()},worker));
@@ -2347,7 +2350,7 @@ async function runAll(opts){opts=opts||{};if(JOB)return;if(!P)return;
       failed.forEach(s=>s.status='run');if(['script','breakdown','slo'].includes(page))render();
       const rworker=async()=>{while(fq.length&&!JOB.fatal&&!JOB.ctl.signal.aborted){const s=fq.shift();
         try{const res=await ask(breakdownPrompt([s]),{modelTier:'default'});const arr=Array.isArray(res&&res.scenes)?res.scenes:Array.isArray(res)?res:[];const r=arr.find(x=>x&&x.id===s.id)||arr[0];
-          if(r)applyBreakdown(s,r);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}}
+          if(r)applyBreakdown(s,r,true);else{s.status='err';s.flags=['The AI skipped this scene. Retry it.']}}
         catch(e){s.status='err';if(e&&e.code==='cancelled')return;if(FATAL.includes(e&&e.code)){JOB.fatal=e;return}soft=errMsg(e)}
         JOB.done++;renderJob();touch([s.id]);if(['script','breakdown','slo'].includes(page))render()}};
       await Promise.all(Array.from({length:Math.min(aiWorkers(),2)},rworker));

@@ -533,6 +533,7 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .i-undo{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3'/%3E%3C/svg%3E")}
 .i-install{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
 .i-download{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11 M7 11l5 5 5-5 M4 20h16'/%3E%3C/svg%3E")}
+.i-mail{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3 7l9 6 9-6'/%3E%3C/svg%3E")}
 .i-settings{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h10 M18 6h2 M4 12h4 M12 12h8 M4 18h12 M20 18h0 M16 4v4 M10 10v4 M18 16v4'/%3E%3C/svg%3E")}
 .i-home{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 11l8-7 8 7M6 10v10h12V10M10 20v-6h4v6'/%3E%3C/svg%3E")}
 /* Home page: the ScriptDesk name, then each part of the app shown with a real picture and what it does */
@@ -1641,7 +1642,7 @@ select option:checked,select option:hover{background-color:#ffd36e;color:#241c3a
         <button class="btn sm ga-acctb" id="bAcct" aria-label="Account and security" hidden></button>
         <button class="btn sm i-settings" data-ic id="bSettings" aria-label="Settings" title="Settings" data-act="settings" hidden>Settings</button>
         <button class="btn sm i-projects" data-ic id="bProjects" aria-label="Projects" title="Projects">Projects</button>
-        <button class="btn sm i-excel mob-only" data-ic id="bMx" aria-label="Export Excel" title="Export Excel">Excel</button><button class="btn sm i-pdf mob-only" data-ic id="bMp" aria-label="Export PDF" title="Export PDF">PDF</button><button class="btn sm i-download" data-ic id="bAll" aria-label="Download all" title="Download all">Download all</button>
+        <button class="btn sm i-excel mob-only" data-ic id="bMx" aria-label="Export Excel" title="Export Excel">Excel</button><button class="btn sm i-pdf mob-only" data-ic id="bMp" aria-label="Export PDF" title="Export PDF">PDF</button><button class="btn sm i-mail" data-ic id="bMail" aria-label="Email a report" title="Email a report">Email</button><button class="btn sm i-download" data-ic id="bAll" aria-label="Download all" title="Download all">Download all</button>
         <button class="btn sm pri i-run" data-ic id="bRun">Run AI breakdown</button>
       </div>
     </header>
@@ -5308,7 +5309,7 @@ document.querySelectorAll('.bbar .tab[data-tab]').forEach(b=>b.onclick=()=>go(b.
 function syncTabs(){const cur=['write','script','slo','structure'].includes(page)?page:'more';document.querySelectorAll('.bbar .tab').forEach(b=>b.setAttribute('aria-current',String((b.dataset.tab||'more')===cur)));requestAnimationFrame(tabInd)}
 function sheetClose(){const m=$('#msheet');if(!m.classList.contains('open'))return;if(typeof MOTION_OK==='undefined'||!MOTION_OK){m.classList.remove('open');return}m.classList.add('closing');setTimeout(()=>m.classList.remove('open','closing'),240)}
 $('#msheet').onclick=e=>{if(e.target.id==='msheet')sheetClose()};
-$('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>page==='write'&&P?wrDownload():exportPage('pdf');
+$('#bMail').onclick=()=>openMail();$('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>page==='write'&&P?wrDownload():exportPage('pdf');
 $('#fTitle').addEventListener('change',e=>{if(!P)return;P.title=e.target.value.trim()||'Untitled film';logChange(`Film title set to ${P.title}`,'x',true);touch([])});
 $('#fProd').addEventListener('change',e=>{if(!P)return;P.production=e.target.value.trim();logChange(`Production house set to ${P.production||'—'}`,'x',true);touch([])});
 
@@ -5394,6 +5395,31 @@ function fname(rep,ext){return `${(P.title||'film').replace(/[^\w\- ]+/g,'').tri
 async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');return}const name=PG[page]?PG[page].t:'Report';
   try{if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name,DOC_CLASSIC.includes(page)));await saveFile(fname(name,'xlsx'),XLSX.write(wb,{bookType:'xlsx',type:'array'}))}
     else{const pdf=await buildPdf(name,lastExp,DOC_CLASSIC.includes(page));await saveFile(fname(name,'pdf'),await pdfOut(pdf))}}catch(e){toast((e&&e.message)||'Export failed. Try again.')}}
+
+/* ================= Email a report ================= */
+const MAIL_RE=/^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/;
+function openMail(){if(!P||!lastExp){toast('Open a report first, then press Email.');return}const name=PG[page]?PG[page].t:'Report';const saved=(lsGet('mailTo')||'');
+  openModal(`<div class="modal-h"><h2>Email "${esc(name)}"</h2><button class="btn ghost" data-close>Close</button></div>
+  <div class="modal-b"><label class="small">To (one or more emails, comma separated)<input id="mTo" class="inp" type="text" inputmode="email" autocomplete="email" value="${esc(saved)}" placeholder="name@example.com"></label>
+  <label class="small">Subject<input id="mSub" class="inp" type="text" value="${esc((P.title||'Film')+' - '+name)}"></label>
+  <label class="small">Message<textarea id="mMsg" class="inp" rows="3">Please find the ${esc(name)} for ${esc(P.title||'the film')} attached.</textarea></label>
+  <label class="small">File<select id="mFmt" class="inp"><option value="xlsx">Excel (.xlsx)</option><option value="pdf">PDF (.pdf)</option></select></label>
+  <p class="small muted" id="mHint">${NATIVE||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)?'Your mail app opens with the file attached.':'The file is saved, then your mail app opens. Attach the saved file to the mail.'}</p></div>
+  <div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="mGo">Send</button></div>`);
+  $('#mGo').onclick=sendMail}
+async function sendMail(){const to=$('#mTo').value.split(/[,;\s]+/).filter(Boolean);if(!to.length||to.some(x=>!MAIL_RE.test(x))){toast('Enter a valid email address.');return}
+  const sub=$('#mSub').value.trim(),msg=$('#mMsg').value.trim(),kind=$('#mFmt').value,name=PG[page]?PG[page].t:'Report',btn=$('#mGo');btn.disabled=true;btn.textContent='Preparing…';
+  try{let fn,data;if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name,DOC_CLASSIC.includes(page)));fn=fname(name,'xlsx');data=XLSX.write(wb,{bookType:'xlsx',type:'array'})}
+    else{const pdf=await buildPdf(name,lastExp,DOC_CLASSIC.includes(page));fn=fname(name,'pdf');data=await pdfOut(pdf)}
+    if(data==null){btn.disabled=false;btn.textContent='Send';return}
+    lsSet('mailTo',to.join(', '));
+    const blob=new Blob([data],{type:mimeOf(fn)});const file=new File([blob],fn,{type:blob.type});
+    if(!NATIVE&&/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:sub,text:msg});closeModal();return}catch(e){if(e&&e.name==='AbortError'){btn.disabled=false;btn.textContent='Send';return}}}
+    await saveFile(fn,data);
+    const body=(msg?msg+'\n\n':'')+'Attachment: '+fn+' (attach the saved file before sending)';
+    const a=document.createElement('a');a.href='mailto:'+to.map(encodeURIComponent).join(',')+'?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+    closeModal();toast('Mail opened. Attach '+fn+' and send.')}
+  catch(e){toast((e&&e.message)||'Could not prepare the email.');btn.disabled=false;btn.textContent='Send'}}
 async function exportAll(){if(!P)return;try{await loadXlsx();const wb=XLSX.utils.book_new();const saved=Object.assign({},VIEW);VIEW.q='';
   const jobs=[['slo'],['sloLoc'],['sloArt'],['sloFight','fmode','fight'],['sloFight','fmode','song'],['locations'],['artists'],['locScenes'],['artScenes'],['breakdown'],['special','spmode','item'],['special','spmode','scene'],['costume','cmode','scene'],['costume','cmode','artist'],['artprops','apmode','overall'],['artprops','apmode','scene'],['profiles'],['structure'],['shots'],['sched'],['order','oday','all'],['dood'],['gear','gmode','script'],['gear','gmode','needs'],['gear','gmode','scenes'],['gear','gmode','list'],['gear','gmode','move'],['scenic'],['budget','bmode','sheet'],['budget','bmode','track'],['budget','bmode','rates'],['budget','bmode','rules']];
   try{if(P.changes&&P.changes.length)addSheet(wb,{name:'Change history',cols:[{h:'Date & time',w:22},{h:'Sheet',w:28},{h:'Change',w:80}],rows:P.changes.map(c=>[fmtWhen(c.at),c.sheet,c.what])},'Change history',false);

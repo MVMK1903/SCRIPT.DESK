@@ -166,9 +166,13 @@ jobs:
         with: { path: out }
       - uses: softprops/action-gh-release@v2
         with:
+          # Installers go to the PUBLIC downloads repo so the source repo can stay private.
+          # Set a repository secret RELEASES_TOKEN = a fine-grained PAT with Contents: write on MVMK1903/SCRIPT.DESK-releases.
+          # If RELEASES_TOKEN is empty, the release falls back to this repo (works while this repo is still public).
+          repository: ${{ secrets.RELEASES_TOKEN != '' && 'MVMK1903/SCRIPT.DESK-releases' || github.repository }}
+          token: ${{ secrets.RELEASES_TOKEN != '' && secrets.RELEASES_TOKEN || secrets.GITHUB_TOKEN }}
           tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', inputs.version) }}
           name: ScriptDesk ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', inputs.version) }}
-          target_commitish: ${{ github.sha }}
           body: |
             **Windows:** ScriptDesk-Setup-*.exe — if Windows shows "protected your PC", click More info → Run anyway.
             **Mac:** ScriptDesk-*-mac.dmg — the first time, right-click the app → Open.

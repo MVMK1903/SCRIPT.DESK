@@ -21,9 +21,9 @@ AI film script breakdown for film and web-series production teams. Works with an
 | Device | How to get it | Offline |
 |---|---|---|
 | **Any device (recommended)** | Open the web app link, then **Install** (Windows/Mac/Android Chrome or Edge) or **Share → Add to Home Screen** (iPhone/iPad Safari) | Yes, after first open |
-| **Windows** | `ScriptDesk-Setup-x.y.z.exe` from Actions / Releases | Yes |
-| **Mac** | `ScriptDesk-x.y.z-mac.dmg` from Actions / Releases | Yes |
-| **Android** | `ScriptDesk-android.apk` from Actions / Releases | Yes |
+| **Windows** | [`ScriptDesk-Setup-x.y.z.exe`](https://github.com/MVMK1903/SCRIPT.DESK-releases/releases/latest) (Downloads) | Yes |
+| **Mac** | [`ScriptDesk-x.y.z-mac.dmg`](https://github.com/MVMK1903/SCRIPT.DESK-releases/releases/latest) (Downloads) | Yes |
+| **Android** | [`ScriptDesk-android.apk`](https://github.com/MVMK1903/SCRIPT.DESK-releases/releases/latest) (Downloads) | Yes |
 | **iPhone / iPad** | `ScriptDesk-iphone-unsigned.ipa` from Releases, installed with **xtool** from Windows, Linux or Mac (below); or the web app (above) | Yes |
 | **Using your Claude subscription (no API key)** | Open the ScriptDesk link inside Claude (claude.ai or the Claude app). Separate apps can only use Claude through an API key. | No (needs internet) |
 
@@ -141,7 +141,7 @@ Setup steps, and how it all works: [SECURITY.md](SECURITY.md).
 |---|---|
 | Excel/PDF/Word/PDF-import libraries (SheetJS, jsPDF, pdf.js, Mammoth), Electron, Capacitor | Free, open source (see THIRD-PARTY-NOTICES.md) |
 | GitHub repo, Actions builds, Pages hosting (public repo) | Free |
-| Windows .exe, Mac .dmg, Android APK from Releases | Free (unsigned: install warnings, see below) |
+| Windows .exe, Mac .dmg, Android APK from [Downloads](https://github.com/MVMK1903/SCRIPT.DESK-releases/releases) | Free (unsigned: install warnings, see below) |
 | iPhone / iPad | Free: the web app (Add to Home Screen), or the `.ipa` from Releases installed with xtool and a free Apple ID (reinstall every 7 days). An App Store app needs an Apple Developer account ($99/yr). |
 | Optional: Play Store listing $25 once · Windows code-signing certificate · Apple notarization | Paid, only if you want store listings or no warnings |
 

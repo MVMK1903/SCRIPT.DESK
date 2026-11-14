@@ -2055,6 +2055,7 @@ Rules:
 - Merge spelling variants of the same person into one entry (e.g. GOVINDU / GOVINDHU) and list the variants as aliases.
 - Drop anything that is not a character (transitions, song titles, "INTERCUT", sound cues, phone or screen text such as "NOEL CALLING", signs such as "STOP", boards, posters, messages, camera or editing notes).
 - Add important characters that appear in the action text even without dialogue.
+- Food dishes, objects, animals and insults spoken in dialogue are never characters: e.g. bajji / bajjilu (a snack), gadidha (donkey), eluka (rat), pichi (mad). Drop them.
 - In Telugu or Tinglish, a word of address or relation spoken in dialogue (amma, nanna, anna, akka, thatha, ammama, mammaya, sir, madam) is not a separate character when it refers to someone already listed: add it to that character's aliases. Keep it as a character only when the script uses it as the character's own cue or name (e.g. "THATHAYA").
 - name: UPPERCASE, the most common spelling.
 - designation: short English description of role or relation, e.g. "LEAD ROLE", "HERO'S FATHER", "VILLAIN", "VILLAGE HEAD".
@@ -2147,7 +2148,8 @@ For EACH scene below return:
 - story: objects, costume details or marks the story depends on that appear in this scene: something shown pointedly that matters later (a Chekhov's gun), a recurring object, a clue or a false clue. 1-6 words each, e.g. "Rock hammer", "Red mitten with LEO stitched". They need continuity care. [] if none.
 - flags: short notes about anything unclear in the scene (empty if clear).
 - In Telugu or Tinglish dialogue, words of address or relation (amma, nanna, anna, akka, thammudu, chelli, babai, pinni, mama, mammaya, atta, thatha, thathaya, ammamma, ammama, sir, madam, garu, ra, orey) are not new characters. Map each to the known character it refers to, and list it as an artist only when the script itself uses that word as the character's name (a cue such as "THATHAYA").
-- Read Tinglish dialogue for props, vehicles and places as well: "aa scooter ni" means a scooter is in the scene; "locker", "phone", "rod" named in dialogue and used in the scene are props.
+- Food dishes, objects, animals and insults spoken in dialogue are never characters: e.g. bajji / bajjilu (a snack), gadidha (donkey), eluka (rat), pichi (mad) are not people, even in UPPERCASE.
+- Read Tinglish dialogue for props, vehicles and places as well: "aa scooter ni" means a scooter is in the scene; "locker", "phone", "rod" named in dialogue and used in the scene are props. In a festival or ceremony scene, capture the crowd (villagers, volunteers, children) as juniors and the ritual items (garlands, flags, cross, vessel, candles) as props or art.
 Rules: read each scene line by line and do not skip details from the middle or end of a scene; never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies. Return one entry for EVERY scene id.
 ${lessonsText()&&lessonsText()+'\n'}Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"story":[],"fight":null,"song":null,"flags":[]}]}
 

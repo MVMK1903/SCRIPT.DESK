@@ -26,9 +26,19 @@ const { chromium } = require('playwright');
     document.getElementById('mTo').value = 'a@b.com'; document.getElementById('mWmOn').checked = true;
     document.getElementById('mWmT').value = 'FOR RAAHUL'; document.getElementById('mWmP').value = 'diag';
     await sendMail(); o.wm = !!wm && wm.text === 'FOR RAAHUL' && wm.pos === 'diag'; o.pdfSaved = /\.pdf$/.test(saved[saved.length - 1] || '');
+    // direct send through the desktop bridge
+    const calls = []; window.sdMail = { cfg: async () => ({ has: true, from: 'x@y.com' }), clear: async () => true, save: async () => ({ ok: true }), send: async m => { calls.push(m); return { ok: true }; } };
+    saved.length = 0; href = '';
+    openMail(); await new Promise(r => setTimeout(r, 200));
+    document.getElementById('mTo').value = 'z@q.org'; document.getElementById('mFmt').value = 'xlsx';
+    await sendMail();
+    o.direct = calls.length === 1 && calls[0].to[0] === 'z@q.org' && /\.xlsx$/.test(calls[0].filename) && calls[0].b64.length > 0 && saved.length === 0 && href === '';
+    // not set up yet: the setup form shows and no mail goes out
+    window.sdMail.cfg = async () => ({ has: false, from: '' }); openMail(); await new Promise(r => setTimeout(r, 200));
+    o.setupShown = document.getElementById('mSetup').style.display !== 'none' && !!document.getElementById('mKey');
     HTMLAnchorElement.prototype.click = oc; return o;
   });
   console.log(r, errs);
-  const ok = r.btn && r.modal && r.rejectsBad && /\.xlsx$/.test(r.saved) && r.mailto && r.pdfDefault && r.wm && r.pdfSaved && !errs.length;
+  const ok = r.btn && r.modal && r.rejectsBad && /\.xlsx$/.test(r.saved) && r.mailto && r.pdfDefault && r.wm && r.pdfSaved && r.direct && r.setupShown && !errs.length;
   console.log(ok ? 'PASS email' : 'FAIL email'); await b.close(); process.exit(ok ? 0 : 1);
 })();

@@ -15,3 +15,11 @@ contextBridge.exposeInMainWorld('sdGoogle', {
   token: () => ipcRenderer.invoke('sd:g:token'),
   signOut: () => ipcRenderer.invoke('sd:g:signout')
 });
+
+// Email: save the Resend key (it never comes back), ask whether it is set, and send one report.
+contextBridge.exposeInMainWorld('sdMail', {
+  cfg: () => ipcRenderer.invoke('sd:mail:cfg'),
+  save: (key, from) => ipcRenderer.invoke('sd:mail:save', key, from),
+  clear: () => ipcRenderer.invoke('sd:mail:clear'),
+  send: (m) => ipcRenderer.invoke('sd:mail:send', m)
+});

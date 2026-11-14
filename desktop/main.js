@@ -207,3 +207,36 @@ app.whenReady().then(() => {
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
+
+// Sending a report by email through Resend (https://resend.com). The API key stays in this process, encrypted with the system key store;
+// the page can only save it, clear it, ask whether one exists, and send a mail. It is never handed back to the page.
+const MAIL_FILE = () => path.join(app.getPath('userData'), 'mail-config.bin');
+const MAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
+function mailLoad() { try { if (!safeStorage.isEncryptionAvailable()) return null; return JSON.parse(safeStorage.decryptString(fs.readFileSync(MAIL_FILE()))); } catch (e) { return null; } }
+ipcMain.handle('sd:mail:cfg', () => { const c = mailLoad(); return { has: !!(c && c.key && c.from), from: c ? c.from || '' : '', keyStore: safeStorage.isEncryptionAvailable() }; });
+ipcMain.handle('sd:mail:save', (e, key, from) => {
+  key = String(key || '').trim(); from = String(from || '').trim().slice(0, 200);
+  if (!/^re_[A-Za-z0-9_\-]{10,200}$/.test(key)) return { error: 'That does not look like a Resend API key (it starts with re_).' };
+  if (!MAIL_RE.test(from.replace(/^.*<([^>]+)>\s*$/, '$1'))) return { error: 'Enter the From address as name@yourdomain.com.' };
+  if (!safeStorage.isEncryptionAvailable()) return { error: 'This computer has no secure key store, so the key cannot be saved safely.' };
+  fs.writeFileSync(MAIL_FILE(), safeStorage.encryptString(JSON.stringify({ key, from })), { mode: 0o600 }); return { ok: true };
+});
+ipcMain.handle('sd:mail:clear', () => { try { fs.unlinkSync(MAIL_FILE()); } catch (e) { } return true; });
+ipcMain.handle('sd:mail:send', async (e, m) => {
+  const c = mailLoad(); if (!c || !c.key) return { error: 'Email is not set up yet.' };
+  m = m || {}; const to = Array.isArray(m.to) ? m.to.map(x => String(x).trim()).filter(Boolean).slice(0, 10) : [];
+  if (!to.length || to.some(x => !MAIL_RE.test(x))) return { error: 'Enter a valid email address.' };
+  const b64 = String(m.b64 || ''); if (!b64 || b64.length > 30 * 1024 * 1024) return { error: 'The file is empty or too large to email.' };
+  const filename = String(m.filename || 'report').replace(/[^\w.\- ]+/g, '_').slice(0, 120);
+  const text = String(m.text || '').slice(0, 5000);
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST', headers: { Authorization: 'Bearer ' + c.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: c.from, to, subject: String(m.subject || 'Report').slice(0, 200), text: text || 'Please find the report attached.', attachments: [{ filename, content: b64 }] }),
+      signal: AbortSignal.timeout(60000)
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return { error: (j && j.message) ? 'Resend: ' + String(j.message).slice(0, 300) : 'The mail service refused it (' + r.status + ').' };
+    return { ok: true, id: j.id || '' };
+  } catch (err) { return { error: 'Could not reach the mail service. Check the internet connection.' }; }
+});

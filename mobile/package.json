@@ -1,9 +1,11 @@
 {
   "name": "scriptdesk-mobile",
   "version": "2.12.12",
-  "description": "ScriptDesk \u2013 AI film script breakdown (iOS and Android app)",
+  "description": "ScriptDesk – AI film script breakdown (iOS and Android app)",
   "private": true,
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "prepare-web": "node -e \"const fs=require('fs');fs.rmSync('www',{recursive:true,force:true});fs.cpSync('../www','www',{recursive:true})\"",
     "icons": "capacitor-assets generate --iconBackgroundColor '#e4e7ec' --splashBackgroundColor '#e4e7ec'",
@@ -19,5 +21,7 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.0.0"
-  }
+  },
+  "license": "UNLICENSED",
+  "copyright": "Copyright (c) 2026 Bhargav Madasu. All rights reserved."
 }

@@ -2,7 +2,7 @@
   "name": "scriptdesk-desktop",
   "productName": "ScriptDesk",
   "version": "2.12.12",
-  "description": "ScriptDesk \u2013 AI film script breakdown (desktop app for Windows and Mac)",
+  "description": "ScriptDesk – AI film script breakdown (desktop app for Windows and Mac)",
   "author": "Bhargav Madasu",
   "main": "main.js",
   "private": true,
@@ -28,7 +28,9 @@
       "main.js",
       "preload.js",
       "google.json",
-      "www/**/*"
+      "www/**/*",
+      "LICENSE",
+      "THIRD-PARTY-NOTICES.md"
     ],
     "win": {
       "target": [
@@ -60,5 +62,7 @@
       "category": "public.app-category.productivity",
       "artifactName": "ScriptDesk-${version}-mac.dmg"
     }
-  }
+  },
+  "license": "UNLICENSED",
+  "copyright": "Copyright (c) 2026 Bhargav Madasu. All rights reserved."
 }

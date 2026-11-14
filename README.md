@@ -135,11 +135,11 @@ Encrypted scripts and the Notepad are locked with a vault passphrase that only y
 30 minutes with no activity (adjustable), and the Account window lists recent sign-ins on every device.
 Setup steps, and how it all works: [SECURITY.md](SECURITY.md).
 
-## What it costs (everything else is free and open source)
+## What it costs
 
 | Part | Cost |
 |---|---|
-| App, Excel/PDF/Word/PDF-import libraries (SheetJS, jsPDF, pdf.js, Mammoth), Electron, Capacitor | Free, open source |
+| Excel/PDF/Word/PDF-import libraries (SheetJS, jsPDF, pdf.js, Mammoth), Electron, Capacitor | Free, open source (see THIRD-PARTY-NOTICES.md) |
 | GitHub repo, Actions builds, Pages hosting (public repo) | Free |
 | Windows .exe, Mac .dmg, Android APK from Releases | Free (unsigned: install warnings, see below) |
 | iPhone / iPad | Free: the web app (Add to Home Screen), or the `.ipa` from Releases installed with xtool and a free Apple ID (reinstall every 7 days). An App Store app needs an Apple Developer account ($99/yr). |
@@ -190,3 +190,8 @@ python3 scripts/build.py --vendor
 cd www && python3 -m http.server 8000      # web app at http://localhost:8000
 cd desktop && npm install && npm start     # desktop app
 ```
+
+
+## Licence
+
+ScriptDesk is proprietary: © 2026 Bhargav Madasu, all rights reserved. See [LICENSE](LICENSE). Bundled open-source parts keep their own licences: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

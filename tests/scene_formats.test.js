@@ -18,5 +18,16 @@ const CASES = [
     const ok = JSON.stringify(got) === JSON.stringify(want); if (!ok) bad++;
     console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : '  got ' + JSON.stringify(got)));
   }
+  // a scene number used twice is flagged: "comes back" when the place is the same, "used twice" otherwise
+  const dup = await pg.evaluate(() => detectScenes('25 EXT. ROADS - NIGHT\nx\n\n26 INT. HOUSE - NIGHT\nx\n\n25. EXT. ROADS - NIGHT\nx\n\n26 EXT. SHOP - DAY\nx\n').scenes.map(s => (s.flags || []).join(' ')));
+  const dupOk = dup.length === 4 && !dup[0] && !dup[1] && /comes back to scene 25/.test(dup[2]) && /used twice/.test(dup[3]);
+  if (!dupOk) bad++; console.log((dupOk ? 'PASS ' : 'FAIL ') + 'repeated scene numbers are flagged' + (dupOk ? '' : '  got ' + JSON.stringify(dup)));
+  // edits are remembered and applied to later AI results
+  const learned = await pg.evaluate(() => { P = newProject(); learn('props', 'gun', 'Revolver'); learn('props', 'chair', ''); learn('art', 'gun', 'Toy gun');
+    return [applyLessons('props', ['Gun', 'Chair', 'Rope']), applyLessons('art', ['gun']), applyLessons('vehicles', ['gun']), lessonsText()]; });
+  const learnOk = JSON.stringify(learned.slice(0, 3)) === JSON.stringify([['Revolver', 'Rope'], ['Toy gun'], ['gun']]) && /Revolver/.test(learned[3]) && /chair/.test(learned[3]);
+  if (!learnOk) bad++; console.log((learnOk ? 'PASS ' : 'FAIL ') + 'lessons from edits are applied' + (learnOk ? '' : '  got ' + JSON.stringify(learned)));
+  const undone = await pg.evaluate(() => { P = newProject(); learn('props', 'gun', 'Revolver'); learn('props', 'Revolver', 'gun'); return (P.lessons || []).length; });
+  if (undone !== 0) bad++; console.log((undone === 0 ? 'PASS ' : 'FAIL ') + 'renaming back forgets the lesson');
   await b.close(); process.exit(bad ? 1 : 0);
 })();

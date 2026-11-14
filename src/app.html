@@ -1952,6 +1952,10 @@ function detectScenes(text){
       else{last=Math.floor(last)+1;s.no=String(last)}}
     else{const n=parseInt(s.no);if(!isNaN(n))last=n}
     lastNo=s.no;s.cues=extractCues(s.text)});
+  /* a number used twice: the script either comes back to that scene after a cutaway, or two scenes share a number */
+  {const first={};scenes.forEach(s=>{const k=U(s.no),f=first[k];if(!f){first[k]=s;return}
+    const back=f.loc&&U(f.loc)===U(s.loc);
+    s.flags=[...(s.flags||[]),back?`The script comes back to scene ${s.no} here (same number and place). Merge it into scene ${s.no} in Full script, or give it its own number.`:`Scene number ${s.no} is used twice in the script. Give one of them a new number.`]})}
   return {front:front.join('\n').trim(),scenes}}
 /* Lines in capitals that are not character names: sound effects, screen or phone text, editing notes, shouted lines */
 const NOT_CUE_W=/(^|[\s'-])(CALLING|CALLS|SCREEN|CUTS?|IMPACT|STOP|SOUNDS?|SFX|NOISE|MUSIC|BGM|TITLES?|CARD|TEXT|INSERT|ANGLE|POV|CLOSE ?UP|SHOTS?|MONTAGE|VFX|SLOW MOTION|FREEZE|BLACKOUT|SILENCE|PAUSE|BEAT|BANG|BOOM|CRASH|THUD|BEEP|KNOCK|HONK|SCREAMS?|RINGING|RINGS|LATER|CONTINUOUS|FLASHBACK|FLASH|MY|ME|YOU|YOUR|WE|US|OUR|IS|ARE|WAS|WERE|AM|DON'?T|CAN'?T|WON'?T|I'?M|IT'?S|THIS|THAT|WHAT|WHY|HOW|HERE|THERE|PLEASE|HELP|KILLED|KILL)(?=$|[\s'-])/;
@@ -2014,6 +2018,16 @@ function renderJob(){const el=$('#job');const run=$('#bRun');if(!JOB){el.hidden=
   $('#bStop').onclick=()=>JOB&&JOB.ctl.abort();run.disabled=true;run.classList.add('rec');run.textContent='Working…'}
 async function ask(prompt,opts){if(!AI.sample)throw {code:'not_granted'};return AI.sample.json(prompt,Object.assign({signal:JOB?JOB.ctl.signal:undefined},opts||{}))}
 
+/* Learning from your edits: when you rename or remove a breakdown item, the project remembers it and every later AI result follows it */
+function learn(k,from,to){if(!P||!LK.includes(k))return false;from=String(from||'').trim();to=String(to||'').trim();const lc=x=>x.toLowerCase();if(!from||lc(from)===lc(to))return false;
+  const L=P.lessons=Array.isArray(P.lessons)?P.lessons:[];
+  const back=L.findIndex(x=>x.k===k&&x.to&&lc(x.to)===lc(from)&&lc(x.from)===lc(to));if(back>=0){L.splice(back,1);return false} /* renamed back: forget it */
+  const old=L.findIndex(x=>x.k===k&&lc(x.from)===lc(from));if(old>=0)L.splice(old,1);
+  L.unshift({k,from,to});if(L.length>200)L.length=200;return true}
+function applyLessons(k,list){const L=((P&&P.lessons)||[]).filter(x=>x.k===k);if(!L.length)return list;const out=[];
+  list.forEach(it=>{const l=L.find(x=>x.from.toLowerCase()===String(it).toLowerCase());if(!l)out.push(it);else if(l.to)out.push(l.to)});return uniq(out)}
+function lessonsText(){const L=((P&&P.lessons)||[]).slice(0,40);if(!L.length)return '';
+  return 'The user corrected earlier results for this film. Follow these corrections in every scene: '+L.map(x=>x.to?`write "${x.from}" as "${x.to}" (${LISTS[x.k]})`:`never list "${x.from}" under ${LISTS[x.k]}`).join('; ')+'.'}
 function rosterText(){return P.artists.map(a=>a.name+(a.aliases&&a.aliases.length?' (also: '+a.aliases.join(', ')+')':'')).join('; ')||'none yet'}
 async function aiCast(){const cnt={};P.scenes.forEach(s=>(s.cues||[]).filter(looksLikeName).forEach(c=>cnt[c]=(cnt[c]||0)+1));
   const cands=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,150).map(([n,c])=>n+' ('+c+' scenes)').join('\n')||'(no character cues detected — find the characters from the text)';
@@ -2026,6 +2040,7 @@ Rules:
 - Merge spelling variants of the same person into one entry (e.g. GOVINDU / GOVINDHU) and list the variants as aliases.
 - Drop anything that is not a character (transitions, song titles, "INTERCUT", sound cues, phone or screen text such as "NOEL CALLING", signs such as "STOP", boards, posters, messages, camera or editing notes).
 - Add important characters that appear in the action text even without dialogue.
+- In Telugu or Tinglish, a word of address or relation spoken in dialogue (amma, nanna, anna, akka, thatha, ammama, mammaya, sir, madam) is not a separate character when it refers to someone already listed: add it to that character's aliases. Keep it as a character only when the script uses it as the character's own cue or name (e.g. "THATHAYA").
 - name: UPPERCASE, the most common spelling.
 - designation: short English description of role or relation, e.g. "LEAD ROLE", "HERO'S FATHER", "VILLAIN", "VILLAGE HEAD".
 - tier: "Primary" for main characters who drive the story (usually 2-8), otherwise "Secondary".
@@ -2079,7 +2094,7 @@ function checkPrompt(s){const cur={desc:s.desc,artists:s.artists.map(aName),cost
   return `You are double-checking a SCRIPT BREAKDOWN for an Indian film. Read the scene below slowly, line by line (it may be in English, Telugu, Tinglish or Hindi), and list everything the CURRENT BREAKDOWN MISSED. Write values in English.
 Check especially: every character who appears, speaks or is described as present (including non-speaking ones); every object an actor touches or uses; vehicles; animals; crowd and junior artistes; costume or look changes (wet, blood, uniform, period); special effects; weapons; anything needing VFX.
 Known characters (use these exact names): ${rosterText()}
-Rules: add only things clearly in this scene; never repeat items already in the breakdown; never invent; keep items short (1-6 words), no commas inside items.
+Rules: add only things clearly in this scene; never repeat items already in the breakdown; never invent; keep items short (1-6 words), no commas inside items. In Telugu or Tinglish dialogue, words of address or relation (amma, nanna, anna, akka, thatha, ammama, mammaya, sir, madam) are not new characters unless the script uses the word as that character's name.${lessonsText()&&' '+lessonsText()}
 desc_fix: a corrected 1-2 sentence single-line-order description ONLY if the current description is wrong or misses the main event; otherwise "".
 Reply with only JSON: {"artists":[],"juniors":[],"extras":[],"props":[],"art":[],"costumes":[{"artist":"","costume":""}],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"desc_fix":""}
 
@@ -2090,7 +2105,7 @@ SCENE ${s.no} | ${s.heading||eff(s)+' '+s.loc}
 ${cutBytes(s.text,Math.min(24000,aiBudget()*0.6))}`}
 function mergeCheck(s,r){if(!r||typeof r!=='object')return 0;const L=s.locked||{};let n=0;const arr=a=>Array.isArray(a)?a.map(cleanItem).filter(Boolean):[];
   if(!L.artists){const add=namesToIds(arr(r.artists),'Found by AI check').filter(id=>!s.artists.includes(id));if(add.length){s.artists=byAppearance(s,[...s.artists,...add]);n+=add.length}}
-  LK.forEach(k=>{if(L[k])return;const have=new Set((s[k]||[]).map(x=>norm(x)));const add=arr(r[k]).filter(x=>!have.has(norm(x)));if(add.length){s[k]=uniq([...(s[k]||[]),...add]).slice(0,80);n+=add.length}});
+  LK.forEach(k=>{if(L[k])return;const have=new Set((s[k]||[]).map(x=>norm(x)));const add=applyLessons(k,arr(r[k])).filter(x=>!have.has(norm(x)));if(add.length){s[k]=uniq([...(s[k]||[]),...add]).slice(0,80);n+=add.length}});
   if(!L.costumes&&Array.isArray(r.costumes))r.costumes.forEach(c=>{if(!c||!c.costume)return;const a=findArtist(c.artist);const key=a?a.id:'n:'+U(c.artist);if(s.costumes.some(x=>(x.a||'n:'+x.n)===key))return;s.costumes.push(a?{a:a.id,n:'',c:cleanItem(c.costume)}:{a:null,n:U(c.artist),c:cleanItem(c.costume)});n++});
   const fix=String(r.desc_fix||'').trim();if(fix&&!L.desc&&fix.length>10){s.desc=fix.slice(0,400);n++}
   return n}
@@ -2116,8 +2131,10 @@ For EACH scene below return:
 - song: null, or {"d":"short description"} if a song or montage happens in this scene.
 - story: objects, costume details or marks the story depends on that appear in this scene: something shown pointedly that matters later (a Chekhov's gun), a recurring object, a clue or a false clue. 1-6 words each, e.g. "Rock hammer", "Red mitten with LEO stitched". They need continuity care. [] if none.
 - flags: short notes about anything unclear in the scene (empty if clear).
+- In Telugu or Tinglish dialogue, words of address or relation (amma, nanna, anna, akka, thammudu, chelli, babai, pinni, mama, mammaya, atta, thatha, thathaya, ammamma, ammama, sir, madam, garu, ra, orey) are not new characters. Map each to the known character it refers to, and list it as an artist only when the script itself uses that word as the character's name (a cue such as "THATHAYA").
+- Read Tinglish dialogue for props, vehicles and places as well: "aa scooter ni" means a scooter is in the scene; "locker", "phone", "rod" named in dialogue and used in the scene are props.
 Rules: read each scene line by line and do not skip details from the middle or end of a scene; never invent story details; keep list items short (1-6 words) and never put commas inside an item; use [] when nothing applies. Return one entry for EVERY scene id.
-Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"story":[],"fight":null,"song":null,"flags":[]}]}
+${lessonsText()&&lessonsText()+'\n'}Reply with only JSON: {"scenes":[{"id":"","title":"","desc":"","loc":"","ie":"","time":"","timeline":"","artists":[],"juniors":[],"extras":[],"setup":"","props":[],"art":[],"costumes":[],"makeup":[],"vehicles":[],"animals":[],"vfx":[],"sfx":[],"spl_sets":[],"spl_props":[],"equipment":[],"technicians":[],"story":[],"fight":null,"song":null,"flags":[]}]}
 
 SCENES:
 ${batch.map(s=>`=== id: ${s.id} | scene ${s.no} | heading: ${s.heading||eff(s)+' '+s.loc}${sceneSpeakers(s).length?`\nSpeaking characters (must be in artists): ${sceneSpeakers(s).join(', ')}`:''}
@@ -2131,7 +2148,7 @@ function applyBreakdown(s,r){const L=s.locked||{};const arr=a=>Array.isArray(a)?
   setIf('timeline',cleanItem(r.timeline)==='Present'?'':cleanItem(r.timeline));
   if(!L.story&&Array.isArray(r.story)){const v=arr(r.story);if(v.length||!s.story)s.story=uniq([...(s.story||[]),...v]).slice(0,20)}
   if(!L.artists){const ids=namesToIds(arr(r.artists),'Found by AI');s.artists=byAppearance(s,[...sureCast(s),...ids])}
-  LK.forEach(k=>{if(!L[k])s[k]=arr(r[k])});
+  LK.forEach(k=>{if(!L[k])s[k]=applyLessons(k,arr(r[k]))});
   if(!L.costumes&&Array.isArray(r.costumes)){s.costumes=r.costumes.filter(c=>c&&c.costume).map(c=>{const a=findArtist(c.artist);return {a:a?a.id:null,n:a?'':U(c.artist),c:cleanItem(c.costume)}})}
   if(!L.fight){s.fight=r.fight&&r.fight.d?{unit:(s.fight&&s.fight.unit)||'',d:String(r.fight.d).trim(),a:arr(r.fight.artists).map(U).join(', '),f:cleanItem(r.fight.fighters),r:String(r.fight.needs||'').trim()}:null}
   if(!L.song){s.song=r.song&&r.song.d?{unit:(s.song&&s.song.unit)||'',d:String(r.song.d).trim()}:null}
@@ -2384,7 +2401,7 @@ function showSaved(pages){const el=$('#savedPill');const names=pages.map(id=>PG[
 function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];return `<div class="lastnote" id="lastNote"${c?'':' hidden'}>${c?`<span>Last change</span><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ghost" data-act="history">History (${P.changes.length})</button>`:''}</div>`}
 function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml()}
 function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
-  <div class="modal-b"><p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
+  <div class="modal-b">${(P.lessons||[]).length?`<details class="sset"><summary>Learned from your edits (${P.lessons.length})</summary><p class="small muted" style="margin:6px 0">The AI follows these in every scene it reads for this film.</p><ul class="small" style="margin:0 0 8px;padding-left:18px">${P.lessons.map(l=>`<li>${esc(LISTS[l.k])}: ${l.to?`"${esc(l.from)}" is written as "${esc(l.to)}"`:`"${esc(l.from)}" is never listed`}</li>`).join('')}</ul><button class="btn sm" data-act="forgetLessons">Forget all of these</button></details>`:''}<p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
 function describeEdit(el,oldV,newV,sids){
   if(el._desc){const d=el._desc;el._desc=null;return [d,'prod']}
   if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);const f=el.dataset.f;return [`Sc ${s?s.no:''} · ${FL[f]||f}: "${cut(oldV)||'—'}" → "${cut(newV)||'—'}"`,f]}
@@ -2399,11 +2416,12 @@ function commit(el){if(!P)return;const v=el.isContentEditable?el.innerText:el.va
   if(el.dataset.s&&el.dataset.f==='artists'){const s=P.scenes.find(x=>x.id===el.dataset.s);if(s){const was=s.artists.map(aName),now=splitList(v).map(x=>U(String(x).replace(/\((V\.?O\.?|O\.?S\.?|CONT'?D)\)/ig,'')));
     if(was.length===now.length){const d=was.map((x,i)=>[x,now[i]]).filter(([x,y])=>norm(x)!==norm(y));if(d.length===1&&!findArtist(d[0][1])){const a=findArtist(d[0][0]);if(a){const sw={a,from:d[0][0],to:U(d[0][1])};setTimeout(()=>askRename(sw,s,()=>{snapshot();setSceneField(s,'artists',v);logChange(`Sc ${s.no} · Artists: "${cut(was.join(', '))}" → "${cut(now.join(', '))}"`,'artists');touch([s.id]);render(true)}),0);return}}}}}
   if(el.dataset.pk){const r=prodCommit(el,v);if(r){el._desc=r.desc;sids=r.sids||[];changed=true}}
-  else if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);setSceneField(s,el.dataset.f,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id]}}
+  else if(el.dataset.s&&el.dataset.f){const s=P.scenes.find(x=>x.id===el.dataset.s);if(!s)return;const before=JSON.stringify(s);const pre=JSON.stringify(P);const lf=el.dataset.f,was=LK.includes(lf)?(s[lf]||[]).slice():null;setSceneField(s,lf,v);if(JSON.stringify(s)!==before){undoStack.push(pre);changed=true;sids=[s.id];
+      if(was){const now=s[lf]||[];if(was.length===now.length){const d=was.map((x,i)=>[x,now[i]]).filter(([x,y])=>x.toLowerCase()!==String(y).toLowerCase());if(d.length===1&&learn(lf,d[0][0],d[0][1]))el._learned=1}}}}
   else if(el.dataset.art){const a=A(el.dataset.art);if(!a)return;const f=el.dataset.af;let val=String(v).trim();if(f==='name'){val=U(val);if(!val){el.innerText=a.name;return}const other=findArtist(val);if(other&&other.id!==a.id){toast(`${val} already exists. Use "Merge into" to combine them.`);el.innerText=a.name;return}}
     if(f==='designation')val=U(val);if(a[f]!==val){undoStack.push(JSON.stringify(P));if(f==='name'&&a.name){sids=renameArtistAll(a,val);el._renamed=sids.length}else a[f]=val;a.locked=1;if(f==='tier'||f==='name')needsRender=true;changed=true}}
   else if(el.dataset.ren){const old=el.dataset.ren;const nv=U(v);if(nv&&nv!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{if(U(s.loc)===old){s.loc=nv;s.locked.loc=1;sids.push(s.id)}});changed=true;needsRender=true}}
-  else if(el.dataset.item){const k=el.dataset.cat,old=el.dataset.item.toLowerCase();const nv=cleanItem(v);if(nv.toLowerCase()!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{const i=(s[k]||[]).findIndex(x=>x.toLowerCase()===old);if(i>=0){if(nv)s[k][i]=nv;else s[k].splice(i,1);s[k]=uniq(s[k]);s.locked[k]=1;sids.push(s.id)}});changed=true;needsRender=true}}
+  else if(el.dataset.item){const k=el.dataset.cat,old=el.dataset.item.toLowerCase();const nv=cleanItem(v);if(nv.toLowerCase()!==old){undoStack.push(JSON.stringify(P));P.scenes.forEach(s=>{const i=(s[k]||[]).findIndex(x=>x.toLowerCase()===old);if(i>=0){if(nv)s[k][i]=nv;else s[k].splice(i,1);s[k]=uniq(s[k]);s.locked[k]=1;sids.push(s.id)}});if(sids.length&&learn(k,el.dataset.item,nv))el._learned=1;changed=true;needsRender=true}}
   else if(el.dataset.cs){const s=P.scenes.find(x=>x.id===el.dataset.cs);if(!s)return;const key=el.dataset.ca;const t=String(v).trim();const i=s.costumes.findIndex(c=>(c.a||'n:'+c.n)===key);const cur=i>=0?s.costumes[i].c:'';
     if(t!==cur){undoStack.push(JSON.stringify(P));if(i>=0){if(t)s.costumes[i].c=t;else s.costumes.splice(i,1)}else if(t){s.costumes.push(key.startsWith('n:')?{a:null,n:key.slice(2),c:t}:{a:key,n:'',c:t})}s.locked.costumes=1;sids=[s.id];changed=true;needsRender=true}}
   else if(el.dataset.pf){const id=el.dataset.pa;P.profiles[id]=P.profiles[id]||{};if(P.profiles[id][el.dataset.pf]!==v){undoStack.push(JSON.stringify(P));P.profiles[id][el.dataset.pf]=v;changed=true}}
@@ -2411,6 +2429,7 @@ function commit(el){if(!P)return;const v=el.isContentEditable?el.innerText:el.va
     if(f==='pname'||f==='psum'||f==='pscenes'){const p=P.structure.parts[+el.dataset.i];if(!p)return;const k={pname:'name',psum:'summary',pscenes:'scenes'}[f];if(p[k]!==v){undoStack.push(JSON.stringify(P));p[k]=v;changed=true}}
     else if(P.structure[f]!==v){undoStack.push(JSON.stringify(P));P.structure[f]=v;changed=true}}
   if(changed){if(undoStack.length>40)undoStack.shift();$('#bUndo').disabled=false;const oldV=el._orig!=null?el._orig:'';const d=describeEdit(el,oldV,String(v).trim(),sids);logChange(d[0],d[1]);touch(sids);renderChecksBtn();
+    if(el._learned){el._learned=0;const l=P.lessons[0];toast(l.to?`Remembered: "${cut(l.from,30)}" is written as "${cut(l.to,30)}". The AI follows this in other scenes too.`:`Remembered: "${cut(l.from,30)}" is not listed under ${LISTS[l.k]}. The AI follows this in other scenes too.`,5000)}
     if(el.dataset.f&&['no','loc','eff','artists','crowd','costumes'].includes(el.dataset.f))needsRender=true}}
 let needsRender=false;
 const isEd=el=>el&&!(el.closest&&el.closest('#wrDoc'))&&(el.isContentEditable||el.matches&&el.matches('textarea[data-pf],textarea[data-st],input[data-st],input[data-pf]'));
@@ -5205,6 +5224,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(act==='desig')desigJob();
   if(act==='rmFakes'){const fk=fakeArtists();if(!fk.length)return;snapshot();const sids=removeArtists(fk.map(a=>a.id));logChange(`Removed ${fk.length} non-character name${fk.length===1?'':'s'} from the artist list: ${fk.map(a=>a.name).join(', ')}`,'artistName');touch(sids);render(true);toast(`Removed ${fk.length}. Undo brings them back.`)}
   if(act==='history')openHistory();
+  if(act==='forgetLessons'){snapshot();P.lessons=[];logChange('Forgot what was learned from edits','scenes',true);touch([]);openHistory();toast('Forgotten. Undo brings them back.')}
   if(act==='settings')openSettings();
   if(act==='install')doInstall();
   if(act==='genProfiles')profileJob();
@@ -5303,8 +5323,10 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
     catch(e){info.textContent=errMsg(e);btn.disabled=false}}}
 function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no location',(!s.ie||!s.time)&&'effect incomplete',sc.filter(x=>U(x.no)===U(s.no)).length>1&&'duplicate number'].filter(Boolean);
   const nw=sc.filter(s=>warn(s).length).length;
+  const jumps=[];{const nums=sc.map(s=>parseInt(s.no)).filter(n=>!isNaN(n));for(let i=1;i<nums.length;i++)if(nums[i]-nums[i-1]>1)jumps.push(nums[i-1]+' to '+nums[i])}
   openModal(`<div class="modal-h"><h2>Scene list check</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b"><p class="small">${sc.length} scenes found${nw?`, <b style="color:var(--warn)">${nw} need a look</b>`:''}. Fix numbers, effects and locations here (click to edit). To split or merge scenes, use Edit in Full script.</p>
+  ${jumps.length?`<div class="banner small" style="display:block">Scene numbers jump from ${esc(jumps.slice(0,6).join(', from '))}${jumps.length>6?' and '+(jumps.length-6)+' more places':''}. Check that no scene is missing from the script.</div>`:''}
   <div class="tw" style="max-height:52vh;overflow:auto"><table class="t rt"><thead><tr><th>Sc No</th><th>Effect / Time</th><th>Location</th><th>Starts with</th></tr></thead><tbody>${sc.map(s=>`<tr><td class="no" data-l="Sc No">${sv(s,'no',s.no)}</td><td class="eff" data-l="Effect">${sv(s,'eff',eff(s))}</td><td class="loc" data-l="Location">${sv(s,'loc',s.loc)}${warn(s).map(w=>` <span class="tag warn">${w}</span>`).join('')}</td><td data-l="Starts with" class="small muted">${esc(s.text.replace(/\s+/g,' ').slice(0,90))}</td></tr>`).join('')}</tbody></table></div></div>
   <div class="modal-f"><span class="small muted" style="margin-right:auto">${AI.sample?'The breakdown takes a few minutes for a full script.':'AI is off in this view. Reports will fill in as you type.'}</span><button class="btn" data-close>${fresh?'Later':'Done'}</button>${AI.sample?`<button class="btn pri" data-act="startBreakdown">Start AI breakdown</button>`:''}</div>`)}
 
@@ -5533,9 +5555,9 @@ const IDB={db:null,open(){if(this.db)return this.db;this.db=new Promise((res,rej
 /* ---- AI services: Claude (paid) or free options (Gemini, Groq, OpenRouter free models, Ollama on this computer, any OpenAI-compatible server) ---- */
 const PROVIDERS={
   ollama:{group:'local',name:'Ollama · on this computer',tag:'Free · offline · private',key:false,base:'http://localhost:11434',budget:30000,workers:1,models:{default:''},keyUrl:'https://ollama.com/download',
-    help:'Runs open-source AI models on your own computer: free, works without internet, and your script never leaves the computer. 1) Install Ollama free from ollama.com and open it. 2) Download a model once, e.g. in a terminal: <code>ollama pull qwen3:8b</code> (8–16 GB RAM) or a larger one if your computer allows. 3) Press "Load models" and pick it. In the ScriptDesk desktop app this just works. For the web app version only, allow it once with <code>OLLAMA_ORIGINS=*</code> (Mac: <code>launchctl setenv OLLAMA_ORIGINS "*"</code>; Windows: add an environment variable OLLAMA_ORIGINS = *), then restart Ollama. Smaller models are slower and less accurate with Telugu than Claude or Gemini. Tip: Ollama on your computer can also run the big free cloud models: run <code>ollama signin</code>, then <code>ollama pull gpt-oss:120b-cloud</code>, and pick that model here (needs internet for those models).'},
-  ollamacloud:{group:'free',probe:1,name:'Ollama Cloud · free key',tag:'Free tier · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
-    help:'Large open models (gpt-oss 120B, DeepSeek, Gemma, Qwen and more) run by Ollama on its servers, so nothing to install and no powerful computer needed. Free key: sign up at ollama.com (email only, no card) → Settings → API keys → Create, paste it here, press "Load models" and pick one (gpt-oss:120b is a good start). Free use has hourly and weekly limits; ScriptDesk waits and retries when it hits them. Your script is sent to Ollama\'s servers. Works in the ScriptDesk desktop and Android apps. If the web app version says the connection was blocked, use the desktop app, or use "Ollama · on this computer" signed in to your Ollama account (see its help).'},
+    help:'Runs open-source AI models on your own computer: free, works without internet, and your script never leaves the computer. It needs about 8 GB of memory (16 GB is better) and is slower and less accurate than the big online models, mostly with Telugu, so check its reports. <ol style="margin:6px 0 6px 18px;padding:0"><li>Install Ollama free from ollama.com and open it (it sits near the clock).</li><li>Download a model once: press Start, type <code>cmd</code>, press Enter, then type <code>ollama pull qwen3:8b</code> and wait for it to finish (about 5 GB, needs internet this one time).</li><li>Press <b>Check Ollama on this computer</b> below. ScriptDesk finds the model, tests it and connects it.</li></ol>After that it works with the internet off. Web app version only: allow it once with an environment variable <code>OLLAMA_ORIGINS</code> = <code>*</code>, then restart Ollama; the desktop app needs nothing.'},
+  ollamacloud:{group:'paid',probe:1,name:'Ollama Cloud · key',tag:'Needs paid credits · big models',key:true,keyHint:'paste your ollama.com API key',base:'https://ollama.com',budget:60000,workers:1,models:{default:'gpt-oss:120b'},keyUrl:'https://ollama.com/settings/keys',
+    help:'Large open models (gpt-oss 120B, DeepSeek, Gemma, Qwen and more) run by Ollama on its servers, so nothing to install and no powerful computer needed. <b>This is not free through a key:</b> when tested in November 2026, new ollama.com keys were accepted but every model answered "Add usage credits or subscribe". Use it only if you have bought Ollama credits or a plan: ollama.com → Settings → API keys → Create, paste the key here and press "Connect key". Your script is sent to Ollama\'s servers. For free AI use NVIDIA, Gemini or Groq keys, or "Ollama · on this computer" (free and offline).'},
   gemini:{group:'free',name:'Google Gemini',tag:'Free tier',key:true,keyHint:'AIza…',base:'https://generativelanguage.googleapis.com',budget:150000,workers:1,models:{default:'gemini-flash-latest'},keyUrl:'https://aistudio.google.com/apikey',
     help:'Free key with a Google account: open aistudio.google.com/apikey → Create API key, paste it here, press "Load models" and pick a Flash model. The Gemini 3 Flash models are the best free choice for Telugu and Tinglish; free use has daily limits set per project (see AI Studio). Privacy: on the free tier Google may use what you send to improve its products, so avoid it for confidential scripts.'},
   groq:{group:'free',jsonMode:1,maxOut:4096,name:'Groq',tag:'Free tier',key:true,keyHint:'gsk_…',base:'https://api.groq.com/openai/v1',budget:20000,workers:1,models:{default:'openai/gpt-oss-120b'},keyUrl:'https://console.groq.com/keys',
@@ -5638,7 +5660,7 @@ function poolRestMsg(c){const now=Date.now(),ids=new Set((c.pool||[]).filter(e=>
   if(cl)return `All your AI keys are resting: ${restTxt(cl,now)}. Add another free key in Settings, or press Test there to try again now.`;
   if(capped.length)return 'Your free keys have used today\'s allowance. Add another free key in Settings, or try again tomorrow.';return ''}
 /* a model that does not answer within this time is skipped (and rests) so one slow free model can never freeze a whole job */
-const TRY_MS=120000;
+const TRY_MS=120000,TRY_LOCAL_MS=900000; /* a model on this computer can need many minutes for one long scene */
 function withTimeout(outer,ms){const ac=new AbortController();let to=false;const t=setTimeout(()=>{to=true;ac.abort()},ms);const on=()=>ac.abort();if(outer){if(outer.aborted)ac.abort();else outer.addEventListener('abort',on,{once:true})}
   return {signal:ac.signal,timedOut:()=>to,done:()=>{clearTimeout(t);if(outer)outer.removeEventListener('abort',on)}}}
 /* one line per key: why it is not answering, so one empty paid key can never hide the real reason the free ones failed */
@@ -5654,9 +5676,10 @@ function poolStatusMsg(c,last){const now=Date.now(),rows=[];
 async function poolCall(prompt,opts,c){let last=null;const tried=new Set();
   const ROUNDS=4;for(let round=0;round<ROUNDS;round++){
     for(;;){const L=poolCands(c).filter(x=>!tried.has(MKEY(x.e,x.m)));if(!L.length)break;const {e,m}=L[0];tried.add(MKEY(e,m));let o=opts;
-      for(let a=0;a<2;a++){const tf=withTimeout(opts.signal,opts.timeoutMs||TRY_MS);try{const r=await callOnce(prompt,Object.assign({},o,{signal:tf.signal}),entryCfg(e,m),PROVIDERS[e.provider]);tf.done();POOLLAST=e.id;POOLMODEL=m;delete COOL[MKEY(e,m)];delete COOL[e.id];
+      const lim=opts.timeoutMs||(e.provider==='ollama'?TRY_LOCAL_MS:TRY_MS);
+      for(let a=0;a<2;a++){const tf=withTimeout(opts.signal,lim);try{const r=await callOnce(prompt,Object.assign({},o,{signal:tf.signal}),entryCfg(e,m),PROVIDERS[e.provider]);tf.done();POOLLAST=e.id;POOLMODEL=m;delete COOL[MKEY(e,m)];delete COOL[e.id];
           poolPatch(e.id,z=>{const d=dayKey();z.used=z.used&&z.used.d===d?{d,n:z.used.n+1}:{d,n:1};z.last=m});return r}
-        catch(x){tf.done();if(x&&x.code==='cancelled'&&tf.timedOut())x={code:'timeout',message:'No answer from '+m+' after '+Math.round((opts.timeoutMs||TRY_MS)/1000)+' seconds'};
+        catch(x){tf.done();if(x&&x.code==='cancelled'&&tf.timedOut())x={code:'timeout',message:'No answer from '+m+' after '+Math.round(lim/1000)+' seconds'};
           if(x&&x.code==='max_tokens'&&!o._small){o=Object.assign({},o,{maxOut:4096,_small:1});continue}
           if(x&&x.code==='cancelled')throw x;if(opts.signal&&opts.signal.aborted)throw {code:'cancelled'};last=x;failFor(e,m,x);break}}}
     const now=Date.now(),ids=new Set(poolEntries(c).map(e=>e.id)),ts=Object.entries(COOL).filter(([k,v])=>ids.has(k.split('|')[0])&&v.until>now).map(([,v])=>v.until);if(!ts.length)break;
@@ -5776,12 +5799,14 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
   </div>`);
   const msg=t=>{$('#sMsg').textContent=t};
   const body=()=>{const p=PROVIDERS[cur];const mc=c.model[cur]||{};
-    $('#sBody').innerHTML=`<div class="banner info small" style="display:block;line-height:1.55">${p.help}${p.keyUrl?` <a href="${p.keyUrl}" target="_blank" rel="noopener">${cur==='ollama'?'Download Ollama':cur==='ollamacloud'?'Get a free Ollama key':'Get a key'}</a>`:''}</div>
+    $('#sBody').innerHTML=`<div class="banner info small" style="display:block;line-height:1.55">${p.help}${p.keyUrl?` <a href="${p.keyUrl}" target="_blank" rel="noopener">${cur==='ollama'?'Download Ollama':cur==='ollamacloud'?'Get an Ollama key':'Get a key'}</a>`:''}</div>
     ${p.key?`<div class="fieldbox"><label for="sKey">API key${cur==='custom'?' (if needed)':''}</label><input type="password" id="sKey" autocomplete="off" spellcheck="false" placeholder="${esc(p.keyHint||'')}" value="${esc(c.keys[cur]||'')}"></div>`:''}
     ${cur==='ollama'||cur==='custom'||p.editBase?`<div class="fieldbox"><label for="sBase">Address</label><input type="text" id="sBase" value="${esc(c.base[cur]||p.base)}"></div>`:''}
     <div class="two"><div class="fieldbox"><label for="sModel">Model <span class="small muted">(optional: leave empty and Connect key finds free ones)</span></label><input type="text" id="sModel" list="sModels" placeholder="${esc(p.models.default||'press Load models')}" value="${esc(mc.default||'')}"></div>
     <div class="fieldbox"><label for="sModel2">Model for profiles &amp; structure (optional)</label><input type="text" id="sModel2" list="sModels" placeholder="same as Model" value="${esc(mc.complex||'')}"></div></div>
-    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div><div id="sChk"></div>`;
+    <datalist id="sModels"></datalist><div><button class="btn sm" id="sLoad">Load models</button> <span class="small muted" id="sLoadMsg"></span></div>
+    ${cur==='ollama'?`<div style="margin-top:10px"><button class="btn pri" id="sOll">Check Ollama on this computer</button><div class="small" id="sOllMsg" role="status" style="margin-top:8px;line-height:1.55"></div></div>`:''}<div id="sChk"></div>`;
+    const ob=$('#sOll');if(ob)ob.onclick=()=>ollamaCheck(c,collect,ob,$('#sOllMsg'));
     $('#sLoad').onclick=async()=>{collect();$('#sLoadMsg').textContent='Loading…';try{const ids=await listModels(c);$('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');$('#sLoadMsg').textContent=ids.length?`${ids.length} models found.`+(p.probe?'':' Click the Model box to pick one.'):'No models found.';}catch(e){$('#sLoadMsg').textContent=errMsg(e)}};
   };
   /* Your AI keys: one row per key, its free models, today's use, and its state */
@@ -5841,6 +5866,24 @@ function openSettings(note){const c=aiCfg();const isIOS=/iPhone|iPad|iPod/i.test
     return {note,refind}};
   $('#sSave').onclick=()=>{collect();{const kb=keyShapeBad(cur,c.keys[cur]);if(kb){msg(kb);return}}const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();msg((aiReady()?'Saved. AI is ready.':'Saved. '+(PROVIDERS[cur].key&&cur!=='custom'&&!c.keys[cur]?'Add a key to use AI.':'Press "Connect key" to find free models.'))+note);if(refind)runFind(refind)};
   $('#sTest').onclick=async()=>{collect();{const kb=keyShapeBad(cur,c.keys[cur]);if(kb){msg(kb);return}}const {note,refind}=syncPool();c.pool=aiCfg().pool;lsSet('ai',c);refreshAI();poolUI();if(refind){msg(note.trim());await runFind(refind)}msg('Testing…');try{await aiCall('Reply with the single word OK.',{modelTier:'quick'});msg(`✓ Works${POOLMODEL&&poolOn(aiCfg())?' with '+POOLMODEL:''}.`+(refind?'':note))}catch(e){msg(errMsg(e)+svcSaid(e)+(refind?'':note))}poolUI()}}
+
+/* One button for the offline AI: is Ollama running, is a model downloaded, does it answer. Each failure says the one step that is missing. */
+const OLL_SKIP=/embed|cloud|rerank|whisper/i;
+async function ollamaCheck(c,collect,btn,out){const say=h=>{out.innerHTML=h};collect();btn.disabled=true;say('Looking for Ollama on this computer…');
+  try{let ids;
+    try{ids=(await listModels(c)).filter(i=>!OLL_SKIP.test(i))}
+    catch(e){say(e&&e.code==='ollama_origin'?esc(ERRS.ollama_origin):'<b>Step 1 is missing:</b> Ollama is not running. Install it free from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a>, open it, then press this button again. If it is installed, open Ollama from the Start menu first.');return}
+    if(!ids.length){say('Ollama is running. <b>Step 2 is missing:</b> no model is downloaded yet. Press Start, type <code>cmd</code>, press Enter, type <code>ollama pull qwen3:8b</code>, wait for it to finish, then press this button again.');return}
+    $('#sModels').innerHTML=ids.map(i=>`<option value="${esc(i)}">`).join('');
+    const typed=$('#sModel').value.trim(),rate=m=>accScore({provider:'ollama',model:m}),pick=ids.includes(typed)?typed:ids.slice().sort((x,y)=>rate(y)-rate(x))[0];$('#sModel').value=pick;collect();
+    say(`Ollama is running with ${ids.length} model${ids.length===1?'':'s'}. Testing <b>${esc(pick)}</b>… the first answer can take a minute while the model loads.`);
+    const t0=Date.now();
+    try{await callOnce('Reply with the single word OK.',{modelTier:'quick'},{provider:'ollama',keys:{},base:{ollama:c.base.ollama||''},model:{ollama:{default:pick,complex:''}}},PROVIDERS.ollama)}
+    catch(e){say(`Ollama is running, but <b>${esc(pick)}</b> did not answer: ${esc(errMsg(e))} Try a smaller model (<code>ollama pull qwen3:4b</code>) if this computer has less than 8 GB of memory.`);return}
+    const secs=Math.max(1,Math.round((Date.now()-t0)/1000));
+    say(`✓ <b>${esc(pick)}</b> answered in ${secs} second${secs===1?'':'s'}. It is connected below under "Your AI keys" and works with the internet off.${secs>40?' This computer is slow with this model, so a full script will take a long time: leave it running.':''}${ids.length>1?' Other models found: '+esc(ids.filter(i=>i!==pick).slice(0,5).join(', '))+'.':''}`);
+    const add=$('#sAdd');if(add)add.click()}
+  finally{btn.disabled=false}}
 
 let installEvt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;const b=$('#bInstall');if(b)b.hidden=false});

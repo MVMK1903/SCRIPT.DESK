@@ -1116,6 +1116,20 @@ body[data-page=gear] tr:hover .il{transform:none}
 .sb-leg{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--muted);margin:0 0 8px}.sb-leg>span:first-child{font-weight:600;color:var(--fg)}.sb-leg .k{white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .sb-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--sbc)}
 .sb-leg i[data-sb=de]{--sbc:var(--sb-de)}.sb-leg i[data-sb=di]{--sbc:var(--sb-di)}.sb-leg i[data-sb=ne]{--sbc:var(--sb-ne)}.sb-leg i[data-sb=ni]{--sbc:var(--sb-ni)}
+.dayboard{margin:0 0 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.dayboard.unsched{border-style:dashed}
+.db-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;padding:9px 12px;background:var(--fill);border-bottom:1px solid var(--line)}
+.db-empty{padding:12px;color:var(--muted);font-size:13px}
+.st-over{color:var(--warn,#c0392b);font-weight:600}
+.strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 12px;border-bottom:1px solid var(--line-2);border-left:5px solid var(--sbc,transparent)}
+.strip:last-child{border-bottom:0}
+.strip[data-sb=de]{--sbc:var(--sb-de)}.strip[data-sb=di]{--sbc:var(--sb-di)}.strip[data-sb=ne]{--sbc:var(--sb-ne)}.strip[data-sb=ni]{--sbc:var(--sb-ni)}
+.st-no{font-weight:700;min-width:34px}
+.st-eff{font-size:12px;padding:1px 6px;border-radius:4px}
+.st-loc{flex:1;min-width:110px}
+.st-meta{font-size:12px;color:var(--muted);white-space:nowrap}
+.st-ord button{padding:2px 7px;font-size:12px;line-height:1.2}
+.strip .sbm{margin-left:auto;max-width:170px}
 .btn.ghost:not(:disabled){color:var(--accent-text)}
 .search::placeholder,input::placeholder,textarea::placeholder{color:var(--faint)}
 @media (max-width:820px){
@@ -1691,6 +1705,7 @@ const PAGES=[
  {g:'Shooting',id:'storyboard',nav:'Storyboard',t:'Storyboard'},
  {g:'Shooting',id:'sched',nav:'Shooting schedule',t:'Shooting schedule'},
  {g:'Shooting',id:'order',nav:'Shoot order',t:'Shoot order'},
+ {g:'Shooting',id:'stripboard',nav:'Stripboard',t:'Stripboard'},
  {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
  {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'},
  {g:'Shooting',id:'sides',nav:'Actor sides',t:'Actor sides'},
@@ -4333,6 +4348,23 @@ R.order=()=>{pruneSched();const S=SCH(),dates=dayDates(),nums=dayNums(),shoot=S.
   return {html:pageHead('Shoot order','The order of scenes and shots for each shoot day, with times. AI can suggest the order; you can type or move anything.',pick)+ds.map(tbl).join(''),
     exp:{orient:'landscape',sheets:[{name:'Shoot order',cols:[{h:'#',w:4},{h:'Time',w:12},{h:'Sc No',w:7},{h:'Shots',w:16},{h:'Location',w:20},{h:'Effect / Time',w:12},{h:'Pages',w:6},{h:'Scene description',w:42},{h:'Cast',w:24},{h:'Notes',w:18}],rows}]}}};
 
+/* ---------- Page: Stripboard (visual colour-coded strips moved between days) ---------- */
+R.stripboard=()=>{pruneSched();const S=SCH(),nums=dayNums(),dates=dayDates();
+  if(!P.scenes.length)return {html:pageHead('Stripboard','Every scene as a colour-coded strip, grouped by shoot day.')+'<div class="empty"><b>Import a script first.</b>Then plan days in Shooting schedule and arrange the strips here.</div>'};
+  const dmap=sceneDay();const shoot=S.days.filter(d=>d.type==='shoot');const tgt=+S.target||0;
+  const mover=(sid,cur)=>`<select class="mini sbm" data-movesc="${sid}" aria-label="Move scene to a day"><option value=""${cur?'':' selected'}>Not scheduled</option>${shoot.map(d=>`<option value="${d.id}"${d.id===cur?' selected':''}>${esc(dayLabel(d,nums,dates))}</option>`).join('')}<option value="+">+ New day</option></select>`;
+  const strip=(sc,dayId,canOrder)=>{const k=sbKey(eff(sc));return `<div class="strip" data-sb="${k}"><span class="st-no">${esc(sc.no)}</span><span class="st-eff effc" data-sb="${k}">${esc(eff(sc)||'—')}</span><span class="st-loc">${esc(sc.loc||'—')}</span><span class="st-meta">${fmtPg(pgE(sc))} pg · ${sc.artists.length} cast</span>${canOrder?`<span class="st-ord"><button class="btn sm" data-pa="oUp" data-day="${dayId}" data-sid="${sc.id}" aria-label="Move earlier">↑</button><button class="btn sm" data-pa="oDown" data-day="${dayId}" data-sid="${sc.id}" aria-label="Move later">↓</button></span>`:''}${mover(sc.id,dayId)}</div>`};
+  const unsched=P.scenes.filter(s2=>!dmap[s2.id]);
+  const leg=`<div class="sb-leg" role="group" aria-label="Colour code"><span>Colour code</span>${SB_KEYS.map(k=>`<span class="k"><i data-sb="${k[0]}"></i>${k[1]}</span>`).join('')}</div>`;
+  const board=shoot.map(d=>{const sc=dayScenes(d),pg=dayPages(d);const over=tgt&&pg/8>tgt?` · <span class="st-over">over ${tgt} pg target</span>`:'';
+    return `<section class="dayboard"><div class="db-h"><b>${esc(dayLabel(d,nums,dates))}</b><span class="small muted">${sc.length} scene${sc.length===1?'':'s'} · ${fmtPg(pg)} pg${over}</span></div>${sc.length?sc.map(x=>strip(x,d.id,sc.length>1)).join(''):'<div class="db-empty">No scenes yet — move strips here.</div>'}</section>`}).join('');
+  const html=pageHead('Stripboard','Every scene as a coloured strip. Move a strip to another day, or reorder it within a day. The colours are the standard production code.')+leg+
+    (unsched.length?`<section class="dayboard unsched"><div class="db-h"><b>Not scheduled</b><span class="small muted">${unsched.length} scene${unsched.length===1?'':'s'} · ${fmtPg(unsched.reduce((a,x)=>a+pgE(x),0))} pg</span></div>${unsched.map(x=>strip(x,'',false)).join('')}</section>`:'')+
+    (shoot.length?board:'<div class="empty"><b>No shoot days yet.</b>Open Shooting schedule and press "Plan with AI" or "Quick plan", then arrange the strips here.</div>');
+  const exp={orient:'portrait',sheets:[{name:'Stripboard',cols:[{h:'Sc No',w:8},{h:'Effect / Time',w:14},{h:'Location',w:34},{h:'Pages',w:8},{h:'Cast',w:7}],
+    rows:[...(unsched.length?[{group:'NOT SCHEDULED'},...unsched.map(x=>[x.no,eff(x),x.loc,fmtPg(pgE(x)),x.artists.length])]:[]),
+      ...shoot.flatMap(d=>[{group:dayLabel(d,nums,dates).toUpperCase()+'  ·  '+fmtPg(dayPages(d))+' pg'},...dayScenes(d).map(x=>[x.no,eff(x),x.loc,fmtPg(pgE(x)),x.artists.length])])]}]};
+  return {html,exp}};
 /* ---------- Page: Day out of days ---------- */
 function doodData(){const S=SCH(),days=S.days,X=P.doodx||{},work={};
   days.forEach(d=>{if(d.type==='shoot')dayCast(d).forEach(a=>{(work[a]=work[a]||new Set()).add(d.id)})});

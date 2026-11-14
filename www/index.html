@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-Qs6CzXgU3oEdRsYdPcV17clikd1UwbYAjS87KtrnUdY=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-AqiqPxKq/TYtKviyP6r3MrgDfbGAOOZhDsx5SVJAihg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -5417,20 +5417,26 @@ async function exportPage(kind){if(!P||!lastExp){toast('Open a report first.');r
 
 /* ================= Email a report ================= */
 const MAIL_RE=/^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/;
-function openMail(){if(!P||!lastExp){toast('Open a report first, then press Email.');return}const name=PG[page]?PG[page].t:'Report';const saved=(lsGet('mailTo')||'');
+function openMail(){if(!P||!lastExp){toast('Open a report first, then press Email.');return}const name=PG[page]?PG[page].t:'Report';const saved=(lsGet('mailTo')||'');const wp=wmPrefs();
   openModal(`<div class="modal-h"><h2>Email "${esc(name)}"</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b"><label class="small">To (one or more emails, comma separated)<input id="mTo" class="inp" type="text" inputmode="email" autocomplete="email" value="${esc(saved)}" placeholder="name@example.com"></label>
   <label class="small">Subject<input id="mSub" class="inp" type="text" value="${esc((P.title||'Film')+' - '+name)}"></label>
   <label class="small">Message<textarea id="mMsg" class="inp" rows="3">Please find the ${esc(name)} for ${esc(P.title||'the film')} attached.</textarea></label>
-  <label class="small">File<select id="mFmt" class="inp"><option value="xlsx">Excel (.xlsx)</option><option value="pdf">PDF (.pdf)</option></select></label>
+  <label class="small">File<select id="mFmt" class="inp"><option value="pdf">PDF (.pdf)</option><option value="xlsx">Excel (.xlsx)</option></select></label>
+  <div id="mWm" class="fieldbox" style="margin-top:8px"><label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="mWmOn" ${wp.on?'checked':''}> <b>Add a watermark</b></label>
+  <div class="sset-g" style="margin:6px 0 0"><label class="small">Text<input id="mWmT" class="inp" type="text" maxlength="60" value="${esc(wp.text)}" placeholder="CONFIDENTIAL or a person's name"></label>
+  <label class="small">Placement<select id="mWmP" class="inp">${WM_POS.map(([k,l])=>`<option value="${k}"${wp.pos===k?' selected':''}>${l}</option>`).join('')}</select></label></div>
+  <label class="small" style="display:flex;gap:8px;align-items:center;margin-top:4px"><input type="checkbox" id="mWmD" ${wp.date?'checked':''}> Add date and time</label></div>
   <p class="small muted" id="mHint">${NATIVE||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)?'Your mail app opens with the file attached.':'The file is saved, then your mail app opens. Attach the saved file to the mail.'}</p></div>
   <div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="mGo">Send</button></div>`);
-  $('#mGo').onclick=sendMail}
+  const fm=()=>{$('#mWm').style.display=$('#mFmt').value==='pdf'?'':'none'};$('#mFmt').onchange=fm;fm();$('#mGo').onclick=sendMail}
 async function sendMail(){const to=$('#mTo').value.split(/[,;\s]+/).filter(Boolean);if(!to.length||to.some(x=>!MAIL_RE.test(x))){toast('Enter a valid email address.');return}
   const sub=$('#mSub').value.trim(),msg=$('#mMsg').value.trim(),kind=$('#mFmt').value,name=PG[page]?PG[page].t:'Report',btn=$('#mGo');btn.disabled=true;btn.textContent='Preparing…';
   try{let fn,data;if(kind==='xlsx'){await loadXlsx();const wb=XLSX.utils.book_new();lastExp.sheets.forEach(sh=>addSheet(wb,sh,name,DOC_CLASSIC.includes(page)));fn=fname(name,'xlsx');data=XLSX.write(wb,{bookType:'xlsx',type:'array'})}
-    else{const pdf=await buildPdf(name,lastExp,DOC_CLASSIC.includes(page));fn=fname(name,'pdf');data=await pdfOut(pdf)}
-    if(data==null){btn.disabled=false;btn.textContent='Send';return}
+    else{const pdf=await buildPdf(name,lastExp,DOC_CLASSIC.includes(page));fn=fname(name,'pdf');
+      const wo=Object.assign(wmPrefs(),{on:$('#mWmOn').checked,text:$('#mWmT').value,pos:$('#mWmP').value,date:$('#mWmD').checked});
+      if(wo.on&&!wmText(wo)){toast('Type the watermark text, or untick the watermark.');btn.disabled=false;btn.textContent='Send';return}
+      if(wo.on)wmApply(pdf,wo);data=pdf.output('arraybuffer')}
     lsSet('mailTo',to.join(', '));
     const blob=new Blob([data],{type:mimeOf(fn)});const file=new File([blob],fn,{type:blob.type});
     if(!NATIVE&&/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:sub,text:msg});closeModal();return}catch(e){if(e&&e.name==='AbortError'){btn.disabled=false;btn.textContent='Send';return}}}

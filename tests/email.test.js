@@ -20,9 +20,15 @@ const { chromium } = require('playwright');
     document.getElementById('mTo').value = 'a@b.com, c@d.in'; document.getElementById('mFmt').value = 'xlsx';
     await sendMail();
     o.saved = saved[0] || ''; o.mailto = decodeURIComponent(href).startsWith('mailto:a@b.com,c@d.in?subject=Demo - ');
+    // PDF with watermark: stub pdf builder, check the watermark is applied with the typed text
+    let wm = null; buildPdf = async () => ({ output: () => new Uint8Array(2) }); wmApply = (d, w) => { wm = w; };
+    openMail(); o.pdfDefault = document.getElementById('mFmt').value === 'pdf';
+    document.getElementById('mTo').value = 'a@b.com'; document.getElementById('mWmOn').checked = true;
+    document.getElementById('mWmT').value = 'FOR RAAHUL'; document.getElementById('mWmP').value = 'diag';
+    await sendMail(); o.wm = !!wm && wm.text === 'FOR RAAHUL' && wm.pos === 'diag'; o.pdfSaved = /\.pdf$/.test(saved[saved.length - 1] || '');
     HTMLAnchorElement.prototype.click = oc; return o;
   });
   console.log(r, errs);
-  const ok = r.btn && r.modal && r.rejectsBad && /\.xlsx$/.test(r.saved) && r.mailto && !errs.length;
+  const ok = r.btn && r.modal && r.rejectsBad && /\.xlsx$/.test(r.saved) && r.mailto && r.pdfDefault && r.wm && r.pdfSaved && !errs.length;
   console.log(ok ? 'PASS email' : 'FAIL email'); await b.close(); process.exit(ok ? 0 : 1);
 })();

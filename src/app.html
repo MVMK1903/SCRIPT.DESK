@@ -5345,8 +5345,8 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   <div class="fieldbox"><label for="iText">Or paste the script</label><textarea id="iText" placeholder="SCENE NO 1  EXT. VILLAGE - DAY&#10;&#10;..."></textarea></div>
   <p class="small muted" id="iInfo">After import you'll check the scene list before the AI breakdown starts.</p>
  </div>
- <div class="modal-f"><button class="btn" id="iSample">Load sample</button><span style="flex:1"></span><button class="btn pri" id="iGo">Find scenes</button></div>`);
-  let scanned=null;const info=$('#iInfo');
+ <div class="modal-f"><button class="btn" id="iSample">Load sample</button><span id="iNote" class="small" role="status" style="flex:1;min-width:0;padding:0 8px;color:var(--warn)"></span><button class="btn pri" id="iGo">Find scenes</button></div>`);
+  let scanned=null,oneOk=false;const info=$('#iInfo');const say=m=>{info.textContent=m;const n=$('#iNote');if(n)n.textContent=m};
   const handle=async f=>{if(!f)return;info.textContent='Reading '+f.name+'…';scanned=null;
     try{const r=await fileToText(f,m=>info.textContent=m);
       if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
@@ -5361,16 +5361,16 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   $('#iGo').onclick=async()=>{const btn=$('#iGo');btn.disabled=true;
     try{let text=$('#iText').value;
       if(scanned){text=await ocrPdf(scanned,m=>info.textContent=m);$('#iText').value=text}
-      if(!text.trim()){info.textContent='Choose a file or paste the script first.';btn.disabled=false;return}
+      if(!text.trim()){say('Choose a file or paste the script first.');btn.disabled=false;return}
       const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       let r=detectScenes(text);
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
-      let aiWhy='';if(weak&&AI.sample){info.textContent='Claude is finding the scenes…';JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
-      if(!r.scenes.length){info.textContent='No scenes could be found without the AI.'+(aiWhy?' The AI could not help: '+aiWhy:' Check the text, or add scene headings like "SCENE NO 1  EXT. VILLAGE - DAY".');btn.disabled=false;return}
+      let aiWhy='';if(weak&&AI.sample){say('Claude is finding the scenes…');JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
+      if(!r.scenes.length){if(oneOk){r={front:'',scenes:[newScene({no:'1',heading:'',text:text.trim(),cues:extractCues(text)})]}}else{oneOk=true;say('No scene headings found'+(aiWhy?' (AI: '+aiWhy+')':'')+'. Add headings like "SCENE NO 1  EXT. VILLAGE - DAY", or press Find scenes again to import everything as one scene.');btn.disabled=false;return}}
       await flushNow();
       P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}
-    catch(e){info.textContent=errMsg(e);btn.disabled=false}}}
+    catch(e){say(errMsg(e));btn.disabled=false}}}
 function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no location',(!s.ie||!s.time)&&'effect incomplete',sc.filter(x=>U(x.no)===U(s.no)).length>1&&'duplicate number'].filter(Boolean);
   const nw=sc.filter(s=>warn(s).length).length;
   const jumps=[];{const nums=sc.map(s=>parseInt(s.no)).filter(n=>!isNaN(n));for(let i=1;i<nums.length;i++)if(nums[i]-nums[i-1]>1)jumps.push(nums[i-1]+' to '+nums[i])}

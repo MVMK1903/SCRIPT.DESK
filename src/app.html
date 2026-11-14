@@ -5414,12 +5414,20 @@ function openMail(){if(!P||!lastExp){toast('Open a report first, then press Emai
   const fm=()=>{$('#mWm').style.display=$('#mFmt').value==='pdf'?'':'none'};$('#mFmt').onchange=fm;fm();$('#mGo').onclick=sendMail;mailSetup()}
 let MAILCFG=null;
 async function mailSetup(){if(!window.sdMail)return;const box=$('#mSetup'),hint=$('#mHint');if(!box)return;try{MAILCFG=await window.sdMail.cfg()}catch(e){MAILCFG=null}if(!MAILCFG||!$('#mSetup'))return;
-  if(MAILCFG.has){hint.innerHTML='Sends straight from <b>'+esc(MAILCFG.from)+'</b>. <a href="#" id="mReset">Change email setup</a>';$('#mReset').onclick=async e=>{e.preventDefault();await window.sdMail.clear();MAILCFG.has=false;mailSetup()};box.style.display='none';return}
-  box.style.display='';hint.textContent='Set up once, then every report sends straight from the app.';
-  box.innerHTML=`<p class="small"><b>One-time email setup</b> (free): make an account at resend.com, verify your domain there, create an API key, and paste it here. Without a verified domain, Resend only delivers to your own address.</p>
+  MAILCFG.ready=!!(MAILCFG.gmail||MAILCFG.has);
+  if(MAILCFG.gmail){hint.innerHTML='Sends straight from your Gmail <b>'+esc(MAILCFG.gmail)+'</b>. <a href="#" id="mReset">Disconnect</a>';$('#mReset').onclick=async e=>{e.preventDefault();await window.sdMail.gdisconnect();mailSetup()};box.style.display='none';return}
+  if(MAILCFG.has){hint.innerHTML='Sends straight from <b>'+esc(MAILCFG.from)+'</b>. <a href="#" id="mReset">Change email setup</a>';$('#mReset').onclick=async e=>{e.preventDefault();await window.sdMail.clear();mailSetup()};box.style.display='none';return}
+  box.style.display='';hint.textContent='Connect once, then every report sends straight from the app.';
+  box.innerHTML=`<p class="small"><b>Send from your Gmail</b>: the app only gets permission to send mail, not to read it.</p>
+  <button class="btn pri sm" id="mGmail"${MAILCFG.gmailReady?'':' disabled'}>Connect Gmail</button>${MAILCFG.gmailReady?'':'<p class="small muted">Gmail sign-in is not set up in this build.</p>'}
+  <details style="margin-top:10px"><summary class="small">Or use Resend instead</summary>
+  <p class="small">Account at resend.com with a verified domain, then an API key.</p>
   <label class="small">Resend API key<input id="mKey" class="inp" type="password" autocomplete="off" placeholder="re_..."></label>
   <label class="small">Send from<input id="mFrom" class="inp" type="text" autocomplete="off" placeholder="ScriptDesk <reports@yourdomain.com>"></label>
-  <button class="btn sm" id="mSave" style="margin-top:6px">Save email setup</button>`;
+  <button class="btn sm" id="mSave" style="margin-top:6px">Save Resend setup</button></details>`;
+  const gb=$('#mGmail');if(gb)gb.onclick=async()=>{gb.disabled=true;gb.textContent='Waiting for Google…';const r=await window.sdMail.gconnect();
+    if(r&&r.error){toast(r.error==='scope_denied'?'Gmail permission was not given.':r.error==='access_denied'?'Gmail connection was cancelled.':'Could not connect Gmail ('+r.error+').');gb.disabled=false;gb.textContent='Connect Gmail';return}
+    toast('Gmail connected: '+r.email);mailSetup()};
   $('#mSave').onclick=async()=>{const r=await window.sdMail.save($('#mKey').value,$('#mFrom').value);if(r&&r.error){toast(r.error);return}toast('Email is set up.');mailSetup()}}
 async function sendMail(){const to=$('#mTo').value.split(/[,;\s]+/).filter(Boolean);if(!to.length||to.some(x=>!MAIL_RE.test(x))){toast('Enter a valid email address.');return}
   const sub=$('#mSub').value.trim(),msg=$('#mMsg').value.trim(),kind=$('#mFmt').value,name=PG[page]?PG[page].t:'Report',btn=$('#mGo');btn.disabled=true;btn.textContent='Preparing…';
@@ -5429,7 +5437,7 @@ async function sendMail(){const to=$('#mTo').value.split(/[,;\s]+/).filter(Boole
       if(wo.on&&!wmText(wo)){toast('Type the watermark text, or untick the watermark.');btn.disabled=false;btn.textContent='Send';return}
       if(wo.on)wmApply(pdf,wo);data=pdf.output('arraybuffer')}
     lsSet('mailTo',to.join(', '));
-    if(window.sdMail&&MAILCFG&&MAILCFG.has){btn.textContent='Sending…';const r=await window.sdMail.send({to,subject:sub,text:msg,filename:fn,b64:b64(data)});
+    if(window.sdMail&&MAILCFG&&(MAILCFG.has||MAILCFG.gmail)){btn.textContent='Sending…';const r=await window.sdMail.send({to,subject:sub,text:msg,filename:fn,b64:b64(data)});
       if(r&&r.ok){closeModal();toast('Sent to '+to.join(', '));return}
       toast((r&&r.error)||'The email could not be sent.');btn.disabled=false;btn.textContent='Send';return}
     const blob=new Blob([data],{type:mimeOf(fn)});const file=new File([blob],fn,{type:blob.type});

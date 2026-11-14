@@ -21,5 +21,7 @@ contextBridge.exposeInMainWorld('sdMail', {
   cfg: () => ipcRenderer.invoke('sd:mail:cfg'),
   save: (key, from) => ipcRenderer.invoke('sd:mail:save', key, from),
   clear: () => ipcRenderer.invoke('sd:mail:clear'),
+  gconnect: () => ipcRenderer.invoke('sd:mail:gconnect'),
+  gdisconnect: () => ipcRenderer.invoke('sd:mail:gdisconnect'),
   send: (m) => ipcRenderer.invoke('sd:mail:send', m)
 });

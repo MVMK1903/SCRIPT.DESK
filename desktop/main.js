@@ -37,6 +37,8 @@ ipcMain.handle('sd:write', (e, rel, payload) => {
 // use it. The long-lived refresh token stays in this main process, encrypted with the operating system's own key store
 // (Windows DPAPI / macOS Keychain). The page only ever receives short-lived access tokens.
 const GCFG = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'google.json'), 'utf8')); } catch (e) { return {}; } })();
+const GMAIL_SCOPES = 'openid email https://www.googleapis.com/auth/gmail.send';
+const M = { at: null, exp: 0, rt: null, email: '' }; // Gmail sending session, kept apart from the Drive/sign-in session
 const G_SCOPES = 'openid email profile https://www.googleapis.com/auth/drive.appdata';
 const G_FILE = () => path.join(app.getPath('userData'), 'google-session.bin');
 const G = { at: null, exp: 0, rt: null, profile: null, pending: null };
@@ -87,6 +89,11 @@ function gSignIn(win, hint, mode) {
       try {
         const j = await gTokenCall({ code: u.searchParams.get('code'), code_verifier: verifier, grant_type: 'authorization_code', redirect_uri: redirect });
         const scopes = String(j.scope || '').split(' ');
+        if (mode === 'gmail') {
+          if (!scopes.includes('https://www.googleapis.com/auth/gmail.send') || !j.refresh_token) throw Object.assign(new Error('scope_denied'), { code: 'scope_denied' });
+          const prof = gIdProfile(j.id_token); M.rt = j.refresh_token; M.email = prof.email; M.at = j.access_token; M.exp = Date.now() + (j.expires_in || 3600) * 1000; mSave();
+          resolve({ email: M.email }); return;
+        }
         if (idOnly) { const prof = gIdProfile(j.id_token); resolve({ profile: prof, idt: j.id_token }); return; }
         G.profile = gIdProfile(j.id_token); G.at = j.access_token; G.exp = Date.now() + (j.expires_in || 3600) * 1000;
         if (j.refresh_token) G.rt = j.refresh_token;
@@ -100,7 +107,7 @@ function gSignIn(win, hint, mode) {
     srv.on('error', (e) => { if (!done) { finish(); reject(e); } });
     srv.listen(0, '127.0.0.1', () => {
       redirect = `http://127.0.0.1:${srv.address().port}/callback`;
-      const q = new URLSearchParams({ client_id: GCFG.desktopClientId, redirect_uri: redirect, response_type: 'code', scope: idOnly ? 'openid email profile' : G_SCOPES, code_challenge: challenge, code_challenge_method: 'S256', state, access_type: idOnly ? 'online' : 'offline', prompt: 'select_account' });
+      const q = new URLSearchParams({ client_id: GCFG.desktopClientId, redirect_uri: redirect, response_type: 'code', scope: mode === 'gmail' ? GMAIL_SCOPES : (idOnly ? 'openid email profile' : G_SCOPES), code_challenge: challenge, code_challenge_method: 'S256', state, access_type: (idOnly && mode !== 'gmail') ? 'online' : 'offline', prompt: mode === 'gmail' ? 'consent select_account' : 'select_account' });
       if (hint && /^[^@\s]+@[^@\s]+$/.test(hint)) q.set('login_hint', hint);
       shell.openExternal('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
     });
@@ -201,19 +208,44 @@ function allowAI() {
 
 app.whenReady().then(() => {
   harden();
-  gLoad();
+  gLoad(); mLoad();
   allowAI();
   createWindow();
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 
+
+// Gmail: the page can connect a Gmail account (send-only permission), ask who is connected, disconnect, and send. Tokens never reach the page.
+const GM_FILE = () => path.join(app.getPath('userData'), 'gmail-session.bin');
+function mLoad() { try { if (!safeStorage.isEncryptionAvailable()) return; const s = JSON.parse(safeStorage.decryptString(fs.readFileSync(GM_FILE()))); M.rt = s.rt || null; M.email = s.email || ''; } catch (e) { } }
+function mSave() { try { if (!M.rt) { fs.rmSync(GM_FILE(), { force: true }); return; } if (!safeStorage.isEncryptionAvailable()) return; fs.writeFileSync(GM_FILE(), safeStorage.encryptString(JSON.stringify({ rt: M.rt, email: M.email })), { mode: 0o600 }); } catch (e) { } }
+async function mAccess() {
+  if (M.at && Date.now() < M.exp - 60000) return M.at;
+  if (!M.rt) throw Object.assign(new Error('signed_out'), { code: 'signed_out' });
+  try { const j = await gTokenCall({ refresh_token: M.rt, grant_type: 'refresh_token' }); M.at = j.access_token; M.exp = Date.now() + (j.expires_in || 3600) * 1000; return M.at; }
+  catch (e) { if (e.code === 'invalid_grant' || e.code === 'unauthorized_client') { M.rt = null; M.at = null; M.email = ''; mSave(); throw Object.assign(new Error('signed_out'), { code: 'signed_out' }); } throw Object.assign(new Error('offline'), { code: 'offline' }); }
+}
+const wrap76 = (s) => s.replace(/(.{76})/g, '$1\r\n');
+const hdr = (s) => /^[\x20-\x7e]*$/.test(s) ? s : '=?UTF-8?B?' + Buffer.from(s, 'utf8').toString('base64') + '?=';
+function mimeBuild(from, to, subject, text, filename, b64) {
+  const bd = 'sd_' + crypto.randomBytes(12).toString('hex');
+  const ct = /\.pdf$/i.test(filename) ? 'application/pdf' : /\.xlsx$/i.test(filename) ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/octet-stream';
+  return [
+    'From: ' + from, 'To: ' + to.join(', '), 'Subject: ' + hdr(subject), 'MIME-Version: 1.0', 'Content-Type: multipart/mixed; boundary="' + bd + '"', '',
+    '--' + bd, 'Content-Type: text/plain; charset="UTF-8"', 'Content-Transfer-Encoding: base64', '', wrap76(Buffer.from(text, 'utf8').toString('base64')),
+    '--' + bd, 'Content-Type: ' + ct + '; name="' + filename + '"', 'Content-Disposition: attachment; filename="' + filename + '"', 'Content-Transfer-Encoding: base64', '', wrap76(b64),
+    '--' + bd + '--', ''
+  ].join('\r\n');
+}
+ipcMain.handle('sd:mail:gconnect', async (e) => { try { const r = await gSignIn(BrowserWindow.fromWebContents(e.sender), '', 'gmail'); return { ok: true, email: r.email }; } catch (err) { return { error: String(err.code || err.message || 'error').slice(0, 60) }; } });
+ipcMain.handle('sd:mail:gdisconnect', async () => { const t = M.rt; M.rt = null; M.at = null; M.email = ''; mSave(); if (t) { try { await fetch('https://oauth2.googleapis.com/revoke', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ token: t }) }); } catch (e) { } } return true; });
 // Sending a report by email through Resend (https://resend.com). The API key stays in this process, encrypted with the system key store;
 // the page can only save it, clear it, ask whether one exists, and send a mail. It is never handed back to the page.
 const MAIL_FILE = () => path.join(app.getPath('userData'), 'mail-config.bin');
 const MAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
 function mailLoad() { try { if (!safeStorage.isEncryptionAvailable()) return null; return JSON.parse(safeStorage.decryptString(fs.readFileSync(MAIL_FILE()))); } catch (e) { return null; } }
-ipcMain.handle('sd:mail:cfg', () => { const c = mailLoad(); return { has: !!(c && c.key && c.from), from: c ? c.from || '' : '', keyStore: safeStorage.isEncryptionAvailable() }; });
+ipcMain.handle('sd:mail:cfg', () => { const c = mailLoad(); return { has: !!(c && c.key && c.from), from: c ? c.from || '' : '', gmail: M.rt ? M.email : '', gmailReady: !!GCFG.desktopClientId, keyStore: safeStorage.isEncryptionAvailable() }; });
 ipcMain.handle('sd:mail:save', (e, key, from) => {
   key = String(key || '').trim(); from = String(from || '').trim().slice(0, 200);
   if (!/^re_[A-Za-z0-9_\-]{10,200}$/.test(key)) return { error: 'That does not look like a Resend API key (it starts with re_).' };
@@ -223,12 +255,21 @@ ipcMain.handle('sd:mail:save', (e, key, from) => {
 });
 ipcMain.handle('sd:mail:clear', () => { try { fs.unlinkSync(MAIL_FILE()); } catch (e) { } return true; });
 ipcMain.handle('sd:mail:send', async (e, m) => {
-  const c = mailLoad(); if (!c || !c.key) return { error: 'Email is not set up yet.' };
-  m = m || {}; const to = Array.isArray(m.to) ? m.to.map(x => String(x).trim()).filter(Boolean).slice(0, 10) : [];
+  m = m || {}; const viaGmail = !!M.rt; const c = mailLoad(); if (!viaGmail && (!c || !c.key)) return { error: 'Email is not set up yet.' }; const to = Array.isArray(m.to) ? m.to.map(x => String(x).trim()).filter(Boolean).slice(0, 10) : [];
   if (!to.length || to.some(x => !MAIL_RE.test(x))) return { error: 'Enter a valid email address.' };
   const b64 = String(m.b64 || ''); if (!b64 || b64.length > 30 * 1024 * 1024) return { error: 'The file is empty or too large to email.' };
   const filename = String(m.filename || 'report').replace(/[^\w.\- ]+/g, '_').slice(0, 120);
   const text = String(m.text || '').slice(0, 5000);
+  if (viaGmail) {
+    try {
+      const tok = await mAccess();
+      const raw = b64url(mimeBuild(M.email, to, String(m.subject || 'Report').slice(0, 200), text || 'Please find the report attached.', filename, b64));
+      const r = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', { method: 'POST', headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' }, body: JSON.stringify({ raw }), signal: AbortSignal.timeout(90000) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) return { error: r.status === 403 || r.status === 401 ? 'Gmail refused it. Disconnect and connect Gmail again.' : 'Gmail: ' + String((j.error && j.error.message) || r.status).slice(0, 200) };
+      return { ok: true, id: j.id || '' };
+    } catch (err) { return { error: err && err.code === 'signed_out' ? 'Gmail is disconnected. Connect it again.' : 'Could not reach Gmail. Check the internet connection.' }; }
+  }
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST', headers: { Authorization: 'Bearer ' + c.key, 'Content-Type': 'application/json' },

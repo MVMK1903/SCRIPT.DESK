@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-mU/eS3BZVforhUaliLGu6f11YWftayHu1MadC9AOcPA=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-4aXinGUYJm6OSX+Bh9WSSeA5OKd8eEmcqOzeC83o+GM=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1918,8 +1918,12 @@ const U=s=>String(s||'').trim().toUpperCase();
 const norm=s=>U(s).replace(/\(.*?\)/g,'').replace(/[^A-Z0-9ऀ-෿ ]+/g,' ').replace(/\s+/g,' ').trim();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const today=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-function lsGet(k){try{if(SEC.on&&PROT(k)){const m=SEC.mem[k];return m?JSON.parse(m):null}const v=localStorage.getItem(LSKEY+k);return v?JSON.parse(v):null}catch(e){return null}}
-function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.mem[k]=JSON.stringify(v);secPersist(k);return true}localStorage.setItem(LSKEY+k,JSON.stringify(v));return true}catch(e){return false}}
+/* Desktop app: AI keys go to the OS-encrypted store and are merged back on read, so page storage never holds them. */
+function aiKeysOn(k){try{return k==='ai'&&typeof sdKeys!=='undefined'&&sdKeys&&sdKeys.get().ok}catch(e){return false}}
+function aiKeysIn(k,v){if(!v||!aiKeysOn(k))return v;try{const s=sdKeys.get().keys||{};const o=JSON.parse(JSON.stringify(v));o.keys=Object.assign({},o.keys||{},s.k||{});(o.pool||[]).forEach(e=>{if(s.p&&s.p[e.id])e.key=s.p[e.id]});return o}catch(e){return v}}
+function aiKeysOut(k,v){if(!v||!aiKeysOn(k))return v;try{const o=JSON.parse(JSON.stringify(v)),store={k:{},p:{}};Object.entries(o.keys||{}).forEach(([a,b])=>{if(b)store.k[a]=b});delete o.keys;(o.pool||[]).forEach(e=>{if(e.key)store.p[e.id]=e.key;delete e.key});if(sdKeys.set(store))return o;return v}catch(e){return v}}
+function lsGet(k){try{if(SEC.on&&PROT(k)){const m=SEC.mem[k];return m?JSON.parse(m):null}const v=localStorage.getItem(LSKEY+k);return aiKeysIn(k,v?JSON.parse(v):null)}catch(e){return null}}
+function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.mem[k]=JSON.stringify(v);secPersist(k);return true}localStorage.setItem(LSKEY+k,JSON.stringify(aiKeysOut(k,v)));return true}catch(e){return false}}
 function lsDel(k){try{if(SEC.on&&PROT(k)){delete SEC.mem[k]}localStorage.removeItem(LSKEY+k)}catch(e){}}
 /* ---------- Security: encryption on this device (AES-256-GCM, key from your passphrase) ---------- */
 const SEC={on:false,unlocked:false,dek:null,cfg:null,mem:{},pend:{},chain:Promise.resolve()};
@@ -6629,7 +6633,7 @@ function loginOtp(fx,u){return new Promise(res=>{
       if(kind==='email'&&LOGIN_OTP_NOSERVER(c)&&!loginOtpOn()){toast('The sign-in code needs the ScriptDesk server, which is not set up yet. Signing in with your password only.',7000);end(true);return}
       m(LOGIN_OTP_NOSERVER(c)?'Could not reach the ScriptDesk server. Check your internet connection and send again.':otpErr(e))}};
   const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=d.querySelector('#loGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
-    try{if(via==='sms'){await fx.phoneConfirm(code);await fx.call('loginOtpSms',{})}else await fx.call('loginOtpVerify',{code});
+    try{if(via==='sms'){await fx.phoneConfirm(code);await fx.call('loginOtpSms',{})}else await fx.call('loginOtpVerify',{code});try{await fx.reload()}catch(e){}
       try{localStorage.setItem(LOGIN_OTP_KEY,'1')}catch(e){}end(true)}
     catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
   d.querySelector('#loGo').onclick=go;d.querySelector('#loRe').onclick=()=>send(via);

@@ -268,6 +268,21 @@ ipcMain.handle('sd:mail:gconnect', async (e) => { try { const r = await gSignIn(
 ipcMain.handle('sd:mail:gdisconnect', async () => { const t = M.rt; M.rt = null; M.at = null; M.email = ''; mSave(); if (t) { try { await fetch('https://oauth2.googleapis.com/revoke', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ token: t }) }); } catch (e) { } } return true; });
 // Sending a report by email through Resend (https://resend.com). The API key stays in this process, encrypted with the system key store;
 // the page can only save it, clear it, ask whether one exists, and send a mail. It is never handed back to the page.
+
+// AI provider keys: kept encrypted here; the page's storage holds only the settings, never the keys.
+const AI_FILE = () => path.join(app.getPath('userData'), 'ai-keys.bin');
+function aiLoad() { try { if (!keyStoreOk()) return null; return JSON.parse(safeStorage.decryptString(fs.readFileSync(AI_FILE()))); } catch (e) { return null; } }
+ipcMain.on('sd:ai:get', (e) => { e.returnValue = trusted(e) ? { ok: keyStoreOk(), keys: aiLoad() || {} } : { ok: false, keys: {} }; });
+ipcMain.on('sd:ai:set', (e, o) => {
+  if (!trusted(e) || !keyStoreOk()) { e.returnValue = false; return; }
+  try {
+    const clean = { k: {}, p: {} };
+    for (const [a, b] of Object.entries((o && o.k) || {})) if (typeof b === 'string' && b.length < 512) clean.k[String(a).slice(0, 40)] = b;
+    for (const [a, b] of Object.entries((o && o.p) || {})) if (typeof b === 'string' && b.length < 512) clean.p[String(a).slice(0, 64)] = b;
+    fs.writeFileSync(AI_FILE(), safeStorage.encryptString(JSON.stringify(clean)), { mode: 0o600 });
+    e.returnValue = true;
+  } catch (err) { e.returnValue = false; }
+});
 const MAIL_FILE = () => path.join(app.getPath('userData'), 'mail-config.bin');
 const MAIL_SENDS = [];
 const MAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;

@@ -1899,8 +1899,12 @@ const U=s=>String(s||'').trim().toUpperCase();
 const norm=s=>U(s).replace(/\(.*?\)/g,'').replace(/[^A-Z0-9ऀ-෿ ]+/g,' ').replace(/\s+/g,' ').trim();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const today=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-function lsGet(k){try{if(SEC.on&&PROT(k)){const m=SEC.mem[k];return m?JSON.parse(m):null}const v=localStorage.getItem(LSKEY+k);return v?JSON.parse(v):null}catch(e){return null}}
-function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.mem[k]=JSON.stringify(v);secPersist(k);return true}localStorage.setItem(LSKEY+k,JSON.stringify(v));return true}catch(e){return false}}
+/* Desktop app: AI keys go to the OS-encrypted store and are merged back on read, so page storage never holds them. */
+function aiKeysOn(k){try{return k==='ai'&&typeof sdKeys!=='undefined'&&sdKeys&&sdKeys.get().ok}catch(e){return false}}
+function aiKeysIn(k,v){if(!v||!aiKeysOn(k))return v;try{const s=sdKeys.get().keys||{};const o=JSON.parse(JSON.stringify(v));o.keys=Object.assign({},o.keys||{},s.k||{});(o.pool||[]).forEach(e=>{if(s.p&&s.p[e.id])e.key=s.p[e.id]});return o}catch(e){return v}}
+function aiKeysOut(k,v){if(!v||!aiKeysOn(k))return v;try{const o=JSON.parse(JSON.stringify(v)),store={k:{},p:{}};Object.entries(o.keys||{}).forEach(([a,b])=>{if(b)store.k[a]=b});delete o.keys;(o.pool||[]).forEach(e=>{if(e.key)store.p[e.id]=e.key;delete e.key});if(sdKeys.set(store))return o;return v}catch(e){return v}}
+function lsGet(k){try{if(SEC.on&&PROT(k)){const m=SEC.mem[k];return m?JSON.parse(m):null}const v=localStorage.getItem(LSKEY+k);return aiKeysIn(k,v?JSON.parse(v):null)}catch(e){return null}}
+function lsSet(k,v){try{if(SEC.on&&PROT(k)){if(!SEC.unlocked)return false;SEC.mem[k]=JSON.stringify(v);secPersist(k);return true}localStorage.setItem(LSKEY+k,JSON.stringify(aiKeysOut(k,v)));return true}catch(e){return false}}
 function lsDel(k){try{if(SEC.on&&PROT(k)){delete SEC.mem[k]}localStorage.removeItem(LSKEY+k)}catch(e){}}
 /* ---------- Security: encryption on this device (AES-256-GCM, key from your passphrase) ---------- */
 const SEC={on:false,unlocked:false,dek:null,cfg:null,mem:{},pend:{},chain:Promise.resolve()};
@@ -6610,7 +6614,7 @@ function loginOtp(fx,u){return new Promise(res=>{
       if(kind==='email'&&LOGIN_OTP_NOSERVER(c)&&!loginOtpOn()){toast('The sign-in code needs the ScriptDesk server, which is not set up yet. Signing in with your password only.',7000);end(true);return}
       m(LOGIN_OTP_NOSERVER(c)?'Could not reach the ScriptDesk server. Check your internet connection and send again.':otpErr(e))}};
   const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=d.querySelector('#loGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
-    try{if(via==='sms'){await fx.phoneConfirm(code);await fx.call('loginOtpSms',{})}else await fx.call('loginOtpVerify',{code});
+    try{if(via==='sms'){await fx.phoneConfirm(code);await fx.call('loginOtpSms',{})}else await fx.call('loginOtpVerify',{code});try{await fx.reload()}catch(e){}
       try{localStorage.setItem(LOGIN_OTP_KEY,'1')}catch(e){}end(true)}
     catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
   d.querySelector('#loGo').onclick=go;d.querySelector('#loRe').onclick=()=>send(via);

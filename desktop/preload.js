@@ -25,3 +25,9 @@ contextBridge.exposeInMainWorld('sdMail', {
   gdisconnect: () => ipcRenderer.invoke('sd:mail:gdisconnect'),
   send: (m) => ipcRenderer.invoke('sd:mail:send', m)
 });
+
+// AI keys live in the OS-encrypted store, not in page storage.
+contextBridge.exposeInMainWorld('sdKeys', {
+  get: () => ipcRenderer.sendSync('sd:ai:get'),
+  set: (o) => ipcRenderer.sendSync('sd:ai:set', o)
+});

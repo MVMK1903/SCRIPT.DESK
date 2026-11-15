@@ -8,13 +8,18 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isUser(uid) { return signedIn() && request.auth.uid == uid; }
     function verified() { return signedIn() && request.auth.token.email_verified == true; }
+    // Sign-in code check. The server sets the otpAuth claim to the sign-in time once the emailed or SMS code is right.
+    // Keep otpEnforced false until the loginOtp functions are deployed and the app version that refreshes its token
+    // after the code is out; turning it on earlier would lock everyone out of their data.
+    function otpEnforced() { return false; }
+    function otpPass() { return !otpEnforced() || request.auth.token.get('otpAuth', 0) == request.auth.token.auth_time; }
     function myEmail() { return request.auth.token.email.lower(); }
 
     // Each account's own data: projects (and their chunks), notes, sign-in activity, vault record.
     match /users/{uid} {
-      allow read, write: if isUser(uid);
+      allow read, write: if isUser(uid) && otpPass();
       match /{rest=**} {
-        allow read, write: if isUser(uid);
+        allow read, write: if isUser(uid) && otpPass();
       }
     }
 

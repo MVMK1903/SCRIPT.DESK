@@ -22,6 +22,13 @@ async function log(uid, t, why) {
   await db().doc(`users/${uid}/activity/${Date.now()}_server_${t}`).set({ t, at: Date.now(), dev: 'server', dn: 'ScriptDesk server', ...(why ? { why } : {}) });
 }
 
+// Mark this sign-in as code-checked. The claim holds the sign-in time (auth_time) of the token that passed, so a later
+// sign-in with only a password has a different auth_time and does not match until its own code is entered.
+async function markOtp(tok) {
+  const u = await admin.auth().getUser(tok.uid);
+  await admin.auth().setCustomUserClaims(tok.uid, { ...(u.customClaims || {}), otpAuth: Number(tok.token.auth_time) });
+}
+
 exports.loginOtpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] }, async (req) => {
   const tok = signedIn(req); const uid = tok.uid;
   const email = tok.token.email;
@@ -60,6 +67,7 @@ exports.loginOtpVerify = onCall(OPTS, async (req) => {
   if (verdict === 'expired') throw new HttpsError('deadline-exceeded', 'The code has expired. Send a new one.');
   if (verdict === 'tries') throw new HttpsError('resource-exhausted', 'Too many wrong codes. Send a new one.');
   if (verdict === 'wrong') { await log(uid, 'loginfail', 'email'); throw new HttpsError('permission-denied', 'That code is not right.'); }
+  await markOtp(tok);
   await log(uid, 'loginok', 'email');
   return { ok: true };
 });
@@ -72,6 +80,7 @@ exports.loginOtpSms = onCall(OPTS, async (req) => {
     await log(uid, 'loginfail', 'sms');
     throw new HttpsError('permission-denied', 'Confirm the SMS code first.');
   }
+  await markOtp(tok);
   await log(uid, 'loginok', 'sms');
   return { ok: true };
 });

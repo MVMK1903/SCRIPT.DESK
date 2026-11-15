@@ -7,7 +7,7 @@ const electron = {
   app: { getPath: () => tmp, whenReady: () => ({ then: noop }), on: noop, quit: noop, requestSingleInstanceLock: () => true, setAppUserModelId: noop, commandLine: { appendSwitch: noop } },
   BrowserWindow: Object.assign(function () { }, { fromWebContents: (wc) => (wc && wc.ok ? {} : null) }),
   shell: { openExternal: noop, openPath: noop }, Menu: { buildFromTemplate: () => ({}), setApplicationMenu: noop }, session: { defaultSession: {} },
-  ipcMain: { handle: (ch, fn) => { handlers[ch] = fn; } },
+  ipcMain: { handle: (ch, fn) => { handlers[ch] = fn; }, on: (ch, fn) => { handlers['on:' + ch] = fn; } },
   safeStorage: { isEncryptionAvailable: () => true, encryptString: (s) => Buffer.from(s), decryptString: (b) => b.toString(), getSelectedStorageBackend: () => 'gnome_libsecret' },
   dialog: { showMessageBox: async () => { dialogCalls++; return { response: dialogAnswer }; } }
 };
@@ -40,5 +40,11 @@ const call = (ch, ev, ...args) => handlers[ch](ev, ...args);
   dialogAnswer = 1; const before = dialogCalls;
   const r = await call('sd:mail:send', good, mail);
   assert.strictEqual(dialogCalls, before + 1); assert.match(r.error, /cancel/i);
+  // 6. AI keys: stored encrypted, only the app window can read or write them
+  const sync = (ch, ev, ...a) => { const e = Object.assign({}, ev); handlers['on:' + ch](e, ...a); return e.returnValue; };
+  assert.strictEqual(sync('sd:ai:set', good, { k: { claude: 'sk-test' }, p: { p1: 'k2' } }), true);
+  assert.strictEqual(sync('sd:ai:get', good).keys.k.claude, 'sk-test');
+  assert.strictEqual(sync('sd:ai:get', { sender: { ok: true }, senderFrame: { url: 'https://evil.example/' } }).keys.k, undefined);
+  assert.strictEqual(sync('sd:ai:set', { sender: { ok: false }, senderFrame: { url: 'file:///x' } }, { k: { x: 'y' } }), false);
   console.log('PASS desktop main process');
 })().catch((e) => { console.error('FAIL', e.message); process.exit(1); });

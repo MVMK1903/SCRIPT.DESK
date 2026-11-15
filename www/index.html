@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-F7N3lt97e7FHzqq57bYc4fgyYtO1j/GCXqmoBHUgssg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-JvyRuKxOr5Nl5phOO3yyAbknPlCsoQTqKPtssfVxp7I=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2166,7 +2166,16 @@ function parseIE(line){const t=line.trim();if(!t||t.length>140)return null;const
   const raw=m[1];const isUpper=raw===raw.toUpperCase();if(!isUpper&&t.length>70)return null;
   let ie=U(raw).replace(/\s|\./g,'').replace('INT-EXT','INT/EXT').replace('INTEXT','INT/EXT');if(ie==='IE')ie='I/E';if(ie==='EI')ie='E/I';if(ie==='I/E'||ie==='E/I'||ie==='EXT/INT')ie=ie==='EXT/INT'?'EXT/INT':ie==='E/I'?'EXT/INT':'INT/EXT';
   const r=parseRest(m[2]||'');return Object.assign({ie},r)}
+const APPS_RE='celtx|final\\s*draft|writerduet|writer\\s*duet|fade\\s*in(?:\\s*pro)?|highland(?:\\s*2)?|scrivener|arc\\s*studio|trelby|fountain|movie\\s*magic(?:\\s*screenwriter)?|screenwriter|studiobinder|studio\\s*binder|writersolo|writer\\s*solo|amazon\\s*storywriter|storywriter|kit\\s*scenarist|scenarist|scriptation|slugline|savage|quoll\\s*writer|screenplay\\.com|filmustage|nolan\\s*ai|chatgpt|sudowrite|google\\s*docs?|microsoft\\s*word|ms\\s*word|wps\\s*office|libreoffice|pages';
+const APP_MARK_RE=new RegExp('^\\W*(?:(?:created|written|made|generated|exported|printed|typed|formatted|produced|prepared|powered|converted|downloaded|saved|edited)\\s+(?:using|with|in|by|from|on|via)\\s+(?:the\\s+)?(?:'+APPS_RE+')(?:\\s+[\\d.]+)?(?:\\s+(?:demo|trial|free|mobile|app|version|software))*|(?:'+APPS_RE+')\\s+(?:demo|trial|free\\s+version|watermark)|(?:www\\.)?(?:celtx|writerduet|finaldraft|fadeinpro|studiobinder|arcstudiopro|scrivener)\\.(?:com|io|co|app)(?:\\/\\S*)?|screenplay\\s+(?:created|written|made)\\s+(?:using|with|in)\\s+(?:'+APPS_RE+'))\\W*$','i');
+/* lines a writing app leaves in the text: "Created using Celtx", "Written in Final Draft", page "CONTINUED:" / "(MORE)", "Page 3 of 90", bare page numbers */
+function stripAppMarks(text){let n=0;const keep=[];
+  String(text||'').split('\n').forEach(l=>{const s=l.trim();
+    if(s&&s.length<90&&(APP_MARK_RE.test(s)||/^\(?(?:CONTINUED|MORE)\)?:?$/i.test(s)||/^page\s+\d+(?:\s*(?:of|\/)\s*\d+)?$/i.test(s))){n++;return}
+    keep.push(l)});
+  return {text:keep.join('\n'),n}}
 function detectScenes(text){
+  const _sm=stripAppMarks(String(text||'').replace(/\r\n?/g,'\n'));text=_sm.text;
   text=String(text||'').replace(/\r\n?/g,'\n').replace(/\t/g,'    ').replace(/ /g,' ').replace(/[​﻿]/g,'');
   /* "12.INT. ROOM" (number glued to the heading) is read as "12 INT. ROOM" */
   text=text.replace(/^([ ]*)(\d+[A-Z]?)[.)](?=(?:INT|EXT|I\/E|E\/I|EST)\b)/gim,'$1$2 ');
@@ -2215,7 +2224,7 @@ function detectScenes(text){
   {const first={};scenes.forEach(s=>{const k=U(s.no),f=first[k];if(!f){first[k]=s;return}
     const back=f.loc&&U(f.loc)===U(s.loc);
     s.flags=[...(s.flags||[]),back?`The script comes back to scene ${s.no} here (same number and place). Merge it into scene ${s.no} in Full script, or give it its own number.`:`Scene number ${s.no} is used twice in the script. Give one of them a new number.`]})}
-  return {front:front.join('\n').trim(),scenes}}
+  return {front:front.join('\n').trim(),scenes,removed:_sm.n}}
 /* Lines in capitals that are not character names: sound effects, screen or phone text, editing notes, shouted lines */
 const NOT_CUE_W=/(^|[\s'-])(CALLING|CALLS|SCREEN|CUTS?|IMPACT|STOP|SOUNDS?|SFX|NOISE|MUSIC|BGM|TITLES?|CARD|TEXT|INSERT|ANGLE|POV|CLOSE ?UP|SHOTS?|MONTAGE|VFX|SLOW MOTION|FREEZE|BLACKOUT|SILENCE|PAUSE|BEAT|BANG|BOOM|CRASH|THUD|BEEP|KNOCK|HONK|SCREAMS?|RINGING|RINGS|LATER|CONTINUOUS|FLASHBACK|FLASH|MY|ME|YOU|YOUR|WE|US|OUR|IS|ARE|WAS|WERE|AM|DON'?T|CAN'?T|WON'?T|I'?M|IT'?S|THIS|THAT|WHAT|WHY|HOW|HERE|THERE|PLEASE|HELP|KILLED|KILL)(?=$|[\s'-])/;
 const OBJ_W=/(^|[\s'-])(MOBILE|PHONE|CELLPHONE|SIGN|SIGNS|SIGNBOARD|SIGN BOARD|NOTICE BOARD|DISPLAY BOARD|NAME BOARD|NAMEPLATE|POSTER|DISPLAY|CAPTION|SUBTITLES?|MESSAGES?|SMS|WHATSAPP|NOTIFICATION|INCOMING|MISSED CALL|VIDEO CALL|BANNER|HOARDING|HEADLINES?|NEWSPAPER|ALARM|SIREN|HORN|EMAIL|SCREENSHOT|LOGO|LABEL|TICKER|BREAKING|RINGTONE|VOICEMAIL|CALLER ID|SUPERIMPOSED?)(?=$|[\s'-])/;
@@ -2422,10 +2431,10 @@ function applyBreakdown(s,r,last){const L=s.locked||{};const arr=a=>Array.isArra
 function assignUnits(){let f=0,g=0,pf=false,pg=false;P.scenes.forEach(s=>{
   if(s.fight){if(!pf)f++;if(!s.locked.unit)s.fight.unit='THRILL-'+f;pf=true}else pf=false;
   if(s.song){if(!pg)g++;if(!s.locked.sunit)s.song.unit='SONG-'+g;pg=true}else pg=false})}
-async function aiSegment(text,onStatus){const L=text.replace(/\r\n?/g,'\n').split('\n');const rows=[];L.forEach((l,i)=>{const t=l.trim();if(t)rows.push(i+'|'+t.slice(0,90))});
+async function aiSegment(text,onStatus){text=stripAppMarks(text).text;const L=text.replace(/\r\n?/g,'\n').split('\n');const rows=[];L.forEach((l,i)=>{const t=l.trim();if(t)rows.push(i+'|'+t.slice(0,90))});
   const wins=[];let w=[],n=0;rows.forEach(r=>{const b=byteLen(r)+1;if(n+b>Math.min(60000,aiBudget()*0.6)){wins.push(w);w=[];n=0}w.push(r);n+=b});if(w.length)wins.push(w);
   const starts=[];for(let k=0;k<wins.length;k++){onStatus&&onStatus('Claude is finding scenes ('+(k+1)+'/'+wins.length+')');
-    const r=await ask(`Below are numbered lines ("lineNumber|text") from a film screenplay in any language or format (English, Telugu, Tinglish, Hindi, scene tables, two-column, prose). Identify every line where a NEW SCENE starts. Return the scene number as written (or empty), INT/EXT, the time/effect as written (DAY, NIGHT, MRNG, ...), and the location in UPPERCASE English letters.
+    const r=await ask(`Below are numbered lines ("lineNumber|text") from a film screenplay in any language or format (English, Telugu, Tinglish, Hindi, scene tables, two-column, prose). Identify every line where a NEW SCENE starts. Ignore lines a writing app added ("Created using Celtx", "Written in Final Draft", watermarks, page numbers, headers, footers, CONTINUED/MORE): they are never scenes. Return the scene number as written (or empty), INT/EXT, the time/effect as written (DAY, NIGHT, MRNG, ...), and the location in UPPERCASE English letters.
 Reply with only JSON: {"scenes":[{"line":0,"no":"","ie":"","time":"","loc":""}]}
 
 ${wins[k].join('\n')}`,{modelTier:'default'});
@@ -5637,6 +5646,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
       let aiWhy='';if(weak&&AI.sample){say('Claude is finding the scenes…');JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
       if(!r.scenes.length){if(oneOk){r={front:'',scenes:[newScene({no:'1',heading:'',text:text.trim(),cues:extractCues(text)})]}}else{oneOk=true;say('No scene headings found'+(aiWhy?' (AI: '+aiWhy+')':'')+'. Add headings like "SCENE NO 1  EXT. VILLAGE - DAY", or press Find scenes again to import everything as one scene.');btn.disabled=false;return}}
+      if(r.removed)toast('Removed '+r.removed+' line'+(r.removed===1?'':'s')+' left by the writing app (like "Created using Celtx" or page labels).',5000);
       await flushNow();
       P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}

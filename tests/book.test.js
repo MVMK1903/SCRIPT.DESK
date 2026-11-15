@@ -25,10 +25,19 @@ const { chromium } = require('playwright');
     o.untouched = JSON.stringify(P.draft.els) === before;
     // from Full script, an imported script with no draft still opens as a book
     P.draft = { els: [], tp: {}, at: 0, syncedAt: 0 }; go('script'); await wait(300); bookOpen(); await wait(100);
-    o.fromScenes = !!document.getElementById('bk') && BK.pages.length > 1; bookClose(); await wait(400);
+    o.fromScenes = !!document.getElementById('bk') && BK.pages.length > 1;
+    // the reader can switch to scrolling: cover plus every page stacked
+    bkMode('scroll'); await wait(100); o.scroll = document.querySelectorAll('#bkScroll .bk-sheet').length === BK.pages.length && document.getElementById('bk').classList.contains('scrolling');
+    bkMode('pages'); await wait(100); o.backToPages = !document.getElementById('bk').classList.contains('scrolling') && !!document.querySelector('#bkR .bk-cover'); bookClose(); await wait(400);
+    // Full script shows the bound cover; the cover takes writer, director and production
+    o.hero = !!document.querySelector('.fs-book .fs-cover');
+    bookCoverEdit(); document.getElementById('bcT').value = 'My Film'; document.getElementById('bcW').value = 'W. Riter'; document.getElementById('bcD').value = 'D. Rector'; document.getElementById('bcP').value = 'Prod Co';
+    document.getElementById('bcSave').click(); await wait(400);
+    const hero = document.querySelector('.fs-book').textContent;
+    o.coverSaved = P.title === 'My Film' && P.draft.tp.director === 'D. Rector' && P.production === 'Prod Co' && /Written by W\. Riter/.test(hero) && /Directed by D\. Rector/.test(hero);
     return o;
   });
   console.log(JSON.stringify(r), errs);
-  const ok = r.pagesMatch && r.cover && /^Pages 1–2 of/.test(r.first) && r.sameFormat && r.back && /of \d+$/.test(r.end) && r.closed && r.untouched && r.fromScenes && !errs.length;
+  const ok = r.pagesMatch && r.cover && /^Pages 1–2 of/.test(r.first) && r.sameFormat && r.back && /of \d+$/.test(r.end) && r.closed && r.untouched && r.fromScenes && r.scroll && r.backToPages && r.hero && r.coverSaved && !errs.length;
   console.log(ok ? 'PASS book' : 'FAIL book'); await b.close(); process.exit(ok ? 0 : 1);
 })();

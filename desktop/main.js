@@ -1,33 +1,57 @@
 // ScriptDesk desktop shell (Windows and Mac). Loads the bundled offline app.
-const { app, BrowserWindow, shell, Menu, session, ipcMain, safeStorage } = require('electron');
+const { app, BrowserWindow, shell, Menu, session, ipcMain, safeStorage, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const crypto = require('crypto');
 
+// Only the app's own window (a file:// page) may call the bridge. Anything else, such as a subframe, is refused.
+const trusted = (e) => !!(e && e.senderFrame && /^file:/i.test(e.senderFrame.url || '') && BrowserWindow.fromWebContents(e.sender));
+const _handle = ipcMain.handle.bind(ipcMain);
+ipcMain.handle = (ch, fn) => _handle(ch, (e, ...a) => { if (!trusted(e)) throw new Error('Not allowed'); return fn(e, ...a); });
+// A secure key store. On Linux without a real keyring Electron falls back to a fixed built-in key; that is not secure, so refuse it.
+function keyStoreOk() {
+  try {
+    if (!safeStorage.isEncryptionAvailable()) return false;
+    if (process.platform === 'linux' && typeof safeStorage.getSelectedStorageBackend === 'function') { const b = safeStorage.getSelectedStorageBackend(); if (b === 'basic_text' || b === 'unknown') return false; }
+    return true;
+  } catch (e) { return false; }
+}
+
 // Saving to the hard disk: everything goes under Documents/ScriptDesk
 const ROOT = () => path.join(app.getPath('documents'), 'ScriptDesk');
 ipcMain.handle('sd:root', () => ROOT());
 ipcMain.handle('sd:open', () => shell.openPath(ROOT()));
-ipcMain.handle('sd:read', (e, rel) => {
-  const root = ROOT();
+// Resolve a path under the ScriptDesk folder. Symbolic links are followed before the check, so a link inside the folder cannot lead out of it.
+const BLOCKED_EXT = /\.(exe|bat|cmd|com|scr|msi|msp|ps1|psm1|vbs|vbe|js|jse|jar|lnk|dll|sh|reg|hta|url|cpl|pif|wsf|appx|msix|app|command)$/i;
+const MAX_WRITE = 200 * 1024 * 1024;
+function realRoot() { const r = ROOT(); fs.mkdirSync(r, { recursive: true }); return fs.realpathSync(r); }
+function safePath(rel) {
+  const root = realRoot();
   const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
   if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  let probe = target;
+  while (!fs.existsSync(probe)) { const up = path.dirname(probe); if (up === probe) break; probe = up; }
+  const real = fs.realpathSync(probe);
+  if (real !== root && !real.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  return target;
+}
+ipcMain.handle('sd:read', (e, rel) => {
+  const target = safePath(rel);
   try { return fs.readFileSync(target).toString('base64'); } catch (err) { return null; }
 });
 ipcMain.handle('sd:del', (e, rel) => {
-  const root = ROOT();
-  const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
-  if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  const target = safePath(rel);
   try { fs.unlinkSync(target); } catch (err) { }
   return true;
 });
 ipcMain.handle('sd:write', (e, rel, payload) => {
-  const root = ROOT();
-  const target = path.resolve(root, String(rel).replace(/^[\\/]+/, ''));
-  if (target !== root && !target.startsWith(root + path.sep)) throw new Error('Path not allowed');
+  const target = safePath(rel);
+  if (BLOCKED_EXT.test(target)) throw new Error('File type not allowed');
+  const data = payload && payload.b64 ? Buffer.from(String(payload.b64), 'base64') : Buffer.from(String((payload && payload.text) || ''), 'utf8');
+  if (data.length > MAX_WRITE) throw new Error('File too large');
   fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, payload && payload.b64 ? Buffer.from(payload.b64, 'base64') : String((payload && payload.text) || ''));
+  fs.writeFileSync(target, data);
   return true;
 });
 
@@ -44,12 +68,12 @@ const G_FILE = () => path.join(app.getPath('userData'), 'google-session.bin');
 const G = { at: null, exp: 0, rt: null, profile: null, pending: null };
 const b64url = (b) => Buffer.from(b).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 function gLoad() {
-  try { if (!safeStorage.isEncryptionAvailable()) return; const s = JSON.parse(safeStorage.decryptString(fs.readFileSync(G_FILE()))); G.rt = s.rt || null; G.profile = s.profile || null; } catch (e) { }
+  try { if (!keyStoreOk()) return; const s = JSON.parse(safeStorage.decryptString(fs.readFileSync(G_FILE()))); G.rt = s.rt || null; G.profile = s.profile || null; } catch (e) { }
 }
 function gSave() {
   try {
     if (!G.rt) { fs.rmSync(G_FILE(), { force: true }); return; }
-    if (!safeStorage.isEncryptionAvailable()) return; // no key store: stay signed in only until the app closes
+    if (!keyStoreOk()) return; // no key store: stay signed in only until the app closes
     fs.writeFileSync(G_FILE(), safeStorage.encryptString(JSON.stringify({ rt: G.rt, profile: G.profile })), { mode: 0o600 });
   } catch (e) { }
 }
@@ -133,7 +157,7 @@ async function gSignOut() {
 }
 // errors cross to the page as plain codes only
 const gWrap = (fn) => async (...a) => { try { return { ok: true, v: await fn(...a) }; } catch (e) { return { ok: false, code: String(e.code || e.message || 'error').slice(0, 60) }; } };
-ipcMain.handle('sd:g:session', gWrap(async () => ({ configured: !!GCFG.desktopClientId, profile: G.rt ? G.profile : null, keyStore: safeStorage.isEncryptionAvailable() })));
+ipcMain.handle('sd:g:session', gWrap(async () => ({ configured: !!GCFG.desktopClientId, profile: G.rt ? G.profile : null, keyStore: keyStoreOk() })));
 ipcMain.handle('sd:g:signin', gWrap((e, hint, mode) => gSignIn(BrowserWindow.fromWebContents(e.sender), typeof hint === 'string' ? hint.slice(0, 200) : '', mode === 'id' ? 'id' : '')));
 ipcMain.handle('sd:g:cancel', gWrap(async () => { if (G.pending) G.pending.cancel('cancelled'); return true; }));
 ipcMain.handle('sd:g:token', gWrap(() => gAccess()));
@@ -144,7 +168,7 @@ function openOutside(url) { try { const u = new URL(url); if (u.protocol === 'ht
 function harden() {
   const ses = session.defaultSession;
   // camera, microphone, location, notifications and the rest are never needed: say no without asking
-  const allowed = new Set(['clipboard-sanitized-write', 'clipboard-read']);
+  const allowed = new Set(['clipboard-sanitized-write']); // reading the clipboard silently is not allowed; paste still works from the keyboard and menu
   ses.setPermissionRequestHandler((wc, perm, cb) => cb(allowed.has(perm)));
   ses.setPermissionCheckHandler((wc, perm) => allowed.has(perm));
   app.on('web-contents-created', (e, wc) => {
@@ -198,7 +222,9 @@ function allowAI() {
     const h = d.responseHeaders || {};
     for (const k of Object.keys(h)) if (/^access-control-allow-/i.test(k)) delete h[k];
     h['Access-Control-Allow-Origin'] = [r.o || '*'];
-    if (r.o) { h['Access-Control-Allow-Credentials'] = ['true']; h['Vary'] = ['Origin']; }
+    // Cookies are only ever allowed for Google and Firebase, which the app signs in with. Any other site gets no credentialed access.
+    let host = ''; try { host = new URL(d.url).hostname; } catch (e) { }
+    if (r.o && /(^|\.)(googleapis\.com|google\.com|gstatic\.com|firebaseio\.com|firebaseapp\.com|cloudfunctions\.net|run\.app)$/.test(host)) { h['Access-Control-Allow-Credentials'] = ['true']; h['Vary'] = ['Origin']; }
     h['Access-Control-Allow-Headers'] = [r.rh || 'authorization, content-type, x-api-key, x-goog-api-key, anthropic-version, anthropic-dangerous-direct-browser-access, http-referer, x-title'];
     h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, PATCH, DELETE, OPTIONS'];
     h['Access-Control-Expose-Headers'] = ['retry-after, x-ratelimit-reset-requests, x-ratelimit-reset-tokens, x-ratelimit-remaining-requests'];
@@ -218,8 +244,8 @@ app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(
 
 // Gmail: the page can connect a Gmail account (send-only permission), ask who is connected, disconnect, and send. Tokens never reach the page.
 const GM_FILE = () => path.join(app.getPath('userData'), 'gmail-session.bin');
-function mLoad() { try { if (!safeStorage.isEncryptionAvailable()) return; const s = JSON.parse(safeStorage.decryptString(fs.readFileSync(GM_FILE()))); M.rt = s.rt || null; M.email = s.email || ''; } catch (e) { } }
-function mSave() { try { if (!M.rt) { fs.rmSync(GM_FILE(), { force: true }); return; } if (!safeStorage.isEncryptionAvailable()) return; fs.writeFileSync(GM_FILE(), safeStorage.encryptString(JSON.stringify({ rt: M.rt, email: M.email })), { mode: 0o600 }); } catch (e) { } }
+function mLoad() { try { if (!keyStoreOk()) return; const s = JSON.parse(safeStorage.decryptString(fs.readFileSync(GM_FILE()))); M.rt = s.rt || null; M.email = s.email || ''; } catch (e) { } }
+function mSave() { try { if (!M.rt) { fs.rmSync(GM_FILE(), { force: true }); return; } if (!keyStoreOk()) return; fs.writeFileSync(GM_FILE(), safeStorage.encryptString(JSON.stringify({ rt: M.rt, email: M.email })), { mode: 0o600 }); } catch (e) { } }
 async function mAccess() {
   if (M.at && Date.now() < M.exp - 60000) return M.at;
   if (!M.rt) throw Object.assign(new Error('signed_out'), { code: 'signed_out' });
@@ -243,14 +269,15 @@ ipcMain.handle('sd:mail:gdisconnect', async () => { const t = M.rt; M.rt = null;
 // Sending a report by email through Resend (https://resend.com). The API key stays in this process, encrypted with the system key store;
 // the page can only save it, clear it, ask whether one exists, and send a mail. It is never handed back to the page.
 const MAIL_FILE = () => path.join(app.getPath('userData'), 'mail-config.bin');
+const MAIL_SENDS = [];
 const MAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;
-function mailLoad() { try { if (!safeStorage.isEncryptionAvailable()) return null; return JSON.parse(safeStorage.decryptString(fs.readFileSync(MAIL_FILE()))); } catch (e) { return null; } }
-ipcMain.handle('sd:mail:cfg', () => { const c = mailLoad(); return { has: !!(c && c.key && c.from), from: c ? c.from || '' : '', gmail: M.rt ? M.email : '', gmailReady: !!GCFG.desktopClientId, keyStore: safeStorage.isEncryptionAvailable() }; });
+function mailLoad() { try { if (!keyStoreOk()) return null; return JSON.parse(safeStorage.decryptString(fs.readFileSync(MAIL_FILE()))); } catch (e) { return null; } }
+ipcMain.handle('sd:mail:cfg', () => { const c = mailLoad(); return { has: !!(c && c.key && c.from), from: c ? c.from || '' : '', gmail: M.rt ? M.email : '', gmailReady: !!GCFG.desktopClientId, keyStore: keyStoreOk() }; });
 ipcMain.handle('sd:mail:save', (e, key, from) => {
   key = String(key || '').trim(); from = String(from || '').trim().slice(0, 200);
   if (!/^re_[A-Za-z0-9_\-]{10,200}$/.test(key)) return { error: 'That does not look like a Resend API key (it starts with re_).' };
   if (!MAIL_RE.test(from.replace(/^.*<([^>]+)>\s*$/, '$1'))) return { error: 'Enter the From address as name@yourdomain.com.' };
-  if (!safeStorage.isEncryptionAvailable()) return { error: 'This computer has no secure key store, so the key cannot be saved safely.' };
+  if (!keyStoreOk()) return { error: 'This computer has no secure key store, so the key cannot be saved safely.' };
   fs.writeFileSync(MAIL_FILE(), safeStorage.encryptString(JSON.stringify({ key, from })), { mode: 0o600 }); return { ok: true };
 });
 ipcMain.handle('sd:mail:clear', () => { try { fs.unlinkSync(MAIL_FILE()); } catch (e) { } return true; });
@@ -260,6 +287,13 @@ ipcMain.handle('sd:mail:send', async (e, m) => {
   const b64 = String(m.b64 || ''); if (!b64 || b64.length > 30 * 1024 * 1024) return { error: 'The file is empty or too large to email.' };
   const filename = String(m.filename || 'report').replace(/[^\w.\- ]+/g, '_').slice(0, 120);
   const text = String(m.text || '').slice(0, 5000);
+  // Rate limit, then ask the person in a window the page cannot reach or click for it.
+  const now = Date.now(); MAIL_SENDS.splice(0, MAIL_SENDS.length, ...MAIL_SENDS.filter((t) => now - t < 60000));
+  if (MAIL_SENDS.length >= 5) return { error: 'Too many emails in a minute. Wait a moment and try again.' };
+  const win = BrowserWindow.fromWebContents(e.sender);
+  const ask = await dialog.showMessageBox(win, { type: 'question', buttons: ['Send', 'Cancel'], defaultId: 1, cancelId: 1, noLink: true, title: 'Send this email?', message: 'Send "' + filename + '" by email?', detail: 'To: ' + to.join(', ') + '\nFrom: ' + (viaGmail ? M.email : (c && c.from) || '') + '\nSubject: ' + String(m.subject || 'Report').slice(0, 200) });
+  if (ask.response !== 0) return { error: 'Cancelled. The email was not sent.' };
+  MAIL_SENDS.push(Date.now());
   if (viaGmail) {
     try {
       const tok = await mAccess();

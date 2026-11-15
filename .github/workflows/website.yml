@@ -23,6 +23,7 @@ jobs:
       - name: Build the website from src/
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+          SD_PUBLIC: '1'
         run: python scripts/build.py
       - name: Check no log prints a password or code
         run: python scripts/check_logs.py

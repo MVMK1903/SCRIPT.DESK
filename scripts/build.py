@@ -196,6 +196,10 @@ def main():
     if fbc:
         import html as _h
         page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="sd-firebase" content="' + _h.escape(json.dumps(fbc, separators=(',', ':')), quote=True) + '">', 1)
+    if os.environ.get('SD_PUBLIC', '').strip() == '1':
+        # Customer build: the AI key settings are tucked away (owner can reveal with Ctrl+Shift+K).
+        page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="sd-public" content="1">', 1)
+        print('public build: AI key settings hidden')
     hdr = headers_file(page)
     page = page.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + csp(page), 1)
     open(os.path.join(WWW, '_headers'), 'w', encoding='utf-8').write(hdr)

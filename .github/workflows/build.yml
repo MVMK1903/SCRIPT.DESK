@@ -22,6 +22,7 @@ on:
 # ScriptDesk accounts: the Firebase web settings (Firebase console > Project settings > Your apps > Config)
 env:
   FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
+  SD_PUBLIC: '1'
 
 permissions:
   contents: write

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-fOlBpYYSCDmw7kRGZ/5IRWnqAY4FmNZ8qSOfIylEEaM=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-uyX8ipNsM+yu4I+cz0AvO0Qoj6quMlk8AWrUFIsIJ7c=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1845,6 +1845,52 @@ select option:checked,select option:hover{background-color:#ffd36e;color:#1f1b16
 }
 @media (min-width:821px) and (max-width:1320px){:root:root .top{flex-wrap:wrap!important;row-gap:4px!important}:root:root .top .film{flex:1 1 100%}:root:root .top .tops{margin-left:0;width:100%;justify-content:flex-end}}
 
+/* Director's desk, Day readiness, Casting tracker */
+.i-dirdesk{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z M8 9h6 M8 13h4 M18 8l2-2'/%3E%3C/svg%3E")}
+.i-ready{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4h14v16H5z M8.500 9l1.500 1.500L13 8 M8.500 15l1.500 1.500L13 14 M15 9.500h1.500 M15 15.500h1.500'/%3E%3C/svg%3E")}
+.i-casting{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 11a3.500 3.500 0 1 0 0-7 3.500 3.500 0 0 0 0 7z M3 20c0-3.300 2.700-6 6-6s6 2.700 6 6 M16.500 9.500l1.500 1.500 3-3'/%3E%3C/svg%3E")}
+.dd-tabs{margin:0 0 14px;overflow-x:auto;scrollbar-width:none}.dd-tabs::-webkit-scrollbar{display:none}.dd-tabs .seg{display:inline-flex;flex-wrap:nowrap;width:max-content}.dd-tabs .seg button{white-space:nowrap;flex:none}
+.dd-lay,.dd-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.dd-list,.rd-list{display:flex;flex-direction:column;gap:8px}
+.dd-sc,.rd-day{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.dd-sc.open,.rd-day.open{border-color:var(--accent-line)}
+.dd-h,.rd-h{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;border:0;background:transparent;color:var(--fg);font:inherit;text-align:left;cursor:pointer;min-height:48px}
+.dd-h:hover,.rd-h:hover{background:var(--fill)}.dd-h:focus-visible,.rd-h:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dd-no,.rd-n{flex:none;min-width:34px;font:800 15px var(--f-display);font-variant-numeric:tabular-nums}.rd-n{min-width:52px}
+.dd-t,.rd-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.dd-t b,.rd-t b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dd-t small,.rd-t small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dd-b{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:46%}.dd-b i{font-style:normal;font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--fill-2,var(--raise));color:var(--muted);white-space:nowrap}.dd-b i.tg{color:var(--accent-text,var(--accent));background:var(--accent-soft)}
+.dd-ed,.rd-body{padding:4px 14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.dd-est{margin:10px 0 0;font-size:12.5px;color:var(--muted)}.dd-est b{color:var(--fg)}
+.dd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.dd-f{display:flex;flex-direction:column;gap:4px;min-width:0}.dd-f.wide{grid-column:1/-1}.dd-f>span{font-size:12px;font-weight:600;color:var(--muted)}
+.dd-in{min-height:38px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--fill);color:var(--fg);font-size:13.5px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;outline:none}
+.dd-in.sm{min-height:32px;padding:5px 8px;font-size:13px;min-width:110px}
+.dd-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dd-in:empty::before,[data-ddcap]:empty::before{content:attr(data-ph);color:var(--faint)}
+.dd-sec h4{margin:0 0 8px;font:700 13px var(--f-ui);color:var(--fg)}
+.dd-chips{display:flex;flex-wrap:wrap;gap:6px}
+.dd-chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 12.5px var(--f-ui);cursor:pointer;min-height:30px}
+.dd-chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-text,var(--accent))}
+.dd-chip.add{border-style:dashed}.dd-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dd-n{display:flex;align-items:flex-start;gap:8px;margin:0 0 6px}.dd-n .dd-in{flex:1;min-width:0}.dd-n .ttx{margin-top:8px}
+.dd-l{flex:none;margin-top:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--fill-2,var(--raise));color:var(--fg);min-width:86px;text-align:center}
+.dd-l.l-perf,.dd-chip.l-perf[aria-pressed="true"]{box-shadow:inset 3px 0 0 #e8b45a}.dd-l.l-cam,.dd-chip.l-cam[aria-pressed="true"]{box-shadow:inset 3px 0 0 #4aa3a0}.dd-l.l-snd,.dd-chip.l-snd[aria-pressed="true"]{box-shadow:inset 3px 0 0 #7fb6ff}.dd-l.l-art,.dd-chip.l-art[aria-pressed="true"]{box-shadow:inset 3px 0 0 #ff8a7a}
+.dd-add{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.dd-add input{flex:1;min-width:160px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--fill);color:var(--fg);font:500 13.5px var(--f-ui)}.dd-add input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dd-mood{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}.dd-mood.big{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.dd-m{position:relative;margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--fill)}.dd-m img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--fill-2,var(--raise))}.dd-m figcaption{padding:6px 8px;font-size:12px;min-height:1.5em;outline:none;color:var(--fg)}.dd-m .ttx{position:absolute;right:6px;top:6px;background:rgba(0,0,0,.6);color:#fff}
+.dd-up{min-height:90px;border-radius:12px;border:2px dashed var(--line);background:transparent;color:var(--muted);font:600 12.5px var(--f-ui);cursor:pointer;padding:8px}.dd-up:hover{border-color:var(--accent);color:var(--fg)}
+.dd-sum{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}.dd-sum>div{flex:1;min-width:120px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;gap:2px}.dd-sum b{font:800 22px/1.1 var(--f-display)}.dd-sum span{font-size:12px;color:var(--muted)}
+.dd-note{margin:0 0 12px;max-width:80ch}
+.dd-hr{min-width:54px;padding:4px 6px;border-radius:8px;border:1px solid transparent;color:var(--muted);outline:none}.dd-hr.own{color:var(--fg);font-weight:700;border-color:var(--accent-line)}.dd-hr:focus{border-color:var(--accent);background:var(--fill);color:var(--fg)}
+.dd-lost{margin-top:18px}
+.rd-p{flex:none;display:flex;align-items:center;gap:10px}.rd-bar{width:90px;height:6px;border-radius:6px;background:var(--fill-2,var(--raise));overflow:hidden}.rd-bar i{display:block;height:100%;background:var(--ok)}
+.rd-p em{font-style:normal;font-size:12px;font-weight:700;min-width:58px;text-align:right}.rd-p em.no,.rd-g legend .no{color:var(--bad)}.rd-p em.ok,.rd-g legend .ok{color:var(--ok)}
+.rd-g{border:0;padding:0;margin:10px 0 0;min-width:0}.rd-g legend{padding:0;font:700 13px var(--f-ui);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.rd-g legend small{font-weight:500;color:var(--muted);font-size:11.5px}
+.rd-items{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.rd-i{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:10px;border:1px solid color-mix(in srgb,var(--bad) 45%,transparent);background:color-mix(in srgb,var(--bad) 8%,transparent);font-size:13px;cursor:pointer;min-height:34px}
+.rd-i.on{border-color:var(--line);background:var(--fill);color:var(--muted)}.rd-i input{accent-color:var(--ok);width:16px;height:16px;margin:0}
+.cs-t .cs-d{padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--fill);color:var(--fg);font:500 12.5px var(--f-ui)}
+.cs-s.s-ok{border-color:var(--ok)!important;color:var(--ok)}.cs-s.s-no{border-color:color-mix(in srgb,var(--bad) 60%,transparent)!important}
+@media (max-width:820px){.dd-grid{grid-template-columns:1fr}.dd-b{display:none}.dd-h,.rd-h{padding:10px 12px;gap:10px}.rd-bar{width:48px}.dd-l{min-width:0}.dd-n{flex-wrap:wrap}.dd-n .dd-in{flex:1 1 100%;order:3}.dd-sum>div{min-width:96px;padding:10px 12px}.dd-sum b{font-size:19px}}
 /* Phone: slimmer header, one-line last change, compact search and sheet tools (v2.12.49) */
 @media (max-width:820px){
   :root:root .appbar{background:var(--bg)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
@@ -1940,6 +1986,7 @@ const PAGES=[
  {g:'Main',id:'structure',nav:'Story structure',t:'Story structure'},
  {g:'Script',id:'beats',nav:'Beat Board',t:'Beat Board'},
  {g:'Script',id:'outline',nav:'Outline',t:'Outline'},
+ {g:'Script',id:'dirdesk',nav:"Director's desk",t:"Director's desk"},
  {g:'Script',id:'profiles',nav:'Character profiles',t:'Character profiles'},
  {g:'Script',id:'characters',nav:'Characters',t:'Characters'},
  {g:'Script',id:'av',nav:'AV script',t:'AV script'},
@@ -1950,6 +1997,7 @@ const PAGES=[
  {g:'Single line order',id:'sloFight',nav:'Stunt / fight',t:'Stunt / fight single line order'},
  {g:'Lists',id:'locations',nav:'No. of locations',t:'No. of locations'},
  {g:'Lists',id:'artists',nav:'No. of artists',t:'No. of artists'},
+ {g:'Lists',id:'casting',nav:'Casting',t:'Casting tracker'},
  {g:'Lists',id:'locScenes',nav:'Location-wise scenes',t:'Location-wise scene list'},
  {g:'Lists',id:'artScenes',nav:'Artist-wise scenes',t:'Artist-wise scene list'},
  {g:'Lists',id:'catalog',nav:'Catalog',t:'Catalog'},
@@ -1964,6 +2012,7 @@ const PAGES=[
  {g:'Shooting',id:'stripboard',nav:'Stripboard',t:'Stripboard'},
  {g:'Shooting',id:'dood',nav:'Day out of days',t:'Day out of days'},
  {g:'Shooting',id:'callsheet',nav:'Call sheet',t:'Call sheet'},
+ {g:'Shooting',id:'ready',nav:'Day readiness',t:'Day readiness'},
  {g:'Shooting',id:'sides',nav:'Actor sides',t:'Actor sides'},
  {g:'Shooting',id:'gear',nav:'Camera & equipment',t:'Camera & equipment'},
  {g:'Budget',id:'budget',nav:'Budget & rates',t:'Budget & rate card'},
@@ -3857,6 +3906,145 @@ function catEdit(id){const L=CAT();let it=L.find(x=>x.id===id);const isNew=!it;i
     const rm=$('#ctRm');if(rm)rm.onclick=()=>{if(!confirm('Delete '+it.name+'?'))return;snapshot();P.catalog=L.filter(x=>x!==it);closeModal();touch([]);render(true)}};draw()}
 /* ---- Tasks: to do / doing / done ---- */
 const TK_COL=[['todo','To do'],['doing','In progress'],['done','Done']];
+/* ================= Pre-production: Director's desk, Day readiness, Casting tracker (v2.12.50) ================= */
+const DD_LAYERS=[['perf','Performance'],['cam','Camera'],['snd','Sound'],['art','Art']];
+const DD_TAGS=['Rain','Fire','Water','Night shoot','Child artist','Animal','Crowd','Fight / stunt','Song','Vehicle','Weapon','VFX','Intimacy','Drone','Permission needed'];
+const DD_FIELDS=[['purpose','What this scene is for','Why the film needs this scene'],['emotion','Emotion / mood','What the audience should feel'],['change','What changes','Who or what is different by the end'],['beats','Beats for the actors','One beat per line']];
+function DD(){if(!P.dir||typeof P.dir!=='object')P.dir={};const D=P.dir;if(!D.cards||typeof D.cards!=='object')D.cards={};if(!Array.isArray(D.notes))D.notes=[];if(!D.tags||typeof D.tags!=='object')D.tags={};if(!Array.isArray(D.custom))D.custom=[];if(!Array.isArray(D.mood))D.mood=[];return D}
+function ddAllTags(){const D=DD();return uniq([...DD_TAGS,...D.custom,...Object.values(D.tags).flat()].map(x=>String(x)))}
+function ddDayHours(){const S=SCH(),m=t=>{const x=String(t||'').match(/^(\d{1,2}):(\d{2})$/);return x?+x[1]+ +x[2]/60:null};const a=m(S.call),b=m(S.wrap);const h=a!=null&&b!=null&&b>a?b-a-1:10;return Math.max(4,Math.min(16,h))}
+/* rough shoot time: the day's working hours spread over the pages-per-day target, then longer for fights, songs, crowd, effects and night */
+function ddEst(s){const S=SCH(),pg=pgE(s),tgt=parsePg(S.target)||32,why=[];let h=pg*ddDayHours()/tgt;
+  if(s.fight){h*=2;why.push('fight or stunt')}
+  if(s.song){h=Math.max(h*3,4);why.push('song')}
+  if((s.juniors||[]).length){h*=1.25;why.push('crowd')}
+  if((s.vfx||[]).length||(s.sfx||[]).length){h*=1.2;why.push('effects')}
+  if(/NIGHT|MIDNIGHT/.test(U(s.time))){h+=.5;why.push('night')}
+  h=Math.max(.5,Math.round(h*4)/4);const c=DD().cards[s.id]||{};const own=+c.hrs>0;
+  return {pg,mins:pg/8,h:own?+c.hrs:h,est:h,own,why}}
+const ddH=h=>(Math.round(h*4)/4)+' h';
+const ddMin=m=>{const t=Math.round(m*60);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+function ddSuggest(s){const t=[],has=(k,re)=>(s[k]||[]).some(x=>re.test(String(x)));const all=[...(s.props||[]),...(s.spl_props||[])].join(' ');
+  if(has('sfx',/rain/i))t.push('Rain');if(has('sfx',/fire|flame|blast|explos/i))t.push('Fire');
+  if(/\b(RIVER|SEA|LAKE|CANAL|POOL|BEACH|WATERFALL|POND|OCEAN)\b/.test(U(s.loc))||has('sfx',/water|underwater/i))t.push('Water');
+  if(/NIGHT|MIDNIGHT/.test(U(s.time))&&/EXT/.test(U(s.ie)))t.push('Night shoot');
+  if((s.animals||[]).length)t.push('Animal');if((s.juniors||[]).length)t.push('Crowd');
+  if(has('juniors',/child|kid|school|student|baby/i)||has('extras',/child|kid|boy\b|girl\b|baby/i))t.push('Child artist');
+  if(s.fight)t.push('Fight / stunt');if(s.song)t.push('Song');if((s.vehicles||[]).length)t.push('Vehicle');
+  if(/\b(gun|pistol|rifle|revolver|knife|sword|dagger|axe|machete|sickle)\b/i.test(all))t.push('Weapon');
+  if((s.vfx||[]).length)t.push('VFX');if(has('equipment',/drone/i))t.push('Drone');return t}
+function ddDaysOf(sids){const sd=sceneDay(),nums=dayNums();return uniq(sids.map(id=>nums[sd[id]]).filter(Boolean).sort((a,b)=>a-b).map(n=>'Day '+n))}
+function ddTabs(){return segm('dtab',[['cards','Scene cards'],['tags','Tags report'],['mood','Mood board'],['time','Time estimate']])}
+function ddHead(extra){return `<div class="ph"><div class="grow"><h1>Director's desk</h1><p>Your notes for every scene: what it is for, beats for the actors, notes by department, tags, reference pictures and a time estimate. Notes stay with the scene when the script is revised.</p></div><div class="acts">${extra||''}<button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div><div class="dd-tabs">${ddTabs()}</div>`}
+function ddNotesOf(sid){return DD().notes.filter(n=>n.sid===sid)}
+function ddEditor(s){const D=DD(),c=D.cards[s.id]||{},e=ddEst(s),off=VIEW.dlay||{},tags=D.tags[s.id]||[],notes=ddNotesOf(s.id),mood=D.mood.filter(m=>m.sid===s.id);
+  const fld=([k,l,ph])=>`<div class="dd-f${k==='beats'?' wide':''}"><span>${l}</span><div class="dd-in" contenteditable="true" spellcheck="true" data-ddf="${k}" data-s="${s.id}" data-ph="${esc(ph)}" aria-label="${esc(l)}">${esc(c[k]||'')}</div></div>`;
+  return `<div class="dd-ed">
+  <p class="dd-est">About <b>${fmtPg(e.pg)} pg</b> · <b>${ddMin(e.mins)}</b> on screen · <b>${ddH(e.h)}</b> to shoot${e.own?' (your figure)':' (estimate'+(e.why.length?': '+e.why.join(', '):'')+')'}</p>
+  <div class="dd-grid">${DD_FIELDS.map(fld).join('')}</div>
+  <div class="dd-sec"><h4>Tags</h4><div class="dd-chips">${ddAllTags().map(t=>`<button class="dd-chip" data-dd="tag" data-s="${s.id}" data-t="${esc(t)}" aria-pressed="${tags.includes(t)}">${esc(t)}</button>`).join('')}<button class="dd-chip add" data-dd="newtag" data-s="${s.id}">+ New tag</button></div></div>
+  <div class="dd-sec"><h4>Notes</h4>${notes.filter(n=>!off[n.layer]).map(n=>`<div class="dd-n"><span class="dd-l l-${esc(n.layer)}">${esc((DD_LAYERS.find(x=>x[0]===n.layer)||['','Note'])[1])}</span><div class="dd-in" contenteditable="true" spellcheck="true" data-ddn="${esc(n.id)}" aria-label="Note">${esc(n.text)}</div><button class="ttx" data-dd="delnote" data-n="${esc(n.id)}" aria-label="Delete note" title="Delete note">×</button></div>`).join('')||(notes.length?'<p class="small muted">Notes here are in a layer that is switched off.</p>':'')}
+    <form class="dd-add" data-ddadd="${s.id}"><select class="mini" aria-label="Layer">${DD_LAYERS.map(([k,l])=>`<option value="${k}"${(VIEW.dlast||'perf')===k?' selected':''}>${l}</option>`).join('')}</select><input type="text" placeholder="Add a note for this scene" aria-label="New note"><button class="btn sm">Add</button></form></div>
+  <div class="dd-sec"><h4>Reference pictures</h4><div class="dd-mood">${mood.map(m=>`<figure class="dd-m">${phImg(m,m.cap||'Reference picture')}<figcaption contenteditable="true" data-ddcap="${esc(m.id)}" data-ph="Caption">${esc(m.cap||'')}</figcaption><button class="ttx" data-dd="delmood" data-m="${esc(m.id)}" aria-label="Remove picture" title="Remove picture">×</button></figure>`).join('')}<button class="dd-up" data-dd="addmood" data-s="${s.id}">+ Add pictures</button></div></div></div>`}
+function ddCards(){const D=DD(),off=VIEW.dlay||{},open=VIEW.dopen;
+  const lay=`<div class="dd-lay" role="group" aria-label="Note layers"><span class="small muted">Show notes for</span>${DD_LAYERS.map(([k,l])=>`<button class="dd-chip l-${k}" data-dd="layer" data-l="${k}" aria-pressed="${!off[k]}">${l}</button>`).join('')}</div>`;
+  const rows=P.scenes.map(s=>{const n=ddNotesOf(s.id).length,tg=D.tags[s.id]||[],mo=D.mood.filter(m=>m.sid===s.id).length,c=D.cards[s.id]||{},isOpen=open===s.id;
+    const q=[s.no,s.loc,s.desc,c.purpose,c.emotion,c.change,c.beats,tg.join(' '),ddNotesOf(s.id).map(x=>x.text).join(' ')].join(' ').toLowerCase();
+    return `<article class="dd-sc${isOpen?' open':''}" id="dd-${s.id}" data-q="${esc(q)}"><button class="dd-h" data-dd="open" data-s="${s.id}" aria-expanded="${isOpen}"><b class="dd-no">${esc(s.no)}</b><span class="dd-t"><b>${esc(s.loc||'No location')}</b><small>${esc([eff(s),cut(s.desc,90)].filter(Boolean).join(' · '))}</small></span><span class="dd-b">${c.purpose||c.emotion||c.change||c.beats?'<i>Card</i>':''}${n?`<i>${n} note${n===1?'':'s'}</i>`:''}${tg.slice(0,3).map(t=>`<i class="tg">${esc(t)}</i>`).join('')}${tg.length>3?`<i class="tg">+${tg.length-3}</i>`:''}${mo?`<i>${mo} pic${mo===1?'':'s'}</i>`:''}</span></button>${isOpen?ddEditor(s):''}</article>`}).join('');
+  const lost=D.notes.filter(n=>!P.scenes.some(s=>s.id===n.sid));
+  const orphan=lost.length?`<div class="dd-sec dd-lost"><h4>Notes from scenes that are no longer in the script</h4>${lost.map(n=>`<div class="dd-n"><span class="dd-l l-${esc(n.layer)}">${esc((DD_LAYERS.find(x=>x[0]===n.layer)||['','Note'])[1])}</span><div class="dd-in">${esc(n.text)}</div><button class="ttx" data-dd="delnote" data-n="${esc(n.id)}" aria-label="Delete note">×</button></div>`).join('')}</div>`:'';
+  return lay+(rows?`<div class="dd-list">${rows}</div>`:'<div class="empty"><p>Import or write a script first. Every scene then gets a card here.</p></div>')+orphan}
+function ddTagRows(){const D=DD(),m=new Map();P.scenes.forEach(s=>(D.tags[s.id]||[]).forEach(t=>{if(!m.has(t))m.set(t,[]);m.get(t).push(s)}));return [...m.entries()].sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0]))}
+function ddTagsTab(){const rows=ddTagRows();
+  const bar=`<div class="dd-bar"><button class="btn sm" data-dd="suggest">Suggest tags from the breakdown</button><span class="small muted">Adds tags such as Rain, Crowd, Fight or Vehicle where the breakdown shows them. It never removes a tag. Intimacy and Permission needed are yours to set.</span></div>`;
+  if(!rows.length)return bar+'<div class="empty"><p>No tags yet. Open a scene card and press a tag, or use the button above.</p></div>';
+  return bar+`<div class="tw"><table class="t rt"><thead><tr><th>Tag</th><th>Scenes</th><th>Scene numbers</th><th>Locations</th><th>Shoot days</th></tr></thead><tbody>${rows.map(([t,L])=>`<tr><td class="left" data-l="Tag"><b>${esc(t)}</b></td><td class="num" data-l="Scenes">${L.length}</td><td class="left" data-l="Scene numbers">${esc(L.map(s=>s.no).join(', '))}</td><td class="left" data-l="Locations">${esc(uniq(L.map(s=>s.loc).filter(Boolean)).join(', '))}</td><td class="left" data-l="Shoot days">${esc(ddDaysOf(L.map(s=>s.id)).join(', ')||'Not scheduled yet')}</td></tr>`).join('')}</tbody></table></div>`}
+function ddMoodTab(){const D=DD(),by=new Map();D.mood.forEach(m=>{const s=P.scenes.find(x=>x.id===m.sid);const k=s?(s.loc||'No location'):'Scene removed';if(!by.has(k))by.set(k,[]);by.get(k).push([m,s])});
+  if(!by.size)return '<div class="empty"><p>No reference pictures yet. Open a scene card and press "Add pictures". They are grouped here by location for the art and costume teams.</p></div>';
+  return [...by.entries()].map(([loc,L])=>`<section class="dd-sec"><h4>${esc(loc)}</h4><div class="dd-mood big">${L.map(([m,s])=>`<figure class="dd-m">${phImg(m,m.cap||'Reference picture')}<figcaption>${s?`<b>Sc ${esc(s.no)}</b> `:''}<span contenteditable="true" data-ddcap="${esc(m.id)}" data-ph="Caption">${esc(m.cap||'')}</span></figcaption><button class="ttx" data-dd="delmood" data-m="${esc(m.id)}" aria-label="Remove picture" title="Remove picture">×</button></figure>`).join('')}</div></section>`).join('')}
+function ddTimeTab(){const E=P.scenes.map(s=>[s,ddEst(s)]),mins=E.reduce((a,[,e])=>a+e.mins,0),hrs=E.reduce((a,[,e])=>a+e.h,0),dh=ddDayHours();
+  if(!E.length)return '<div class="empty"><p>Import or write a script first.</p></div>';
+  return `<div class="dd-sum"><div><b>${Math.round(mins)} min</b><span>running time</span></div><div><b>${Math.round(hrs)} h</b><span>to shoot</span></div><div><b>${Math.ceil(hrs/dh)} days</b><span>at ${ddH(dh)} a day</span></div></div>
+  <p class="small muted dd-note">Estimates only. One script page is counted as one minute on screen. Shoot time uses your schedule's working hours and pages-per-day target, with extra time for fights, songs, crowd, effects and night. Type your own hours to replace any figure; clear it to go back to the estimate.</p>
+  <div class="tw"><table class="t rt"><thead><tr><th>Sc No</th><th>Location</th><th>Effect / Time</th><th>Pages</th><th>On screen</th><th>Shoot hours</th><th>Extra time for</th></tr></thead><tbody>${E.map(([s,e])=>`<tr data-q="${esc((s.no+' '+s.loc).toLowerCase())}"><td class="num" data-l="Sc No">${esc(s.no)}</td><td class="left" data-l="Location">${esc(s.loc)}</td><td data-l="Effect / Time">${esc(eff(s))}</td><td class="num" data-l="Pages">${fmtPg(e.pg)}</td><td class="num" data-l="On screen">${ddMin(e.mins)}</td><td class="num" data-l="Shoot hours"><div class="dd-hr${e.own?' own':''}" contenteditable="true" inputmode="decimal" data-ddh="${s.id}" aria-label="Shoot hours for scene ${esc(s.no)}">${e.h}</div></td><td class="left" data-l="Extra time for">${esc(e.why.join(', ')||'—')}</td></tr>`).join('')}</tbody></table></div>`}
+R.dirdesk=()=>{const D=DD(),tab=VIEW.dtab||'cards';let body,head=ddHead(tab==='cards'||tab==='time'?searchBox('Search scenes'):'');
+  if(tab==='tags')body=ddTagsTab();else if(tab==='mood')body=ddMoodTab();else if(tab==='time')body=ddTimeTab();else body=ddCards();
+  const lname=k=>(DD_LAYERS.find(x=>x[0]===k)||['','Note'])[1];let exp;
+  if(tab==='tags')exp={orient:'landscape',sheets:[{name:'Tags report',cols:[{h:'Tag',w:20},{h:'Scenes',w:8},{h:'Scene numbers',w:40},{h:'Locations',w:40},{h:'Shoot days',w:24}],rows:ddTagRows().map(([t,L])=>[t,L.length,L.map(s=>s.no).join(', '),uniq(L.map(s=>s.loc).filter(Boolean)).join(', '),ddDaysOf(L.map(s=>s.id)).join(', ')])}]};
+  else if(tab==='time')exp={orient:'portrait',sheets:[{name:'Time estimate',cols:[{h:'Sc No',w:8},{h:'Location',w:30},{h:'Effect / Time',w:14},{h:'Pages',w:8},{h:'On screen (min:sec)',w:12},{h:'Shoot hours',w:10},{h:'Extra time for',w:24}],rows:P.scenes.map(s=>{const e=ddEst(s);return [s.no,s.loc,eff(s),fmtPg(e.pg),ddMin(e.mins),e.h,e.why.join(', ')]})}]};
+  else exp={orient:'landscape',sheets:[{name:"Director's notes",cols:[{h:'Sc No',w:7},{h:'Location',w:22},{h:'What it is for',w:28},{h:'Emotion',w:18},{h:'What changes',w:24},{h:'Beats',w:30},{h:'Tags',w:20},{h:'Notes',w:44}],rows:P.scenes.map(s=>{const c=D.cards[s.id]||{};return [s.no,s.loc,c.purpose||'',c.emotion||'',c.change||'',c.beats||'',(D.tags[s.id]||[]).join(', '),ddNotesOf(s.id).map(n=>lname(n.layer)+': '+n.text).join('\n')]})}]};
+  return {html:head+body,exp}};
+
+/* ---- Day readiness: is everything in place before each shoot day ---- */
+const RD_GROUPS=[['cast','Cast confirmed',0],['loc','Location permitted',1],['cos','Costumes ready',1],['prop','Props sourced',1],['crowd','Juniors and extras booked',0],['veh','Vehicles and animals booked',0],['spl','Special equipment and effects arranged',0]];
+function RD(){if(!P.ready||typeof P.ready!=='object')P.ready={};const X=P.ready;if(!X.g||typeof X.g!=='object')X.g={};if(!X.d||typeof X.d!=='object')X.d={};return X}
+const rdKey=(g,item)=>g+'|'+String(item).toLowerCase().replace(/\s+/g,' ').trim();
+function rdNeeds(d){const sc=d.items.map(it=>P.scenes.find(s=>s.id===it.sid)).filter(Boolean),all=k=>uniq(sc.flatMap(s=>s[k]||[]).map(String).filter(Boolean));
+  return {sc,items:{cast:uniq(sc.flatMap(s=>s.artists.map(aName)).filter(Boolean)),loc:uniq(sc.map(s=>s.loc).filter(Boolean)),
+    cos:uniq(sc.flatMap(s=>(s.costumes||[]).filter(c=>c&&c.c).map(c=>((c.a?aName(c.a):c.n)||'Artist')+' – '+c.c))),
+    prop:uniq([...all('props'),...all('spl_props')]),crowd:uniq([...all('juniors'),...all('extras')]),veh:uniq([...all('vehicles'),...all('animals')]),spl:uniq([...all('sfx'),...all('equipment'),...all('spl_sets')])}}}
+function rdDone(g,glob,dayId,item){const X=RD(),k=rdKey(g,item);return !!(glob?X.g[k]:(X.d[dayId]||{})[k])}
+function rdStat(d){const N=rdNeeds(d);let tot=0,ok=0;RD_GROUPS.forEach(([g,,glob])=>N.items[g].forEach(it=>{tot++;if(rdDone(g,glob,d.id,it))ok++}));return {N,tot,ok}}
+function rdDays(){pruneSched();return SCH().days.filter(d=>d.type==='shoot'&&d.items.length)}
+R.ready=()=>{const days=rdDays(),nums=dayNums(),dates=dayDates();
+  const head=`<div class="ph"><div class="grow"><h1>Day readiness</h1><p>Before each shoot day: is the cast confirmed, are costumes and props ready, is the location permitted, are vehicles and crowd booked? Tick what is done. Anything left shows in red.</p></div><div class="acts"><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
+  if(!days.length)return {html:head+`<div class="empty"><p>Plan the shoot days first. This page then lists what each day needs, taken from the breakdown.</p><button class="btn pri" data-dd="go" data-p="sched">Open Shooting schedule</button></div>`,exp:{orient:'portrait',sheets:[{name:'Day readiness',cols:[{h:'Day',w:8},{h:'Date',w:16},{h:'Needs',w:26},{h:'Item',w:40},{h:'Ready',w:8}],rows:[]}]}};
+  const st=days.map(d=>[d,rdStat(d)]),ready=st.filter(([,x])=>x.tot&&x.ok===x.tot).length;
+  let open=VIEW.ropen;if(open===undefined){const f=st.find(([,x])=>x.ok<x.tot);open=f?f[0].id:null}
+  const cards=st.map(([d,x])=>{const left=x.tot-x.ok,isOpen=open===d.id,pct=x.tot?Math.round(x.ok/x.tot*100):100;
+    const groups=isOpen?`<div class="rd-body">${RD_GROUPS.map(([g,l,glob])=>{const L=x.N.items[g];if(!L.length)return '';const dn=L.filter(it=>rdDone(g,glob,d.id,it)).length;
+      return `<fieldset class="rd-g"><legend>${l} <span class="${dn===L.length?'ok':'no'}">${dn} / ${L.length}</span>${glob?'<small>counts for every day</small>':''}</legend><div class="rd-items">${L.map(it=>{const on=rdDone(g,glob,d.id,it);return `<label class="rd-i${on?' on':''}"><input type="checkbox" data-rd="${g}" data-d="${d.id}" data-k="${esc(it)}"${on?' checked':''}><span>${esc(it)}</span></label>`}).join('')}</div><button class="btn sm ghost" data-dd="rdall" data-g="${g}" data-d="${d.id}">${dn===L.length?'Untick all':'Tick all'}</button></fieldset>`}).join('')||'<p class="small muted">The breakdown lists nothing to arrange for these scenes.</p>'}</div>`:'';
+    return `<article class="rd-day${isOpen?' open':''}${left?'':' done'}"><button class="rd-h" data-dd="rdopen" data-d="${d.id}" aria-expanded="${isOpen}"><b class="rd-n">Day ${nums[d.id]||''}</b><span class="rd-t"><b>${esc(dates[d.id]?fmtD(dates[d.id],1):'No date yet')}</b><small>${esc('Sc '+x.N.sc.map(s=>s.no).join(', ')+' · '+uniq(x.N.sc.map(s=>s.loc).filter(Boolean)).join(', '))}</small></span><span class="rd-p"><span class="rd-bar"><i style="width:${pct}%"></i></span><em class="${left?'no':'ok'}">${left?left+' left':'Ready'}</em></span></button>${groups}</article>`}).join('');
+  const rows=[];st.forEach(([d,x])=>RD_GROUPS.forEach(([g,l,glob])=>x.N.items[g].forEach(it=>rows.push(['Day '+(nums[d.id]||''),dates[d.id]?fmtD(dates[d.id],1):'',l,it,rdDone(g,glob,d.id,it)?'Yes':'No']))));
+  return {html:head+`<div class="dd-sum"><div><b>${ready} of ${days.length}</b><span>days ready</span></div><div><b>${st.reduce((a,[,x])=>a+x.tot-x.ok,0)}</b><span>things left</span></div></div><div class="rd-list">${cards}</div>`,exp:{orient:'portrait',sheets:[{name:'Day readiness',cols:[{h:'Day',w:8},{h:'Date',w:16},{h:'Needs',w:26},{h:'Item',w:40},{h:'Ready',w:8}],rows}]}}};
+
+/* ---- Casting tracker ---- */
+const CS_STATUS=['Open','Shortlisted','Auditioned','Look test done','Locked'];
+function CASTG(){if(!P.casting||typeof P.casting!=='object')P.casting={};return P.casting}
+function csCount(x){const t=String(x),m=t.match(/\((\d+)\s*\+?\)/)||t.match(/^(\d+)\s/)||t.match(/\b(\d+)\b/);return m?+m[1]:0}
+function csCrowdRows(){const days=rdDays(),nums=dayNums(),dates=dayDates();const pack=sc=>{const L=uniq(sc.flatMap(s=>s.juniors||[]).map(String).filter(Boolean));const tot=L.reduce((a,x)=>a+csCount(x),0),un=L.filter(x=>!csCount(x)).length;return {L,tot,un}};
+  if(days.length)return {byDay:true,rows:days.map(d=>{const sc=d.items.map(it=>P.scenes.find(s=>s.id===it.sid)).filter(Boolean),p=pack(sc);return ['Day '+(nums[d.id]||''),dates[d.id]?fmtD(dates[d.id],1):'',sc.map(s=>s.no).join(', '),p.L.join(', '),p.tot,p.un]}).filter(r=>r[3])};
+  return {byDay:false,rows:P.scenes.map(s=>{const p=pack([s]);return ['Sc '+s.no,'',s.loc,p.L.join(', '),p.tot,p.un]}).filter(r=>r[3])}}
+R.casting=()=>{const C=CASTG(),cnt={};P.scenes.forEach(s=>s.artists.forEach(id=>cnt[id]=(cnt[id]||0)+1));
+  const L=P.artists.slice().sort((a,b)=>(a.tier==='Primary'?0:1)-(b.tier==='Primary'?0:1)||(cnt[b.id]||0)-(cnt[a.id]||0)||a.name.localeCompare(b.name));
+  const st=a=>(C[a.id]&&C[a.id].status)||(a.actor?'Locked':'Open');const locked=L.filter(a=>st(a)==='Locked').length;
+  const head=`<div class="ph"><div class="grow"><h1>Casting tracker</h1><p>Every character from the script: who is shortlisted, audition and look-test dates, and who is locked. Below it, how many junior artists each shoot day needs.</p></div><div class="acts">${searchBox('Search characters')}<button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
+  if(!L.length)return {html:head+'<div class="empty"><p>No characters yet. Import a script and run the breakdown first.</p></div>',exp:{orient:'landscape',sheets:[{name:'Casting',cols:[{h:'Character',w:22}],rows:[]}]}};
+  const tx=(a,f,ph)=>`<div class="dd-in sm" contenteditable="true" data-csf="${f}" data-a="${a.id}" data-ph="${esc(ph)}" aria-label="${esc(ph)}">${esc(f==='actor'?a.actor||'':(C[a.id]||{})[f]||'')}</div>`;
+  const dt=(a,f,l)=>`<input type="date" class="cs-d" data-csd="${f}" data-a="${a.id}" value="${esc((C[a.id]||{})[f]||'')}" aria-label="${l}">`;
+  const table=`<div class="tw"><table class="t rt cs-t"><thead><tr><th>Character</th><th>Level</th><th>Scenes</th><th>Status</th><th>Actor</th><th>Shortlist</th><th>Audition</th><th>Look test</th><th>Notes</th></tr></thead><tbody>${L.map(a=>{const s=st(a);return `<tr data-q="${esc((a.name+' '+(a.actor||'')+' '+s).toLowerCase())}"><td class="left" data-l="Character"><b>${esc(a.name)}</b>${a.designation?`<small class="muted"> ${esc(a.designation)}</small>`:''}</td><td data-l="Level">${esc(a.tier||'')}</td><td class="num" data-l="Scenes">${cnt[a.id]||0}</td><td data-l="Status"><select class="mini cs-s s-${s==='Locked'?'ok':s==='Open'?'no':'mid'}" data-css="${a.id}" aria-label="Status for ${esc(a.name)}">${CS_STATUS.map(x=>`<option${x===s?' selected':''}>${x}</option>`).join('')}</select></td><td class="left" data-l="Actor">${tx(a,'actor','Actor name')}</td><td class="left" data-l="Shortlist">${tx(a,'short','Names being considered')}</td><td data-l="Audition">${dt(a,'aud','Audition date')}</td><td data-l="Look test">${dt(a,'look','Look test date')}</td><td class="left" data-l="Notes">${tx(a,'notes','Notes')}</td></tr>`}).join('')}</tbody></table></div>`;
+  const cr=csCrowdRows();const crowd=`<h3 class="gk">Junior artists needed${cr.byDay?' per shoot day':' per scene'}</h3>${cr.byDay?'':'<p class="small muted">Plan the shoot days in Shooting schedule to see this per day.</p>'}${cr.rows.length?`<div class="tw"><table class="t rt"><thead><tr><th>${cr.byDay?'Day':'Scene'}</th>${cr.byDay?'<th>Date</th>':''}<th>${cr.byDay?'Scenes':'Location'}</th><th>Groups</th><th>People</th></tr></thead><tbody>${cr.rows.map(r=>`<tr><td class="num" data-l="${cr.byDay?'Day':'Scene'}">${esc(r[0])}</td>${cr.byDay?`<td data-l="Date">${esc(r[1])}</td>`:''}<td class="left" data-l="${cr.byDay?'Scenes':'Location'}">${esc(r[2])}</td><td class="left" data-l="Groups">${esc(r[3])}</td><td class="num" data-l="People"><b>${r[4]||'—'}</b>${r[5]?`<small class="muted"> + ${r[5]} group${r[5]===1?'':'s'} with no number</small>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<p class="small muted">The breakdown lists no junior artists or crowd yet.</p>'}`;
+  return {html:head+`<div class="dd-sum"><div><b>${locked} of ${L.length}</b><span>roles locked</span></div><div><b>${L.filter(a=>st(a)==='Open').length}</b><span>still open</span></div></div>`+table+crowd,
+    exp:{orient:'landscape',sheets:[{name:'Casting',cols:[{h:'Character',w:22},{h:'Level',w:10},{h:'Scenes',w:8},{h:'Status',w:14},{h:'Actor',w:22},{h:'Shortlist',w:30},{h:'Audition',w:12},{h:'Look test',w:12},{h:'Notes',w:30}],rows:L.map(a=>{const c=C[a.id]||{};return [a.name,a.tier||'',cnt[a.id]||0,st(a),a.actor||'',c.short||'',c.aud?fmtD(c.aud,1):'',c.look?fmtD(c.look,1):'',c.notes||'']})},
+      {name:'Junior artists',cols:[{h:cr.byDay?'Day':'Scene',w:10},{h:'Date',w:16},{h:cr.byDay?'Scenes':'Location',w:26},{h:'Groups',w:44},{h:'People',w:10},{h:'Groups with no number',w:12}],rows:cr.rows}]}}};
+
+function ddMount(){try{phHydrate($('#content'))}catch(e){}}
+const DD_PAGES=['dirdesk','ready','casting'];
+document.addEventListener('click',async e=>{if(!P||!DD_PAGES.includes(page))return;const t=e.target.closest('[data-dd]');if(!t)return;const a=t.dataset.dd,D=DD();
+  {const ae=document.activeElement;if(ae&&ae!==t&&ae.closest&&ae.closest('.dd-add'))ae.blur()}
+  if(a==='go'){page=t.dataset.p;render();return}
+  if(a==='open'){VIEW.dopen=VIEW.dopen===t.dataset.s?null:t.dataset.s;render(true);return}
+  if(a==='layer'){VIEW.dlay=VIEW.dlay||{};VIEW.dlay[t.dataset.l]=!VIEW.dlay[t.dataset.l];render(true);return}
+  if(a==='tag'){const sid=t.dataset.s,tg=t.dataset.t;snapshot();const L=D.tags[sid]=D.tags[sid]||[];const i=L.indexOf(tg);if(i>=0)L.splice(i,1);else L.push(tg);if(!L.length)delete D.tags[sid];touch([]);render(true);return}
+  if(a==='newtag'){const sid=t.dataset.s;askText('New tag','Name of the tag (for example Underwater, Period set, Prosthetics)',nm=>{nm=String(nm).replace(/\s+/g,' ').trim().slice(0,30);if(!nm)return;snapshot();const have=ddAllTags().find(x=>x.toLowerCase()===nm.toLowerCase());const tg=have||nm;if(!have)D.custom.push(tg);const L=D.tags[sid]=D.tags[sid]||[];if(!L.includes(tg))L.push(tg);logChange(`Director's desk · tag "${tg}" added`,'dirdesk',true);touch([]);render(true)});return}
+  if(a==='delnote'){snapshot();D.notes=D.notes.filter(n=>n.id!==t.dataset.n);touch([]);render(true);return}
+  if(a==='addmood'){const sid=t.dataset.s,fs=await pickImages(true);if(!fs.length)return;const ids=await phAddFiles(fs.slice(0,12));if(!ids.length)return;snapshot();ids.forEach(id=>D.mood.push({id,sid,cap:''}));logChange(`Director's desk · ${ids.length} reference picture${ids.length===1?'':'s'} added`,'dirdesk',true);touch([]);render(true);return}
+  if(a==='delmood'){snapshot();D.mood=D.mood.filter(m=>m.id!==t.dataset.m);touch([]);render(true);try{PH.del(t.dataset.m)}catch(e){}return}
+  if(a==='suggest'){let n=0;snapshot();P.scenes.forEach(s=>{const L=D.tags[s.id]=D.tags[s.id]||[];ddSuggest(s).forEach(tg=>{if(!L.includes(tg)){L.push(tg);n++}});if(!L.length)delete D.tags[s.id]});if(n){logChange(`Director's desk · ${n} tags suggested from the breakdown`,'dirdesk',true);touch([])}toast(n?`${n} tag${n===1?'':'s'} added from the breakdown.`:'Nothing new to add. Run the AI breakdown first if the lists are empty.',4500);render(true);return}
+  if(a==='rdopen'){VIEW.ropen=t.closest('.rd-day').classList.contains('open')?null:t.dataset.d;render(true);return}
+  if(a==='rdall'){const d=rdDays().find(x=>x.id===t.dataset.d);if(!d)return;const g=RD_GROUPS.find(x=>x[0]===t.dataset.g),X=RD(),L=rdNeeds(d).items[g[0]],all=L.every(it=>rdDone(g[0],g[2],d.id,it));snapshot();const box=g[2]?X.g:(X.d[d.id]=X.d[d.id]||{});L.forEach(it=>{const k=rdKey(g[0],it);if(all)delete box[k];else box[k]=1});VIEW.ropen=d.id;logChange(`Day readiness · ${g[1]} ${all?'unticked':'ticked'}`,'ready',true);touch([]);render(true);return}});
+document.addEventListener('submit',e=>{const f=e.target.closest&&e.target.closest('form[data-ddadd]');if(!f||!P)return;e.preventDefault();const inp=f.querySelector('input'),txt=inp.value.replace(/\s+/g,' ').trim();if(!txt)return;const layer=f.querySelector('select').value;snapshot();DD().notes.push({id:uid(),sid:f.dataset.ddadd,layer,text:txt.slice(0,600),at:Date.now()});VIEW.dlast=layer;if(VIEW.dlay)VIEW.dlay[layer]=false;logChange(`Director's desk · note added`,'dirdesk',true);touch([]);inp.value='';inp.blur();render(true);setTimeout(()=>{const n=document.querySelector(`form[data-ddadd="${f.dataset.ddadd}"] input`);if(n)n.focus()},40)});
+document.addEventListener('focusout',e=>{const el=e.target;if(!P||!el.dataset||!DD_PAGES.includes(page))return;const v=(el.innerText||'').replace(/ /g,' ').trim();
+  if(el.dataset.ddf){const D=DD(),sid=el.dataset.s,k=el.dataset.ddf,c=D.cards[sid]||{};if((c[k]||'')===v)return;snapshot();D.cards[sid]=c;if(v)c[k]=v.slice(0,2000);else delete c[k];logChange(`Director's desk · scene card edited`,'dirdesk',true);touch([])}
+  else if(el.dataset.ddn){const n=DD().notes.find(x=>x.id===el.dataset.ddn);if(!n||n.text===v)return;snapshot();if(v)n.text=v.slice(0,600);else DD().notes=DD().notes.filter(x=>x!==n);touch([])}
+  else if(el.dataset.ddcap){const m=DD().mood.find(x=>x.id===el.dataset.ddcap);if(!m||(m.cap||'')===v)return;snapshot();m.cap=v.slice(0,120);touch([])}
+  else if(el.dataset.ddh){const D=DD(),sid=el.dataset.ddh,s=P.scenes.find(x=>x.id===sid);if(!s)return;const c=D.cards[sid]||{},num=parseFloat(v.replace(',','.'));const est=ddEst(Object.assign({},s)).est;const nv=isFinite(num)&&num>0&&num<=72&&num!==est?Math.round(num*4)/4:0;if((+c.hrs||0)===nv){el.textContent=nv||est;return}snapshot();D.cards[sid]=c;if(nv)c.hrs=nv;else delete c.hrs;logChange(`Director's desk · shoot hours changed`,'dirdesk',true);touch([]);needsRender=true;setTimeout(()=>render(true),0)}
+  else if(el.dataset.csf){const a=A(el.dataset.a);if(!a)return;const f=el.dataset.csf;if(f==='actor'){if((a.actor||'')===v)return;snapshot();a.actor=v.slice(0,80);a.locked=1}else{const C=CASTG(),c=C[a.id]||{};if((c[f]||'')===v)return;snapshot();C[a.id]=c;if(v)c[f]=v.slice(0,400);else delete c[f]}logChange(`Casting · ${a.name} updated`,'casting',true);touch([])}});
+document.addEventListener('change',e=>{const el=e.target;if(!P||!el.dataset||!DD_PAGES.includes(page))return;
+  if(el.dataset.rd){const X=RD(),g=RD_GROUPS.find(x=>x[0]===el.dataset.rd);if(!g)return;snapshot();const box=g[2]?X.g:(X.d[el.dataset.d]=X.d[el.dataset.d]||{}),k=rdKey(g[0],el.dataset.k);if(el.checked)box[k]=1;else delete box[k];VIEW.ropen=el.dataset.d;touch([]);render(true)}
+  else if(el.dataset.css){const a=A(el.dataset.css);if(!a)return;snapshot();const C=CASTG();C[a.id]=C[a.id]||{};C[a.id].status=el.value;logChange(`Casting · ${a.name} is ${el.value}`,'casting',true);touch([]);render(true)}
+  else if(el.dataset.csd){const a=A(el.dataset.a);if(!a)return;snapshot();const C=CASTG();C[a.id]=C[a.id]||{};if(el.value)C[a.id][el.dataset.csd]=el.value;else delete C[a.id][el.dataset.csd];touch([])}});
+
 function TASKS(){if(!Array.isArray(P.tasks))P.tasks=[];return P.tasks}
 R.tasks=()=>{const T=TASKS();const today=isoD(new Date());
   const head=`<div class="ph"><div class="grow"><h1>Tasks</h1><p>Everything the team has to do before and during the shoot. Drag a card to another column, or use the arrows.</p></div><div class="acts"><button class="btn sm" data-act="aiTasks">Write with AI</button><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
@@ -5541,7 +5729,7 @@ function render(keepScroll){const c=$('#content');const ae=document.activeElemen
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 const SB_KEYS=[['de','Day exterior'],['di','Day interior'],['ne','Night exterior'],['ni','Night interior']];
 /* the stripboard colour code every production office uses: yellow day exterior, white day interior, green night exterior, blue night interior */

@@ -908,6 +908,15 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
 .ck-comedy .bk-art{background:radial-gradient(circle at 80% 14%,#e8472f 0,#e8472f calc(var(--u) * .55),rgba(232,71,47,0) calc(var(--u) * .56)),radial-gradient(circle at 24% 88%,rgba(255,255,255,.55) 0,rgba(255,255,255,.55) calc(var(--u) * .9),rgba(255,255,255,0) calc(var(--u) * .91))}
 /* cover picker */
 .ck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.bc-f{display:flex;flex-direction:column;gap:14px}
+@media (min-width:821px){
+  .modal.bc-wide{width:min(940px,100%)}
+  .bc-wide .bc-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:start}
+  .bc-wide .ck-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:821px) and (max-height:700px){
+  .bc-wide .ck-pick .bk-page{width:66px;height:86px}.bc-wide .bc-f{gap:8px}.bc-wide .modal-h{padding-top:12px}.bc-wide .modal-b{padding-bottom:10px}
+}
 .ck-pick{border:0;background:transparent;padding:6px 4px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:inherit;font:inherit}
 .ck-pick .bk-page{position:relative;inset:auto;display:block;width:85px;height:110px;border-radius:2px;box-shadow:0 0 0 .5px rgba(0,0,0,.2),0 4px 10px rgba(0,0,0,.25)!important}
 .ck-pick .bk-page span{display:block}.ck-pick .bk-ct{display:flex!important;top:30%}.ck-pick .bk-cf{display:none!important}
@@ -5570,9 +5579,9 @@ function bkCoverInner(c){c=c||bkCoverInfo();const n=(P.scenes||[]).length;return
 function bkCoverHtml(u){const c=bkCoverInfo();return `<div class="bk-page bk-cover ck-${c.style} wr-paper" style="--u:${u||38}px">${bkCoverInner(c)}</div>`}
 function bookCoverEdit(){if(!P)return;const c=bkCoverInfo();const tp=draft().tp;let pick=tp.cover&&COVERS[tp.cover]?tp.cover:'auto';const f=(id,l,v,ph)=>`<div class="fieldbox"><label for="${id}">${l}</label><input type="text" id="${id}" maxlength="120" value="${esc(v)}" placeholder="${esc(ph)}"></div>`;
   const thumb=(id,label)=>{const st=id==='auto'?bkCoverStyle.call(null):id;return `<button type="button" class="ck-pick" data-ck="${id}" aria-pressed="${pick===id}"><span class="bk-page bk-cover ck-${id==='auto'?'AUTO':st} wr-paper" style="--u:10px">${bkCoverInner(Object.assign({},c,{genre:'',writer:'',director:'',prod:''})).replace(/<div/g,'<span').replace(/<\/div>/g,'</span>')}</span><small>${label}</small></button>`};
-  openModal(`<div class="modal-h"><h2>Book cover</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">${f('bcT','Title',c.title,'Film title')}${f('bcG','Genre line (optional)',tp.genre||c.genre,'e.g. Psychological Thriller')}${f('bcW','Written by',c.writer,'Writer name')}${f('bcD','Directed by (optional)',c.director,'Director name')}${f('bcP','Production (optional)',c.prod,'Production house')}
-  <div class="fieldbox"><label>Cover design</label><div class="ck-grid" id="ckGrid">${thumb('auto','Match genre')}${Object.entries(COVERS).map(([k,l])=>thumb(k,l)).join('')}</div></div></div>
-  <div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="bcSave">Save cover</button></div>`);
+  openModal(`<div class="modal-h"><h2>Book cover</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b bc-b"><div class="bc-f">${f('bcT','Title',c.title,'Film title')}${f('bcG','Genre line (optional)',tp.genre||c.genre,'e.g. Psychological Thriller')}${f('bcW','Written by',c.writer,'Writer name')}${f('bcD','Directed by (optional)',c.director,'Director name')}${f('bcP','Production (optional)',c.prod,'Production house')}</div>
+  <div class="fieldbox bc-d"><label>Cover design</label><div class="ck-grid" id="ckGrid">${thumb('auto','Match genre')}${Object.entries(COVERS).map(([k,l])=>thumb(k,l)).join('')}</div></div></div>
+  <div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="bcSave">Save cover</button></div>`);document.querySelector('.modal').classList.add('bc-wide');
   const autoFix=()=>{const g=$('#bcG').value;const m=COVER_RX.find(([,r])=>r.test(g));const el=document.querySelector('.ck-pick[data-ck="auto"] .bk-cover');if(el)el.className='bk-page bk-cover ck-'+(m?m[0]:'classic')+' wr-paper'};autoFix();$('#bcG').oninput=autoFix;
   $('#ckGrid').onclick=e=>{const b=e.target.closest('.ck-pick');if(!b)return;pick=b.dataset.ck;document.querySelectorAll('.ck-pick').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))};
   $('#bcSave').onclick=()=>{const D=draft();const title=$('#bcT').value.trim();if(title){D.tp.title=title;P.title=title}D.tp.genre=$('#bcG').value.trim();D.tp.author=$('#bcW').value.trim();D.tp.director=$('#bcD').value.trim();D.tp.cover=pick==='auto'?'':pick;P.production=$('#bcP').value.trim();D.at=Date.now();dirty.draft=true;logChange('Book cover edited','script',true);touch([]);closeModal();try{syncTop()}catch(e){}render();toast('Cover saved')}}

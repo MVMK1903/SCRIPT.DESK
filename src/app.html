@@ -849,6 +849,13 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
 .i-beats{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='8' height='6' rx='1.5'/%3E%3Crect x='13' y='4' width='8' height='6' rx='1.5'/%3E%3Crect x='3' y='14' width='8' height='6' rx='1.5'/%3E%3Crect x='13' y='14' width='8' height='6' rx='1.5'/%3E%3C/svg%3E")}
 .i-outline{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5v14 M8 6h12 M11 10h9 M11 14h9 M8 18h12'/%3E%3C/svg%3E")}
 /* ---- v2.2 revisions ---- */
+/* ---- Write: real sheets of paper. The single editable document stays as it is; each page gets its own sheet drawn behind it. ---- */
+.wr-paper.sheets{background:transparent!important;box-shadow:none!important;isolation:isolate}
+.wr-sheets{position:absolute;inset:0;pointer-events:none;z-index:-1}
+.wr-sheet{position:absolute;left:0;right:0;background:#fffffe linear-gradient(to bottom,rgba(60,40,10,.022),rgba(60,40,10,0) 28px,rgba(60,40,10,0) calc(100% - 28px),rgba(60,40,10,.028));border-radius:2px;box-shadow:0 0 0 .5px rgba(0,0,0,.11),0 1px 2px rgba(0,0,0,.06),0 12px 32px rgba(0,0,0,.09)}
+.wr-paper.sheets .wr-pg{border-top:0;color:#5c5c5c}
+body.wr-mid .wr-sheet{background:#1d1d20;box-shadow:0 0 0 .5px rgba(255,255,255,.08),0 12px 32px rgba(0,0,0,.4)}
+body.wr-mid .wr-paper.sheets .wr-pg{color:#8a8a90}
 .wr-doc .el.rv{color:var(--rc)}
 .wr-star{position:absolute;right:calc(var(--u) * 0.45);font:700 calc(var(--u) / 6)/1 "Courier Prime","Courier New",monospace;pointer-events:none}
 .wr-doc .el.om-hide{opacity:.32;text-decoration:line-through}
@@ -2750,6 +2757,23 @@ function wrTouch(structural){if(WXV.tw)requestAnimationFrame(wxTypewriter);clear
 function wrSave(){if(!P||!wrDoc())return;wxTrack();const els=wrRead();const D=draft();if(JSON.stringify(els)===JSON.stringify(D.els)){wrSavedLabel();return}D.els=els;D.at=Date.now();dirty.draft=true;touch([]);wrSavedLabel()}
 function wrSavedLabel(){const st=$('#wrSaved');if(!st)return;const at=draft().at;st.textContent=at?'Saved on this device '+new Date(at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Saved on this device'}
 
+/* Sheets of paper: one sheet per page behind the document. Element formatting is untouched; only the space at a page break grows so
+   every page sits on its own Letter-size sheet (wide screens) or its own card (phones). Returns the page-number labels. */
+function wrSheets(d,kids,marks){const paper=$('#wrPaper'),layer=$('#wrSheets');if(!paper||!layer)return '';
+  kids.forEach(el=>{if(el.style.marginTop&&!el.classList.contains('pb'))el.style.marginTop=''});
+  const cs=getComputedStyle(paper),wide=window.matchMedia('(min-width:821px)').matches,u=wide?paper.clientWidth/8.5:0;
+  const tm=parseFloat(cs.paddingTop)||0,padB=parseFloat(cs.paddingBottom)||0,bm=Math.min(padB,wide?u*1.5:28),PH=wide?u*11:0,GAP=wide?Math.max(20,u*.32):14;
+  const tops=marks.map(([el])=>el.offsetTop),mts=marks.map(([el])=>parseFloat(getComputedStyle(el).marginTop)||0);
+  const last=d.lastElementChild,docPad=parseFloat(d.style.paddingBottom)||0;let docEnd=last?last.offsetTop+last.offsetHeight:tm;
+  if(!marks.length)docEnd=Math.max(docEnd,tm+d.offsetHeight-docPad);
+  let y=0,sheets='',labels='';const n=marks.length+1;
+  for(let k=0;k<n;k++){const start=k?tops[k-1]:tm,end=k<marks.length?tops[k]-mts[k]:docEnd,ch=Math.max(0,end-start),h=Math.max(PH,tm+ch+bm);
+    sheets+=`<div class="wr-sheet" style="top:${y.toFixed(1)}px;height:${h.toFixed(1)}px"></div>`;
+    if(k<marks.length){const mt=h-tm-ch+GAP+tm;if(Math.abs(mt-mts[k])>.5)marks[k][0].style.marginTop=mt.toFixed(1)+'px';
+      labels+=`<div class="wr-pg" style="top:${(y+h+GAP+(wide?u*.45:3)).toFixed(1)}px">${marks[k][1]}.</div>`}
+    else{const extra=h-(tm+ch+padB);const want=extra>.5?extra.toFixed(1)+'px':'';if(d.style.paddingBottom!==want)d.style.paddingBottom=want}
+    y+=h+GAP}
+  layer.innerHTML=sheets;paper.classList.add('sheets');return labels}
 /* ---- Decorations: scene numbers, page breaks, scene list, counts ---- */
 function wrDecorate(){const d=wrDoc();if(!d)return;
   if(!d.children.length){d.innerHTML=wrBlockHtml({t:draft().els.length?'a':'h',x:''})}
@@ -2765,7 +2789,8 @@ function wrDecorate(){const d=wrDoc();if(!d)return;
     else if(line+need>LP&&line>0){lab=lps?lockNo+A_LET[Math.min(25,++suf)]:String(page+1)}
     if(lab!==null){page++;line=0;el.classList.add('pb');el.dataset.pg=String(page);marks.push([el,lab]);line=lines}else{el.classList.remove('pb');delete el.dataset.pg;line+=gap+lines}});
   const stars=revDecorate(kids);chHlDecorate(kids);
-  const mk=$('#wrMarks');if(mk)mk.innerHTML=marks.map(([el,pg])=>`<div class="wr-pg" style="top:${el.offsetTop-Math.round(el.offsetHeight>0?parseFloat(getComputedStyle(el).marginTop)/2:12)}px">${pg}.</div>`).join('')+(REVS().show!==false?stars.map(([el,st])=>el.offsetHeight?`<div class="wr-star" style="top:${el.offsetTop}px;height:${el.offsetHeight}px;color:${st.ink||'#1f5fd1'}">*</div>`:'').join(''):'');
+  const pgHtml=wrSheets(d,kids,marks);
+  const mk=$('#wrMarks');if(mk)mk.innerHTML=pgHtml+(REVS().show!==false?stars.map(([el,st])=>el.offsetHeight?`<div class="wr-star" style="top:${el.offsetTop}px;height:${el.offsetHeight}px;color:${st.ink||'#1f5fd1'}">*</div>`:'').join(''):'');
   const olc=olColors();kids.forEach(el=>{const sl=el.dataset.t==='h'&&olc?olc[U(el.dataset.n||'')]:null;if(sl){el.style.setProperty('--sl',sl);el.dataset.sl='1'}else if(el.dataset.sl){el.style.removeProperty('--sl');delete el.dataset.sl}if(el.dataset.alt)el.dataset.altn=wxAlts(el).length+1;else delete el.dataset.altn});
   const side=$('#wrScenes');if(side){const hs=kids.map((el,i)=>[el,i]).filter(([el])=>el.dataset.t==='h');const curH=(()=>{let h=null;for(const el of kids){if(el.dataset.t==='h')h=el;if(el===cur)break}return h})();
     side.innerHTML=hs.length?hs.map(([el,i])=>`<button data-wrgo="${i}" aria-current="${el===curH}"${olc&&olc[U(nums[i])]?` style="--sl:${olc[U(nums[i])]}" data-sl="1"`:''}><b>${esc(nums[i])}</b><span>${esc(U(el.textContent.trim())||'(new scene)')}</span></button>`).join(''):'<p class="small muted" style="margin:6px">Scene headings appear here.</p>'}
@@ -2846,13 +2871,13 @@ R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   `<div class="wr"><aside class="wr-side"><div class="seg wx-side-tabs" role="tablist"><button type="button" data-wrside="scenes" aria-pressed="true">Scenes</button><button type="button" data-wrside="notes" aria-pressed="false">Notes</button></div><div id="wrScenes"></div><div id="wrNotes" hidden></div></aside>
    <div class="wr-main" id="wrMain">${wxToolsHtml()}<div class="wr-bar"><div class="wr-types" role="toolbar" aria-label="Element type">${WKEYS.map((k,i)=>`<button type="button" data-wrt="${k}" aria-pressed="false" title="${WT[k]} (Ctrl+${i+1})">${WT_SHORT[k]}</button>`).join('')}</div>
      ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
-     <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}${/[\u0600-\u06FF\u0900-\u0DFF]/.test(JSON.stringify(draft().els.slice(0,120)))?' ind':''}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
+     <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}${/[\u0600-\u06FF\u0900-\u0DFF]/.test(JSON.stringify(draft().els.slice(0,120)))?' ind':''}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-sheets" id="wrSheets" aria-hidden="true"></div><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
      <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div></div>`,exp:null}};
 function wrMount(){const d=wrDoc();if(!d)return;const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
   d.addEventListener('keydown',wrKey);d.addEventListener('input',wrInput);d.addEventListener('paste',wrPaste);
   d.addEventListener('blur',()=>{setTimeout(hideAC,120);clearTimeout(WR.saveT);wrSave()});
-  $('#wrPaper').addEventListener('mousedown',e=>{if(e.target.id==='wrPaper'||e.target.id==='wrMarks'){e.preventDefault();placeCaret(d.lastElementChild)}});
+  $('#wrPaper').addEventListener('mousedown',e=>{if(e.target.id==='wrPaper'||e.target.id==='wrMarks'||e.target.id==='wrSheets'){e.preventDefault();placeCaret(d.lastElementChild)}});
   document.querySelectorAll('[data-wrt]').forEach(x=>{x.addEventListener('mousedown',e=>e.preventDefault());x.addEventListener('click',()=>{let b=wrCur();if(!b){b=d.lastElementChild;placeCaret(b)}wrPush();setType(b,x.dataset.wrt);if(x.dataset.wrt!=='p')placeCaret(b);wrBarSync()})});
   $('#wrScenes').addEventListener('click',e=>{const g=e.target.closest('[data-wrgo]');if(!g)return;const el=d.children[+g.dataset.wrgo];if(el){el.scrollIntoView({block:'start'});placeCaret(el)}});
   document.querySelectorAll('[data-wrx]').forEach(x=>{x.addEventListener('mousedown',e=>e.preventDefault());x.addEventListener('click',()=>wxTool(x.dataset.wrx))});

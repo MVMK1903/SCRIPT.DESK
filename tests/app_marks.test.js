@@ -7,4 +7,14 @@ console.log(JSON.stringify(r));
 assert.strictEqual(r.n,2);assert.strictEqual(r.rm,8);
 assert(!/celtx|final draft|fade in\b(?!:)|writerduet|CONTINUED|\(MORE\)|Page 4/i.test(r.txt.replace(/FADE IN:/g,'')));
 assert(/FADE IN:/.test(r.txt)&&/in Pages and was happy/.test(r.txt)&&/CHURCH FATHER walks/.test(r.txt));
+const E=await pg.evaluate(()=>({
+ a:stripAppMarks('He wrote Page 4 of the diary.\nPAGE 12\nShe said: made with love.\nCreated using Celtx').text,
+ b:stripAppMarks('Written in the stars.\nMade in India\nSaved in Pages and Word docs').text,
+ c:detectScenes('1 EXT. LAKE - DAY\nMan walks.\nCreated using Celtx\n(MORE)\n').scenes[0].text,
+ d:detectScenes('Created using Celtx\n\n1 EXT. LAKE - DAY\nMan walks.').front,
+ e:stripAppMarks('').n+stripAppMarks(null).n}));
+console.log(JSON.stringify(E));
+assert.strictEqual(E.a,'He wrote Page 4 of the diary.\nShe said: made with love.');
+assert(/Written in the stars/.test(E.b)&&/Made in India/.test(E.b)&&/Saved in Pages/.test(E.b));
+assert.strictEqual(E.c.trim(),'Man walks.');assert.strictEqual(E.d.trim(),'');assert.strictEqual(E.e,0);
 assert.deepStrictEqual(errs,[]);console.log('PASS app marks removed, story text kept');await b.close()})().catch(e=>{console.error('FAIL',e.message);process.exit(1)})

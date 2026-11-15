@@ -3086,7 +3086,7 @@ function wrInput(){const b=wrCur();if(!WR.typing){wrPush()}revMark(b);clearTimeo
   if(b)b.classList.toggle('wr-empty',!b.textContent.length);
   wxActive();wrTouch(false);wrSuggest()}
 function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipboardData).getData('text/plain');if(!raw)return;wrPush();
-  const text=raw.replace(/\r\n?/g,'\n');if(!/\n/.test(text.trim())){document.execCommand('insertText',false,text);return}
+  const text=stripAppMarks(raw.replace(/\r\n?/g,'\n')).text;if(!/\n/.test(text.trim())){document.execCommand('insertText',false,text);return}
   const r=detectScenes(text);let blocks=r.scenes.length?[...textToBlocks(r.front),...scenesToEls(r.scenes,false)]:textToBlocks(text);if(!blocks.length)return;
   const b=wrCur();const d=wrDoc();const frag=document.createElement('div');frag.innerHTML=blocks.map(wrBlockHtml).join('');const nodes=[...frag.children];
   let ref=b;if(b&&!b.textContent.trim()){b.replaceWith(...nodes)}else if(ref){ref.after(...nodes)}else d.append(...nodes);
@@ -3133,7 +3133,7 @@ function wrTitle(){const tp=draft().tp;const f=(id,l,v,ph)=>`<div class="fieldbo
 function wrOpen(){const inp=document.createElement('input');inp.type='file';inp.accept='.fountain,.fdx,.txt,.docx,.pdf,.text';inp.onchange=async()=>{const file=inp.files[0];if(!file)return;
   try{toast('Reading '+file.name+'…');let text=await fileToText(file,m=>{});if(text&&text.json)throw new Error('That is a ScriptDesk backup. Open it with Import script.');
     text=String(text).replace(/^\s*(Title|Credit|Author|Authors|Source|Draft date|Contact)\s*:.*$/gim,'');text=text.replace(/^\.(?=[A-Z])/gm,'').replace(/^[@!>]\s?/gm,'').replace(/\s*#[\w.-]+#\s*$/gm,'');
-    const r=detectScenes(text);const els=r.scenes.length?[...textToBlocks(r.front),...scenesToEls(r.scenes,true)]:textToBlocks(text);if(!els.length){toast('No script text found in that file.');return}
+    text=stripAppMarks(text).text;const r=detectScenes(text);const els=r.scenes.length?[...textToBlocks(r.front),...scenesToEls(r.scenes,true)]:textToBlocks(text);if(!els.length){toast('No script text found in that file.');return}
     const D=draft();if(D.els.some(e=>String(e.x||'').trim())&&!confirm('Replace the script in the writer with '+file.name+'? You can undo with the Undo button.'))return;
     snapshot();D.els=els;D.at=Date.now();dirty.draft=true;logChange(`${file.name} opened in the writer (${r.scenes.length} scenes)`,'script',true);touch([]);render();toast(`Opened ${file.name}: ${r.scenes.length} scenes. Check the element types.`)}
   catch(e){toast((e&&e.message)||errMsg(e),6000)}};inp.click()}
@@ -5623,9 +5623,10 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       if(scanned){text=await ocrPdf(scanned,m=>info.textContent=m);$('#iText').value=text}
       if(!text.trim()){say('Choose a file or paste the script first.');btn.disabled=false;return}
       const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
-      let r=detectScenes(text);
+      const _am=stripAppMarks(text);text=_am.text;
+      let r=detectScenes(text);r.removed=(r.removed||0)+_am.n;
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
-      let aiWhy='';if(weak&&AI.sample){say('Claude is finding the scenes…');JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length)r=r2}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
+      let aiWhy='';if(weak&&AI.sample){say('Claude is finding the scenes…');JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length){r2.removed=r.removed;r=r2}}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
       if(!r.scenes.length){if(oneOk){r={front:'',scenes:[newScene({no:'1',heading:'',text:text.trim(),cues:extractCues(text)})]}}else{oneOk=true;say('No scene headings found'+(aiWhy?' (AI: '+aiWhy+')':'')+'. Add headings like "SCENE NO 1  EXT. VILLAGE - DAY", or press Find scenes again to import everything as one scene.');btn.disabled=false;return}}
       if(r.removed)toast('Removed '+r.removed+' line'+(r.removed===1?'':'s')+' left by the writing app (like "Created using Celtx" or page labels).',5000);
       await flushNow();

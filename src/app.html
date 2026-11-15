@@ -868,7 +868,7 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
 .bk-nav{position:absolute;top:50%;width:44px;height:44px;margin-top:-22px;font-size:22px;z-index:8}
 .bk-prev{left:16px}.bk-next{right:16px}.bk-nav[disabled]{opacity:.25;cursor:default}
 .bk-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:0 0 18px}
-.bk-book{position:relative;display:flex;perspective:2600px;padding:7px;border-radius:6px;background:linear-gradient(#3b2f25,#2a211a);box-shadow:0 30px 70px rgba(0,0,0,.55),0 4px 10px rgba(0,0,0,.4)}
+.bk-book{position:relative;display:flex;perspective:4600px;padding:7px;border-radius:6px;background:linear-gradient(#3b2f25,#2a211a);box-shadow:0 30px 70px rgba(0,0,0,.55),0 4px 10px rgba(0,0,0,.4)}
 .bk-slot{position:relative;width:calc(var(--u) * 8.5);height:calc(var(--u) * 11);overflow:hidden}
 .bk-l{border-radius:2px 0 0 2px;box-shadow:-1px 0 0 #d9cfba,-2px 0 0 #f1e9d8,-3px 0 0 #d2c7b0,-4px 0 0 #ece3d0}
 .bk-r{border-radius:0 2px 2px 0;box-shadow:1px 0 0 #d9cfba,2px 0 0 #f1e9d8,3px 0 0 #d2c7b0,4px 0 0 #ece3d0}
@@ -908,11 +908,16 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
 .fs-cover:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:4px}
 .fs-side{flex:1;min-width:220px}.fs-side h2{margin:0 0 6px;font:800 24px/1.2 var(--f-ui)}.fs-side p{margin:0 0 8px}
 .fs-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.bk-leaf{position:absolute;top:7px;bottom:7px;left:50%;width:calc(var(--u) * 8.5);transform-origin:left center;transform-style:preserve-3d;z-index:5;will-change:transform}
+.bk-leaf{position:absolute;top:7px;bottom:7px;left:50%;width:calc(var(--u) * 8.5);transform-style:preserve-3d;z-index:5}
+.bk-seg{position:absolute;top:0;height:100%;transform-origin:left center;transform-style:preserve-3d;will-change:transform}
 .bk-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .bk-back{transform:rotateY(180deg)}
-.bk-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,rgba(0,0,0,.38),rgba(0,0,0,.06) 60%,rgba(0,0,0,0));opacity:0;z-index:2}
-.bk-back .bk-shade{background:linear-gradient(to left,rgba(0,0,0,.38),rgba(0,0,0,.06) 60%,rgba(0,0,0,0))}
+.bk-clip{position:absolute;top:0}
+.bk-shade{position:absolute;inset:0;pointer-events:none;background:#1a1206;opacity:0;z-index:2}
+.bk-blank.wr-paper{background:var(--paper-tex),#f6f1e4!important}
+.bk-cast{position:absolute;top:7px;bottom:7px;width:calc(var(--u) * 8.5);pointer-events:none;opacity:0;z-index:3}
+.bk-castR{left:50%;background:linear-gradient(to right,rgba(20,12,0,.55),rgba(20,12,0,.18) 30%,rgba(20,12,0,0) 70%)}
+.bk-castL{right:50%;background:linear-gradient(to left,rgba(20,12,0,.5),rgba(20,12,0,.15) 30%,rgba(20,12,0,0) 70%)}
 .bk-spine{position:absolute;top:7px;bottom:7px;left:50%;width:2px;margin-left:-1px;background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.18));z-index:4;pointer-events:none}
 .bk-hint{text-align:center;font:12px/1.4 var(--f-ui);color:#9c917d;padding:0 16px 14px}
 @media (max-width:820px){
@@ -921,11 +926,11 @@ body.wr-mid .wr-doc .el[data-note]{background:rgba(255,204,0,.12)}
   .bk-slot.bk-r{width:auto;height:auto;flex:1;border-radius:2px}
   .bk-page.wr-paper{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px 16px 34px}
   .bk-no{top:8px;right:12px;font-size:11px}
-  .bk-leaf{left:5px;right:5px;top:5px;bottom:5px;width:auto}
+  .bk-leaf{left:5px;right:5px;top:5px;bottom:5px;width:auto}.bk-castL{display:none}.bk-castR{left:5px;right:5px;top:5px;bottom:5px;width:auto}.bk{overflow:hidden}
   .bk-nav{top:auto;bottom:18px;margin:0;background:rgba(30,25,20,.82);backdrop-filter:blur(6px)}
   .bk .bk-cover .bk-ct{font-size:15px;gap:4px}.bk .bk-cover .bk-ct b{font-size:28px;margin-bottom:16px}.bk .bk-cover .bk-cf{font-size:12px}
   .bk .bk-cover .bk-brad{left:11px;width:11px;height:11px;margin-top:-5px}
-  .bk-top{flex-wrap:wrap;gap:8px}.bk-count{order:5;margin-left:0;flex:1 1 100%}.bk-modes{margin-left:auto}
+  .bk-top{flex-wrap:wrap;gap:8px}.bk-title{flex:1 1 0}.bk-modes button{padding:7px 10px}.bk-x{padding:9px 12px}.bk-count{order:5;margin-left:0;flex:1 1 100%}.bk-modes{margin-left:auto}
   .bk-scroll{padding:4px 10px 40px}.bk-sheet{width:auto;margin-bottom:14px}.bk-sheet .bk-page.wr-paper{min-height:0}
   .fs-book{padding:16px;gap:16px}.fs-cover{margin:0 auto}
 }
@@ -5547,18 +5552,26 @@ function bkMode(m){BK.mode=m==='scroll'?'scroll':'pages';lsSet('bookMode',BK.mod
 function bkMax(){const n=BK.pages.length;return BK.phone?n-1:(n%2?n-1:n)}
 function bkMeta(){const n=BK.pages.length-1,a=BK.at;if(BK.mode==='scroll'){$('#bkCount').textContent=n+(n===1?' page':' pages');return}const s=a===0?'Cover':BK.phone?`Page ${a} of ${n}`:a<=n?`Pages ${a-1}–${a} of ${n}`:`Page ${a-1} of ${n}`;
   $('#bkCount').textContent=s;$('#bkPrev').disabled=a<=0;$('#bkNext').disabled=a>=bkMax()}
-async function bkTurn(dir){if(BK.busy)return;const step=BK.phone?1:2;const to=BK.at+dir*step;if(to<0||to>bkMax())return;
+/* A page turn that bends like paper: the leaf is cut into narrow vertical strips, each hinged to the one before it, so the outer edge
+   lifts first and the sheet curls over the spine instead of swinging like a board. Driven frame by frame. */
+function bkLeafBuild(front,back){const leaf=$('#bkLeaf');leaf.hidden=false;const W=leaf.offsetWidth,H=leaf.offsetHeight,N=BK.phone?7:9,sw=W/N;let html='';
+  for(let k=N-1;k>=0;k--){html=`<div class="bk-seg" style="left:${k?sw.toFixed(2):0}px;width:${(sw+1.2).toFixed(2)}px"><div class="bk-face bk-front"><div class="bk-clip" style="left:${(-k*sw).toFixed(2)}px;width:${W}px;height:${H}px">${front}</div><i class="bk-shade"></i></div><div class="bk-face bk-back"><div class="bk-clip" style="left:${(-(W-(k+1)*sw)).toFixed(2)}px;width:${W}px;height:${H}px">${back}</div><i class="bk-shade"></i></div>${html}</div>`}
+  leaf.innerHTML=html;bkFit(leaf);return [...leaf.querySelectorAll('.bk-seg')]}
+function bkLeafPose(segs,p,dir){const N=segs.length,s=Math.sin(Math.PI*p),LEAD=.24;let prev=0;
+  segs.forEach((el,k)=>{const pe=Math.min(1,Math.max(0,p+dir*LEAD*(k/(N-1))*s));const A=-180*pe;el.style.transform='rotateY('+(A-prev).toFixed(2)+'deg)';prev=A;
+    const tilt=Math.abs(Math.sin(A*Math.PI/180));const f=el.children[0].lastElementChild,b=el.children[1].lastElementChild;f.style.opacity=(tilt*.17).toFixed(3);b.style.opacity=(tilt*.2).toFixed(3)});
+  const cr=$('#bkCastR'),cl=$('#bkCastL');if(cr)cr.style.opacity=(s*(1-p)*.9).toFixed(3);if(cl)cl.style.opacity=(s*p*.75).toFixed(3)}
+async function bkTurn(dir){if(BK.busy||BK.mode==='scroll')return;const step=BK.phone?1:2;const to=BK.at+dir*step;if(to<0||to>bkMax())return;
   if(!MOTION_OK){BK.at=to;bkShow();return}
-  BK.busy=true;if(!BK.phone)$('#bkBook').classList.toggle('closed',to===0);const leaf=$('#bkLeaf'),F=leaf.querySelector('.bk-front'),B=leaf.querySelector('.bk-back'),L=$('#bkL'),R=$('#bkR');const sh='<div class="bk-shade"></div>';
-  const ease='cubic-bezier(.36,.02,.18,1)',dur=BK.phone?520:820;let anim;
-  if(BK.phone){const from=dir>0?BK.at:to;F.innerHTML=bkPage(from)+sh;B.innerHTML='';if(dir>0)R.innerHTML=bkPage(to);leaf.hidden=false;bkFit(leaf);
-    const kf=[{transform:'rotateY(0deg)',opacity:1},{transform:'rotateY(-78deg)',opacity:.15}];anim=leaf.animate(dir>0?kf:kf.slice().reverse(),{duration:dur,easing:ease,fill:'forwards'});
-    F.querySelector('.bk-shade').animate([{opacity:0},{opacity:.5}].slice(0)[dir>0?'slice':'reverse'](),{duration:dur,easing:ease,fill:'forwards'})}
-  else{if(dir>0){F.innerHTML=bkPage(BK.at)+sh;B.innerHTML=bkPage(to-1)+sh;R.innerHTML=bkPage(to)}else{F.innerHTML=bkPage(to)+sh;B.innerHTML=bkPage(BK.at-1)+sh;L.innerHTML=bkPage(to-1)}
-    leaf.hidden=false;bkFit(BK.el);const kf=[{transform:'rotateY(0deg)'},{transform:'rotateY(-180deg)'}];anim=leaf.animate(dir>0?kf:kf.slice().reverse(),{duration:dur,easing:ease,fill:'forwards'});
-    leaf.querySelectorAll('.bk-shade').forEach(s=>s.animate([{opacity:0},{opacity:.55,offset:.5},{opacity:0}],{duration:dur,easing:'linear'}))}
-  try{await anim.finished}catch(e){}
-  BK.at=to;bkShow();leaf.hidden=true;anim.cancel();F.innerHTML='';B.innerHTML='';BK.busy=false}
+  BK.busy=true;if(!BK.phone)$('#bkBook').classList.toggle('closed',to===0);const leaf=$('#bkLeaf'),L=$('#bkL'),R=$('#bkR');const blank='<div class="bk-page wr-paper bk-blank"></div>';
+  let segs;
+  if(BK.phone){segs=bkLeafBuild(bkPage(dir>0?BK.at:to),blank);if(dir>0)R.innerHTML=bkPage(to)}
+  else if(dir>0){segs=bkLeafBuild(bkPage(BK.at),bkPage(to-1));R.innerHTML=bkPage(to)}
+  else{segs=bkLeafBuild(bkPage(to),bkPage(BK.at-1));L.innerHTML=bkPage(to-1)}
+  bkFit(BK.el);bkLeafPose(segs,dir>0?0:1,dir);
+  const dur=BK.phone?640:980,ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+  await new Promise(res=>{let t0=0;const tick=now=>{if(!BK.el){res();return}if(!t0)t0=now;const q=Math.min(1,(now-t0)/dur),e=ease(q);bkLeafPose(segs,dir>0?e:1-e,dir);if(q<1)requestAnimationFrame(tick);else res()};requestAnimationFrame(tick)});
+  if(!BK.el)return;BK.at=to;bkShow();leaf.hidden=true;leaf.innerHTML='';const cr=$('#bkCastR'),cl=$('#bkCastL');if(cr)cr.style.opacity=0;if(cl)cl.style.opacity=0;BK.busy=false}
 function bkKey(e){if(!BK.el)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();bookClose();return}
   if(BK.mode==='scroll'&&e.key!=='Tab')return;
   if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();bkTurn(1)}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();bkTurn(-1)}
@@ -5571,7 +5584,7 @@ function bookOpen(mode){if(!P||BK.el)return;const c=bkCollect();if(!c.pages.some
    <span class="bk-modes" role="group" aria-label="How to read"><button type="button" data-bkmode="pages" aria-pressed="true">Turn pages</button><button type="button" data-bkmode="scroll" aria-pressed="false">Scroll</button></span>
    <button type="button" class="bk-x" id="bkX">Close</button></div>
   <div class="bk-stage"><button type="button" class="bk-nav bk-prev" id="bkPrev" aria-label="Previous page">‹</button>
-   <div class="bk-book" id="bkBook"><div class="bk-slot bk-l" id="bkL"></div><div class="bk-slot bk-r" id="bkR"></div><div class="bk-spine"></div><div class="bk-leaf" id="bkLeaf" hidden><div class="bk-face bk-front"></div><div class="bk-face bk-back"></div></div></div>
+   <div class="bk-book" id="bkBook"><div class="bk-slot bk-l" id="bkL"></div><div class="bk-slot bk-r" id="bkR"></div><div class="bk-spine"></div><div class="bk-cast bk-castL" id="bkCastL"></div><div class="bk-cast bk-castR" id="bkCastR"></div><div class="bk-leaf" id="bkLeaf" hidden></div></div>
    <button type="button" class="bk-nav bk-next" id="bkNext" aria-label="Next page">›</button></div>
   <div class="bk-scroll" id="bkScroll" tabindex="0" aria-label="Script pages"></div>
   <div class="bk-hint" id="bkHint"></div>`;

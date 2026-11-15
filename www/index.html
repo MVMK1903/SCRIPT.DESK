@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-Cfu7CMgOjxvSbHg4TvmLqsIeMNttsBYZSycKKb6kXM8=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-F7N3lt97e7FHzqq57bYc4fgyYtO1j/GCXqmoBHUgssg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2062,6 +2062,12 @@ function loadScript(src){return new Promise((res,rej)=>{if(document.querySelecto
 loadScript.done={};
 function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(Math.abs(m-n)>3)return 9;let p=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
 function natKey(no){const m=String(no||'').match(/(\d+)\s*([A-Z]?)/i);return m?(+m[1])*100+(m[2]?m[2].toUpperCase().charCodeAt(0)-64:0):999999}
+function cleanDesc(x){let s=String(x??'').replace(/\s+/g,' ').trim();
+  s=s.replace(/^(?:in this scene|the scene (?:shows|opens|begins)|scene (?:shows|opens)|we (?:see|watch|follow))[,:]?\s+/i,'');
+  s=s.replace(/^[-–•*\s]+/,'');if(s)s=s[0].toUpperCase()+s.slice(1);
+  const parts=s.match(/[^.!?]+[.!?]*/g)||[s];s=parts.slice(0,2).map(x=>x.trim()).join(" ").trim();
+  if(s.length>300){const c=s.slice(0,300),i=Math.max(c.lastIndexOf('. '),c.lastIndexOf(', '),c.lastIndexOf(' '));s=c.slice(0,i>120?i:300).replace(/[,;:\s]+$/,'')+'.'}
+  return s.slice(0,400)}
 function cleanItem(x){return String(x??'').replace(/\s+/g,' ').replace(/,/g,' /').trim()}
 function splitList(t){return String(t||'').split(/\s*[,;\n]\s*/).map(s=>s.trim()).filter(s=>s&&s!=='—'&&s!=='-')}
 function uniq(arr){const seen=new Set();return arr.filter(x=>{const k=String(x).toLowerCase();if(seen.has(k))return false;seen.add(k);return true})}
@@ -2369,7 +2375,7 @@ Known characters (use these exact UPPERCASE names; map spelling variants to them
 For EACH scene below return:
 - id: copy exactly.
 - title: 1-3 word scene title in UPPERCASE (e.g. "HAUNTING", "THE STATEMENT").
-- desc: scene description for a single line order, 1-2 short sentences, present tense, English. When the scene turns (a reveal, a discovery, a reversal), say plainly what changes; no storytelling jargon.
+- desc: the scene as a professional ONE-LINE ORDER entry that a production manager reads on a call sheet: ONE short sentence (two only if the scene truly turns), present tense, English, about 8-22 words. Start with who (character names, not "he/she"), then what they do, then the single plot point that matters. Example: "Raahul and Ritu enter the showroom in the new car and get caught by Ritu's father." Do not quote dialogue, do not write "In this scene" or "We see", do not describe camera or mood. When the scene turns (a reveal, a discovery, a reversal), say plainly what changes.
 - loc: the script location in UPPERCASE as written in the heading (fix obvious typos only).
 - ie: INT, EXT, INT/EXT. time: the time/effect exactly as the heading writes it, e.g. DAY, NIGHT, MRNG, AFTN, EVNG, DAWN.
 - timeline: "Present" unless the scene sits outside the main story time: "Flashback" (an earlier event), "Flash-forward" (a later event), "Dream", "Imagination", "Montage", or the period such as "1947" or "Flashback 1947". Clues: headings or captions like FLASHBACK, YEARS EARLIER, BACK TO PRESENT, MONTAGE, a year, a younger or older version of a character, or dialogue that frames the scene as a memory.
@@ -2377,14 +2383,16 @@ For EACH scene below return:
 - juniors: crowd / junior artistes groups with estimated count, e.g. "Villagers (30)".
 - extras: small non-speaking bit roles, e.g. "Waiter", "Valet guy".
 - setup: the physical set-up in a few words, e.g. "Karthik's bedroom".
-- props: objects handled by actors. art: set dressing and art department items not handled.
-- costumes: [{"artist":"NAME","costume":"short description"}] for artists whose costume is described or implied (period, uniform, wet, bloodied, torn).
+- props: every object an actor picks up, holds, uses, throws, opens, drives, wears as a handheld item or hands to someone (phone, file, keys, gun, cup, bag, letter), including objects only named in dialogue that are then used. art: set dressing and art department items that are seen but not handled (posters, furniture, banners, decorations, signage). An object that is both handled and shown is a prop, listed once. Do not list the same thing as prop and art.
+- costumes: [{"artist":"NAME","costume":"short description"}] for artists whose costume is described or implied: named garments in the action, uniform, period dress, wedding or festival wear, wet, bloodied, torn, dirty, or a change from how that character looked earlier (new outfit, disguise, injury bandage). Only the artist's own clothing and worn accessories (glasses, watch, jewellery, helmet); never props they merely hold. Do not invent a costume when the script says nothing: leave it out.
 - makeup: "NAME – look", e.g. "BALI – blood on face", "RAYAPPA – wooden leg".
 - vehicles, animals, vfx (CG, digital), sfx (rain, fire, smoke, blasts, breakaways), spl_sets (special or constructed sets), spl_props (special, period or rigged props, weapons), equipment (drone, crane, jimmy jib, car mount, underwater), technicians (fight master, choreographer, animal handler, VFX supervisor, etc.).
 - fight: null, or {"d":"what happens","artists":["NAME"],"fighters":"e.g. 15 fighters","needs":"rope rigging, breakaway glass, safety"} if the scene has a fight, chase or stunt.
 - song: null, or {"d":"short description"} if a song or montage happens in this scene.
 - story: objects, costume details or marks the story depends on that appear in this scene: something shown pointedly that matters later (a Chekhov's gun), a recurring object, a clue or a false clue. 1-6 words each, e.g. "Rock hammer", "Red mitten with LEO stitched". They need continuity care. [] if none.
-- flags: short notes about anything unclear in the scene (empty if clear).
+- flags: short notes about anything unclear in the scene (empty if clear). Also flag continuity risks a script supervisor must watch: an injury, blood, dirt or wetness that must carry to the next scene; a time jump inside the scene; a character wearing something different from the scene before; an object that appears or disappears.
+- Characters: list a person once under the name the script cues use, even if called by a relation or nickname elsewhere. A voice on phone or off-screen who speaks is still an artist; a person only mentioned (not present, not heard) is not. Groups ("goons", "villagers", "guests") go under juniors with a count, never as artists.
+- Locations: loc is the place, not the action. Keep the script's own spelling of the place and its sub-place order as written (e.g. "ROOM, GOLCONDA RESORTS, HYDERABAD"). Never change the heading's INT/EXT or time of day.
 - In Telugu or Tinglish dialogue, words of address or relation (amma, nanna, anna, akka, thammudu, chelli, babai, pinni, mama, mammaya, atta, thatha, thathaya, ammamma, ammama, sir, madam, garu, ra, orey) are not new characters. Map each to the known character it refers to, and list it as an artist only when the script itself uses that word as the character's name (a cue such as "THATHAYA").
 - Food dishes, objects, animals and insults spoken in dialogue are never characters: e.g. bajji / bajjilu (a snack), gadidha (donkey), eluka (rat), pichi (mad) are not people, even in UPPERCASE.
 - Read Tinglish dialogue for props, vehicles and places as well: "aa scooter ni" means a scooter is in the scene; "locker", "phone", "rod" named in dialogue and used in the scene are props. In a festival or ceremony scene, capture the crowd (villagers, volunteers, children) as juniors and the ritual items (garlands, flags, cross, vessel, candles) as props or art.
@@ -2398,7 +2406,7 @@ function batchMax(){if(!STANDALONE)return 4;const c=aiCfg(),bm=e=>{const p=PROVI
 function makeBatches(list){const out=[];let b=[],n=0;const mx=batchMax();list.forEach(s=>{const l=byteLen(s.text)+300;if(b.length&&(n+l>Math.min(14000,aiBudget()*0.5)||b.length>=Math.min(mx,aiBudget()<30000?2:4))){out.push(b);b=[];n=0}b.push(s);n+=l});if(b.length)out.push(b);return out}
 function applyBreakdown(s,r,last){const L=s.locked||{};const arr=a=>Array.isArray(a)?uniq(a.map(cleanItem).filter(Boolean)).slice(0,60):[];
   const setIf=(f,v)=>{if(!L[f]&&v!=null&&v!=='')s[f]=v};
-  setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',String(r.desc||'').trim().slice(0,400));setIf('setup',cleanItem(r.setup));
+  setIf('title',cleanItem(r.title).toUpperCase().slice(0,40));setIf('desc',cleanDesc(r.desc));setIf('setup',cleanItem(r.setup));
   if(!s.loc&&r.loc)s.loc=U(r.loc);if(!s.ie&&r.ie)s.ie=U(r.ie);if(!s.time&&r.time)s.time=U(r.time);
   setIf('timeline',cleanItem(r.timeline)==='Present'?'':cleanItem(r.timeline));
   if(!L.story&&Array.isArray(r.story)){const v=arr(r.story);if(v.length||!s.story)s.story=uniq([...(s.story||[]),...v]).slice(0,20)}

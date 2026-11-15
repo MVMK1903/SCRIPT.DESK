@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-vNxeeaoMpuXRGYYs5v3V69x3xvDxNzNKGGqrPTuU+YY=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-eAM4t6uzZVoyzTXEDQ8ICUtpEGpI8LVa18UHhFDvpKM=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -5692,14 +5692,27 @@ function bkLeafPose(segs,p,dir){const N=segs.length,s=Math.sin(Math.PI*p),LEAD=.
 const BKS={ctx:null,on(){try{return localStorage.getItem('scriptdesk.bookSound')!=='0'}catch(e){return true}},set(v){try{localStorage.setItem('scriptdesk.bookSound',v?'1':'0')}catch(e){}}};
 function bkAudio(){try{if(!BKS.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;BKS.ctx=new C()}if(BKS.ctx.state==='suspended')BKS.ctx.resume();return BKS.ctx}catch(e){return null}}
 function bkNoise(c,dur){const n=Math.max(1,Math.floor(c.sampleRate*dur)),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;return s}
-function bkSwish(c,t,dur,f0,f1,vol){const s=bkNoise(c,dur),f=c.createBiquadFilter(),g=c.createGain();f.type='bandpass';f.Q.value=.9;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+dur);
-  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+dur*.3);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);s.connect(f);f.connect(g);g.connect(c.destination);s.start(t);s.stop(t+dur)}
-function bkThump(c,t,vol,f0,f1,dur){const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur)}
-function bkSound(kind){if(!BKS.on())return;const c=bkAudio();if(!c)return;const t=c.currentTime+.01;
-  if(kind==='turn'){bkSwish(c,t,.42,2600,900,.22);bkSwish(c,t+.05,.3,5200,2200,.06);bkThump(c,t+.34,.12,160,70,.12)}
-  else if(kind==='open'){bkThump(c,t,.5,110,45,.32);bkSwish(c,t+.04,.5,700,300,.16)}
-  else if(kind==='cover'){bkThump(c,t,.25,90,50,.22);bkSwish(c,t+.02,.7,500,1800,.14);bkSwish(c,t+.2,.5,2400,800,.14);bkThump(c,t+.55,.14,150,65,.14)}
-  else if(kind==='close'){bkSwish(c,t,.3,1800,600,.12);bkThump(c,t+.22,.5,100,40,.3)}}
+/* paper friction: many tiny random clicks (not steady hiss), denser as the page lifts, like fibres catching */
+function bkCrackle(c,t,dur,d0,d1,vol,hp){const sr=c.sampleRate,n=Math.floor(sr*dur),b=c.createBuffer(1,n,sr),d=b.getChannelData(0);let y=0;
+  for(let i=0;i<n;i++){const k=i/n,dens=(d0+(d1-d0)*k)/sr;if(Math.random()<dens)y+=(Math.random()*2-1)*(.5+Math.random()*.9);y*=.55;d[i]=y*Math.sin(Math.PI*Math.min(1,k*1.15))}
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='highpass';f.frequency.value=hp;g.gain.value=vol;s.connect(f);f.connect(g);bkOut(c,g);s.start(t)}
+function bkAir(c,t,dur,f0,fm,vol){const s=bkNoise(c,dur),f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.Q.value=.4;f.frequency.setValueAtTime(f0,t);f.frequency.linearRampToValueAtTime(fm,t+dur*.45);f.frequency.linearRampToValueAtTime(f0*.7,t+dur);
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+dur*.4);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);s.connect(f);f.connect(g);bkOut(c,g);s.start(t);s.stop(t+dur)}
+function bkFlap(c,t,vol,f0,dur){const s=bkNoise(c,dur),f=c.createBiquadFilter(),g=c.createGain();f.type='bandpass';f.Q.value=.7;f.frequency.value=f0;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+.004);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);s.connect(f);f.connect(g);bkOut(c,g);s.start(t);s.stop(t+dur)}
+function bkThud(c,t,vol,f0,dur){const s=bkNoise(c,dur),f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.frequency.value=f0;f.Q.value=.8;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+.006);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);s.connect(f);f.connect(g);bkOut(c,g);s.start(t);s.stop(t+dur);
+  const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(f0*.4,t);o.frequency.exponentialRampToValueAtTime(f0*.18,t+dur);og.gain.setValueAtTime(vol*.5,t);og.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(og);bkOut(c,og);o.start(t);o.stop(t+dur)}
+/* a small room: everything goes through a short, quiet echo and a limiter so it sounds placed, not pasted */
+function bkOut(c,node){if(!BKS.bus){const comp=c.createDynamicsCompressor(),dry=c.createGain(),wet=c.createGain(),conv=c.createConvolver(),n=Math.floor(c.sampleRate*.35),ir=c.createBuffer(2,n,c.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.2)}
+    conv.buffer=ir;dry.gain.value=1.7;wet.gain.value=.3;const inp=c.createGain();inp.connect(dry);inp.connect(conv);conv.connect(wet);dry.connect(comp);wet.connect(comp);comp.connect(c.destination);BKS.bus=inp}
+  node.connect(BKS.bus)}
+function bkSound(kind){if(!BKS.on())return;const c=bkAudio();if(!c)return;if(BKS.bus&&BKS.bus.context!==c)BKS.bus=null;const t=c.currentTime+.02,v=.85+Math.random()*.3,r=.9+Math.random()*.2;
+  if(kind==='turn'){bkCrackle(c,t,.2*r,260,900,.5*v,1800);bkAir(c,t+.05,.34*r,2400,4200,.16*v);bkCrackle(c,t+.2*r,.12,500,150,.3*v,2500);bkFlap(c,t+.36*r,.5*v,1500*r,.11);bkThud(c,t+.37*r,.14*v,220,.12)}
+  else if(kind==='open'){bkThud(c,t,.55*v,300,.3);bkCrackle(c,t+.05,.3,120,500,.25*v,1500);bkAir(c,t+.08,.45,1800,3000,.1*v)}
+  else if(kind==='cover'){bkCrackle(c,t,.45,60,380,.4*v,900);bkThud(c,t+.04,.25*v,260,.18);bkAir(c,t+.12,.55,2000,3600,.15*v);bkCrackle(c,t+.3,.25,500,200,.3*v,2200);bkFlap(c,t+.6,.5*v,1200,.14);bkThud(c,t+.61,.2*v,200,.16)}
+  else if(kind==='close'){bkAir(c,t,.22,3000,2400,.12*v);bkFlap(c,t+.18,.55*v,1000,.12);bkThud(c,t+.19,.6*v,260,.28)}}
 async function bkTurn(dir){if(BK.busy||BK.mode==='scroll')return;const step=BK.phone?1:2;const to=BK.at+dir*step;if(to<0||to>bkMax())return;
   bkSound(to===0?'close':(BK.at===0?'cover':'turn'));
   if(!MOTION_OK){BK.at=to;bkShow();return}

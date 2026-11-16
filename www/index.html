@@ -1964,6 +1964,20 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 .sb-leg .k:hover i,.sb-leg .k:focus-within i{outline:2px solid var(--slate);outline-offset:2px}
 .t tr[data-sb=di] td.eff{background:color-mix(in srgb,var(--sb-di) 22%,var(--bg))}
 .effc[data-sb=di]{background:color-mix(in srgb,var(--sb-di) 24%,var(--bg))!important}
+
+/* Scroll bars: a slim film-strip rail (a column of sprocket dots) with an amber pill that rides on it */
+:root{--sbw:14px}
+*::-webkit-scrollbar{width:var(--sbw);height:var(--sbw)}
+*::-webkit-scrollbar-button{display:none;width:0;height:0}
+*::-webkit-scrollbar-corner{background:transparent}
+*::-webkit-scrollbar-track{background:radial-gradient(circle at center,color-mix(in srgb,var(--fg,#fff) 22%,transparent) 1.1px,transparent 1.5px) center top/var(--sbw) 11px repeat-y;border-radius:99px;margin:6px}
+*::-webkit-scrollbar-track:horizontal{background:radial-gradient(circle at center,color-mix(in srgb,var(--fg,#fff) 22%,transparent) 1.1px,transparent 1.5px) left center/11px var(--sbw) repeat-x}
+*::-webkit-scrollbar-thumb{min-height:44px;min-width:44px;border:4px solid transparent;background-clip:padding-box;border-radius:99px;background-color:var(--slate,#e8b45a);background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(0,0,0,.12))}
+*::-webkit-scrollbar-thumb:horizontal{background-image:linear-gradient(90deg,rgba(255,255,255,.35),rgba(0,0,0,.12))}
+*::-webkit-scrollbar-thumb:hover{border-width:2px;filter:brightness(1.08)}
+*::-webkit-scrollbar-thumb:active{border-width:2px;filter:brightness(.92)}
+@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:var(--slate,#e8b45a) transparent}}
+@media (max-width:820px){:root{--sbw:10px}*::-webkit-scrollbar-thumb{border-width:3px;min-height:36px;min-width:36px}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 

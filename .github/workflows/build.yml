@@ -22,7 +22,7 @@ on:
 # ScriptDesk accounts: the Firebase web settings (Firebase console > Project settings > Your apps > Config)
 env:
   FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
-  SD_PUBLIC: '1'
+  SD_PUBLIC: ''   # set to '1' at launch to hide the AI key settings from customers (owner: Ctrl+Shift+K)
 
 permissions:
   contents: write

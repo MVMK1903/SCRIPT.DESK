@@ -1233,8 +1233,8 @@ body[data-page=gear] tr:hover .il{transform:none}
 .tr-gap{grid-column:1/-1;height:8px}
 @media (max-width:640px){.tr-g{grid-template-columns:1fr}.tr-ch:nth-child(2){display:none}.tr-ch:first-child::after{content:' / translation below each line'}.tr-o{padding-bottom:0}.tr-t{margin-bottom:6px}.tr-n{padding-left:0}}
 /* ===== v3 design pass: work first, stripboard colours, AA contrast, calm chrome (UI UX Pro Max + tasteskill rules) ===== */
-:root{--muted:#5a5a61;--faint:#6e6e75;--accent-text:#0062c4;--sb-de:#e0a800;--sb-di:#b8b8be;--sb-ne:#2f9e4f;--sb-ni:#3b6fd6}
-:root[data-theme="dark"]{--canvas:#000;--bg:#101012;--bg-2:#18181b;--panel:#101012;--panel-2:#18181b;--raise:#222226;--fill:#1a1a1d;--fill-2:#26262a;--line:#2a2a2e;--line-2:#1e1e22;--muted:#a9a9b0;--faint:#8c8c93;--accent-text:#4da3ff;--sb-de:#ffd60a;--sb-di:#8e8e93;--sb-ne:#30d158;--sb-ni:#5e8cff}
+:root{--muted:#5a5a61;--faint:#6e6e75;--accent-text:#0062c4;--sb-de:var(--sbu-de,#e0a800);--sb-di:var(--sbu-di,#b8b8be);--sb-ne:var(--sbu-ne,#2f9e4f);--sb-ni:var(--sbu-ni,#3b6fd6)}
+:root[data-theme="dark"]{--canvas:#000;--bg:#101012;--bg-2:#18181b;--panel:#101012;--panel-2:#18181b;--raise:#222226;--fill:#1a1a1d;--fill-2:#26262a;--line:#2a2a2e;--line-2:#1e1e22;--muted:#a9a9b0;--faint:#8c8c93;--accent-text:#4da3ff;--sb-de:var(--sbu-de,#ffd60a);--sb-di:var(--sbu-di,#8e8e93);--sb-ne:var(--sbu-ne,#30d158);--sb-ni:var(--sbu-ni,#5e8cff)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 .lastnote{background:none;box-shadow:none;padding:0 2px 10px;margin:0;font-size:12.5px;gap:8px}.lastnote[hidden]{display:none}
 .banner{background:var(--fill);box-shadow:none;border-radius:10px;padding:8px 12px;margin-bottom:12px;gap:10px;font-size:13px}.banner.info{box-shadow:none}
@@ -1754,7 +1754,7 @@ select option:checked,select option:hover{background-color:#ffd36e;color:#1f1b16
   --bg:#fffdf8;--bg-2:#f6f1e4;--panel:#fffdf8;--panel-2:#f6f1e4;--raise:#ece6d6;--fill:#f1ecdf;--fill-2:#e7e0cf;--line:#d9d1bd;--line-2:#e8e2d2;
   --fg:#1d1b16;--muted:#5a564b;--faint:#7a7568;--hair:rgba(40,30,10,.16);
   --accent:#0062c4;--accent-hi:#0a74e0;--accent-ink:#fff;--accent-soft:rgba(0,98,196,.10);--accent-line:rgba(0,98,196,.35);--accent-text:#0062c4;
-  --day:#9a5a00;--night:#3a46c4;--ok:#1d7a42;--warn:#8f5200;--bad:#c4001a;--sb-de:#e0a800;--sb-di:#b8b8be;--sb-ne:#2f9e4f;--sb-ni:#3b6fd6;
+  --day:#9a5a00;--night:#3a46c4;--ok:#1d7a42;--warn:#8f5200;--bad:#c4001a;--sb-de:var(--sbu-de,#e0a800);--sb-di:var(--sbu-di,#b8b8be);--sb-ne:var(--sbu-ne,#2f9e4f);--sb-ni:var(--sbu-ni,#3b6fd6);
   --glass:#fffdf8;--glass-line:rgba(40,30,10,.18);--glass-sh:0 0 0 .5px rgba(40,30,10,.12),0 6px 18px rgba(40,30,10,.10);--glass-blur:none;
   background:var(--paper-tex),#fbf7ee!important;color:#1d1b16!important;color-scheme:light;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 :root:root :is(.tw,.card) .t th{background:#e8e0cc!important;color:#3a352a!important}
@@ -1939,6 +1939,12 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 .lastnote:not(.open)>.when,.lastnote:not(.open)>b,.lastnote:not(.open)>.what,.lastnote:not(.open)>.ln-h{display:none!important}
 .lastnote.open{width:auto;padding-right:0}
 @media (max-width:820px){.lastnote .ln-t .ln-lab{display:inline!important}.lastnote.open{width:100%}.lastnote>.what{white-space:nowrap}}
+
+.sb-leg .k{position:relative;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.sb-leg .sb-pick{position:absolute;left:0;top:0;width:14px;height:100%;opacity:0;cursor:pointer;padding:0;border:0}
+.sb-leg .k:hover i,.sb-leg .k:focus-within i{outline:2px solid var(--slate);outline-offset:2px}
+.t tr[data-sb=di] td.eff{background:color-mix(in srgb,var(--sb-di) 22%,var(--bg))}
+.effc[data-sb=di]{background:color-mix(in srgb,var(--sb-di) 24%,var(--bg))!important}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -4890,7 +4896,7 @@ R.stripboard=()=>{pruneSched();const S=SCH(),nums=dayNums(),dates=dayDates();
   const mover=(sid,cur)=>`<select class="mini sbm" data-movesc="${sid}" aria-label="Move scene to a day"><option value=""${cur?'':' selected'}>Not scheduled</option>${shoot.map(d=>`<option value="${d.id}"${d.id===cur?' selected':''}>${esc(dayLabel(d,nums,dates))}</option>`).join('')}<option value="+">+ New day</option></select>`;
   const strip=(sc,dayId,canOrder)=>{const k=sbKey(eff(sc));return `<div class="strip" data-sb="${k}"><span class="st-no">${esc(sc.no)}</span><span class="st-eff effc" data-sb="${k}">${esc(eff(sc)||'—')}</span><span class="st-loc">${esc(sc.loc||'—')}</span><span class="st-meta">${fmtPg(pgE(sc))} pg · ${sc.artists.length} cast</span>${canOrder?`<span class="st-ord"><button class="btn sm" data-pa="oUp" data-day="${dayId}" data-sid="${sc.id}" aria-label="Move earlier">↑</button><button class="btn sm" data-pa="oDown" data-day="${dayId}" data-sid="${sc.id}" aria-label="Move later">↓</button></span>`:''}${mover(sc.id,dayId)}</div>`};
   const unsched=P.scenes.filter(s2=>!dmap[s2.id]);
-  const leg=`<div class="sb-leg" role="group" aria-label="Colour code"><span>Colour code</span>${SB_KEYS.map(k=>`<span class="k"><i data-sb="${k[0]}"></i>${k[1]}</span>`).join('')}</div>`;
+  const leg=sbLeg('Colour code');
   const board=shoot.map(d=>{const sc=dayScenes(d),pg=dayPages(d);const over=tgt&&pg/8>tgt?` · <span class="st-over">over ${tgt} pg target</span>`:'';
     return `<section class="dayboard"><div class="db-h"><b>${esc(dayLabel(d,nums,dates))}</b><span class="small muted">${sc.length} scene${sc.length===1?'':'s'} · ${fmtPg(pg)} pg${over}</span></div>${sc.length?sc.map(x=>strip(x,d.id,sc.length>1)).join(''):'<div class="db-empty">No scenes yet — move strips here.</div>'}</section>`}).join('');
   const html=pageHead('Stripboard','Every scene as a coloured strip. Move a strip to another day, or reorder it within a day. The colours are the standard production code.')+leg+
@@ -5756,7 +5762,7 @@ R.home=()=>({html:`<section class="hm"><header class="hm-h"><svg class="hm-logo"
   HOME_ITEMS.map(f=>`<article class="hm-f"><figure class="hm-pic"><div class="hm-bar" aria-hidden="true"><i></i><i></i><i></i></div><img src="${HOME_IMG[f.k]||''}" width="900" height="531" loading="lazy" alt="${esc(f.t)} in ScriptDesk, shown with a sample film"></figure><div class="hm-t"><h2>${esc(f.t)}</h2><p class="hm-s">${esc(f.s)}</p><ul>${f.d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button class="btn sm" data-page="${f.go}">Open ${esc(f.t)}</button></div></article>`).join('')+`</section>`,exp:null});
 function sampleHidden(){if(VIEW.hideSample)return true;try{return localStorage.getItem('scriptdesk.hideSample')==='1'}catch(e){return false}}
 function tidyHeads(root){root.querySelectorAll('.ph .grow>p').forEach(p=>{if(p.querySelector('button,a,input,select,textarea')||/^Sign in/.test(p.textContent.trim()))return;const h=p.parentNode.querySelector('h1');const t=p.textContent.replace(/\s+/g,' ').trim();if(h&&t)h.title=t;p.remove()})}
-function render(keepScroll){const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
+function render(keepScroll){applySbColors();const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
   $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();wxApplyView();
   if(page==='home'){c.innerHTML=R.home().html;lastExp=null;$('#bCur').textContent='Home';syncTabs();syncTop();document.body.dataset.page=page;c.scrollTop=0;return}
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
@@ -5770,6 +5776,16 @@ function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^e
 const SB_KEYS=[['de','Day exterior'],['di','Day interior'],['ne','Night exterior'],['ni','Night interior']];
 /* the stripboard colour code every production office uses: yellow day exterior, white day interior, green night exterior, blue night interior */
 function sbKey(txt){const t=String(txt||'');return (NIGHTISH.test(t)?'n':'d')+(/EXT|I\/E/i.test(t)?'e':'i')}
+const SB_DEF={de:'#e0a800',di:'#b8b8be',ne:'#2f9e4f',ni:'#3b6fd6'};
+const SB_HEX=/^#[0-9a-f]{6}$/i;
+function sbCol(k){const c=P&&P.sbc&&P.sbc[k];return SB_HEX.test(c||'')?c:(getComputedStyle(document.documentElement).getPropertyValue('--sb-'+k).trim()||SB_DEF[k])}
+function sbTint(k,amt){const h=sbCol(k);const c=SB_HEX.test(h)?h:SB_DEF[k];const m=[1,3,5].map(i=>{const v=parseInt(c.slice(i,i+2),16);return Math.round(255-(255-v)*amt)});return m}
+function sbTintHex(txt){return sbTint(sbKey(txt),.3).map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function applySbColors(){const st=document.documentElement.style;SB_KEYS.forEach(([k])=>{const c=P&&P.sbc&&P.sbc[k];if(SB_HEX.test(c||''))st.setProperty('--sbu-'+k,c);else st.removeProperty('--sbu-'+k)})}
+function sbLeg(label){const cu=P&&P.sbc&&Object.keys(P.sbc).length;return `<div class="sb-leg" role="group" aria-label="${label}"><span>Colour code</span>${SB_KEYS.map(k=>`<label class="k" title="Click to change this colour"><i data-sb="${k[0]}"></i><input type="color" class="sb-pick" data-sbc="${k[0]}" value="${sbCol(k[0])}" aria-label="Colour for ${k[1]}">${k[1]}</label>`).join('')}${cu?'<button class="btn sm ghost" data-sbreset title="Back to the standard colours">Reset</button>':''}</div>`}
+document.addEventListener('input',e=>{const t=e.target.closest&&e.target.closest('[data-sbc]');if(!t||!P)return;P.sbc=P.sbc||{};P.sbc[t.dataset.sbc]=t.value;applySbColors()});
+document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-sbc]');if(!t||!P)return;logChange(`Colour code · ${SB_KEYS.find(x=>x[0]===t.dataset.sbc)[1]} colour changed`,'prod',true);touch([]);render(true)});
+document.addEventListener('click',e=>{if(!e.target.closest('[data-sbreset]')||!P)return;snapshot();delete P.sbc;applySbColors();logChange('Colour code · standard colours restored','prod',true);touch([]);render(true)});
 function sheetify(root){const LEFT=/artist|crowd|cast|character|name|note|remark|title|item|prop|costume|vehicle|animal|dept|detail|reason|task|description|what happens/i;
   root.querySelectorAll('.t th').forEach(th=>{const k=hdrKind(th.textContent.trim());if(k)th.classList.add('c-'+k)});
   root.querySelectorAll('.t td.eff').forEach(td=>{td.classList.add(NIGHTISH.test(td.textContent)?'n':'d');const tr=td.closest('tr');if(tr&&td.textContent.trim())tr.dataset.sb=sbKey(td.textContent)});
@@ -5778,7 +5794,7 @@ function sheetify(root){const LEFT=/artist|crowd|cast|character|name|note|remark
   root.querySelectorAll('.effc').forEach(x=>{if(x.textContent.trim())x.dataset.sb=sbKey(x.textContent)});
   root.querySelectorAll('.t td').forEach(td=>{if(td.querySelector('textarea'))td.classList.add('left')});
   const first=root.querySelector('.tw');if(first&&root.querySelector('tr[data-sb]')&&!root.querySelector('.sb-leg')){const used=new Set([...root.querySelectorAll('tr[data-sb]')].map(r=>r.dataset.sb));
-    first.insertAdjacentHTML('beforebegin',`<div class="sb-leg" role="group" aria-label="Colour code for scenes"><span>Colour code</span>${SB_KEYS.filter(k=>used.has(k[0])).map(k=>`<span class="k"><i data-sb="${k[0]}"></i>${k[1]}</span>`).join('')}</div>`)}}
+    first.insertAdjacentHTML('beforebegin',sbLeg('Colour code for scenes'))}}
 function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.production:'';$('#fTitle').disabled=$('#fProd').disabled=!P;$('#bAll').disabled=$('#bRun').disabled=!P||!!JOB;
   $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
   if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?(advAI()?'Choose an AI service in Settings (free options available)':'AI is not available right now'):'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
@@ -6149,7 +6165,7 @@ function addSheet(wb,sh,title,classic){if(classic===false||(classic===undefined&
       else if(k==='h')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:XL_FILL[hk[c]]}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
       else if(k==='g')st={font:Object.assign({},font,{bold:true}),fill:{patternType:'solid',fgColor:{rgb:'D9D9D9'}},alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
       else{const v=String(ws[ref].v||'');st={font,alignment:{horizontal:'center',vertical:'center',wrapText:true},border:xlBorder()};
-        if(hk[c]==='eff'&&v)st.fill={patternType:'solid',fgColor:{rgb:NIGHTISH.test(v)?'E3E7F7':'FBF2D0'}};
+        if(hk[c]==='eff'&&v)st.fill={patternType:'solid',fgColor:{rgb:sbTintHex(v)}};
         if(c===0||hk[c]==='loc'||hk[c]==='eff')st.font=Object.assign({},font,{bold:true})}
       ws[ref].s=st}
     ws['!rows']=[{hpt:20},{hpt:24},{hpt:18},{hpt:22}]}
@@ -6178,7 +6194,7 @@ function addSheetPro(wb,sh,title){const n=Math.max(1,sh.cols.length);const aoa=[
       else if(k==='g')x={font:{name:'Calibri',sz:10.5,bold:true,color:{rgb:'0050C8'}},fill:{patternType:'solid',fgColor:{rgb:'E8F0FE'}},alignment:{horizontal:'left',vertical:'center',wrapText:true,indent:1},border:bd};
       else if(k==='f')x={font:{name:'Calibri',sz:9,italic:true,color:{rgb:'8E8E93'}},alignment:{horizontal:'right'}};
       else{const v=String(ws[ref].v||'');x={font:F,alignment:{horizontal:c===0||typeof ws[ref].v==='number'?'center':(String(v).length>28?'left':'center'),vertical:'center',wrapText:true},border:bd};if(k==='z')x.fill={patternType:'solid',fgColor:{rgb:'F7F7F9'}};
-        if(hk[c]==='eff'&&v)x.fill={patternType:'solid',fgColor:{rgb:NIGHTISH.test(v)?'E4E6FF':'FFF4D6'}};if(c===0||hk[c]==='loc')x.font=Object.assign({},F,{bold:true})}
+        if(hk[c]==='eff'&&v)x.fill={patternType:'solid',fgColor:{rgb:sbTintHex(v)}};if(c===0||hk[c]==='loc')x.font=Object.assign({},F,{bold:true})}
       ws[ref].s=x}
     ws['!rows']=[{hpt:30},{hpt:21},{hpt:18},{hpt:6},{hpt:24}]}
   let nm=String(sh.name).replace(/[\\\/?*\[\]:]/g,'-').slice(0,31);let i=2;while(wb.SheetNames.includes(nm)){nm=String(sh.name).slice(0,27)+' '+i++}XLSX.utils.book_append_sheet(wb,ws,nm)}
@@ -6211,7 +6227,7 @@ async function buildPdfPro(title,exp){await loadScript(CDN.jspdf);await loadScri
       body:s.rows.map(r=>r&&r.group?[{content:r.group,colSpan:s.cols.length,styles:{fillColor:[232,240,254],fontStyle:'bold',textColor:[0,80,200],halign:'left'}}]:r.map(v=>v==null?'':String(v))),
       columnStyles:Object.fromEntries(s.cols.map((c,i)=>[i,{cellWidth:avail*(c.w||14)/tw,halign:(c.w||14)>=30?'left':'center'}])),
       didParseCell:d=>{if(d.section!=='body')return;const k=hdrKind(s.cols[d.column.index]?s.cols[d.column.index].h:'');if(d.column.index===0||k==='loc')d.cell.styles.fontStyle='bold';
-        if(k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string'&&d.cell.raw.trim())d.cell.styles.fillColor=NIGHTISH.test(d.cell.raw)?[228,230,255]:[255,244,214]},
+        if(k==='eff'&&d.cell.raw&&typeof d.cell.raw==='string'&&d.cell.raw.trim())d.cell.styles.fillColor=sbTint(sbKey(d.cell.raw),.3)},
       didDrawPage:onPage}))});
   foot();if(nonLatin)toast('Note: PDF cannot show Telugu or Hindi letters yet. Excel shows them correctly.',6000);return doc}
 async function buildPdf(title,exp,classic){if(classic===false||(classic===undefined&&!DOC_CLASSIC.includes(page)))return buildPdfPro(title,exp);await loadScript(CDN.jspdf);await loadScript(CDN.autotable);const {jsPDF}=window.jspdf;

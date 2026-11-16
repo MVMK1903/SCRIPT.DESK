@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-uyX8ipNsM+yu4I+cz0AvO0Qoj6quMlk8AWrUFIsIJ7c=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-gFuc5e8Nq+EnQzfbHJc0SD3nLaKbYhMwaY8/zjzKBU4=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1891,6 +1891,15 @@ select option:checked,select option:hover{background-color:#ffd36e;color:#1f1b16
 .cs-t .cs-d{padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--fill);color:var(--fg);font:500 12.5px var(--f-ui)}
 .cs-s.s-ok{border-color:var(--ok)!important;color:var(--ok)}.cs-s.s-no{border-color:color-mix(in srgb,var(--bad) 60%,transparent)!important}
 @media (max-width:820px){.dd-grid{grid-template-columns:1fr}.dd-b{display:none}.dd-h,.rd-h{padding:10px 12px;gap:10px}.rd-bar{width:48px}.dd-l{min-width:0}.dd-n{flex-wrap:wrap}.dd-n .dd-in{flex:1 1 100%;order:3}.dd-sum>div{min-width:96px;padding:10px 12px}.dd-sum b{font-size:19px}}
+/* Folding menu groups */
+.nav h6.ngt{margin:4px 0 0!important;padding:0}
+.ngh{display:flex;align-items:center;gap:8px;width:100%;min-height:38px;padding:0 12px 0 10px;border:0;border-radius:10px;background:transparent;color:var(--muted);font:600 12.5px/1 var(--f-ui);letter-spacing:0;text-transform:none;cursor:pointer;text-align:left}
+.ngh:hover{background:var(--fill);color:var(--fg)}.ngh:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.ngh .ngn{margin-left:auto;font-weight:500;font-size:11.5px;color:var(--faint)}
+.ngh::after{content:"";flex:none;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);transition:transform .16s ease;margin-right:2px}
+.ngh[aria-expanded="true"]{color:var(--fg)}.ngh[aria-expanded="true"]::after{transform:rotate(45deg)}
+.ng.shut{display:none!important}
+@media (prefers-reduced-motion:reduce){.ngh::after{transition:none}}
 /* Phone: slimmer header, one-line last change, compact search and sheet tools (v2.12.49) */
 @media (max-width:820px){
   :root:root .appbar{background:var(--bg)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
@@ -5301,7 +5310,14 @@ document.addEventListener('dragover',e=>{if(!DRAG)return;const z=e.target.closes
 document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closest&&e.target.closest('[data-dropday]');if(!z)return;e.preventDefault();const row=e.target.closest('tr[data-drag]');const sid=DRAG;DRAG=null;
   const before=row&&row.dataset.drag!==sid?row.dataset.drag:null;const to=z.dataset.dropday||null;const s=scById(sid);if(!s)return;snapshot();placeScene(sid,to,before);prodSave(`Sc ${s.no} moved to ${to?dayLabel(dayById(to)):'Not scheduled yet'}`)});
 
-function navHtml(){let h='',g='';PAGES.forEach(p=>{if(p.hide&&p.hide())return;if(p.g!==g){if(g)h+='</div>';g=p.g;h+=`<h6>${esc(g)}</h6><div class="ng" data-g="${esc(g)}">`}h+=`<button data-page="${esc(p.id)}" aria-current="${page===p.id?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
+/* The menu folds: Main is always shown, the group you are working in is open, the rest are one line each. Your choice is remembered. */
+function navState(){try{const o=JSON.parse(localStorage.getItem('scriptdesk.navOpen')||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
+function navIsOpen(g,cur,st){if(g==='Main')return true;if(st[g]===0)return false;return st[g]===1||g===cur}
+function navHtml(){const vis=PAGES.filter(p=>!(p.hide&&p.hide())),cur=(PAGES.find(p=>p.id===page)||{}).g,st=navState(),n={};vis.forEach(p=>n[p.g]=(n[p.g]||0)+1);let h='',g='';
+  vis.forEach(p=>{if(p.g!==g){if(g)h+='</div>';g=p.g;const open=navIsOpen(g,cur,st);h+=(g==='Main'?`<h6>${esc(g)}</h6>`:`<h6 class="ngt"><button type="button" class="ngh" data-ng="${esc(g)}" aria-expanded="${open}">${esc(g)}<span class="ngn">${n[g]}</span></button></h6>`)+`<div class="ng${open?'':' shut'}" data-g="${esc(g)}">`}
+    h+=`<button data-page="${esc(p.id)}" aria-current="${page===p.id?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.ngh');if(!b)return;const g=b.dataset.ng,open=b.getAttribute('aria-expanded')!=='true',st=navState();st[g]=open?1:0;try{localStorage.setItem('scriptdesk.navOpen',JSON.stringify(st))}catch(x){}
+  document.querySelectorAll('.ngh').forEach(x=>{if(x.dataset.ng===g)x.setAttribute('aria-expanded',open)});document.querySelectorAll('.ng').forEach(x=>{if(x.dataset.g===g)x.classList.toggle('shut',!open)})});
 /* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
 const RATE_SRC='Telugu Film Chamber of Commerce and Telugu Film Industry Employees Federation, "General conditions and wages" agreement dated 01-07-2022 (valid 01-07-2022 to 30-06-2025; stunt wages to 30-03-2025 as printed)';
 /* [union, role / item, rupees, unit, pdf page, note] */

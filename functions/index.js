@@ -17,6 +17,7 @@ const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
 const { otpInput } = require('./validate');
 Object.assign(exports, require('./auth')); // sign-in gate, safe sign-up, account triggers
 Object.assign(exports, require('./loginotp')); // one-time code on every sign-in
+Object.assign(exports, require('./totp')); // authenticator app + backup codes for the sign-in code
 
 const CODE_MINUTES = 5;
 const MAX_TRIES = 5;

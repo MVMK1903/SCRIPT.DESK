@@ -1,6 +1,6 @@
 # ScriptDesk security
 
-How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026 (sign-in protection added the same day).
+How ScriptDesk protects scripts and accounts. Last reviewed 7 Nov 2026 (sign-in protection added the same day); authenticator app added 17 Nov 2026.
 
 ## Accounts (Firebase)
 
@@ -63,6 +63,37 @@ Password sign-in and sign-up go through ScriptDesk's server functions (`function
 - An account made by the sign-up form with someone else's email stays unverified, and the real owner still gets the
   "you already have an account" email with a reset link. Teams and OTP locks need a verified email, and finishing a
   password reset verifies the address.
+
+## Authenticator app (2-step sign-in)
+
+Added 17 Nov 2026. A second way to pass the sign-in code, next to the email and SMS codes. Needs the server functions
+deployed (`functions/totp.js`); without them the section in Account & security says so and sign-in is unchanged.
+
+- **Set up** in Account & security: the app shows a key (and an `otpauth` link for phones). The person adds it to an
+  authenticator app (Google Authenticator, Microsoft Authenticator, 1Password and so on) and types the 6-digit code.
+  A verified email is required. The key is only turned on after a right code, and a set-up that is not finished expires
+  after 10 minutes (10 wrong tries end it).
+- **Sign-in:** when it is on, the sign-in code screen asks for the app code first. Links offer **Email me a code instead**
+  and **Use a backup code**. A right code marks the sign-in exactly like the email and SMS codes do (the `otpAuth` claim),
+  so the database rules need no other change.
+- **Standard TOTP** (RFC 6238, SHA-1, 6 digits, 30 seconds), checked on the server with one step of clock drift either way.
+  A code can only be used once: the step of the last good code is saved and an older or equal step is refused.
+- **Wrong tries:** 5 wrong codes in 15 minutes pause the check (even a right code is refused until the 15 minutes pass).
+  Counting and checking happen in one database transaction, so many tries at once still only get five.
+- **Backup codes:** 8 codes made when it is switched on, shown once. Only salted SHA-256 hashes are stored. Each works once.
+  New codes (which replace the old ones) and turning it off both need a right code.
+- **Where the key lives:** `totp/{uid}` and `totpPending/{uid}`, closed to every app by `firestore.rules`; only the server
+  reads them. Google encrypts the database at rest; the key is not additionally encrypted by ScriptDesk. A person with
+  access to your Firebase project could read it. Keys, codes and backup codes are never written to a log.
+- **Activity log:** turned on or off, wrong code, paused after wrong tries, new backup codes, and which method signed in.
+- **Lost phone and no backup codes:** the email code still works, so nobody is locked out. If the email code is not
+  available either, the project owner has to remove `totp/{uid}` in the Firebase console.
+- **Limits:** like the other sign-in codes, this is enforced by the database rules only once `otpEnforced()` is switched
+  on after the functions are deployed. Until then the check is made by the app. Not yet done: passkeys (WebAuthn), and a
+  QR code for set-up (the key can be typed or opened by link).
+- **Tested:** 11 server tests (including the RFC 6238 test vector, replay, lockout, backup codes, other accounts) and a
+  browser test where the screens talk to the real server code. Not tested against a real Firebase project, a real
+  authenticator app, or on a phone.
 
 ## End-to-end encrypted vault
 

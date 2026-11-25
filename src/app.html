@@ -2001,6 +2001,7 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 .wa-btns{display:flex;flex-wrap:wrap;gap:6px}.wa-btns button{border:1px solid rgba(127,127,127,.3);background:transparent;color:inherit;border-radius:99px;padding:6px 11px;font:600 12px var(--f-ui);cursor:pointer}.wa-btns button:hover{border-color:var(--accent);color:var(--accent)}
 .wa-opt{padding:9px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.25);display:flex;flex-direction:column;gap:6px;font-size:13px;overflow-wrap:anywhere}
 .wa-empty{font-size:12.5px;color:var(--muted)}
+.wa-dir{display:flex;gap:6px;align-items:center}.wa-dir input{flex:1;min-width:0;border:1px solid rgba(127,127,127,.3);background:transparent;color:inherit;border-radius:10px;padding:7px 9px;font:12.5px var(--f-ui)}
 body.wr-focus .wr-ai{display:none!important}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
@@ -3381,9 +3382,9 @@ async function wcRun(ai,manual){
 
 /* ---------- Writing assistant (desktop, right of the paper): suggestions for the page + AI rewrite options for the line you are on ---------- */
 const WRW={sel:null,opts:null,busy:false};
-const RW_MODES=[['fix','Fix grammar'],['pro','Screenplay style'],['short','Shorter'],['vivid','More visual'],['punch','Punchier'],['emo','More emotion']];
-const RW_ASK={pro:'Rewrite it in the house style below: present tense, short, visual, filmable.',fix:'Fix spelling, grammar and punctuation only. Change nothing else.',short:'Make it shorter and tighter.',vivid:'Make it more visual and cinematic: what we see and hear.',punch:'Make it punchier and more natural to say aloud.',emo:'Make the emotion stronger without adding new events.'};
-function wrAIHtml(){return `<aside class="wr-ai" id="wrAI" aria-label="Writing assistant"><h3>Writing assistant</h3><div class="wa-cur" id="wrAIcur">Click a line to work on it.</div><div class="wa-sec"><b>REWRITE THIS LINE</b><div class="wa-btns">${RW_MODES.map(m=>`<button type="button" data-rw="${m[0]}">${m[1]}</button>`).join('')}</div><div id="wrAIout"><div class="wa-empty">Select words to rewrite only those, or leave the cursor in a line to rewrite all of it.</div></div></div><div class="wa-sec"><b>SUGGESTIONS</b><div class="wa-btns"><button type="button" data-aichk="1">Check this line with AI</button></div><div id="wrAIlist"><div class="wa-empty">Nothing to fix right now.</div></div></div></aside>`}
+const RW_MODES=[['fix','Fix grammar'],['pro','Screenplay style'],['expand','Expand'],['short','Shorter'],['vivid','More visual'],['punch','Punchier'],['emo','More emotion']];
+const RW_ASK={expand:'Expand it with a little more filmable detail (what we see and hear) without adding new events.',describe:'Details only, never a new event.',pro:'Rewrite it in the house style below: present tense, short, visual, filmable.',fix:'Fix spelling, grammar and punctuation only. Change nothing else.',short:'Make it shorter and tighter.',vivid:'Make it more visual and cinematic: what we see and hear.',punch:'Make it punchier and more natural to say aloud.',emo:'Make the emotion stronger without adding new events.'};
+function wrAIHtml(){return `<aside class="wr-ai" id="wrAI" aria-label="Writing assistant"><h3>Writing assistant</h3><div class="wa-cur" id="wrAIcur">Click a line to work on it.</div><div class="wa-sec"><b>REWRITE THIS LINE</b><div class="wa-btns">${RW_MODES.map(m=>`<button type="button" data-rw="${m[0]}">${m[1]}</button>`).join('')}</div><div class="wa-btns"><button type="button" data-as="add">Describe (add detail)</button><button type="button" data-as="words">Related words</button></div><div class="wa-dir"><input type="text" id="wrAIdir" placeholder="Or tell it how, e.g. “angrier, fewer words”" maxlength="200"><button type="button" class="btn sm" data-as="custom">Go</button></div><div id="wrAIout"><div class="wa-empty">Select words to work on only those, or leave the cursor in a line to work on all of it.</div></div></div><div class="wa-sec"><b>THIS SCENE</b><div class="wa-btns"><button type="button" data-as="feedback">Feedback (5 notes)</button><button type="button" data-as="ideas">Brainstorm ideas</button></div></div><div class="wa-sec"><b>SUGGESTIONS</b><div class="wa-btns"><button type="button" data-aichk="1">Check this line with AI</button></div><div id="wrAIlist"><div class="wa-empty">Nothing to fix right now.</div></div></div></aside>`}
 function wrAIdesk(){return page==='write'&&matchMedia('(min-width:821px)').matches&&!!$('#wrAI')}
 function wrAIcur(){const el=$('#wrAIcur');if(!el)return;const b=wrCur();if(!b){return}
   const sel=getSelection();WRW.sel={el:b,text:(!sel.isCollapsed&&b.contains(sel.anchorNode)&&b.contains(sel.focusNode))?String(sel).trim():''};
@@ -3394,27 +3395,52 @@ function wrAIlistRender(items){const box=$('#wrAIlist');if(!box)return;
   if(!WXV.chk){box.innerHTML='<div class="wa-empty">Suggestions are off (Tools → Suggestions).</div>';return}
   if(!items.length){box.innerHTML='<div class="wa-empty">Nothing to fix right now.</div>';return}
   box.innerHTML=items.slice(0,30).map(wcItemHtml).join('')}
-async function wrRewrite(mode){
+const WR_KIND={a:'action line',d:'dialogue',c:'character name',p:'parenthetical',h:'scene heading',t:'transition',s:'shot'};
+function wrSceneText(el){const d=wrDoc();if(!d||!el)return '';const k=[...d.children];let i=k.indexOf(el);if(i<0)return '';let a=i;while(a>0&&k[a].dataset.t!=='h')a--;let b=i+1;while(b<k.length&&k[b].dataset.t!=='h')b++;return k.slice(a,b).map(x=>{const t=x.textContent.trim();return x.dataset.t==='c'?'\n'+t:t}).join('\n').slice(0,7000)}
+/* One entry point for every assistant button. kind: rewrite (3 versions of the selection), add (3 details to add after it), words (alternatives for a word), feedback (5 areas to improve in the scene), ideas (6 ideas for what could happen next). The writer always chooses; nothing is written without a click. */
+async function wrAssist(kind,mode,dir){
   const out=$('#wrAIout');if(!out||WRW.busy)return;
   const cur=WRW.sel&&WRW.sel.el&&WRW.sel.el.isConnected?WRW.sel:null;
   if(!cur){out.innerHTML='<div class="wa-empty">Click inside a line of the script first.</div>';return}
   const el=cur.el,whole=el.textContent,part=cur.text||whole;
-  if(!part.trim()){out.innerHTML='<div class="wa-empty">That line is empty.</div>';return}
-  if(!AI.sample){out.innerHTML='<div class="wa-empty">Rewrites need an AI service. Open Settings and choose one (free options available). The suggestions above work without it.</div>';return}
+  if(!part.trim()&&kind!=='feedback'&&kind!=='ideas'){out.innerHTML='<div class="wa-empty">That line is empty.</div>';return}
+  if(kind==='words'&&(!cur.text||cur.text.split(/\s+/).length>3)){out.innerHTML='<div class="wa-empty">Select one word or a short phrase (up to 3 words) first.</div>';return}
+  if(!AI.sample){out.innerHTML='<div class="wa-empty">This needs an AI service. Open Settings and choose one (free options available). The suggestions above work without it.</div>';return}
   WRW.busy=true;out.innerHTML='<div class="wa-empty">Thinking…</div>';
-  const kind={a:'action line',d:'dialogue',c:'character name',p:'parenthetical',h:'scene heading',t:'transition',s:'shot'}[el.dataset.t]||'line';
+  const lk=WR_KIND[el.dataset.t]||'line',lang='The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Keep the writer\'s language, names, places and meaning. Do not translate. ';
   try{
-    const r=await ask('You are a film screenplay editor. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Rewrite the '+kind+' below in 3 different ways. '+RW_ASK[mode]+' Keep the writer\'s language, names, places and meaning. Do not translate. Do not add new characters or events. '+STYLE_GUIDE+' Return JSON: {"options":["...","...","..."]}.\nText:\n'+part,{modelTier:'complex'});
-    const list=(r&&Array.isArray(r.options)?r.options:[]).map(x=>String(x||'').trim()).filter(x=>x&&x!==part.trim()).slice(0,3);
-    WRW.opts={el,part,whole,list};
-    out.innerHTML=list.length?list.map((x,i)=>`<div class="wa-opt"><div>${esc(x)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-rwuse="${i}">Use this</button></div></div>`).join(''):'<div class="wa-empty">No better version found.</div>';
+    if(kind==='rewrite'||kind==='add'){
+      const task=kind==='add'?'Suggest 3 short details the writer could ADD after the '+lk+' below: sounds, light, objects, small gestures that can be filmed. Each is one sentence in present tense and must not repeat what is already there. '+RW_ASK.describe:'Rewrite the '+lk+' below in 3 different ways. '+(mode==='custom'?'Follow the writer\'s direction: "'+String(dir||'').slice(0,300)+'".':RW_ASK[mode]);
+      const r=await ask('You are a film screenplay editor. '+lang+task+' Do not add new characters or events. '+STYLE_GUIDE+' Return JSON: {"options":["...","...","..."]}.\nText:\n'+part,{modelTier:'complex'});
+      const list=(r&&Array.isArray(r.options)?r.options:[]).map(x=>String(x||'').trim()).filter(x=>x&&x!==part.trim()).slice(0,3);
+      WRW.opts={el,part,whole,list,add:kind==='add'};
+      out.innerHTML=list.length?list.map((x,i)=>`<div class="wa-opt"><div>${esc(x)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-rwuse="${i}">${kind==='add'?'Add after':'Use this'}</button></div></div>`).join(''):'<div class="wa-empty">No better version found.</div>';
+    }else if(kind==='words'){
+      const r=await ask('You are a film screenplay editor. '+lang+'Give 8 alternatives for the word or phrase "'+cur.text+'" that fit naturally in this '+lk+', same language and register, no repeats. Return JSON: {"words":["..."]}.\nLine:\n'+whole,{modelTier:'quick'});
+      const list=(r&&Array.isArray(r.words)?r.words:[]).map(x=>String(x||'').trim()).filter(x=>x&&x.toLowerCase()!==cur.text.toLowerCase()).slice(0,8);
+      WRW.opts={el,part:cur.text,whole,list};
+      out.innerHTML=list.length?'<div class="wa-btns">'+list.map((x,i)=>`<button type="button" data-rwuse="${i}">${esc(x)}</button>`).join('')+'</div>':'<div class="wa-empty">No alternatives found.</div>';
+    }else if(kind==='feedback'){
+      const sc=wrSceneText(el);if(sc.split(/\s+/).length<15){out.innerHTML='<div class="wa-empty">Write a little more of the scene first.</div>';WRW.busy=false;return}
+      const r=await ask('You are a script editor giving notes to a screenwriter. '+lang+'Read this scene and name exactly 5 specific, actionable areas to improve (for example clarity of what we see, conflict, character voice, dialogue that tells instead of shows, pacing, format). Quote a short phrase from the scene in each note. Do not rewrite the scene. '+STYLE_GUIDE+' Return JSON: {"items":[{"area":"short title","note":"1 or 2 sentences"}]}.\nScene:\n'+sc,{modelTier:'complex'});
+      const list=(r&&Array.isArray(r.items)?r.items:[]).filter(x=>x&&x.note).slice(0,5);
+      out.innerHTML=list.length?list.map(x=>`<div class="wa-opt"><b>${esc(String(x.area||'Note'))}</b><div>${esc(String(x.note))}</div></div>`).join(''):'<div class="wa-empty">No notes came back. Try again.</div>';
+    }else if(kind==='ideas'){
+      const sc=wrSceneText(el);
+      const r=await ask('You are a story editor helping a screenwriter brainstorm. '+lang+'Give 6 different ideas for what could happen next in this scene, or how a character could react at this point. One short line each. Ideas only, do not write scenes or dialogue. Stay inside the story\'s characters and setting. Return JSON: {"ideas":["..."]}.\nScene so far:\n'+sc,{modelTier:'complex'});
+      const list=(r&&Array.isArray(r.ideas)?r.ideas:[]).map(x=>String(x||'').trim()).filter(Boolean).slice(0,6);
+      out.innerHTML=list.length?list.map(x=>`<div class="wa-opt">${esc(x)}</div>`).join(''):'<div class="wa-empty">No ideas came back. Try again.</div>';
+    }
   }catch(e){out.innerHTML='<div class="wa-empty">'+esc(errMsg(e))+'</div>'}
   finally{WRW.busy=false}}
+function wrRewrite(mode,dir){return wrAssist('rewrite',mode,dir)}
 function wrRewriteUse(i){const o=WRW.opts;if(!o||!o.el.isConnected||!o.list[i])return;const text=o.el.textContent,k=text.indexOf(o.part);if(k<0){toast('That line changed. Run the rewrite again.');return}
-  let rep=o.list[i];const rest=text.slice(k+o.part.length);if(o.part!==o.whole&&/[.!?,;:]$/.test(rep)&&/^[.!?,;:]/.test(rest))rep=rep.replace(/[.!?,;:]+$/,'');wrPush();const nx=text.slice(0,k)+rep+rest;setText(o.el,nx);placeCaret(o.el,k+rep.length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const out=$('#wrAIout');if(out)out.innerHTML='<div class="wa-empty">Done. Undo with Ctrl+Z.</div>'}
+  let rep=o.list[i];if(o.add){wrPush();const nx2=text.replace(/\s+$/,'')+' '+rep;setText(o.el,nx2);placeCaret(o.el,nx2.length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const o2=$('#wrAIout');if(o2)o2.innerHTML='<div class="wa-empty">Added. Undo with Ctrl+Z.</div>';return}
+  const rest=text.slice(k+o.part.length);if(o.part!==o.whole&&/[.!?,;:]$/.test(rep)&&/^[.!?,;:]/.test(rest))rep=rep.replace(/[.!?,;:]+$/,'');wrPush();const nx=text.slice(0,k)+rep+rest;setText(o.el,nx);placeCaret(o.el,k+rep.length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const out=$('#wrAIout');if(out)out.innerHTML='<div class="wa-empty">Done. Undo with Ctrl+Z.</div>'}
 document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('#wrAI button'))e.preventDefault()});
 document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(!t)return;
   const rw=t.closest('[data-rw]');if(rw){wrRewrite(rw.dataset.rw);return}
+  const as=t.closest('[data-as]');if(as){const k=as.dataset.as;if(k==='custom'){const v=($('#wrAIdir')||{}).value||'';if(!v.trim()){toast('Type how you want it changed first.');return}wrAssist('rewrite','custom',v)}else wrAssist(k);return}
   if(t.closest('[data-aichk]')){const b=wrCur()||(WRW.sel&&WRW.sel.el);if(b&&b.isConnected){WC.el=b;wcRun(false);wcRun(true,true)}else toast('Click inside a line first.');return}
   const us=t.closest('[data-rwuse]');if(us){wrRewriteUse(+us.dataset.rwuse);return}
   if(t.closest('#wrMenuBtn')){const o=document.body.classList.toggle('wr-menuopen');t.closest('#wrMenuBtn').setAttribute('aria-expanded',o);return}

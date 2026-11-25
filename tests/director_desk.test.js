@@ -52,5 +52,5 @@ const c=await pg.evaluate(()=>{const id=document.querySelector('[data-css]').dat
 console.log(JSON.stringify(c));
 assert.strictEqual(c.st,'Locked');assert.strictEqual(c.actor,'Ravi Teja');assert.strictEqual(c.aud,'2027-01-05');assert(/^1 of/.test(c.locked));assert(c.crowd.includes('Day 1:20'));assert.deepStrictEqual(c.cnt,[30,12,0]);
 /* pages are in the menu and nothing threw */
-assert.strictEqual(await pg.evaluate(()=>['dirdesk','ready','casting'].every(id=>!!document.querySelector('.nav [data-page="'+id+'"]'))),true);
+assert.strictEqual(await pg.evaluate(()=>['dirdesk','ready','artists'].every(id=>!!document.querySelector('.nav [data-page="'+id+'"]'))),true);
 assert.deepStrictEqual(errs,[]);console.log("PASS director's desk, day readiness, casting");await b.close()})().catch(e=>{console.error('FAIL',e.message);process.exit(1)})

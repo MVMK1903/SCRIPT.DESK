@@ -1,3 +1,4 @@
+
 {
   "name": "scriptdesk-desktop",
   "productName": "ScriptDesk",
@@ -16,6 +17,9 @@
   "devDependencies": {
     "electron": "^45.2.3",
     "electron-builder": "^26.0.12"
+  },
+  "overrides": {
+    "minimatch@>=7.0.0 <=11.0.0": "11.0.1"
   },
   "build": {
     "appId": "com.scriptdesk.app",

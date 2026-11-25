@@ -15,7 +15,7 @@ const { chromium } = require('playwright');
     // add a scene below scene 2 from the menu
     document.querySelectorAll('#wrScenes [data-wrsc]')[1].click(); await wait(80);
     out.menu = [...document.querySelectorAll('#wrScMenu [data-op]')].map(x => x.dataset.op).join(',');
-    document.querySelector('#wrScMenu [data-op="add"]').click(); await wait(500);
+    document.querySelector('#wrScMenu [data-op="add"]').click(); await wait(200); document.querySelector('[data-np="insert"]').click(); await wait(500);
     const d = wrDoc(); const hs = [...d.children].filter(e => e.dataset.t === 'h');
     out.afterAddHeads = hs.length; out.newHeading = hs[2].textContent;
     hs[2].textContent = 'INT. LIGHTHOUSE - NIGHT'; hs[2].dispatchEvent(new Event('input', { bubbles: true }));
@@ -35,12 +35,12 @@ const { chromium } = require('playwright');
     // move a scene up
     go('write'); await wait(600);
     const before = locs();
-    document.querySelectorAll('#wrScenes [data-wrsc]')[2].click(); await wait(60); document.querySelector('#wrScMenu [data-op="up"]').click(); await wait(500);
+    document.querySelectorAll('#wrScenes [data-wrsc]')[2].click(); await wait(60); document.querySelector('#wrScMenu [data-op="up"]').click(); await wait(200); document.querySelector('[data-np="insert"]').click(); await wait(500);
     go('script'); await wait(600); const after = locs(); out.moved = after[1] === before[2] && after[2] === before[1];
     // full script: add a scene below and delete one; the writer follows
-    document.querySelector('[data-addbelow]').click(); await wait(300);
+    document.querySelector('[data-addbelow]').click(); await wait(200); document.querySelector('[data-np="insert"]').click(); await wait(300);
     out.editing = !!document.querySelector('.scr textarea');
-    const ta = document.querySelector('.scr textarea'); ta.value = 'SCENE NO 1A INT BOAT HOUSE - DAY\n\nNina ties a rope.'; document.querySelector('[data-save]').click(); await wait(500);
+    const ta = document.querySelector('.scr textarea'); ta.blur(); ta.value = 'SCENE NO 1A INT BOAT HOUSE - DAY\n\nNina ties a rope.'; document.querySelector('[data-save]').click(); await wait(500);
     out.boatInScenes = locs().includes('BOAT HOUSE');
     go('write'); await wait(600);
     out.dbg = [page, !!wrDoc(), draftReal(), draft().els.length, P.scenes.length, document.getElementById('content').textContent.slice(0,120)];
@@ -49,6 +49,6 @@ const { chromium } = require('playwright');
     out.ok = true; return out;
   });
   console.log(JSON.stringify(r, null, 1)); if (errs.length) console.log('ERRORS', errs);
-  const ok = r.rows >= 6 && /add,dup,up,down,del/.test(r.menu) && r.afterAddHeads === r.rows + 1 && r.hasLighthouse && r.scriptShows && r.afterDel === r.count - 1 && r.victimGone && r.moved && r.editing && r.boatInScenes && r.writerHasBoat && !errs.length;
+  const ok = r.rows >= 6 && /add,dup,up,down,no,del/.test(r.menu) && r.afterAddHeads === r.rows + 1 && r.hasLighthouse && r.scriptShows && r.afterDel === r.count - 1 && r.victimGone && r.moved && r.editing && r.boatInScenes && r.writerHasBoat && !errs.length;
   console.log(ok ? 'PASS' : 'FAIL'); await b.close(); process.exit(ok ? 0 : 1);
 })();

@@ -2037,6 +2037,10 @@ body.wr-focus .wr-ai{display:none!important}
 #wrScMenu button{border:0;background:transparent;color:inherit;text-align:left;padding:9px 12px;border-radius:8px;font:13px var(--f-ui,inherit);cursor:pointer}
 #wrScMenu button:hover,#wrScMenu button:focus-visible{background:var(--accent-soft,rgba(128,128,128,.15))}
 #wrScMenu button.danger{color:#e5484d}
+
+.np-opts{display:grid;gap:10px;margin-top:10px}
+.np-opts .btn{display:grid;gap:3px;text-align:left;height:auto;padding:12px 14px;white-space:normal}
+.np-opts .btn span{font-weight:400;font-size:12.5px;opacity:.85}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -2915,9 +2919,25 @@ function listStr(s,k){return (s[k]||[]).join(', ')}
 function costumeStr(s){return s.costumes.map(c=>(c.a?aName(c.a):c.n)+' – '+c.c).join('; ')}
 function parseCostumes(t){return String(t||'').split(/\s*[;\n]\s*/).map(x=>x.trim()).filter(Boolean).map(x=>{const m=x.split(/\s+[–—-]\s+|:\s*/);if(m.length>1){const nm=m.shift().trim();const a=findArtist(nm);return {a:a?a.id:null,n:a?'':U(nm),c:m.join(' – ').trim()}}return {a:null,n:'',c:x}})}
 /* Renumbering: giving a scene a number another scene already has pushes that scene up by one, and so on down the chain (8 becomes 9: old 9 becomes 10, old 10 becomes 11) */
-function bumpSceneNos(s,oldNo){const out={ids:[],list:[]};
-  if(/^\d+$/.test(String(s.no))){let cur=String(s.no);const at=P.scenes.indexOf(s);
-    for(let g=0;g<P.scenes.length;g++){const ord=[...P.scenes.slice(at+1),...P.scenes.slice(0,at)];const d=ord.find(x=>String(x.no)===cur&&!out.ids.includes(x.id));if(!d)break;
+/* scene numbers: 1, 2, 2A, 3. Changing a number renumbers the scenes after it in order. */
+function noParts(n){const m=/^(\d+)([A-Z]?)$/.exec(U(String(n==null?'':n)).trim());return m?[+m[1],m[2]?m[2].charCodeAt(0)-64:0]:null}
+function noCmp(a,b){return a[0]-b[0]||a[1]-b[1]}
+const noStr=(i,l)=>String(i)+(l?String.fromCharCode(64+l):'');
+/* list: scenes in order, each with .no. Scenes after list[at] are renumbered from list[at].no (at -1 = from the top). A plain scene gets the next whole number, an inserted one (5A) keeps its letter. Returns [[item,old,new]...], or null when list[at] is out of order. */
+function chainNos(list,at){const out=[];let prev=at<0?[0,0]:noParts(list[at].no);if(!prev)return out;
+  if(at>0){const pb=noParts(list[at-1].no);if(pb&&noCmp(prev,pb)<=0)return null}
+  const taken=new Set(list.slice(0,at+1).map(x=>U(x.no)));let cur=prev[0];
+  for(let i=at+1;i<list.length;i++){const o=list[i];const old=U(String(o.no==null?'':o.no));const pp=old===''?[0,0]:noParts(old);if(!pp){taken.add(old);continue}
+    let nn;if(pp[1]){let L=pp[1];nn=noStr(cur,L);while(taken.has(nn)&&L<26){L++;nn=noStr(cur,L)}}else{cur++;nn=String(cur)}
+    taken.add(nn);if(nn!==old)out.push([o,old,nn]);o.no=nn}
+  return out}
+/* the number an inserted scene would take after prevNo: 2 gives 2A, 2A gives 2B */
+function insertNoAfter(prevNo,taken){const p=noParts(prevNo);if(!p)return null;let L=p[1]+1;let n=noStr(p[0],L);while(taken.has(U(n))&&L<26){L++;n=noStr(p[0],L)}return n}
+function bumpSceneNos(s,oldNo){const out={ids:[],list:[]};const at=P.scenes.indexOf(s);const taken=P.scenes.filter(x=>x!==s&&U(x.no)===U(s.no));
+  const ch=chainNos(P.scenes,at);
+  if(ch){ch.forEach(([o,a,b])=>{out.ids.push(o.id);out.list.push(a+' to '+b)});return out}
+  /* out of order: only push scenes that now share this number */
+  if(/^\d+$/.test(String(s.no))){let cur=String(s.no);for(let g=0;g<P.scenes.length;g++){const ord=[...P.scenes.slice(at+1),...P.scenes.slice(0,at)];const d=ord.find(x=>String(x.no)===cur&&!out.ids.includes(x.id));if(!d)break;
       const nn=String(parseInt(cur,10)+1);d.no=nn;out.ids.push(d.id);out.list.push(cur+' to '+nn);cur=nn}}
   return out}
 function setSceneField(s,f,t){t=String(t).replace(/ /g,' ').trim();s.locked=s.locked||{};
@@ -3639,26 +3659,69 @@ function wrMirror(){if(!P||!draftReal())return;const D=draft();const els=D.els,n
 function nextSceneNo(no){no=String(no||'').trim();const taken=new Set(P.scenes.map(x=>U(x.no)));let base=no.replace(/[A-Z]$/i,'')||no;let c=/[A-Z]$/i.test(no)?no.slice(-1).toUpperCase().charCodeAt(0)+1:65;let cand;
   for(let k=0;k<26;k++){cand=base+String.fromCharCode(c+k);if(c+k>90)break;if(!taken.has(U(cand)))return cand}
   let n=1;while(taken.has(String(n)))n++;return String(n)}
-function addSceneBelow(id){const i=P.scenes.findIndex(x=>x.id===id);if(i<0)return;snapshot();const a=P.scenes[i];
-  const n=newScene({no:nextSceneNo(a.no),ie:a.ie||'INT',time:a.time||'DAY',loc:'NEW LOCATION',text:'',status:'new'});P.scenes.splice(i+1,0,n);
-  wrMirror();logChange(`Scene ${n.no} added after scene ${a.no}`,'scenes');touch([n.id]);VIEW.editScene=n.id;render(true);
-  const ta=$('#ed-'+n.id);if(ta){ta.focus();ta.select()};toast(`Scene ${n.no} added. Type its heading and text, then Save scene.`,5000)}
-function wrSceneOp(op,hi){wrSave();const D=draft(),els=D.els;if(!els[hi]||els[hi].t!=='h')return;const [a,b]=wrHeadRange(els,hi);snapshot();let focus=hi,msg='';
-  const nums=wrNumbers(els),no=nums[hi];
-  if(op==='add'){els.splice(b,0,{t:'h',x:'INT. '},{t:'a',x:''});focus=b;msg='New scene added below. Type its heading.'}
-  else if(op==='dup'){const copy=els.slice(a,b).map(e=>{const c=Object.assign({},e);delete c.n;delete c.id;return c});els.splice(b,0,...copy);focus=b;msg=`Scene ${no} copied. The copy is numbered as an inserted scene.`}
-  else if(op==='up'){let p=a-1;while(p>=0&&els[p].t!=='h')p--;if(p<0){toast('This is already the first scene.');return}const blk=els.splice(a,b-a);delete blk[0].n;els.splice(p,0,...blk);focus=p;msg=`Scene ${no} moved up. It is numbered as an inserted scene.`}
-  else if(op==='down'){if(b>=els.length||els[b].t!=='h'){toast('This is already the last scene.');return}const [,b2]=wrHeadRange(els,b);const blk=els.splice(a,b-a);delete blk[0].n;els.splice(b2-blk.length,0,...blk);focus=b2-blk.length;msg=`Scene ${no} moved down. It is numbered as an inserted scene.`}
-  else if(op==='del'){els.splice(a,b-a);if(!els.length)els.push({t:'h',x:''});focus=Math.min(a,els.length-1);msg=`Scene ${no} deleted. Other scene numbers stay as they are. Undo is at the top.`}
+function addSceneBelow(id,mode){const i=P.scenes.findIndex(x=>x.id===id);if(i<0)return;const a=P.scenes[i];
+  if(!mode){numPick(a.no,new Set(P.scenes.map(x=>U(x.no))),P.scenes.length-1-i,'Add a scene',m=>addSceneBelow(id,m));return}
+  snapshot();const n=newScene({no:'',ie:a.ie||'INT',time:a.time||'DAY',loc:'NEW LOCATION',text:'',status:'new'});P.scenes.splice(i+1,0,n);
+  let moved=0;if(mode==='insert')n.no=insertNoAfter(a.no,new Set(P.scenes.filter(x=>x!==n).map(x=>U(x.no))))||nextSceneNo(a.no);
+  else{/* the new scene takes the next whole number and the scenes after it move up */const ch=chainNos(P.scenes,i);moved=ch?ch.length-1:0}
+  wrMirror();logChange(`Scene ${n.no} added after scene ${a.no}`,'scenes');touch(P.scenes.map(x=>x.id));VIEW.editScene=n.id;render(true);
+  const ta=$('#ed-'+n.id);if(ta){ta.focus();ta.select()};toast(`Scene ${n.no} added${moved>0?` and ${moved} scene${moved===1?'':'s'} after it renumbered`:''}. Type its heading and text, then Save scene.`,5000)}
+/* ask how a new or moved scene is numbered: as an inserted scene (2A), or in order with everything after it renumbered */
+function numPick(prevNo,taken,after,title,cb){const ins=prevNo!=null&&noParts(prevNo)?insertNoAfter(prevNo,taken):null;const pp=prevNo==null?[0,0]:noParts(prevNo);
+  if(!pp||!ins){cb('renumber');return}
+  const plain=String(pp[0]+1);
+  openModal(`<div class="modal-h"><h2>${esc(title)}</h2></div><div class="modal-b"><p>It comes right after scene ${esc(prevNo)}. How should it be numbered?</p>
+  <div class="np-opts"><button class="btn pri" data-np="insert"><b>Number it ${esc(ins)}</b><span>The other scenes keep their numbers. Use this once the script is locked for shooting.</span></button>
+  <button class="btn" data-np="renumber"><b>Number it ${esc(plain)}</b><span>${after?`The ${after} scene${after===1?'':'s'} after it move${after===1?'s':''} up by one.`:'Nothing after it changes.'}</span></button></div></div>
+  <div class="modal-f"><button class="btn" data-close>Cancel</button></div>`);
+  document.querySelectorAll('[data-np]').forEach(b=>b.onclick=()=>{closeModal();cb(b.dataset.np)})}
+function wrNoAsk(op,hi,cb){const els=draft().els,nums=wrNumbers(els);const [a,b]=wrHeadRange(els,hi);const heads=els.map((e,i)=>e.t==='h'?i:-1).filter(i=>i>=0);const taken=new Set(heads.map(i=>U(nums[i])));
+  let prev=nums[hi],after=heads.filter(i=>i>hi).length,title='Add a scene';
+  if(op==='dup'){title='Copy this scene'}
+  if(op==='up'){title='Move this scene up';const k=heads.indexOf(hi);prev=k>1?nums[heads[k-2]]:null;after=heads.length-(k-1)}
+  if(op==='down'){title='Move this scene down';if(b>=els.length){cb('renumber');return}prev=nums[b];after=heads.filter(i=>i>b).length}
+  if(op==='up'&&heads.indexOf(hi)<1){cb('renumber');return}
+  numPick(prev,taken,after,title,cb)}
+function wrSceneOp(op,hi,mode){wrSave();const D=draft(),els=D.els;if(!els[hi]||els[hi].t!=='h')return;
+  if(['add','dup','up','down'].includes(op)&&!mode){wrNoAsk(op,hi,m=>wrSceneOp(op,hi,m));return}
+  const [a,b]=wrHeadRange(els,hi);const nums0=wrNumbers(els);els.forEach((e,i)=>{if(e.t==='h')e.n=nums0[i]});
+  snapshot();const no=els[hi].n;const oldNo=new Map();els.forEach(e=>{if(e.t==='h')oldNo.set(e,e.n)});const pmap=new Map(P.scenes.map(sc=>[U(sc.no),sc]));
+  let focus=hi,msg='',target=null,from=0;
+  if(op==='add'){const h={t:'h',x:'INT. '};els.splice(b,0,h,{t:'a',x:''});focus=b;target=h;from=b;msg='New scene added. Type its heading.'}
+  else if(op==='dup'){const copy=els.slice(a,b).map(e=>{const c=Object.assign({},e);delete c.n;delete c.id;return c});els.splice(b,0,...copy);focus=b;target=copy[0];from=b;msg=`Scene ${no} copied.`}
+  else if(op==='up'){let q=a-1;while(q>=0&&els[q].t!=='h')q--;if(q<0){toast('This is already the first scene.');return}const blk=els.splice(a,b-a);els.splice(q,0,...blk);focus=q;target=blk[0];from=q;msg=`Scene ${no} moved up.`}
+  else if(op==='down'){if(b>=els.length||els[b].t!=='h'){toast('This is already the last scene.');return}const [,b2]=wrHeadRange(els,b);const blk=els.splice(a,b-a);els.splice(b2-blk.length,0,...blk);focus=b2-blk.length;target=blk[0];from=a;msg=`Scene ${no} moved down.`}
+  else if(op==='del'){const sc=pmap.get(U(no));els.splice(a,b-a);if(!els.some(e=>e.t==='h'))els.push({t:'h',x:''});focus=Math.min(a,els.length-1);from=a;msg=`Scene ${no} deleted. The scenes after it were renumbered. Undo is at the top.`;if(sc&&draftReal()){dirty.deleted.add(sc.id);P.scenes.splice(P.scenes.indexOf(sc),1);pmap.delete(U(no))}}
   else return;
+  /* numbering */
+  const hl=els.map((e,i)=>e.t==='h'?{e,i}:null).filter(Boolean);const list=hl.map(x=>({e:x.e,no:oldNo.has(x.e)?oldNo.get(x.e):''}));
+  const ti=target?list.findIndex(x=>x.e===target):-1;const fi=list.findIndex(x=>hl.find(y=>y.e===x.e).i>=from);
+  const was=new Map(list.map(x=>[x.e,x.no]));
+  if(op==='del'){if(fi>=0)chainNos(list,fi-1)}
+  else if(mode==='insert'){const prev=ti>0?list[ti-1].no:null;const taken=new Set(list.filter((x,k)=>k!==ti).map(x=>U(x.no)));list[ti].no=insertNoAfter(prev,taken)||nextSceneNo(prev)}
+  else{const at=op==='add'||op==='dup'?ti-1:Math.min(ti,list.findIndex(x=>x.e===hl.find(y=>y.i>=from).e))-1;chainNos(list,Math.max(-1,at))}
+  list.forEach(x=>{x.e.n=x.no;const o=was.get(x.e);if(o&&o!==x.no){const sc=pmap.get(U(o));if(sc&&draftReal())sc._nn=x.no}});
+  P.scenes.forEach(sc=>{if(sc._nn){sc.no=sc._nn;delete sc._nn}});
   D.at=Date.now();dirty.draft=true;logChange(`Scene ${no} ${({add:'added after',dup:'copied',up:'moved up',down:'moved down',del:'deleted'})[op]||op} in the writer`,'script');touch([]);
   const ae=document.activeElement;if(ae&&ae.blur)ae.blur();render(true);
   setTimeout(()=>{const d=wrDoc();const el=d&&d.children[focus];if(el){el.scrollIntoView({block:'center'});placeCaret(el)}},60);if(msg)toast(msg,5000)}
+function wrChangeNo(hi){wrSave();const els=draft().els,nums=wrNumbers(els);if(!els[hi]||els[hi].t!=='h')return;const cur=nums[hi];
+  openModal(`<div class="modal-h"><h2>Change scene number</h2></div><div class="modal-b"><p>Scene ${esc(cur)} is now numbered:</p><input id="npNo" value="${esc(cur)}" maxlength="8" style="width:100%"><p class="small muted" id="npMsg">The scenes after it are renumbered in order. For example, change 3 to 2A and the next scene becomes 3.</p></div><div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="npGo">Change number</button></div>`);
+  const inp=$('#npNo');inp.focus();inp.select();
+  const go=()=>{const v=U(inp.value).trim();if(!noParts(v)){$('#npMsg').textContent='Use a number such as 12 or 12A.';return}if(v===U(cur)){closeModal();return}closeModal();wrSceneNo(hi,v)};
+  $('#npGo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()}}
+function wrSceneNo(hi,v){wrSave();const D=draft(),els=D.els,nums=wrNumbers(els);els.forEach((e,i)=>{if(e.t==='h')e.n=nums[i]});snapshot();
+  const pmap=new Map(P.scenes.map(sc=>[U(sc.no),sc]));const hl=els.filter(e=>e.t==='h');const list=hl.map(e=>({e,no:e.n}));const k=hl.indexOf(els[hi]);const was=list.map(x=>x.no);
+  list[k].no=v;const ch=chainNos(list,k);
+  if(ch===null&&list.some((x,j)=>j!==k&&U(x.no)===U(v))){toast(`Scene ${v} already exists, and this one is out of order. Pick another number.`,5000);return}
+  list.forEach((x,j)=>{x.e.n=x.no;if(was[j]!==x.no){const sc=pmap.get(U(was[j]));if(sc&&draftReal())sc._nn=x.no}});P.scenes.forEach(sc=>{if(sc._nn){sc.no=sc._nn;delete sc._nn}});
+  D.at=Date.now();dirty.draft=true;logChange(`Scene ${was[k]} renumbered ${v}`,'script');touch([]);const ae=document.activeElement;if(ae&&ae.blur)ae.blur();render(true);
+  toast(ch&&ch.length?`Scene ${was[k]} is now ${v}. ${ch.length} scene${ch.length===1?'':'s'} after it renumbered.`:`Scene ${was[k]} is now ${v}.`,5000)}
 function wrScMenu(btn){const old=document.getElementById('wrScMenu');if(old){const same=old._for===btn.dataset.wrsc;old.remove();if(same)return}
   const hi=+btn.dataset.wrsc;const m=document.createElement('div');m.id='wrScMenu';m._for=btn.dataset.wrsc;m.setAttribute('role','menu');m.setAttribute('data-nohl','');
-  m.innerHTML=[['add','Add a scene below'],['dup','Copy this scene'],['up','Move up'],['down','Move down'],['del','Delete this scene']].map(([k,l])=>`<button type="button" role="menuitem" data-op="${k}"${k==='del'?' class="danger"':''}>${l}</button>`).join('');
+  m.innerHTML=[['add','Add a scene below'],['dup','Copy this scene'],['up','Move up'],['down','Move down'],['no','Change scene number'],['del','Delete this scene']].map(([k,l])=>`<button type="button" role="menuitem" data-op="${k}"${k==='del'?' class="danger"':''}>${l}</button>`).join('');
   document.body.appendChild(m);const r=btn.getBoundingClientRect();m.style.top=Math.min(r.bottom+4,innerHeight-m.offsetHeight-8)+'px';m.style.left=Math.max(8,Math.min(r.left,innerWidth-m.offsetWidth-8))+'px';
-  m.addEventListener('click',e=>{const b=e.target.closest('[data-op]');if(!b)return;if(b.dataset.op==='del'&&!b.dataset.armed){b.dataset.armed=1;b.textContent='Delete? Tap again';return}m.remove();wrSceneOp(b.dataset.op,hi)});
+  m.addEventListener('click',e=>{const b=e.target.closest('[data-op]');if(!b)return;if(b.dataset.op==='del'&&!b.dataset.armed){b.dataset.armed=1;b.textContent='Delete? Tap again';return}m.remove();if(b.dataset.op==='no')wrChangeNo(hi);else wrSceneOp(b.dataset.op,hi)});
   setTimeout(()=>{const off=e=>{if(!m.contains(e.target)){m.remove();document.removeEventListener('mousedown',off,true)}};document.addEventListener('mousedown',off,true);document.addEventListener('keydown',function k(e){if(e.key==='Escape'){m.remove();document.removeEventListener('keydown',k)}})},0)}
 function wrRenumber(){if(!confirm('Renumber every scene 1, 2, 3…? Scene numbers in the reports change after "Update breakdown", so breakdown details follow the new numbers.'))return;snapshot();draft().els.forEach(e=>{delete e.n});draft().at=Date.now();dirty.draft=true;touch([]);render()}
 
@@ -6260,7 +6323,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.save){saveSceneEdit(t.dataset.save);return}
   if(t.dataset.addbelow){addSceneBelow(t.dataset.addbelow);return}
   if(t.dataset.mergenext){mergeNext(t.dataset.mergenext);return}
-  if(t.dataset.delscene){if(t.dataset.armed){snapshot();const i=P.scenes.findIndex(s=>s.id===t.dataset.delscene);if(i>=0){const no=P.scenes[i].no;dirty.deleted.add(P.scenes[i].id);P.scenes.splice(i,1);logChange(`Scene ${no} deleted`,'scenes');wrMirror()}VIEW.editScene=null;touch([]);render(true);return}t.dataset.armed=1;t.textContent='Confirm delete';return}
+  if(t.dataset.delscene){if(t.dataset.armed){snapshot();const i=P.scenes.findIndex(s=>s.id===t.dataset.delscene);if(i>=0){const no=P.scenes[i].no;dirty.deleted.add(P.scenes[i].id);P.scenes.splice(i,1);const ch=chainNos(P.scenes,i-1)||[];logChange(`Scene ${no} deleted`+(ch.length?`; ${ch.length} scene${ch.length===1?'':'s'} after it renumbered`:''),'scenes');wrMirror();touch(ch.map(x=>x[0].id));if(ch.length)toast(`Scene ${no} deleted. ${ch.length} scene${ch.length===1?'':'s'} after it renumbered.`,5000)}VIEW.editScene=null;touch([]);render(true);return}t.dataset.armed=1;t.textContent='Confirm delete';return}
   if(t.dataset.delart){if(t.dataset.armed){snapshot();const id=t.dataset.delart;const ids=[];P.scenes.forEach(s=>{if(s.artists.includes(id)){s.artists=s.artists.filter(x=>x!==id);ids.push(s.id)}s.costumes=s.costumes.filter(c=>c.a!==id)});const dn=aName(id);P.artists=P.artists.filter(a=>a.id!==id);delete P.profiles[id];logChange(`Artist ${dn} deleted`,'artistName');touch(ids);render(true);return}t.dataset.armed=1;t.textContent='Confirm';return}
   if(t.dataset.rerun){runAll({only:[t.dataset.rerun]});return}
   if(t.dataset.prof){profileJob(t.dataset.prof);return}
@@ -6322,13 +6385,14 @@ async function profileJob(id){if(JOB)return;if(!AI.sample){noAI('AI needs Script
 async function structureJob(){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude.');return}snapshot();startJob('Reading story structure',0);
   try{await aiStructure();logChange('Story structure written by AI','structure',true);touch([]);toast('Story structure ready.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
 function saveSceneEdit(id){const ta=$('#ed-'+id);const s=P.scenes.find(x=>x.id===id);if(!ta||!s)return;snapshot();const oldText=s.text,oldCues=(s.cues||[]).slice();
-  const r=detectScenes(ta.value);const idx=P.scenes.indexOf(s);let changed=[s.id];
+  const r=detectScenes(ta.value);const idx=P.scenes.indexOf(s);let changed=[s.id];const oldNoEd=s.no;
   if(!r.scenes.length){s.text=ta.value.trim();s.cues=extractCues(s.text)}
   else{const f=r.scenes[0];const pre=r.front;s.no=f.no||s.no;s.ie=f.ie||s.ie;s.time=f.time||s.time;s.loc=f.loc||s.loc;s.heading=f.heading;s.text=(pre?pre+'\n\n':'')+f.text;s.cues=f.cues;['no','ie','time','loc'].forEach(k=>s.locked[k]=1);
     r.scenes.slice(1).forEach((n,i)=>{n.status='stale';P.scenes.splice(idx+1+i,0,n);changed.push(n.id)})}
   const swp=cueSwap(oldText,s.text);
   changed.forEach(cid=>{const x=P.scenes.find(y=>y.id===cid);if(x){x.status='stale';if(!(swp&&x===s))syncSceneCast(x,x===s?oldCues:[])}});
-  VIEW.editScene=null;logChange(r.scenes.length>1?`Scene ${s.no} script edited and split into ${r.scenes.length} scenes`:`Scene ${s.no} script edited`,'script');wrMirror();touch(changed);render(true);
+  let bumped=null;if(r.scenes.length<2&&s.no!==oldNoEd){bumped=bumpSceneNos(s,oldNoEd);if(bumped.ids.length)toast('Scene numbers after it renumbered: '+(bumped.list.length>4?bumped.list.slice(0,3).join(', ')+' … '+bumped.list[bumped.list.length-1]:bumped.list.join(', '))+'.',5000)}
+  VIEW.editScene=null;logChange(r.scenes.length>1?`Scene ${s.no} script edited and split into ${r.scenes.length} scenes`:`Scene ${s.no} script edited`,'script');wrMirror();touch(changed.concat(bumped?bumped.ids:[]));render(true);
   if(AI.sample&&!JOB){toast(r.scenes.length>1?`Saved and split into ${r.scenes.length} scenes. The AI is re-reading them.`:'Saved. The AI is re-reading this scene.');runAll({only:changed})}
   else toast('Saved. Run AI later to update this scene\'s breakdown.');
   if(swp)askRename(swp,s,()=>{syncSceneCast(s,oldCues);touch([s.id]);render(true)})}

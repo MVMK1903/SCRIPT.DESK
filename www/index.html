@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-9DDt/GsGAA9B281Tvmn4hPP7NUaE6v7L6kfcVlVXSpM=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-Svi23YPnsxoVDvtT7IYtuqZCTjvarfyZsvm6LetwaBo=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2025,6 +2025,27 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 body.wr-focus .wr-ai{display:none!important}
 /* disabled buttons stay readable: no half-transparent text on a tinted fill */
 :root .btn:disabled,:root[data-look] .btn.pri:disabled,:root[data-look] .btn:disabled,.btn:disabled,.btn.pri:disabled{opacity:1!important;cursor:not-allowed;background:var(--fill-2,rgba(128,128,128,.18))!important;color:var(--muted)!important;border:1px solid var(--line,rgba(128,128,128,.35))!important;box-shadow:none!important;font-weight:600}
+
+/* colour highlights (painted with the CSS Custom Highlight API, so the text and editing are untouched) */
+.i-hl{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 11 6 6-4 4H5v-3zM14 6l4 4M13 7l3-3 4 4-3 3M4 21h6'/%3E%3C/svg%3E")}
+#hlPanel{position:fixed;z-index:60;top:64px;right:16px;width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 84px);overflow:auto;background:var(--bg-2,var(--surface,#fff));color:var(--fg);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:14px 14px 12px}
+#hlPanel[hidden]{display:none}
+#hlPanel h3{margin:0;font-size:15px}
+#hlPanel .hl-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+#hlPanel .hl-h .grow{flex:1}
+#hlPanel .hl-sec{margin:12px 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+#hlPanel .hl-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line-2,var(--line))}
+#hlPanel .hl-row label{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+#hlPanel .hl-row small{color:var(--muted);font-weight:400}
+#hlPanel .hl-dots{display:flex;gap:4px;flex-wrap:wrap}
+#hlPanel .hl-dot{width:18px;height:18px;border-radius:50%;border:2px solid transparent;padding:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+#hlPanel .hl-dot[aria-pressed="true"]{border-color:var(--fg)}
+#hlPanel .hl-add{display:grid;gap:6px}
+#hlPanel .hl-add select,#hlPanel .hl-add input{width:100%;min-width:0}
+#hlPanel .hl-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:3px 4px 3px 9px;border-radius:999px;font-size:12px;color:#111827;font-weight:600}
+#hlPanel .hl-chip button{border:0;background:rgba(0,0,0,.14);color:#111827;border-radius:50%;width:18px;height:18px;line-height:16px;cursor:pointer;padding:0}
+#hlPanel .hl-chips{display:flex;gap:6px;flex-wrap:wrap}
+#hlPanel .hl-note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -2047,6 +2068,7 @@ body.wr-focus .wr-ai{display:none!important}
         <span class="job" id="job" hidden></span>
         <span class="sync" id="sync"><i></i><span>Ready</span></span>
         <button class="btn sm warn" id="bChecks" hidden></button>
+        <button class="btn sm ghost i-hl" data-ic id="bHl" aria-label="Highlight with colour" title="Highlight characters, locations, costumes and props with colour" aria-expanded="false">Highlight</button>
         <button class="btn sm ghost i-undo" data-ic id="bUndo" aria-label="Undo" title="Undo last edit" disabled>Undo</button>
         <button class="btn sm i-install" data-ic id="bInstall" aria-label="Install app" title="Install app" data-act="install" hidden>Install app</button>
         <button class="btn sm ga-acctb" id="bAcct" aria-label="Account and security" hidden></button>
@@ -6083,7 +6105,86 @@ function render(keepScroll){applySbColors();const c=$('#content');const ae=docum
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  hlInit();hlSchedule();hlPanelRender();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+
+/* ===== colour highlights: whole type (all characters, all props...) or one item, in every view ===== */
+const HL_COLS=[['Yellow','#ffe14d'],['Orange','#ffab5e'],['Pink','#ff8fb8'],['Red','#ff7a7a'],['Purple','#c59bff'],['Blue','#7cc0ff'],['Teal','#5fe0d2'],['Green','#8fe07a']];
+const HL_CATS=[['cast','Characters','cast'],['loc','Locations','loc'],['costume','Costumes','costume'],['props','Props','props'],['art','Art / set dressing','art'],['makeup','Makeup / hair','makeup'],['vehicles','Vehicles','vehicles'],['animals','Animals','animals'],['other','VFX, SFX and special','other']];
+const HL_OTHER=['vfx','sfx','spl_sets','spl_props','equipment','technicians','juniors','extras'];
+const HL_SKIP='textarea,input,select,script,style,[data-nohl],.wr-ai,.wr-bar,.modal,button';
+const HL_OK=typeof CSS!=='undefined'&&CSS.highlights&&typeof Highlight!=='undefined';
+let hlTimer=0,hlCache=null,hlObs=null;
+function hlState(){if(!P)return null;if(!P.hl||typeof P.hl!=='object')P.hl={off:false,cats:{},items:[]};if(!P.hl.cats)P.hl.cats={};if(!Array.isArray(P.hl.items))P.hl.items=[];return P.hl}
+function hlColor(i){return (HL_COLS[i]||HL_COLS[0])[1]}
+function hlClean(x){return String(x||'').replace(/\s+/g,' ').trim()}
+function hlCueName(x){return hlClean(String(x||'').replace(/\([^)]*\)/g,'').replace(/\b(?:V\.?\s?O|O\.?\s?S|CONT'?D)\.?\s*$/i,'').replace(/[:^]+$/,'')).toUpperCase()}
+function hlItems(cat){const set=new Map();const add=n=>{n=hlClean(n);if(n.length<3||n.length>80)return;const k=n.toUpperCase();if(!set.has(k))set.set(k,n)};
+  if(!P)return [];
+  if(cat==='cast'){(P.artists||[]).forEach(a=>{if(!a)return;add(a.name||a.n);(a.aliases||[]).forEach(add)});if(P.draft&&Array.isArray(P.draft.els))P.draft.els.forEach(e=>{if(e&&e.t==='c')add(hlCueName(e.x))})}
+  else if(cat==='loc'){(P.scenes||[]).forEach(s=>s.loc&&add(s.loc));if(P.draft&&Array.isArray(P.draft.els))P.draft.els.forEach(e=>{if(e&&e.t==='h'&&e.x){const m=String(e.x).replace(/^\s*(?:INT\.?\s*\/\s*EXT\.?|EXT\.?\s*\/\s*INT\.?|I\s*\/\s*E\.?|INT\.?|EXT\.?)\s*/i,'').split(/\s+[-–—]\s+|,/)[0];add(m)}})}
+  else if(cat==='costume'){(P.scenes||[]).forEach(s=>(s.costumes||[]).forEach(c=>c&&c.c&&String(c.c).split(/\s*[\/,;]\s*|\s+and\s+/i).forEach(add)))}
+  else{const keys=cat==='other'?HL_OTHER:[cat];(P.scenes||[]).forEach(s=>keys.forEach(k=>(s[k]||[]).forEach(v=>add(typeof v==='string'?v:(v&&v.n)||''))))}
+  return [...set.values()].sort((a,b)=>a.localeCompare(b))}
+function hlTerms(){const H=hlState();if(!H||H.off)return null;const map=new Map();
+  const put=(txt,col,cap,rank)=>{txt=hlClean(txt);if(txt.length<3)return;const k=txt.toLowerCase();const old=map.get(k);if(!old||rank>old.rank)map.set(k,{txt,col,cap,rank})};
+  HL_CATS.forEach(([c])=>{const st=H.cats[c];if(!st||!st.on)return;hlItems(c).forEach(n=>{put(n,st.col|0,c==='cast',1);
+    if(c==='cast'){const f=n.split(' ')[0];if(n.includes(' ')&&f.length>=3&&/^[A-Za-z]+$/.test(f))put(f,st.col|0,true,0)}
+    const sh=n.replace(/\s*[\(\[].*$/,'').replace(/\s+(?:with|in|on|of)\s+.*$/i,'');if(sh!==n)put(sh,st.col|0,c==='cast',0)})});
+  H.items.forEach(it=>{if(!it||!it.name)return;const cast=it.cat==='cast';put(it.name,it.col|0,cast,3);
+    if(cast){const f=hlClean(it.name).split(' ')[0];if(it.name.includes(' ')&&f.length>=3&&/^[A-Za-z]+$/.test(f))put(f,it.col|0,true,2)}});
+  if(!map.size)return null;
+  const list=[...map.values()].sort((a,b)=>b.txt.length-a.txt.length);
+  const esc=t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s+');
+  const re=new RegExp('(?<![\\p{L}\\p{N}\\p{M}_])(?:'+list.map(t=>esc(t.txt)).join('|')+')(?![\\p{L}\\p{N}\\p{M}_])','giu');
+  return {re,map}}
+function hlApply(){hlTimer=0;if(!HL_OK)return;const c=document.getElementById('content');
+  const clear=()=>HL_COLS.forEach((_,i)=>CSS.highlights.delete('sdhl-'+i));
+  if(!c||!P||page==='home'||page==='projects'){clear();return}
+  const T=hlTerms();if(!T){clear();return}
+  const buckets=HL_COLS.map(()=>[]);
+  const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>{if(!n.nodeValue||n.nodeValue.trim().length<3)return NodeFilter.FILTER_REJECT;const p=n.parentElement;return p&&!p.closest(HL_SKIP)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});
+  let n,count=0;while((n=w.nextNode())&&count<60000){const txt=n.nodeValue;T.re.lastIndex=0;let m;
+    while((m=T.re.exec(txt))){const hit=T.map.get(m[0].replace(/\s+/g,' ').toLowerCase());if(!hit)continue;
+      if(hit.cap&&/[a-z]/i.test(m[0][0])&&m[0][0]===m[0][0].toLowerCase())continue;
+      const r=new Range();r.setStart(n,m.index);r.setEnd(n,m.index+m[0].length);buckets[hit.col%buckets.length].push(r);count++}}
+  buckets.forEach((rs,i)=>{if(rs.length){const h=new Highlight(...rs);h.priority=i;CSS.highlights.set('sdhl-'+i,h)}else CSS.highlights.delete('sdhl-'+i)})}
+function hlSchedule(){if(hlTimer)return;hlTimer=setTimeout(()=>{(window.requestIdleCallback||(f=>f()))(hlApply)},180)}
+function hlStyle(){if(document.getElementById('hlStyle'))return;const st=document.createElement('style');st.id='hlStyle';st.textContent=HL_COLS.map((c,i)=>`::highlight(sdhl-${i}){background-color:${c[1]};color:#111827}`).join('\n');document.head.appendChild(st)}
+function hlSave(){touch([]);hlSchedule();hlPanelRender()}
+function hlDots(sel,attr){return `<span class="hl-dots" role="group" aria-label="Colour">${HL_COLS.map((c,i)=>`<button type="button" class="hl-dot" ${attr}="${i}" style="background:${c[1]}" title="${c[0]}" aria-label="${c[0]}" aria-pressed="${sel===i?'true':'false'}"></button>`).join('')}</span>`}
+let hlDraft={cat:'cast',name:'',col:0};
+function hlPanelRender(){const el=document.getElementById('hlPanel');if(!el||el.hidden)return;const H=hlState();
+  if(!H){el.innerHTML='<div class="hl-h"><h3>Highlight</h3><span class="grow"></span><button class="btn sm ghost" data-hl="close">Close</button></div><p class="hl-note">Open a script first.</p>';return}
+  const rows=HL_CATS.map(([c,label])=>{const st=H.cats[c]||{on:false,col:0};const n=hlItems(c).length;
+    return `<div class="hl-row"><label><input type="checkbox" data-hl-cat="${c}" ${st.on?'checked':''}> <span>${label} <small>${n}</small></span></label>${hlDots(st.col|0,'data-hl-catcol="'+c+'" data-c')}</div>`}).join('');
+  const opts=hlItems(hlDraft.cat).map(n=>`<option value="${esc(n)}">`).join('');
+  const chips=H.items.map((it,i)=>`<span class="hl-chip" style="background:${hlColor(it.col|0)}">${esc(it.name)} <small>${esc((HL_CATS.find(x=>x[0]===it.cat)||[,''])[1])}</small><button type="button" data-hl-del="${i}" aria-label="Remove ${esc(it.name)}">×</button></span>`).join('');
+  el.innerHTML=`<div class="hl-h"><h3>Highlight with colour</h3><span class="grow"></span><button class="btn sm ghost" data-hl="close">Close</button></div>
+  ${HL_OK?'':'<p class="hl-note" style="color:#c0392b">This browser cannot paint highlights. Use the ScriptDesk app, or a current Chrome, Edge or Safari.</p>'}
+  <label class="hl-row" style="border-top:0"><label><input type="checkbox" data-hl="onoff" ${H.off?'':'checked'}> <span><b>Show highlights</b></span></label></label>
+  <div class="hl-sec">Highlight every one of a type</div>${rows}
+  <div class="hl-sec">Or pick just one</div>
+  <div class="hl-add"><select data-hl-addcat aria-label="Type">${HL_CATS.map(([c,l])=>`<option value="${c}" ${hlDraft.cat===c?'selected':''}>${l}</option>`).join('')}</select>
+  <input data-hl-addname list="hlList" placeholder="Start typing a name" value="${esc(hlDraft.name)}" autocomplete="off"><datalist id="hlList">${opts}</datalist>
+  ${hlDots(hlDraft.col,'data-hl-addcol')}<button class="btn sm pri" data-hl="add">Highlight this one</button></div>
+  ${chips?`<div class="hl-sec">Your picks</div><div class="hl-chips">${chips}</div>`:''}
+  <p class="hl-note">Highlights show on screen in Write, the breakdown, the reports and the full script. A single pick overrides its type colour. The text itself is never changed.</p>`}
+function hlToggle(open){const el=document.getElementById('hlPanel');if(!el)return;const show=open==null?el.hidden:open;el.hidden=!show;const b=document.getElementById('bHl');if(b)b.setAttribute('aria-expanded',show?'true':'false');if(show)hlPanelRender()}
+function hlInit(){hlStyle();if(!document.getElementById('hlPanel')){const d=document.createElement('div');d.id='hlPanel';d.hidden=true;d.setAttribute('role','dialog');d.setAttribute('aria-label','Highlight with colour');d.setAttribute('data-nohl','');document.body.appendChild(d);
+    d.addEventListener('click',e=>{const H=hlState();if(!H)return;const t=e.target.closest('button,input');if(!t)return;
+      if(t.dataset.hl==='close'){hlToggle(false);return}
+      if(t.dataset.hl==='add'){const name=hlClean(d.querySelector('[data-hl-addname]').value);if(!name){toast('Type or pick a name first.');return}H.items=H.items.filter(x=>!(x.cat===hlDraft.cat&&x.name.toUpperCase()===name.toUpperCase()));H.items.push({cat:hlDraft.cat,name,col:hlDraft.col});hlDraft.name='';hlSave();return}
+      if(t.dataset.hlDel!=null){H.items.splice(+t.dataset.hlDel,1);hlSave();return}
+      if(t.dataset.hlCatcol){const c=t.dataset.hlCatcol;H.cats[c]=Object.assign({on:true},H.cats[c],{col:+t.dataset.c,on:true});hlSave();return}
+      if(t.dataset.hlAddcol!=null){hlDraft.col=+t.dataset.hlAddcol;hlDraft.name=d.querySelector('[data-hl-addname]').value;hlPanelRender();return}});
+    d.addEventListener('change',e=>{const H=hlState();if(!H)return;const t=e.target;
+      if(t.dataset.hl==='onoff'){H.off=!t.checked;hlSave();return}
+      if(t.dataset.hlCat){const c=t.dataset.hlCat;H.cats[c]=Object.assign({col:HL_CATS.findIndex(x=>x[0]===c)%HL_COLS.length},H.cats[c],{on:t.checked});hlSave();return}
+      if(t.matches('[data-hl-addcat]')){hlDraft.cat=t.value;hlDraft.name='';hlPanelRender();return}});
+    d.addEventListener('input',e=>{if(e.target.matches('[data-hl-addname]'))hlDraft.name=e.target.value});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!d.hidden&&d.contains(document.activeElement))hlToggle(false)})}
+  const b=document.getElementById('bHl');if(b&&!b._hl){b._hl=1;b.addEventListener('click',()=>hlToggle())}
+  const c=document.getElementById('content');if(c&&!hlObs&&HL_OK){hlObs=new MutationObserver(hlSchedule);hlObs.observe(c,{childList:true,subtree:true,characterData:true})}}
 function hdrKind(h){h=String(h).toLowerCase();if(/effect|day ?\/ ?night|^day$|^effects$/.test(h))return 'eff';if(/location|^set$/.test(h))return 'loc';if(/description|what happens|fight \/ stunt|song \/ montage|^costume$|^item$|scene numbers/.test(h))return 'desc';return ''}
 const SB_KEYS=[['de','Day exterior'],['di','Day interior'],['ne','Night exterior'],['ni','Night interior']];
 /* the stripboard colour code every production office uses: yellow day exterior, white day interior, green night exterior, blue night interior */

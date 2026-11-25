@@ -2343,6 +2343,11 @@ function detectScenes(text){
      /* "26  GROCERY SUPER MARKET, HYDERABAD - DAY/NIGHT": a numbered heading that has a place and a time but no INT or EXT */
      if(nm&&nm[2].length>2&&!/^(CONTINUED|CONT'?D|MORE)\b/.test(nm[2])){cur=newScene({no:U(nm[1]),time:U(nm[3]).replace(/\s+/g,''),loc:U(nm[2]).replace(/\s+/g,' ').trim(),heading:t,flags:['This heading has no INT/EXT. Add it in Scene list check.']});cur._lines=[];scenes.push(cur);continue}}
     if(cur)cur._lines.push(line);else front.push(line)}
+  /* pages after "THE END" (publisher's notes, essays, credits) are not part of the last scene */
+  let back='';
+  {const last=scenes[scenes.length-1];if(last){const ls=last._lines;let e=-1;
+    for(let i=0;i<ls.length;i++){const t=ls[i].trim();if(t&&t.length<40&&t===t.toUpperCase()&&/^[-–—*\s]*(?:THE\s+END|END(?:\s+OF\s+(?:THE\s+)?(?:SCRIPT|SCREENPLAY|FILM|MOVIE|DRAFT))?|FIN)[.\s\-–—*]*$/.test(t)){e=i;break}}
+    if(e>=0){const rest=ls.slice(e+1);if(rest.filter(x=>x.trim()).length>=40){back=rest.join('\n').trim();last._lines=ls.slice(0,e+1)}}}}
   const numbered=scenes.filter(s=>s.no).length;const mixed=numbered>=scenes.length/2;let last=0,lastNo='';const used=new Set(scenes.map(s=>U(s.no)).filter(Boolean));
   scenes.forEach(s=>{while(s._lines.length&&!s._lines[0].trim())s._lines.shift();while(s._lines.length&&!s._lines[s._lines.length-1].trim())s._lines.pop();
     s.text=s._lines.join('\n');delete s._lines;
@@ -2354,17 +2359,23 @@ function detectScenes(text){
   {const first={};scenes.forEach(s=>{const k=U(s.no),f=first[k];if(!f){first[k]=s;return}
     const back=f.loc&&U(f.loc)===U(s.loc);
     s.flags=[...(s.flags||[]),back?`The script comes back to scene ${s.no} here (same number and place). Merge it into scene ${s.no} in Full script, or give it its own number.`:`Scene number ${s.no} is used twice in the script. Give one of them a new number.`]})}
-  return {front:front.join('\n').trim(),scenes,removed:_sm.n}}
+  return {front:front.join('\n').trim(),scenes,removed:_sm.n,back}}
 /* Lines in capitals that are not character names: sound effects, screen or phone text, editing notes, shouted lines */
 const NOT_CUE_W=/(^|[\s'-])(CALLING|CALLS|SCREEN|CUTS?|IMPACT|STOP|SOUNDS?|SFX|NOISE|MUSIC|BGM|TITLES?|CARD|TEXT|INSERT|ANGLE|POV|CLOSE ?UP|SHOTS?|MONTAGE|VFX|SLOW MOTION|FREEZE|BLACKOUT|SILENCE|PAUSE|BEAT|BANG|BOOM|CRASH|THUD|BEEP|KNOCK|HONK|SCREAMS?|RINGING|RINGS|LATER|CONTINUOUS|FLASHBACK|FLASH|MY|ME|YOU|YOUR|WE|US|OUR|IS|ARE|WAS|WERE|AM|DON'?T|CAN'?T|WON'?T|I'?M|IT'?S|THIS|THAT|WHAT|WHY|HOW|HERE|THERE|PLEASE|HELP|KILLED|KILL)(?=$|[\s'-])/;
 const OBJ_W=/(^|[\s'-])(MOBILE|PHONE|CELLPHONE|SIGN|SIGNS|SIGNBOARD|SIGN BOARD|NOTICE BOARD|DISPLAY BOARD|NAME BOARD|NAMEPLATE|POSTER|DISPLAY|CAPTION|SUBTITLES?|MESSAGES?|SMS|WHATSAPP|NOTIFICATION|INCOMING|MISSED CALL|VIDEO CALL|BANNER|HOARDING|HEADLINES?|NEWSPAPER|ALARM|SIREN|HORN|EMAIL|SCREENSHOT|LOGO|LABEL|TICKER|BREAKING|RINGTONE|VOICEMAIL|CALLER ID|SUPERIMPOSED?)(?=$|[\s'-])/;
 const PERSON_W=/(^|[\s'-])(BOY|BOYS|GIRL|GIRLS|MAN|MEN|WOMAN|WOMEN|LADY|GUY|OWNER|SELLER|VENDOR|KEEPER|GUARD|DRIVER|WALA|WALLAH|BOSS|AGENT|OFFICER|ANCHOR|READER|REPORTER|OPERATOR|MECHANIC|UNCLE|AUNTY|AUNTIE|FRIEND|FATHER|MOTHER|BROTHER|SISTER|SON|DAUGHTER|WIFE|HUSBAND|INSPECTOR|CONSTABLE|DOCTOR|NURSE|TEACHER|STUDENT|MANAGER|CLERK|PEON|WORKER|HAWKER|SALESMAN|SALESGIRL|CUSTOMER)(?=$|[\s'-])/;
 /* More lines in capitals that are not people: places and objects named alone, shot notes, time-of-day tags, scene headings and addresses */
 const NOT_CUE_X=/^(?:WINDOW|TABLE|DOORWAY|BAR|BACKROOM|KITCHEN TABLE|CHAMPAGNE|POLICE CAR|CORRIDOR|DELETED|WHEN|VARIATION|TIME LAPSE|POST CREDITS?(?: SCENE)?|SUB COUNT'?D \d+|[A-Z])$|^(?:CLOSE ON|LARGE ?CLOSE ?UP|INSIDE|OUTSIDE|ENTRANCE OF|QUICK CUTAWAY|NEXT (?:MORNING|AFTERNOON|DAY|NIGHT)|SAME TIME)\b|(?:^|\s)-\s*$|^-|--|\b(?:INT|EXT)\.|\b(?:CONTINUOUS|CONTINOUS|MOMENTS? LATER|DAY|NIGHT|MORNING|AFTERNOON|EVENING|DAWN|DUSK)\s*$|\d{4,}/;
-function looksLikeName(b){b=String(b||'').trim();if(!b)return false;if(NOT_CUE_X.test(b))return false;if(/[.!?,…:]$/.test(b)&&!/(^|\s)(MR|MRS|MS|DR|SR|JR|ST)\.$/.test(b))return false;if(/([A-Z])\1\1/.test(b))return false;if(NOT_CUE_W.test(b)||NOT_CHAR.test(b))return false;if(OBJ_W.test(b)&&!PERSON_W.test(b))return false;return true}
+const CUE_OBJ_END=/(?:^|[\s'’])(?:FACES?|HANDS?|EYES|PLATE|PAN|BOX|BOOK|DUMPSTER|STOREFRONTS?|FLOOR|BEDROOM|CLOSET|PROFILE|TABLE|DESK|TREE|WALL|WINDOW|STREET|ROAD|TRUCK|SNAPSHOT|STAGE|GARLIC)$|(?:DESK|STOREFRONTS?)$/;
+const CUE_POSS_OBJ=/['’]S\s*(?:[A-Z]+\s+)*(?:FACE|FACES|HAND|HANDS|EYES?|HEAD|BODY|FEET|FOOT|ARMS?|LEGS?|MOUTH|LIPS|BACK|PROFILE|FORM|SHADOW|REFLECTION|SHOES?|CAR|TRUCK|PHONE|LAPTOP|BAG|HOUSE|HOME|OFFICE|DESK|TABLE|BED|BEDROOM|ROOM|KITCHEN|DOOR|CLOSET|PLATE|PHOTO|PICTURE|NAME|TIRED FACE)$/;
+function looksLikeName(b){b=String(b||'').trim();if(!b)return false;if(NOT_CUE_X.test(b))return false;
+  if(/\.{2,}|…/.test(b))return false;
+  if(/\.\s+\S/.test(b.replace(/\b(?:MR|MRS|MS|DR|SR|JR|ST|PROF|CAPT|COL|GEN|SGT|DET|OFC|LT|[A-Z])\.\s+/g,'')))return false;
+  if((CUE_POSS_OBJ.test(b)||CUE_OBJ_END.test(b))&&!/\s(?:AT|ON|IN|BY|NEAR)\s/.test(b))return false;
+  {const w=b.split(/\s+/);if(w.length===4&&!/[\d&'’\-]/.test(b)&&!/\s(?:ON|AT|IN|OF|THE|TO|FROM|WITH|AND)\s/.test(b))return false}if(/[.!?,…:]$/.test(b)&&!/(^|\s)(MR|MRS|MS|DR|SR|JR|ST)\.$/.test(b))return false;if(/([A-Z])\1\1/.test(b))return false;if(NOT_CUE_W.test(b)||NOT_CHAR.test(b))return false;if(OBJ_W.test(b)&&!PERSON_W.test(b))return false;return true}
 /* Character names that the capital-letters rule cannot see: scripts in Telugu, Hindi and other languages without capitals, and scripts that write "Akash: text" on one line.
    A name is learned from the script itself: a short line that keeps coming back and is followed by dialogue, or a name that keeps coming back before a colon. */
-let CUE_X=new Set(),CUE_IN=new Set();
+let CUE_X=new Set(),CUE_IN=new Set(),CUE_DUAL=new Map(),CUE_ALIAS=new Map();
 const INLINE_RE=/^([^\s:：()\d][^:：()\d]{0,22}?)\s*(\([^)]{0,30}\))?\s*[:：]\s+(\S.*)$/;
 function mineCues(L){
   const solo={},soloNext={},inl={};let inlTotal=0;
@@ -2373,12 +2384,17 @@ function mineCues(L){
     const m=t.match(INLINE_RE);
     if(m){const nm=m[1].trim();if(nm.split(/\s+/).length<=3&&!/[.!?,;…"“”]$/.test(nm)&&!/^(NOTE|INT|EXT|SCENE|TITLE|SUPER|SUBTITLE|CUT TO|FADE IN|FADE OUT)$/i.test(nm)){inl[nm]=(inl[nm]||0)+1;inlTotal++}continue}
     if(t.length<=26&&t.split(/\s+/).length<=3&&!/[.!?,;:…\d"“”(]/.test(t)){solo[t]=(solo[t]||0)+1;let j=i+1;if(j<L.length&&L[j].trim()&&L[j].trim()!==t)soloNext[t]=(soloNext[t]||0)+1}}
-  CUE_X=new Set();CUE_IN=new Set();
+  CUE_X=new Set();CUE_IN=new Set();CUE_DUAL=new Map();CUE_ALIAS=new Map();
   const need=Math.max(5,Math.round(L.length/1500));
-  Object.keys(solo).forEach(n=>{if(solo[n]>=need&&soloNext[n]>=solo[n]*0.6&&(/[^\x00-\x7F]/.test(n)||(n!==n.toUpperCase()&&solo[n]>=need*2)))CUE_X.add(n)});
+  const known=n=>solo[n]>=3&&soloNext[n]>=solo[n]*0.6;
+  /* two columns printed on one line (dual dialogue): "WALT LINDA" when WALT and LINDA are each a name on their own */
+  {const pairs=new Map();Object.keys(solo).forEach(n=>{if(solo[n]<2||n!==n.toUpperCase())return;const w=n.split(/\s+/);if(w.length>=2&&w.length<=3&&w.every(x=>/^[A-Z][A-Z'’.\-]+$/.test(x)&&known(x)))pairs.set(n,w)});if(pairs.size>=3)pairs.forEach((w,n)=>CUE_DUAL.set(n,w))}
+  /* a name printed twice, once in another script's letters ("Qjgku FARHAN"): read it as the plain name when that name is also a cue by itself */
+  Object.keys(solo).forEach(n=>{const m=n.match(/^(\S+)\s+([A-Z][A-Z0-9 .'’\-&]+)$/);if(m&&/[a-z]/.test(m[1])&&solo[n]>=3&&known(m[2]))CUE_ALIAS.set(n,m[2])});
+  Object.keys(solo).forEach(n=>{if(!CUE_ALIAS.has(n)&&solo[n]>=need&&soloNext[n]>=solo[n]*0.6&&(/[^\x00-\x7F]/.test(n)||(n!==n.toUpperCase()&&solo[n]>=need*2)))CUE_X.add(n)});
   if(inlTotal>=15)Object.keys(inl).forEach(n=>{if(inl[n]>=3)CUE_IN.add(n)});
 }
-function cueOf(t){const s=t.trim();if(!s||s.length>34)return null;if(CUE_X.has(s))return s;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
+function cueOf(t){const s=t.trim().replace(/^[.,'’`·•*\s]+(?=[A-Z])/,'');if(!s||s.length>34)return null;if(CUE_ALIAS.has(s))return CUE_ALIAS.get(s);if(CUE_X.has(s))return s;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
   if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'’\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;if(!looksLikeName(b))return null;return b.replace(/\s+/g,' ')}
 function classify(lines){const out=[];let mode='a',justCue=false;
   const nextNon=i=>{for(let j=i+1;j<lines.length&&j<i+4;j++){const x=lines[j].trim();if(x)return x}return ''};
@@ -2391,7 +2407,7 @@ function classify(lines){const out=[];let mode='a',justCue=false;
     if(cueOf(t)&&nx&&!cueOf(nx)&&!parseIE(nx)&&!SCN_RE.test(nx)){out.push(['chr',t]);mode='d';justCue=true;continue}
     out.push(['act',t])}
   return out}
-function extractCues(text){const c=new Set();classify(text.split('\n')).forEach(([k,t])=>{if(k==='chr'){const n=cueOf(t);if(n)c.add(n)}});return [...c]}
+function extractCues(text){const c=new Set();classify(text.split('\n')).forEach(([k,t])=>{if(k==='chr'){const n=cueOf(t);if(n){const d=CUE_DUAL.get(n);if(d)d.forEach(x=>c.add(x));else c.add(n)}}});return [...c]}
 
 /* ================= File import ================= */
 async function fileToText(file,onStatus){const name=file.name.toLowerCase();
@@ -2419,6 +2435,8 @@ async function pdfToText(buf,onStatus){await ensurePdfjs();const doc=await windo
   /* old Telugu, Hindi and similar fonts store letters in a private range: the text looks like boxes or symbols. Read the page pictures instead. */
   if(garbledRatio(all)>=0.15)return {scanned:doc,garbled:true};
   return all}
+/* old Hindi or Telugu fonts that store letters as ordinary Latin symbols ("gSYyks gk¡A"): many lowercase words with no vowel in them. English scripts have almost none. */
+function legacyFont(t){let w=0,n=0;for(const x of String(t||'').match(/[A-Za-z]{3,}/g)||[]){if(x===x.toUpperCase())continue;w++;if(!/[aeiouyAEIOUY]/.test(x))n++}return n>=150&&n/w>=0.02}
 function garbledRatio(t){const s=String(t||'').replace(/\s/g,'');if(!s)return 0;let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0xE000&&c<=0xF8FF)n++}return n/s.length}
 async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Choose an AI service in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
   const lim=AI.limits&&AI.limits.images;if(!lim)throw new Error('This view cannot send page images to Claude. Use a text PDF or Word file.');
@@ -6029,7 +6047,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
       if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
       if(r&&r.scanned){scanned=r.scanned;info.textContent=r.garbled?`${f.name} uses an old font, so its text cannot be read directly (${r.scanned.numPages} pages). Press "Find scenes" and AI will read the page pictures instead.`:`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
-      else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}`}
+      else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}${legacyFont(r)?' Some lines use an old Hindi or Telugu font and read as junk letters. The English lines are fine. For clean text, export the PDF again with a standard font, or paste the script.':''}`}
       if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/^[0-9a-f]{8}\s/,'')}
     catch(e){info.textContent=(e&&e.message)||'That file could not be read. Try pasting the text.'}};
   $('#iFile').onchange=e=>handle(e.target.files[0]);
@@ -6045,6 +6063,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
       let aiWhy='';if(weak&&AI.sample){say('Claude is finding the scenes…');JOB={ctl:new AbortController(),label:'',done:0,total:0};try{const r2=await aiSegment(text,m=>info.textContent=m);if(r2&&r2.scenes.length>=r.scenes.length){r2.removed=r.removed;r=r2}}catch(e){aiWhy=e&&e.code!=='cancelled'?errMsg(e):''}finally{JOB=null}}
       if(!r.scenes.length){if(oneOk){r={front:'',scenes:[newScene({no:'1',heading:'',text:text.trim(),cues:extractCues(text)})]}}else{oneOk=true;say('No scene headings found'+(aiWhy?' (AI: '+aiWhy+')':'')+'. Add headings like "SCENE NO 1  EXT. VILLAGE - DAY", or press Find scenes again to import everything as one scene.');btn.disabled=false;return}}
+      if(r.back)toast('Left out '+r.back.split('\n').filter(x=>x.trim()).length+' lines after "THE END" (notes or credits), so they are not read as part of the last scene.',6000);
       if(r.removed)toast('Removed '+r.removed+' line'+(r.removed===1?'':'s')+' left by the writing app (like "Created using Celtx" or page labels).',5000);
       await flushNow();
       P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);

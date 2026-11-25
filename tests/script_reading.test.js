@@ -25,6 +25,14 @@ const { chromium } = require('playwright');
     // 4. text in a private-use range (old Telugu / Hindi fonts) is flagged as unreadable
     out.garbled = garbledRatio('  ab');
     out.normal = garbledRatio('INT. HOUSE - DAY\nరవి: హలో');
+    // 5. invented text: objects with possessives / endings are not people, CONSTABLE is, stray dot is cleaned
+    const t5 = ['INT. STATION. DAY.', '', 'CONSTABLE', 'Sit.', '', 'CONSTABLE', 'Quiet.', '', "ASHA'S HAND", 'Shakes.', '', 'HOT PLATE', 'Steam.', '', 'REGISTRATIONDESK', 'Busy.', '', '. RAVI', 'Hi.', '', 'RAVI', 'Hello.'];
+    out.t5 = detectScenes(t5.join('\n')).scenes[0].cues;
+    // 6. text after THE END is left out when a long tail follows
+    const tail = ['INT. HALL. DAY.', 'Action.', '', 'THE END', ''];
+    for (let i = 0; i < 60; i++) tail.push('Credits line ' + i);
+    const d6 = detectScenes(tail.join('\n'));
+    out.tail = d6.scenes[d6.scenes.length - 1].text.split('\n').length;
     return out;
   });
   console.log(JSON.stringify(r), errs);
@@ -33,6 +41,8 @@ const { chromium } = require('playwright');
     && r.inlineKinds.join() === 'act,chr,dia,dia'
     && r.devaCues.includes('रवि') && r.devaCues.includes('आशा')
     && r.junkCues.includes('RAVI') && r.junkCues.includes('MOTHER’S FRIEND') && r.junkCues.length === 2
+    && r.t5.includes('CONSTABLE') && r.t5.includes('RAVI') && r.t5.length === 2
+    && r.tail < 20
     && r.garbled > 0.5 && r.normal === 0;
   console.log(ok ? 'PASS script reading' : 'FAIL script reading'); await b.close(); process.exit(ok ? 0 : 1);
 })();

@@ -3393,7 +3393,7 @@ async function wrRewrite(mode){
   }catch(e){out.innerHTML='<div class="wa-empty">'+esc(errMsg(e))+'</div>'}
   finally{WRW.busy=false}}
 function wrRewriteUse(i){const o=WRW.opts;if(!o||!o.el.isConnected||!o.list[i])return;const text=o.el.textContent,k=text.indexOf(o.part);if(k<0){toast('That line changed. Run the rewrite again.');return}
-  wrPush();const nx=text.slice(0,k)+o.list[i]+text.slice(k+o.part.length);setText(o.el,nx);placeCaret(o.el,k+o.list[i].length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const out=$('#wrAIout');if(out)out.innerHTML='<div class="wa-empty">Done. Undo with Ctrl+Z.</div>'}
+  let rep=o.list[i];const rest=text.slice(k+o.part.length);if(o.part!==o.whole&&/[.!?,;:]$/.test(rep)&&/^[.!?,;:]/.test(rest))rep=rep.replace(/[.!?,;:]+$/,'');wrPush();const nx=text.slice(0,k)+rep+rest;setText(o.el,nx);placeCaret(o.el,k+rep.length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const out=$('#wrAIout');if(out)out.innerHTML='<div class="wa-empty">Done. Undo with Ctrl+Z.</div>'}
 document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('#wrAI button'))e.preventDefault()});
 document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(!t)return;
   const rw=t.closest('[data-rw]');if(rw){wrRewrite(rw.dataset.rw);return}

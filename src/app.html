@@ -439,6 +439,17 @@ select.mini{background:var(--bg);border:0;box-shadow:var(--sh-inset-sm);border-r
 .wr-doc .el.pb{margin-top:calc(var(--u) * 0.9)}
 .wr-marks{position:absolute;inset:0;pointer-events:none}
 .wr-pg{position:absolute;left:0;right:0;border-top:1px dashed #c8c8c8;font:calc(var(--u) / 6)/1.6 "Courier Prime","Courier New",monospace;color:#777;text-align:right;padding-right:var(--u)}
+.wc-has{text-decoration:underline dotted #d9a13a;text-decoration-skip-ink:none;text-underline-offset:5px;text-decoration-thickness:1.5px}
+.wc-pill{position:absolute;right:18px;bottom:16px;z-index:21;border:1px solid rgba(127,127,127,.35);background:var(--bg);color:inherit;border-radius:99px;padding:7px 14px;font:600 13px Inter,sans-serif;cursor:pointer;box-shadow:var(--sh-raise-lg)}
+.wc-panel{position:absolute;right:18px;bottom:16px;z-index:21;width:360px;max-width:calc(100% - 36px);max-height:52vh;overflow:auto;background:var(--bg);border:1px solid rgba(127,127,127,.25);border-radius:14px;box-shadow:var(--sh-raise-lg);padding:10px;font:13px/1.4 Inter,sans-serif}
+.wc-head{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;font-weight:600}
+.wc-item{padding:8px;border-radius:10px;display:flex;flex-direction:column;gap:4px}
+.wc-item+.wc-item{border-top:1px solid rgba(127,127,127,.18)}
+.wc-txt{font-family:"Courier Prime",monospace;font-size:12px;opacity:.85;word-break:break-word}
+.wc-why{opacity:.7;font-size:12px}
+.wc-btns{display:flex;gap:6px;margin-top:2px}
+.wc-btns button{border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;border-radius:8px;padding:4px 10px;font:600 12px Inter,sans-serif;cursor:pointer}
+.wc-btns .wc-ok{background:#d9a13a;color:#14120e;border-color:#d9a13a}
 .wr-ac{position:absolute;z-index:20;min-width:230px;max-width:360px;background:var(--bg);border-radius:14px;box-shadow:var(--sh-raise-lg);padding:6px;display:flex;flex-direction:column;animation:rise .14s var(--ease)}
 .wr-ac button{border:0;background:transparent;text-align:left;padding:7px 10px;border-radius:10px;font:13px/1.3 var(--f-script);color:var(--fg);cursor:pointer}
 .wr-ac button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
@@ -3226,10 +3237,76 @@ function wrKey(e){const b=wrCur();if(!b)return;const mod=e.ctrlKey||e.metaKey;
     setText(b,before);const nb=mkBlock(nt,after);b.after(nb);revMark(b);revMark(nb);if(nt==='p'&&!after){setText(nb,'()');placeCaret(nb,1)}else placeCaret(nb,0);wrTouch(true);wrBarSync();return}
   if(e.key==='Backspace'&&!b.textContent.length&&b.previousElementSibling&&getSelection().isCollapsed){e.preventDefault();wrPush();const pv=b.previousElementSibling;b.remove();revMark(pv);placeCaret(pv);wrTouch(true);return}
   if(e.key==='Escape'){hideAC()}}
+
+/* ---------- Writing suggestions: spacing, punctuation, capitals, grammar, sentences. Appear after a pause, never as a popup while typing ---------- */
+const WC={t:0,ta:0,el:null,rule:{},ai:{},aiTxt:{},busy:false,ign:new Set(),open:false,items:[]};
+function wcRules(text,action){
+  const out=[],seen=new Set(),push=(from,to,why)=>{const k=from+'|'+to;if(!seen.has(k)){seen.add(k);out.push({kind:'rule',from,to,why})}};
+  for(const m of text.matchAll(/(\S) {2,}(?=\S)/g))push(m[0],m[1]+' ','Use one space');
+  for(const m of text.matchAll(/(\S)\s+([.,!?;:])/g))push(m[0],m[1]+m[2],'No space before “'+m[2]+'”');
+  for(const m of text.matchAll(/([a-z]{2,}[.!?])([A-Z][a-z])/g))push(m[0],m[1]+' '+m[2],'Add a space after “'+m[1].slice(-1)+'”');
+  if(action)for(const m of text.matchAll(/([.!?] +)([a-z])/g))push(m[0],m[1]+m[2].toUpperCase(),'Start the sentence with a capital letter');
+  for(const m of text.matchAll(/(^|[\s(“"])i(?=[\s.,!?'’)]|$)/g))push(m[0],m[1]+'I','Capital I');
+  for(const m of text.matchAll(/\b([A-Za-z]{2,}) \1\b/gi))if(!/^(that|had)$/i.test(m[1]))push(m[0],m[1],'Repeated word');
+  return out;
+}
+function wcKey(id,x){return id+'|'+x.kind+'|'+x.from+'|'+x.to}
+function wcSchedule(el){if(!WXV.chk)return;WC.el=el;clearTimeout(WC.t);clearTimeout(WC.ta);WC.t=setTimeout(()=>wcRun(false),900);WC.ta=setTimeout(()=>wcRun(true),2400)}
+function wcId(el){return el.dataset.id||(el.dataset.id='w'+Math.random().toString(36).slice(2,9))}
+async function wcRun(ai){
+  const el=WC.el;if(!el||!el.isConnected||!WXV.chk)return;
+  const id=wcId(el),text=el.textContent,act=el.dataset.t==='a';
+  if(!ai){WC.rule[id]=wcRules(text,act);WC.ai[id]=(WC.ai[id]||[]).filter(x=>text.includes(x.from));wcRender();return}
+  if(!AI.sample||WC.busy||text.trim().split(/\s+/).length<5||WC.aiTxt[id]===text)return;
+  WC.busy=true;
+  try{
+    const r=await ask('You are a careful copy editor for film screenplays. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Check the line below for spelling, grammar, punctuation and sentence-structure mistakes only. Keep the writer\'s language, meaning, names, places, tone and dialogue style. Do not translate. Return JSON: {"fixes":[{"from":"exact text copied from the line","to":"corrected text","why":"short reason in English"}]}. Return an empty list if nothing needs fixing. Line:\n'+text,{});
+    const fixes=(r&&Array.isArray(r.fixes)?r.fixes:[]).filter(f=>f&&typeof f.from==='string'&&typeof f.to==='string'&&f.from&&f.from!==f.to&&text.includes(f.from)).slice(0,5).map(f=>({kind:'ai',from:f.from,to:f.to,why:String(f.why||'Grammar or sentence fix').slice(0,120)}));
+    if(el.isConnected&&el.textContent===text){WC.ai[id]=fixes;WC.aiTxt[id]=text}
+  }catch(e){}
+  finally{WC.busy=false}
+  wcRender();
+}
+function wcRender(){
+  const d=wrDoc(),main=$('#wrMain');if(!d||!main)return;
+  d.querySelectorAll('.wc-has').forEach(x=>x.classList.remove('wc-has'));
+  const items=[];
+  if(WXV.chk)for(const id of Object.keys(WC.rule)){
+    const el=d.querySelector(`[data-id="${id}"]`);if(!el)continue;
+    const list=[...(WC.rule[id]||[]),...(WC.ai[id]||[])].filter(x=>!WC.ign.has(wcKey(id,x)));
+    if(!list.length)continue;
+    el.classList.add('wc-has');list.forEach(x=>items.push({...x,id,el}));
+  }
+  WC.items=items;
+  let p=$('#wcPanel');
+  if(!WXV.chk||!items.length){if(p)p.remove();return}
+  if(!p){p=document.createElement('div');p.id='wcPanel';main.appendChild(p)}
+  const n=items.length,lbl=n+' writing suggestion'+(n===1?'':'s');
+  if(!WC.open){p.className='wc-pill';p.innerHTML=`<button type="button" id="wcTog" aria-expanded="false">${lbl} ▴</button>`;return}
+  p.className='wc-panel';
+  p.innerHTML=`<div class="wc-head"><span>${lbl}</span><button type="button" id="wcTog" aria-expanded="true" class="wc-btns" style="border:0;background:none;color:inherit;cursor:pointer" aria-label="Hide suggestions">Hide</button></div>`+
+    items.slice(0,30).map((x,i)=>`<div class="wc-item"><div class="wc-txt">${esc(x.from.trim())} → ${esc(x.to.trim())}</div><div class="wc-why">${esc(x.why)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-wc="acc" data-i="${i}">Accept</button><button type="button" data-wc="ign" data-i="${i}">Ignore</button></div></div>`).join('');
+}
+function wcAccept(x){
+  const el=x.el;if(!el.isConnected)return;
+  const text=el.textContent,i=text.indexOf(x.from);if(i<0)return;
+  wrPush();
+  const nx=text.slice(0,i)+x.to+text.slice(i+x.from.length);
+  setText(el,nx);placeCaret(el,i+x.to.length);wrTouch(false);
+  WC.rule[x.id]=(WC.rule[x.id]||[]).filter(r=>r.from!==x.from||r.to!==x.to);
+  WC.ai[x.id]=(WC.ai[x.id]||[]).filter(r=>r.from!==x.from||r.to!==x.to);
+  WC.el=el;wcSchedule(el);wcRender();
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest&&e.target.closest('#wcTog')){WC.open=!WC.open;wcRender();return}
+  const b=e.target.closest&&e.target.closest('#wcPanel [data-wc]');if(!b)return;
+  const x=WC.items[+b.dataset.i];if(!x)return;
+  if(b.dataset.wc==='acc')wcAccept(x);else{WC.ign.add(wcKey(x.id,x));wcRender()}
+});
 function wrInput(){const b=wrCur();if(!WR.typing){wrPush()}revMark(b);clearTimeout(WR.typing);WR.typing=setTimeout(()=>{WR.typing=0},900);
   if(b&&b.dataset.t==='a'){const t=b.textContent;if(/^(INT|EXT|I\/E|EST)[.\/]/i.test(t)||/^(INT|EXT) /.test(t)){const o=caretOff(b);setType(b,'h');placeCaret(b,o)}}
   if(b)b.classList.toggle('wr-empty',!b.textContent.length);
-  wxActive();wrTouch(false);wrSuggest()}
+  wxActive();wrTouch(false);wrSuggest();if(b)wcSchedule(b)}
 function wrPaste(e){e.preventDefault();const raw=(e.clipboardData||window.clipboardData).getData('text/plain');if(!raw)return;wrPush();
   const text=stripAppMarks(raw.replace(/\r\n?/g,'\n')).text;if(!/\n/.test(text.trim())){document.execCommand('insertText',false,text);return}
   const r=detectScenes(text);let blocks=r.scenes.length?[...textToBlocks(r.front),...scenesToEls(r.scenes,false)]:textToBlocks(text);if(!blocks.length)return;
@@ -3386,11 +3463,11 @@ async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPD
 
 
 /* ================= Writing tools (v2.1): notes, alternates, dual dialogue, find & replace, stats, sprint, view modes ================= */
-const WXV=(()=>{try{return Object.assign({tw:false,focus:false,mid:false,spell:true},JSON.parse(localStorage.getItem('scriptdesk.wrview')||'{}'))}catch(e){return {tw:false,focus:false,mid:false,spell:true}}})();
+const WXV=(()=>{try{return Object.assign({tw:false,focus:false,mid:false,spell:true,chk:true},JSON.parse(localStorage.getItem('scriptdesk.wrview')||'{}'))}catch(e){return {tw:false,focus:false,mid:false,spell:true,chk:true}}})();
 function wxSaveView(){try{localStorage.setItem('scriptdesk.wrview',JSON.stringify(WXV))}catch(e){}}
 function wxApplyView(){const b=document.body;b.classList.toggle('wr-tw',!!WXV.tw&&page==='write');b.classList.toggle('wr-focus',!!WXV.focus&&page==='write');b.classList.toggle('wr-mid',!!WXV.mid);
   const d=wrDoc();if(d)d.setAttribute('spellcheck',WXV.spell?'true':'false');
-  document.querySelectorAll('[data-wrx]').forEach(x=>{const k=x.dataset.wrx;if(['tw','focus','mid','spell'].includes(k))x.setAttribute('aria-pressed',WXV[k]?'true':'false')});
+  document.querySelectorAll('[data-wrx]').forEach(x=>{const k=x.dataset.wrx;if(['tw','focus','mid','spell','chk'].includes(k))x.setAttribute('aria-pressed',WXV[k]?'true':'false')});
   let ex=$('#wxExit');if(WXV.focus&&page==='write'){if(!ex){ex=document.createElement('button');ex.id='wxExit';ex.className='btn sm wx-exit';ex.textContent='Exit focus';ex.onclick=()=>{WXV.focus=false;wxSaveView();wxApplyView()};document.body.appendChild(ex)}}else if(ex)ex.remove()}
 function wxCurOrLast(){let b=wrCur();const d=wrDoc();if(!b&&d){b=d.lastElementChild;placeCaret(b)}return b}
 /* --- Script notes --- */
@@ -3483,9 +3560,9 @@ function wxNotesList(){const d=wrDoc();const box=$('#wrNotes');if(!d||!box)retur
   box.innerHTML=list.length?list.map(([i,no,n,t])=>`<button data-wrgo="${i}" class="wx-nl"><b>${esc(no||'—')}</b><span><em>${esc(n)}</em><small>${esc(t.slice(0,60))}</small></span></button>`).join(''):'<p class="small muted" style="margin:6px">No notes yet. Put the cursor on a line and press Note.</p>';
   const tab=document.querySelector('[data-wrside="notes"]');if(tab)tab.textContent='Notes'+(list.length?' · '+list.length:'')}
 function wxTool(k){if(k==='book'){wrSave();return bookOpen()}if(k==='read')return RA.on?raStop():raStart();if(k==='hl')return chHlModal();if(k==='rev')return revModal();if(k==='omit')return wxOmit();if(k==='note')return wxNote();if(k==='alt')return wxAlt();if(k==='dual')return wxDual();if(k==='find')return wxFind(true);if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
-  if(['tw','focus','mid','spell'].includes(k)){WXV[k]=!WXV[k];wxSaveView();wxApplyView();if(k==='tw'&&WXV.tw)setTimeout(wxTypewriter,50);if(k==='focus'&&WXV.focus)toast('Focus mode. Press Esc or "Exit focus" to leave.');const d=wrDoc();d&&d.focus({preventScroll:true})}}
-const WX_TOOLS=[['note','Note','Add a note to this line (Ctrl+Shift+N)'],['alt','Alternates','Keep other versions of this line'],['dual','Dual','Two characters speak at the same time'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark this scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the cursor, a voice per character'],['hl','Highlight','Colour a character\'s dialogue'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find and replace (Ctrl+F)'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint'],['tw','Typewriter','Keep the line you type at the same height'],['focus','Focus','Hide everything but the page'],['mid','Midnight','Dark page for night writing'],['spell','Spelling','Underline spelling mistakes']];
-function wxToolsHtml(){return `<div class="wx-tools" role="toolbar" aria-label="Writing tools"><span class="wx-revchip" id="wxRev" hidden></span>${WX_TOOLS.map(([k,l,t],i)=>`${k==='tw'?'<span class="wx-sep" aria-hidden="true"></span>':''}<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell'].includes(k)?' aria-pressed="false"':''}>${l}</button>`).join('')}</div>`}
+  if(['tw','focus','mid','spell','chk'].includes(k)){WXV[k]=!WXV[k];wxSaveView();wxApplyView();if(k==='tw'&&WXV.tw)setTimeout(wxTypewriter,50);if(k==='chk')wcRender();if(k==='focus'&&WXV.focus)toast('Focus mode. Press Esc or "Exit focus" to leave.');const d=wrDoc();d&&d.focus({preventScroll:true})}}
+const WX_TOOLS=[['note','Note','Add a note to this line (Ctrl+Shift+N)'],['alt','Alternates','Keep other versions of this line'],['dual','Dual','Two characters speak at the same time'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark this scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the cursor, a voice per character'],['hl','Highlight','Colour a character\'s dialogue'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find and replace (Ctrl+F)'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint'],['tw','Typewriter','Keep the line you type at the same height'],['focus','Focus','Hide everything but the page'],['mid','Midnight','Dark page for night writing'],['spell','Spelling','Underline spelling mistakes'],['chk','Suggestions','Writing suggestions after a pause: spacing, punctuation, capitals, grammar and sentences']];
+function wxToolsHtml(){return `<div class="wx-tools" role="toolbar" aria-label="Writing tools"><span class="wx-revchip" id="wxRev" hidden></span>${WX_TOOLS.map(([k,l,t],i)=>`${k==='tw'?'<span class="wx-sep" aria-hidden="true"></span>':''}<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell','chk'].includes(k)?' aria-pressed="false"':''}>${l}</button>`).join('')}</div>`}
 
 
 /* ================= Production revisions (v2.2): revision sets, marks, locked pages, A-pages, omitted scenes ================= */

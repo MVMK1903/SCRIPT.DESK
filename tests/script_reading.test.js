@@ -33,6 +33,11 @@ const { chromium } = require('playwright');
     for (let i = 0; i < 60; i++) tail.push('Credits line ' + i);
     const d6 = detectScenes(tail.join('\n'));
     out.tail = d6.scenes[d6.scenes.length - 1].text.split('\n').length;
+    // 7. action labels with a colon are not people; "NAME VO 1:" is NAME
+    const t7 = ['INT. TRACK. DAY.', 'IN PIT LANE: Team reacts to the near-collision.', 'ECU DETAILS: A wing vibrates.', 'ON TRACK: The car pivots back.'];
+    ['Asha', 'Ravi', 'Meera'].forEach(n => { for (let i = 0; i < 8; i++) t7.push('', n + ': Come on, we are late for the train today and nobody', 'has packed anything yet.'); });
+    for (let i = 0; i < 3; i++) t7.push('', 'RAVI VO ' + (i + 1) + ': It was a long night and nobody', 'slept at all.');
+    out.t7 = detectScenes(t7.join('\n')).scenes[0].cues;
     return out;
   });
   console.log(JSON.stringify(r), errs);
@@ -43,6 +48,7 @@ const { chromium } = require('playwright');
     && r.junkCues.includes('RAVI') && r.junkCues.includes('MOTHER’S FRIEND') && r.junkCues.length === 2
     && r.t5.includes('CONSTABLE') && r.t5.includes('RAVI') && r.t5.length === 2
     && r.tail < 20
+    && r.t7.length === 3 && ['ASHA', 'RAVI', 'MEERA'].every(n => r.t7.includes(n))
     && r.garbled > 0.5 && r.normal === 0;
   console.log(ok ? 'PASS script reading' : 'FAIL script reading'); await b.close(); process.exit(ok ? 0 : 1);
 })();

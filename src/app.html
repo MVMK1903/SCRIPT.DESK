@@ -2426,7 +2426,7 @@ function mineCues(L){
   Object.keys(solo).forEach(n=>{if(!CUE_ALIAS.has(n)&&solo[n]>=need&&soloNext[n]>=solo[n]*0.6&&(/[^\x00-\x7F]/.test(n)||(n!==n.toUpperCase()&&solo[n]>=need*2)))CUE_X.add(n)});
   if(inlTotal>=15)Object.keys(inl).forEach(n=>{if(inl[n]>=3)CUE_IN.add(n)});
 }
-function cueOf(t){const s=t.trim().replace(/^[.,'’`·•*\s]+(?=[A-Z])/,'').replace(/^([A-Z][A-Z .'’\-]{1,28}?)\s+(?:V\.?\s?O|O\.?\s?S)\.?(?:\s+\d+)?(?=[:^]?$)/,'$1');if(!s||s.length>34)return null;if(CUE_ALIAS.has(s))return CUE_ALIAS.get(s);if(CUE_X.has(s))return s;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
+function cueOf(t){const s=t.trim().replace(/^[.,'’`·•*\s]+(?=[A-Z])/,'').replace(/^([A-Z][A-Z .'’\-]{1,28}?)\s+(?:V\.?\s?O|O\.?\s?S)\.?(?:\s+\d+)?(?=[:^]?$)/,'$1');if(!s||s.length>34)return null;if(CUE_ALIAS.has(s))return CUE_ALIAS.get(s);if(CUE_X.has(s))return s;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim().replace(/^([A-Z][A-Z .'’\-]{1,28}?)\s+(?:V\.?\s?O|O\.?\s?S)\.?(?:\s+\d+)?$/,'$1');
   if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'’\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;if(!looksLikeName(b))return null;return b.replace(/\s+/g,' ')}
 function classify(lines){const out=[];let mode='a',justCue=false;
   const nextNon=i=>{for(let j=i+1;j<lines.length&&j<i+4;j++){const x=lines[j].trim();if(x)return x}return ''};

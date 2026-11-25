@@ -2170,6 +2170,32 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 .hx-chips button{border:1px solid var(--line,rgba(128,128,128,.3));background:transparent;color:var(--muted);padding:5px 10px;border-radius:999px;font:600 12px/1 inherit;font-family:inherit;cursor:pointer}
 .hx-chips button:hover{color:var(--fg);border-color:var(--accent)}
 @media (max-width:820px){.hx h1{font-size:26px}.hx-cols{grid-template-columns:1fr}.hx-goto{min-width:0;flex:1}}
+/* section bar: one row under the title with the stage name, its tabs, last change and page actions */
+.sbar{display:flex;align-items:center;gap:12px;padding:0 28px;border-bottom:1px solid var(--line,rgba(128,128,128,.25));min-width:0}
+.sbar:not(:has(.mtabs,.lastnote:not([hidden]),#pageActs>*)){display:none}
+.sbar .stabs{flex:1 1 auto;min-width:0;padding:0!important;margin:0}
+.sbar-r{display:flex;align-items:center;gap:10px;flex:0 0 auto;position:relative;padding:6px 0}
+.mtabs{display:flex;align-items:stretch;gap:2px;border:0!important;background:none!important;border-radius:0!important;padding:0!important;margin:0;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs .msec{display:flex;align-items:center;gap:9px;flex:0 0 auto;margin-right:10px;padding-right:16px;border-right:1px solid var(--line,rgba(128,128,128,.3));font:800 12px/1 inherit;font-family:inherit;letter-spacing:.09em;text-transform:uppercase;color:var(--sc)}
+.mtabs .msec .ic-b{width:26px;height:26px;border-radius:8px;background:color-mix(in srgb,var(--sc) 20%,transparent)!important;color:var(--sc);display:grid;place-items:center}
+.mtabs button{flex:0 0 auto;border:0!important;border-bottom:3px solid transparent!important;border-radius:0!important;background:none!important;color:var(--muted);padding:15px 14px 12px!important;font:600 14px/1 inherit!important;font-family:inherit!important;cursor:pointer;box-shadow:none!important}
+.mtabs button:hover{color:var(--fg);background:color-mix(in srgb,var(--sc) 9%,transparent)!important}
+.mtabs button.on{color:var(--fg);font-weight:800!important;border-bottom-color:var(--sc)!important;background:color-mix(in srgb,var(--sc) 12%,transparent)!important}
+.mtabs button:focus-visible{outline:2px solid var(--sc);outline-offset:-2px}
+#lnSlot .lastnote.open{top:calc(100% + 2px)}
+@media (max-width:820px){
+  .sbar{padding:0 16px;gap:6px}.sbar-r{display:none}
+  .mtabs .msec{display:none}
+  .mtabs button{padding:13px 12px 10px!important;font-size:14px!important}
+  .sbar .stabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+}
+/* menu: each stage has its own colour */
+#nav button[data-sec] .ic-b,#nav2 button[data-sec] .ic-b,.hx-th .ic-b{background:color-mix(in srgb,var(--sc) 18%,transparent)!important;color:var(--sc)!important}
+#nav button[data-sec],#nav2 button[data-sec]{border-left:3px solid transparent}
+#nav button[data-sec][aria-current=page],#nav2 button[data-sec][aria-current=page]{background:color-mix(in srgb,var(--sc) 14%,transparent)!important;border-left-color:var(--sc);font-weight:700}
+#nav button[data-sec][aria-current=page] .ic-b,#nav2 button[data-sec][aria-current=page] .ic-b{background:var(--sc)!important;color:#1a1612!important}
+.hx-tile{border-top:3px solid var(--sc)}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -2201,8 +2227,8 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
         <button class="btn sm i-excel mob-only" data-ic id="bMx" aria-label="Export Excel" title="Export Excel">Excel</button><button class="btn sm i-pdf mob-only" data-ic id="bMp" aria-label="Export PDF" title="Export PDF">PDF</button><button class="btn sm i-mail" data-ic id="bMail" aria-label="Email a report" title="Email a report">Email</button><button class="btn sm i-download" data-ic id="bAll" aria-label="Download all" title="Download all">Download all</button>
         <button class="btn sm pri i-run" data-ic id="bRun">Run AI breakdown</button>
       </div>
-      <div class="top-r2" id="topR2"><div class="stabs" id="stabs" hidden></div><div id="lnSlot"></div><div id="pageActs"></div></div>
     </header>
+    <div class="sbar" id="sbar"><div class="stabs" id="stabs"></div><div class="sbar-r"><div id="lnSlot"></div><div id="pageActs"></div></div></div>
     <main class="content" id="content"></main>
   </div>
 </div>
@@ -6068,27 +6094,28 @@ function navState(){try{const o=JSON.parse(localStorage.getItem('scriptdesk.navO
 function navIsOpen(g,cur,st){if(g==='Main')return true;if(st[g]===0)return false;return st[g]===1||g===cur}
 /* The menu: 10 stages. Every old page is a tab inside its stage; "Go to" (Ctrl+K) reaches any page by name. */
 const SECTIONS=[
- {id:'home',label:'Home',tabs:[['home','Overview'],['tasks','Tasks']]},
- {id:'write',label:'Write',tabs:[['write','Write'],['script','Full script'],['notes','Notepad'],['av','AV format']],extra:['translate']},
- {id:'story',label:'Story',tabs:[['beats','Beat board'],['outline','Outline'],['structure','Structure'],['dirdesk',"Director's desk"]]},
- {id:'cast',label:'Cast & characters',tabs:[['characters','Characters'],['profiles','Profiles'],['artists','Artists'],['artScenes','Artist scenes'],['casting','Casting']]},
- {id:'breakdown',label:'Breakdown',tabs:[['breakdown','Script breakdown'],['special','Special'],['costume','Costume'],['artprops','Art / props'],['catalog','Catalog']]},
- {id:'locations',label:'Locations',tabs:[['locations','Count'],['locScenes','Scenes']]},
- {id:'slo',label:'Single line order',tabs:[['slo','By scene'],['scenic','By scenic'],['sloLoc','By location'],['sloArt','By artist'],['sloFight','Stunt / fight']]},
- {id:'plan',label:'Plan',tabs:[['shots','Shot division'],['storyboard','Storyboard'],['sched','Schedule'],['order','Shoot order'],['stripboard','Stripboard'],['dood','Day out of days']]},
- {id:'shoot',label:'Shoot day',tabs:[['callsheet','Call sheet'],['ready','Day readiness'],['sides','Actor sides'],['gear','Equipment']]},
- {id:'budget',label:'Budget',tabs:[['budget','Budget & rates']]}];
+ {id:'home',c:'#e8b04a',label:'Home',tabs:[['home','Overview'],['tasks','Tasks']]},
+ {id:'write',c:'#e8b04a',label:'Write',tabs:[['write','Write'],['script','Full script'],['notes','Notepad'],['av','AV format']],extra:['translate']},
+ {id:'story',c:'#c59bff',label:'Story',tabs:[['beats','Beat board'],['outline','Outline'],['structure','Structure'],['dirdesk',"Director's desk"]]},
+ {id:'cast',c:'#ff8fb8',label:'Cast & characters',tabs:[['characters','Characters'],['profiles','Profiles'],['artists','Artists'],['artScenes','Artist scenes'],['casting','Casting']]},
+ {id:'breakdown',c:'#5fe0d2',label:'Breakdown',tabs:[['breakdown','Script breakdown'],['special','Special'],['costume','Costume'],['artprops','Art / props'],['catalog','Catalog']]},
+ {id:'locations',c:'#7cc0ff',label:'Locations',tabs:[['locations','Count'],['locScenes','Scenes']]},
+ {id:'slo',c:'#8fe07a',label:'Single line order',tabs:[['slo','By scene'],['scenic','By scenic'],['sloLoc','By location'],['sloArt','By artist'],['sloFight','Stunt / fight']]},
+ {id:'plan',c:'#ffab5e',label:'Plan',tabs:[['shots','Shot division'],['storyboard','Storyboard'],['sched','Schedule'],['order','Shoot order'],['stripboard','Stripboard'],['dood','Day out of days']]},
+ {id:'shoot',c:'#ff7a7a',label:'Shoot day',tabs:[['callsheet','Call sheet'],['ready','Day readiness'],['sides','Actor sides'],['gear','Equipment']]},
+ {id:'budget',c:'#aab6c6',label:'Budget',tabs:[['budget','Budget & rates']]}];
 const sectionOf=id=>SECTIONS.find(m=>m.tabs.some(t=>t[0]===id)||(m.extra||[]).includes(id));
 const secTabs=m=>m.tabs.filter(t=>{const g=PG[t[0]];return g&&!(g.hide&&g.hide())});
 function lastTabs(){try{return JSON.parse(localStorage.getItem('scriptdesk.lastTab')||'{}')||{}}catch(e){return {}}}
 function rememberTab(){const m=sectionOf(page);if(!m)return;if(P&&page!=='home'&&page!=='tasks'){try{localStorage.setItem('scriptdesk.lastPage',page)}catch(e){}}const o=lastTabs();if(o[m.id]===page)return;o[m.id]=page;try{localStorage.setItem('scriptdesk.lastTab',JSON.stringify(o))}catch(e){}}
 function secTarget(sid){const m=SECTIONS.find(x=>x.id===sid);if(!m)return sid;const tabs=secTabs(m);if(sectionOf(page)===m)return page;const last=lastTabs()[m.id];return tabs.some(t=>t[0]===last)?last:(tabs[0]||m.tabs[0])[0]}
 function syncStabs(){const el=document.getElementById('stabs');if(!el)return;const m=P?sectionOf(page):null;const tabs=m?secTabs(m):[];
-  if(!m||tabs.length<2){el.hidden=true;el.innerHTML='';return}
-  el.hidden=false;el.innerHTML=`<div class="mtabs seg" role="tablist" aria-label="${esc(m.label)}">${tabs.map(t=>`<button type="button" role="tab" data-mtab="${t[0]}" aria-selected="${t[0]===page}" class="${t[0]===page?'on':''}">${esc(t[1])}</button>`).join('')}</div>`}
+  if(!m||tabs.length<2){el.innerHTML='';return}
+  el.innerHTML=`<div class="mtabs" role="tablist" aria-label="${esc(m.label)}" style="--sc:${m.c}"><span class="msec"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(tabs[0][0])}"></i></i>${esc(m.label)}</span>${tabs.map(t=>`<button type="button" role="tab" data-mtab="${t[0]}" aria-selected="${t[0]===page}" class="${t[0]===page?'on':''}">${esc(t[1])}</button>`).join('')}</div>`;
+  const on=el.querySelector('.mtabs .on');if(on&&on.scrollIntoView)try{on.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-mtab]');if(b&&P)go(b.dataset.mtab)});
 function navHtml(){const cur=sectionOf(page);let h='<div class="ng" data-g="Main"><button type="button" class="navgo" data-goto aria-label="Go to any page"><span>Go to…</span><kbd>Ctrl K</kbd></button>';
-  SECTIONS.forEach(m=>{const tabs=secTabs(m);if(!tabs.length)return;const head=tabs[0][0];h+=`<button data-page="${esc(head)}" data-sec="${m.id}" aria-current="${cur===m?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span>${esc(m.label)}</span></button>`});return h+'</div>'}
+  SECTIONS.forEach(m=>{const tabs=secTabs(m);if(!tabs.length)return;const head=tabs[0][0];h+=`<button data-page="${esc(head)}" data-sec="${m.id}" style="--sc:${m.c}" aria-current="${cur===m?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span>${esc(m.label)}</span></button>`});return h+'</div>'}
 /* Go to: type a page name, press Enter */
 function gotoOpen(){if(!P)return;const items=[];SECTIONS.forEach(m=>secTabs(m).concat((m.extra||[]).map(id=>[id,(PG[id]||{}).nav||id])).forEach(t=>items.push({id:t[0],t:(PG[t[0]]||{}).t||t[1],sec:m.label,tab:t[1],key:(m.label+' '+t[1]+' '+((PG[t[0]]||{}).t||'')).toLowerCase()})));
   openModal(`<div class="modal-h"><h2>Go to</h2></div><div class="modal-b"><input type="search" id="gtQ" class="srch" placeholder="Type a page: stripboard, call sheet, translator…" autocomplete="off" style="width:100%"><div id="gtL" role="listbox" style="margin-top:10px;max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:2px"></div></div>`);
@@ -6537,7 +6564,7 @@ function homeDash(){const d=homeData();const last=(()=>{try{return localStorage.
    {ok:d.days>0,t:'Plan the shooting schedule',s:d.days?d.days+' shoot days planned':'Place scenes on shoot days',b:'Open schedule',go:'sched',off:!d.n}];
   const done=steps.filter(x=>x.ok).length;
   const stat=(k,v)=>`<div class="hx-stat"><b>${esc(String(v))}</b><span>${esc(k)}</span></div>`;
-  const tile=m=>{const tabs=secTabs(m);if(!tabs.length)return '';const head=tabs[0][0];return `<article class="hx-tile"><button type="button" class="hx-th" data-page="${esc(head)}" data-sec="${m.id}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span><b>${esc(m.label)}</b><small>${esc(HOME_DESC[m.id]||'')}</small></span></button>${tabs.length>1?`<div class="hx-chips">${tabs.map(t=>`<button type="button" data-mtab="${t[0]}">${esc(t[1])}</button>`).join('')}</div>`:''}</article>`};
+  const tile=m=>{const tabs=secTabs(m);if(!tabs.length)return '';const head=tabs[0][0];return `<article class="hx-tile" style="--sc:${m.c}"><button type="button" class="hx-th" data-page="${esc(head)}" data-sec="${m.id}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span><b>${esc(m.label)}</b><small>${esc(HOME_DESC[m.id]||'')}</small></span></button>${tabs.length>1?`<div class="hx-chips">${tabs.map(t=>`<button type="button" data-mtab="${t[0]}">${esc(t[1])}</button>`).join('')}</div>`:''}</article>`};
   return {html:`<section class="hx"><header class="hx-h"><div><p class="hx-eye">${esc(P.production||'Your film')}</p><h1>${(h=>h<12?'Good morning':h<17?'Good afternoon':'Good evening')(new Date().getHours())}</h1><p class="hx-sub">Here is where <b>${esc(P.title||'your film')}</b> stands.</p></div><div class="hx-top"><button type="button" class="btn hx-goto" data-goto><span>Go to any page…</span><kbd>Ctrl K</kbd></button><button class="btn" data-page="projects">My projects</button></div></header>
    <div class="hx-stats">${stat('Scenes',d.n)}${stat('Pages',(Math.round(d.pg/8*10)/10).toString())}${stat('Artists',d.arts)}${stat('Locations',d.locs)}${stat('Shoot days',d.days)}</div>
    <div class="hx-cols"><div class="hx-card"><div class="hx-ch"><h2>Next steps</h2><span class="hx-prog">${done} of ${steps.length} done</span></div><div class="hx-bar" aria-hidden="true"><i style="width:${Math.round(done/steps.length*100)}%"></i></div>

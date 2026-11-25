@@ -12,7 +12,7 @@ const r=await pg.evaluate(async()=>{const g=document.getElementById('galock');if
  go('home');await w(300);document.querySelector('#nav button[data-sec=plan]').click();await w(400);o.remembered=page;
  document.querySelector('#nav button[data-sec=slo]').click();await w(400);o.sloFirst=page;
  go('sloArt');await w(300);go('home');await w(200);document.querySelector('#nav button[data-sec=slo]').click();await w(400);o.sloRem=page;
- go('budget');await w(300);o.budgetStrip=document.getElementById('stabs').hidden;
+ go('budget');await w(300);o.budgetStrip=!document.querySelector('#stabs .mtabs');
  go('script');await w(500);o.cur=document.querySelector('#nav button[aria-current=page]').textContent;
  const tb=document.querySelector('.fs-tools [data-fsx=translate]');o.translateBtn=!!tb;tb.click();await w(400);o.translatePage=page;o.translateSec=document.querySelector('#nav button[aria-current=page]').textContent;
  // go to

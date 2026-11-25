@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-QKAMfsLwJVdYcw+c82FUQNXCXNxJx+eoqu4lOK0AE8g=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-V6DDKt7gqRrGNydtBiZEC5y+Nn72kwK16ZWyIkpXsFs=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2108,6 +2108,13 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 .mtabs button:hover{color:var(--fg)}
 .mtabs button.on{background:var(--accent,#e8b04a);color:#1a1612}
 .mtabs button:focus-visible{outline:2px solid var(--accent,#e8b04a);outline-offset:1px}
+.mtabs{margin:0}
+.stabs{padding:10px 24px 0;background:transparent}
+.stabs[hidden]{display:none}
+@media (max-width:820px){.stabs{padding:8px 16px 0}}
+.navgo{display:flex!important;align-items:center;justify-content:space-between;width:100%;margin:0 0 8px;padding:9px 12px;border:1px solid var(--line,rgba(128,128,128,.3));border-radius:12px;background:transparent;color:var(--muted);font:inherit;cursor:pointer}
+.navgo:hover{color:var(--fg)}
+.navgo kbd{font:600 11px/1 inherit;padding:3px 6px;border:1px solid var(--line,rgba(128,128,128,.3));border-radius:6px;color:var(--muted)}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -2140,10 +2147,11 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
         <button class="btn sm pri i-run" data-ic id="bRun">Run AI breakdown</button>
       </div>
     </header>
+    <div class="stabs" id="stabs" hidden></div>
     <main class="content" id="content"></main>
   </div>
 </div>
-<nav class="bbar" aria-label="Main"><button class="tab" data-tab="write" aria-current="false"><i class="ic i-write" aria-hidden="true"></i><span>Write</span></button><button class="tab" data-tab="script" aria-current="false"><i class="ic i-script" aria-hidden="true"></i><span>Full script</span></button><button class="tab" data-tab="slo" aria-current="false"><i class="ic i-slo" aria-hidden="true"></i><span>Single line</span></button><button class="tab" data-tab="structure" aria-current="false"><i class="ic i-structure" aria-hidden="true"></i><span>Structure</span></button><button class="tab" id="bMenu" aria-current="false"><i class="ic i-menu" aria-hidden="true"></i><span>More</span></button><span class="cur" id="bCur" hidden></span></nav>
+<nav class="bbar" aria-label="Main"><button class="tab" data-tab="write" aria-current="false"><i class="ic i-write" aria-hidden="true"></i><span>Write</span></button><button class="tab" data-tab="breakdown" aria-current="false"><i class="ic i-breakdown" aria-hidden="true"></i><span>Breakdown</span></button><button class="tab" data-tab="plan" aria-current="false"><i class="ic i-shots" aria-hidden="true"></i><span>Plan</span></button><button class="tab" data-tab="shoot" aria-current="false"><i class="ic i-callsheet" aria-hidden="true"></i><span>Shoot day</span></button><button class="tab" id="bMenu" aria-current="false"><i class="ic i-menu" aria-hidden="true"></i><span>More</span></button><span class="cur" id="bCur" hidden></span></nav>
 <div class="msheet" id="msheet"><nav class="nav" id="nav2" aria-label="Reports"></nav></div>
 <div id="modalRoot"></div>
 <div class="savebar" id="savebar" hidden><span id="sbLabel">Editing</span><button class="btn sm" id="sbCancel">Cancel</button><button class="btn sm pri" id="sbSave">Save</button></div>
@@ -3816,7 +3824,7 @@ function fsSideHtml(){const cur=fsCurId();const rows=fsRows();const tab=VIEW.fsT
   return `<aside class="fs-side" aria-label="Scenes">${tabs}${rows.map(r=>r.om?`<div class="wr-scr fs-om"><button type="button" disabled title="Omitted scene"><b>${esc(r.no)}</b><span>OMITTED</span></button><button type="button" class="wr-scm" data-fsm="om:${r.hi}" aria-haspopup="menu" aria-label="Omitted scene ${esc(r.no)} actions">⋯</button></div>`:
     `<div class="wr-scr"><button type="button" data-fsgo="${esc(r.id)}" aria-current="${r.id===cur}"><b>${esc(r.no)}</b><span>${esc(U(r.loc)||'(no location)')}</span></button><button type="button" class="wr-scm" data-fsm="${esc(r.id)}" aria-haspopup="menu" aria-label="Scene ${esc(r.no)} actions" title="Add, copy, move, omit or delete this scene">⋯</button></div>`).join('')}
     <button type="button" class="wr-scadd" data-fsm="end">+ Add scene at the end</button></aside>`}
-const FS_TOOLS=[['note','Note','Write a note or idea and pin it to the current scene'],['alt','Alternates','Keep other versions of a line (works in Write)'],['dual','Dual','Two characters speak at the same time (works in Write)'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark the current scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the current scene, a voice per character'],['voice','Voices','Choose natural or device voices, narration style and speed'],['hl','Highlight','Colour characters, locations, costumes and props'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find text in the script'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint']];
+const FS_TOOLS=[['note','Note','Write a note or idea and pin it to the current scene'],['alt','Alternates','Keep other versions of a line (works in Write)'],['dual','Dual','Two characters speak at the same time (works in Write)'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark the current scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the current scene, a voice per character'],['voice','Voices','Choose natural or device voices, narration style and speed'],['hl','Highlight','Colour characters, locations, costumes and props'],['book','Read as book','Read the finished script as a bound book'],['translate','Translate','Translate the script into another language'],['find','Find','Find text in the script'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint']];
 function fsToolsHtml(){return `<div class="wx-tools fs-tools" role="toolbar" aria-label="Writing tools">${FS_TOOLS.map(([k,l,t])=>`<button type="button" class="wx-b" data-fsx="${k}" title="${esc(t)}">${l}</button>`).join('')}</div>`}
 function fsWriterAt(sc,toastMsg){const D=draft();const nums=wrNumbers(D.els);const hi=D.els.findIndex((e,i)=>e.t==='h'&&sc&&U(nums[i])===U(sc.no));go('write');setTimeout(()=>{const d=wrDoc();const el=d&&d.children[hi>=0?hi:0];if(el){el.scrollIntoView({block:'center'});placeCaret(el)}if(toastMsg)toast(toastMsg,6000)},120)}
 function fsNote(){pinModal(fsCurId(),null)}
@@ -3839,7 +3847,7 @@ function fsRead(){if(RA.on)return raStop();if(VO().engine!=='natural'&&(!('speec
   raRun(q,all)}
 function fsTool(k){const sc=P.scenes.find(x=>x.id===fsCurId());
   if(k==='note')return fsNote();if(k==='rev')return revModal();if(k==='omit')return sc?fsOp('omit',sc.id):toast('Pick a scene first.');
-  if(k==='read')return fsRead();if(k==='voice')return voiceModal();if(k==='hl')return hlToggle(true);if(k==='book'){return bookOpen()}
+  if(k==='read')return fsRead();if(k==='voice')return voiceModal();if(k==='translate')return go('translate');if(k==='hl')return hlToggle(true);if(k==='book'){return bookOpen()}
   if(k==='find'){const q=$('#q');if(q){q.focus();q.select()}return}if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
   if(k==='alt')return fsWriterAt(sc,'Select the line, then press Alternates.');if(k==='dual')return fsWriterAt(sc,'Put the cursor on the character, then press Dual.')}
 function fsDelete(id){const i=P.scenes.findIndex(s=>s.id===id);if(i<0)return;snapshot();const no=P.scenes[i].no;dirty.deleted.add(P.scenes[i].id);P.scenes.splice(i,1);const ch=chainNos(P.scenes,i-1)||[];
@@ -5998,16 +6006,40 @@ document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closes
 /* The menu folds: Main is always shown, the group you are working in is open, the rest are one line each. Your choice is remembered. */
 function navState(){try{const o=JSON.parse(localStorage.getItem('scriptdesk.navOpen')||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
 function navIsOpen(g,cur,st){if(g==='Main')return true;if(st[g]===0)return false;return st[g]===1||g===cur}
-/* Pages that share one menu item: the menu shows the first page; the others are tabs at the top of the page */
-const MERGES=[{label:'Locations',ids:['locations','locScenes','sloLoc'],tabs:['Count','Scenes','Single line order']},
-  {label:'Artists',ids:['artists','artScenes','sloArt','casting'],tabs:['Count','Scenes','Single line order','Casting']},
-  {label:'Characters',ids:['characters','profiles'],tabs:['Stats','Profiles']}];
-const mergeOf=id=>MERGES.find(m=>m.ids.includes(id));
-function mergeTabsHtml(id){const m=mergeOf(id);if(!m)return '';return `<div class="mtabs seg" role="tablist" aria-label="${esc(m.label)}">${m.ids.map((x,i)=>`<button type="button" role="tab" data-mtab="${x}" aria-selected="${x===id}" class="${x===id?'on':''}">${esc(m.tabs[i])}</button>`).join('')}</div>`}
+/* The menu: 10 stages. Every old page is a tab inside its stage; "Go to" (Ctrl+K) reaches any page by name. */
+const SECTIONS=[
+ {id:'home',label:'Home',tabs:[['home','Overview'],['tasks','Tasks']]},
+ {id:'write',label:'Write',tabs:[['write','Write'],['script','Full script'],['notes','Notepad'],['av','AV format']],extra:['translate']},
+ {id:'story',label:'Story',tabs:[['beats','Beat board'],['outline','Outline'],['structure','Structure'],['dirdesk',"Director's desk"]]},
+ {id:'cast',label:'Cast & characters',tabs:[['characters','Characters'],['profiles','Profiles'],['artists','Artists'],['artScenes','Artist scenes'],['casting','Casting']]},
+ {id:'breakdown',label:'Breakdown',tabs:[['breakdown','Script breakdown'],['special','Special'],['costume','Costume'],['artprops','Art / props'],['catalog','Catalog']]},
+ {id:'locations',label:'Locations',tabs:[['locations','Count'],['locScenes','Scenes']]},
+ {id:'slo',label:'Single line order',tabs:[['slo','By scene'],['scenic','By scenic'],['sloLoc','By location'],['sloArt','By artist'],['sloFight','Stunt / fight']]},
+ {id:'plan',label:'Plan',tabs:[['shots','Shot division'],['storyboard','Storyboard'],['sched','Schedule'],['order','Shoot order'],['stripboard','Stripboard'],['dood','Day out of days']]},
+ {id:'shoot',label:'Shoot day',tabs:[['callsheet','Call sheet'],['ready','Day readiness'],['sides','Actor sides'],['gear','Equipment']]},
+ {id:'budget',label:'Budget',tabs:[['budget','Budget & rates']]}];
+const sectionOf=id=>SECTIONS.find(m=>m.tabs.some(t=>t[0]===id)||(m.extra||[]).includes(id));
+const secTabs=m=>m.tabs.filter(t=>{const g=PG[t[0]];return g&&!(g.hide&&g.hide())});
+function lastTabs(){try{return JSON.parse(localStorage.getItem('scriptdesk.lastTab')||'{}')||{}}catch(e){return {}}}
+function rememberTab(){const m=sectionOf(page);if(!m)return;const o=lastTabs();if(o[m.id]===page)return;o[m.id]=page;try{localStorage.setItem('scriptdesk.lastTab',JSON.stringify(o))}catch(e){}}
+function secTarget(sid){const m=SECTIONS.find(x=>x.id===sid);if(!m)return sid;const tabs=secTabs(m);if(sectionOf(page)===m)return page;const last=lastTabs()[m.id];return tabs.some(t=>t[0]===last)?last:(tabs[0]||m.tabs[0])[0]}
+function syncStabs(){const el=document.getElementById('stabs');if(!el)return;const m=P?sectionOf(page):null;const tabs=m?secTabs(m):[];
+  if(!m||tabs.length<2){el.hidden=true;el.innerHTML='';return}
+  el.hidden=false;el.innerHTML=`<div class="mtabs seg" role="tablist" aria-label="${esc(m.label)}">${tabs.map(t=>`<button type="button" role="tab" data-mtab="${t[0]}" aria-selected="${t[0]===page}" class="${t[0]===page?'on':''}">${esc(t[1])}</button>`).join('')}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-mtab]');if(b&&P)go(b.dataset.mtab)});
-function navHtml(){const vis=PAGES.filter(p=>!(p.hide&&p.hide())&&!(mergeOf(p.id)&&mergeOf(p.id).ids[0]!==p.id)),cur=(PAGES.find(p=>p.id===(mergeOf(page)?mergeOf(page).ids[0]:page))||{}).g,st=navState(),n={};vis.forEach(p=>n[p.g]=(n[p.g]||0)+1);let h='',g='';
-  vis.forEach(p=>{if(p.g!==g){if(g)h+='</div>';g=p.g;const open=navIsOpen(g,cur,st);h+=(g==='Main'?`<h6>${esc(g)}</h6>`:`<h6 class="ngt"><button type="button" class="ngh" data-ng="${esc(g)}" aria-expanded="${open}">${esc(g)}<span class="ngn">${n[g]}</span></button></h6>`)+`<div class="ng${open?'':' shut'}" data-g="${esc(g)}">`}
-    h+=`<button data-page="${esc(p.id)}" aria-current="${(page===p.id||(mergeOf(p.id)&&mergeOf(p.id).ids.includes(page)))?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(mergeOf(p.id)?mergeOf(p.id).label:p.nav)}</span></button>`});return h+'</div>'}
+function navHtml(){const cur=sectionOf(page);let h='<div class="ng" data-g="Main"><button type="button" class="navgo" data-goto aria-label="Go to any page"><span>Go to…</span><kbd>Ctrl K</kbd></button>';
+  SECTIONS.forEach(m=>{const tabs=secTabs(m);if(!tabs.length)return;const head=tabs[0][0];h+=`<button data-page="${esc(head)}" data-sec="${m.id}" aria-current="${cur===m?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span>${esc(m.label)}</span></button>`});return h+'</div>'}
+/* Go to: type a page name, press Enter */
+function gotoOpen(){if(!P)return;const items=[];SECTIONS.forEach(m=>secTabs(m).concat((m.extra||[]).map(id=>[id,(PG[id]||{}).nav||id])).forEach(t=>items.push({id:t[0],t:(PG[t[0]]||{}).t||t[1],sec:m.label,tab:t[1],key:(m.label+' '+t[1]+' '+((PG[t[0]]||{}).t||'')).toLowerCase()})));
+  openModal(`<div class="modal-h"><h2>Go to</h2></div><div class="modal-b"><input type="search" id="gtQ" class="srch" placeholder="Type a page: stripboard, call sheet, translator…" autocomplete="off" style="width:100%"><div id="gtL" role="listbox" style="margin-top:10px;max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:2px"></div></div>`);
+  const q=document.getElementById('gtQ'),L=document.getElementById('gtL');let sel=0,cur=[];
+  const draw=()=>{const w=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);cur=items.filter(i=>w.every(x=>i.key.includes(x))).slice(0,30);if(sel>=cur.length)sel=Math.max(0,cur.length-1);
+    L.innerHTML=cur.length?cur.map((i,k)=>`<button type="button" role="option" class="btn ghost" data-gt="${i.id}" aria-selected="${k===sel}" style="justify-content:space-between;text-align:left;${k===sel?'background:var(--raise,rgba(128,128,128,.2))':''}"><span>${esc(i.t)}</span><small class="muted">${esc(i.sec)}${i.tab&&i.tab!==i.t?' › '+esc(i.tab):''}</small></button>`).join(''):'<p class="small muted">Nothing matches.</p>'};
+  const pick=id=>{const o=document.getElementById('ov');if(o)o.remove();go(id)};
+  q.addEventListener('input',()=>{sel=0;draw()});q.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();sel=Math.min(cur.length-1,sel+1);draw()}else if(e.key==='ArrowUp'){e.preventDefault();sel=Math.max(0,sel-1);draw()}else if(e.key==='Enter'&&cur[sel]){e.preventDefault();pick(cur[sel].id)}});
+  L.addEventListener('click',e=>{const b=e.target.closest('[data-gt]');if(b)pick(b.dataset.gt)});draw();q.focus()}
+document.addEventListener('keydown',e=>{const ed=e.target&&(e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName));
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='k'){e.preventDefault();gotoOpen()}else if(e.key==='/'&&!ed&&!e.ctrlKey&&!e.metaKey&&!document.getElementById('ov')){e.preventDefault();gotoOpen()}});
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.ngh');if(!b)return;const g=b.dataset.ng,open=b.getAttribute('aria-expanded')!=='true',st=navState();st[g]=open?1:0;try{localStorage.setItem('scriptdesk.navOpen',JSON.stringify(st))}catch(x){}
   document.querySelectorAll('.ngh').forEach(x=>{if(x.dataset.ng===g)x.setAttribute('aria-expanded',open)});document.querySelectorAll('.ng').forEach(x=>{if(x.dataset.g===g)x.classList.toggle('shut',!open)})});
 /* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
@@ -6434,13 +6466,13 @@ R.home=()=>({html:`<section class="hm"><header class="hm-h"><svg class="hm-logo"
 function sampleHidden(){if(VIEW.hideSample)return true;try{return localStorage.getItem('scriptdesk.hideSample')==='1'}catch(e){return false}}
 function tidyHeads(root){root.querySelectorAll('.ph .grow>p').forEach(p=>{if(p.querySelector('button,a,input,select,textarea')||/^Sign in/.test(p.textContent.trim()))return;const h=p.parentNode.querySelector('h1');const t=p.textContent.replace(/\s+/g,' ').trim();if(h&&t)h.title=t;p.remove()})}
 function render(keepScroll){applySbColors();const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
-  $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();wxApplyView();
+  $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();rememberTab();syncStabs();wxApplyView();
   if(page==='home'){c.innerHTML=R.home().html;lastExp=null;$('#bCur').textContent='Home';syncTabs();syncTop();document.body.dataset.page=page;c.scrollTop=0;return}
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
   syncTop();
   if(!P.scenes.length&&page!=='artists'&&page!=='notes'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
-  c.innerHTML=mergeTabsHtml(page)+lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
+  c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
   hlInit();hlSchedule();hlPanelRender();if(page==='script')fsMount();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 
@@ -6555,7 +6587,8 @@ async function fillProjects(){const box=$('#plist');if(!box)return;const list=aw
 
 /* ================= Actions ================= */
 document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-open]');if(!t)return;
-  if(t.dataset.page){go(t.dataset.page);return}
+  if(t.hasAttribute('data-goto')){gotoOpen();return}
+  if(t.dataset.page){go(t.dataset.sec?secTarget(t.dataset.sec):t.dataset.page);return}
   if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}
   if(t.dataset.x){exportPage(t.dataset.x);return}
   if(t.dataset.delp){e.stopPropagation();if(t.dataset.armed){const id=t.dataset.delp;t.textContent='Deleting…';await deleteProject(id);if(P&&P.id===id)P=null;toast('Project deleted');render();return}t.dataset.armed=1;t.textContent='Confirm delete';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}
@@ -6615,8 +6648,8 @@ $('#bMenu').onclick=()=>$('#msheet').classList.add('open');
 document.addEventListener('click',e=>{const c=e.target.closest('[data-catopen]');if(c&&P)catEdit(c.dataset.catopen)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest&&e.target.closest('[data-catopen]');if(c&&P)catEdit(c.dataset.catopen)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&WXV.focus&&page==='write'&&!$('#ov')){WXV.focus=false;wxSaveView();wxApplyView()}});
-document.querySelectorAll('.bbar .tab[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));
-function syncTabs(){const cur=['write','script','slo','structure'].includes(page)?page:'more';document.querySelectorAll('.bbar .tab').forEach(b=>b.setAttribute('aria-current',String((b.dataset.tab||'more')===cur)));requestAnimationFrame(tabInd)}
+document.querySelectorAll('.bbar .tab[data-tab]').forEach(b=>b.onclick=()=>go(secTarget(b.dataset.tab)));
+function syncTabs(){const sc=sectionOf(page);const cur=sc&&['write','breakdown','plan','shoot'].includes(sc.id)?sc.id:'more';document.querySelectorAll('.bbar .tab').forEach(b=>b.setAttribute('aria-current',String((b.dataset.tab||'more')===cur)));requestAnimationFrame(tabInd)}
 function sheetClose(){const m=$('#msheet');if(!m.classList.contains('open'))return;if(typeof MOTION_OK==='undefined'||!MOTION_OK){m.classList.remove('open');return}m.classList.add('closing');setTimeout(()=>m.classList.remove('open','closing'),240)}
 $('#msheet').onclick=e=>{if(e.target.id==='msheet')sheetClose()};
 $('#bMail').onclick=()=>openMail();$('#bMx').onclick=()=>exportPage('xlsx');$('#bMp').onclick=()=>page==='write'&&P?wrDownload():exportPage('pdf');

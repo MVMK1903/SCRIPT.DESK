@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-I7gT7J8+hrMQhJtD4wOox5RXZ+rwJ0YKWpUlxWf4VJg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-yCPyfwMjf/TxeAc9JWpdfJ0ab9KSqKXNse6QAXC/I6A=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -1993,6 +1993,34 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 .ta-key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;letter-spacing:.08em;padding:10px 12px;border:1px dashed var(--slate);border-radius:8px;margin:6px 0;word-break:break-all;user-select:all}
 .ta-codes{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;line-height:1.7;columns:2;padding:10px 12px;border:1px solid var(--hair,#ffffff1f);border-radius:8px;margin:6px 0;user-select:all}
 .ga-btn.pri{background:var(--slate)!important;color:#1a1306!important;box-shadow:none!important;border:0}
+
+/* ===== Write screen, desktop: paper centred, menu closed, toolbar fixed above the paper, assistant on the right ===== */
+.wr-nav,.wr-ai{display:none}
+@media (min-width:821px){
+ body.wr-write .shell{grid-template-columns:minmax(0,1fr)}
+ body.wr-write .main{grid-column:1}
+ body.wr-write .side{display:none}
+ body.wr-write.wr-menuopen .side{display:flex;position:fixed;left:14px;top:calc(var(--appbar-h) + 6px);bottom:14px;width:var(--side);z-index:60;box-shadow:0 18px 50px rgba(0,0,0,.35);margin:0}
+ body.wr-write .wr{grid-template-columns:minmax(0,1fr) minmax(0,816px) minmax(0,1fr)!important;gap:24px;align-items:start}
+ body.wr-write .wr>.wr-side{display:none;grid-column:1;grid-row:1;justify-self:start;width:min(240px,100%);position:sticky;top:76px}
+ body.wr-write.wr-scenes .wr>.wr-side{display:block}
+ body.wr-write .wr>.wr-main{grid-column:2;grid-row:1}
+ body.wr-write .wr>.wr-ai{display:flex;grid-column:3;grid-row:1;justify-self:end;width:min(300px,100%);position:sticky;top:76px;max-height:calc(100vh - 150px);overflow:auto;flex-direction:column;gap:14px;padding:14px;border-radius:16px;background:var(--bg);border:1px solid rgba(127,127,127,.22);box-shadow:var(--sh-raise-sm);font:13px/1.4 var(--f-ui)}
+ body.wr-write .wr-nav{display:flex;gap:6px;flex:none}
+ body.wr-write .wr-main .wr-bar,body.wr-write .wr .wr-bar{position:sticky!important;top:0!important;z-index:30;background:var(--bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-radius:14px;margin:0 0 14px!important;padding:8px 10px!important;border:1px solid rgba(127,127,127,.25);box-shadow:0 6px 18px rgba(0,0,0,.16)}
+ body.wr-write .wr-bar .wr-stat{margin-left:auto;font-size:11.5px;text-align:right;line-height:1.3}
+ body.wr-write .wc-pill,body.wr-write .wc-panel{display:none}
+ body.wr-write:not(.wr-focus) .content{padding-top:0!important}
+ body.wr-write:not(.wr-focus) .wr{padding-top:14px}
+ body.wr-write .wr>.wr-side,body.wr-write .wr>.wr-ai{top:70px}
+}
+.wr-ai h3{margin:0;font:700 14px/1.2 var(--f-ui)}
+.wa-cur{font-size:12px;color:var(--muted);padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.1);min-height:2.4em;overflow-wrap:anywhere}
+.wa-sec{display:flex;flex-direction:column;gap:8px}.wa-sec>b{font-size:12px;letter-spacing:.04em;color:var(--muted)}
+.wa-btns{display:flex;flex-wrap:wrap;gap:6px}.wa-btns button{border:1px solid rgba(127,127,127,.3);background:transparent;color:inherit;border-radius:99px;padding:6px 11px;font:600 12px var(--f-ui);cursor:pointer}.wa-btns button:hover{border-color:var(--accent);color:var(--accent)}
+.wa-opt{padding:9px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.25);display:flex;flex-direction:column;gap:6px;font-size:13px;overflow-wrap:anywhere}
+.wa-empty{font-size:12.5px;color:var(--muted)}
+body.wr-focus .wr-ai{display:none!important}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -3352,6 +3380,47 @@ async function wcRun(ai){
   finally{WC.busy=false}
   wcRender();
 }
+
+/* ---------- Writing assistant (desktop, right of the paper): suggestions for the page + AI rewrite options for the line you are on ---------- */
+const WRW={sel:null,opts:null,busy:false};
+const RW_MODES=[['fix','Fix grammar'],['short','Shorter'],['vivid','More visual'],['punch','Punchier'],['emo','More emotion']];
+const RW_ASK={fix:'Fix spelling, grammar and punctuation only. Change nothing else.',short:'Make it shorter and tighter.',vivid:'Make it more visual and cinematic: what we see and hear.',punch:'Make it punchier and more natural to say aloud.',emo:'Make the emotion stronger without adding new events.'};
+function wrAIHtml(){return `<aside class="wr-ai" id="wrAI" aria-label="Writing assistant"><h3>Writing assistant</h3><div class="wa-cur" id="wrAIcur">Click a line to work on it.</div><div class="wa-sec"><b>REWRITE THIS LINE</b><div class="wa-btns">${RW_MODES.map(m=>`<button type="button" data-rw="${m[0]}">${m[1]}</button>`).join('')}</div><div id="wrAIout"><div class="wa-empty">Select words to rewrite only those, or leave the cursor in a line to rewrite all of it.</div></div></div><div class="wa-sec"><b>SUGGESTIONS</b><div id="wrAIlist"><div class="wa-empty">Nothing to fix right now.</div></div></div></aside>`}
+function wrAIdesk(){return page==='write'&&matchMedia('(min-width:821px)').matches&&!!$('#wrAI')}
+function wrAIcur(){const el=$('#wrAIcur');if(!el)return;const b=wrCur();if(!b){return}
+  const sel=getSelection();WRW.sel={el:b,text:(!sel.isCollapsed&&b.contains(sel.anchorNode)&&b.contains(sel.focusNode))?String(sel).trim():''};
+  const t=b.textContent.trim();el.textContent=(WT[b.dataset.t]||'Line')+': '+(WRW.sel.text?'“'+WRW.sel.text.slice(0,80)+'” selected':t.slice(0,90)||'(empty)')}
+document.addEventListener('selectionchange',()=>{if(wrAIdesk())wrAIcur()});
+function wrAIlistRender(items){const box=$('#wrAIlist');if(!box)return;
+  if(!WXV.chk){box.innerHTML='<div class="wa-empty">Suggestions are off (Tools → Suggestions).</div>';return}
+  if(!items.length){box.innerHTML='<div class="wa-empty">Nothing to fix right now.</div>';return}
+  box.innerHTML=items.slice(0,30).map((x,i)=>`<div class="wc-item"><div class="wc-txt">${esc(x.from.replace(/ /g,'·'))} → ${esc(x.to.replace(/ /g,'·'))}</div><div class="wc-why">${esc(x.why)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-wc="acc" data-i="${i}">Accept</button><button type="button" data-wc="ign" data-i="${i}">Ignore</button></div></div>`).join('')}
+async function wrRewrite(mode){
+  const out=$('#wrAIout');if(!out||WRW.busy)return;
+  const cur=WRW.sel&&WRW.sel.el&&WRW.sel.el.isConnected?WRW.sel:null;
+  if(!cur){out.innerHTML='<div class="wa-empty">Click inside a line of the script first.</div>';return}
+  const el=cur.el,whole=el.textContent,part=cur.text||whole;
+  if(!part.trim()){out.innerHTML='<div class="wa-empty">That line is empty.</div>';return}
+  if(!AI.sample){out.innerHTML='<div class="wa-empty">Rewrites need an AI service. Open Settings and choose one (free options available). The suggestions above work without it.</div>';return}
+  WRW.busy=true;out.innerHTML='<div class="wa-empty">Thinking…</div>';
+  const kind={a:'action line',d:'dialogue',c:'character name',p:'parenthetical',h:'scene heading',t:'transition',s:'shot'}[el.dataset.t]||'line';
+  try{
+    const r=await ask('You are a film screenplay editor. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Rewrite the '+kind+' below in 3 different ways. '+RW_ASK[mode]+' Keep the writer\'s language, names, places and meaning. Do not translate. Do not add new characters or events. Return JSON: {"options":["...","...","..."]}.\nText:\n'+part,{});
+    const list=(r&&Array.isArray(r.options)?r.options:[]).map(x=>String(x||'').trim()).filter(x=>x&&x!==part.trim()).slice(0,3);
+    WRW.opts={el,part,whole,list};
+    out.innerHTML=list.length?list.map((x,i)=>`<div class="wa-opt"><div>${esc(x)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-rwuse="${i}">Use this</button></div></div>`).join(''):'<div class="wa-empty">No better version found.</div>';
+  }catch(e){out.innerHTML='<div class="wa-empty">'+esc(errMsg(e))+'</div>'}
+  finally{WRW.busy=false}}
+function wrRewriteUse(i){const o=WRW.opts;if(!o||!o.el.isConnected||!o.list[i])return;const text=o.el.textContent,k=text.indexOf(o.part);if(k<0){toast('That line changed. Run the rewrite again.');return}
+  wrPush();const nx=text.slice(0,k)+o.list[i]+text.slice(k+o.part.length);setText(o.el,nx);placeCaret(o.el,k+o.list[i].length);wrTouch(false);WC.el=o.el;wcSchedule(o.el);WRW.opts=null;const out=$('#wrAIout');if(out)out.innerHTML='<div class="wa-empty">Done. Undo with Ctrl+Z.</div>'}
+document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('#wrAI button'))e.preventDefault()});
+document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(!t)return;
+  const rw=t.closest('[data-rw]');if(rw){wrRewrite(rw.dataset.rw);return}
+  const us=t.closest('[data-rwuse]');if(us){wrRewriteUse(+us.dataset.rwuse);return}
+  if(t.closest('#wrMenuBtn')){const o=document.body.classList.toggle('wr-menuopen');t.closest('#wrMenuBtn').setAttribute('aria-expanded',o);return}
+  if(t.closest('#wrScBtn')){const o=document.body.classList.toggle('wr-scenes');t.closest('#wrScBtn').setAttribute('aria-expanded',o);return}
+  if(document.body.classList.contains('wr-menuopen')&&!t.closest('.side'))document.body.classList.remove('wr-menuopen')});
+
 function wcRender(){
   const d=wrDoc(),main=$('#wrMain');if(!d||!main)return;
   d.querySelectorAll('.wc-has').forEach(x=>x.classList.remove('wc-has'));
@@ -3364,6 +3433,7 @@ function wcRender(){
   }
   WC.items=items;
   let p=$('#wcPanel');
+  if(wrAIdesk()){if(p)p.remove();wrAIlistRender(items);return}
   if(!WXV.chk||!items.length){if(p)p.remove();return}
   if(!p){p=document.createElement('div');p.id='wcPanel';main.appendChild(p)}
   const n=items.length,lbl=n+' writing suggestion'+(n===1?'':'s');
@@ -3384,7 +3454,7 @@ function wcAccept(x){
 }
 document.addEventListener('click',e=>{
   if(e.target.closest&&e.target.closest('#wcTog')){WC.open=!WC.open;wcRender();return}
-  const b=e.target.closest&&e.target.closest('#wcPanel [data-wc]');if(!b)return;
+  const b=e.target.closest&&e.target.closest('#wcPanel [data-wc],#wrAI [data-wc]');if(!b)return;
   const x=WC.items[+b.dataset.i];if(!x)return;
   if(b.dataset.wc==='acc')wcAccept(x);else{WC.ign.add(wcKey(x.id,x));wcRender()}
 });
@@ -3408,10 +3478,10 @@ R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
   const unsynced=D.at&&D.at>(D.syncedAt||0)&&hasScript;
   return {html:head+''+
   `<div class="wr"><aside class="wr-side"><div class="seg wx-side-tabs" role="tablist"><button type="button" data-wrside="scenes" aria-pressed="true">Scenes</button><button type="button" data-wrside="notes" aria-pressed="false">Notes</button></div><div id="wrScenes"></div><div id="wrNotes" hidden></div></aside>
-   <div class="wr-main" id="wrMain">${wxToolsHtml()}<div class="wr-bar"><div class="wr-types" role="toolbar" aria-label="Element type">${WKEYS.map((k,i)=>`<button type="button" data-wrt="${k}" aria-pressed="false" title="${WT[k]} (Ctrl+${i+1})">${WT_SHORT[k]}</button>`).join('')}</div>
+   <div class="wr-main" id="wrMain">${wxToolsHtml()}<div class="wr-bar"><div class="wr-nav"><button type="button" class="btn sm" id="wrMenuBtn" aria-expanded="false">☰ Menu</button><button type="button" class="btn sm" id="wrScBtn" aria-expanded="false">Scenes</button></div><div class="wr-types" role="toolbar" aria-label="Element type">${WKEYS.map((k,i)=>`<button type="button" data-wrt="${k}" aria-pressed="false" title="${WT[k]} (Ctrl+${i+1})">${WT_SHORT[k]}</button>`).join('')}</div>
      ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
      <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}${/[\u0600-\u06FF\u0900-\u0DFF]/.test(JSON.stringify(draft().els.slice(0,120)))?' ind':''}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-sheets" id="wrSheets" aria-hidden="true"></div><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
-     <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div></div>`,exp:null}};
+     <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div>${wrAIHtml()}</div>`,exp:null}};
 function wrMount(){const d=wrDoc();if(!d)return;const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
   d.addEventListener('keydown',wrKey);d.addEventListener('input',wrInput);d.addEventListener('paste',wrPaste);
@@ -3550,7 +3620,7 @@ async function wrPdf(opts){opts=opts||{};await loadScript(CDN.jspdf);const {jsPD
 /* ================= Writing tools (v2.1): notes, alternates, dual dialogue, find & replace, stats, sprint, view modes ================= */
 const WXV=(()=>{try{return Object.assign({tw:false,focus:false,mid:false,spell:true,chk:true},JSON.parse(localStorage.getItem('scriptdesk.wrview')||'{}'))}catch(e){return {tw:false,focus:false,mid:false,spell:true,chk:true}}})();
 function wxSaveView(){try{localStorage.setItem('scriptdesk.wrview',JSON.stringify(WXV))}catch(e){}}
-function wxApplyView(){const b=document.body;b.classList.toggle('wr-tw',!!WXV.tw&&page==='write');b.classList.toggle('wr-focus',!!WXV.focus&&page==='write');b.classList.toggle('wr-mid',!!WXV.mid);
+function wxApplyView(){const b=document.body;b.classList.toggle('wr-tw',!!WXV.tw&&page==='write');b.classList.toggle('wr-focus',!!WXV.focus&&page==='write');b.classList.toggle('wr-write',page==='write');if(page!=='write')b.classList.remove('wr-menuopen','wr-scenes');b.classList.toggle('wr-mid',!!WXV.mid);
   const d=wrDoc();if(d)d.setAttribute('spellcheck',WXV.spell?'true':'false');
   document.querySelectorAll('[data-wrx]').forEach(x=>{const k=x.dataset.wrx;if(['tw','focus','mid','spell','chk'].includes(k))x.setAttribute('aria-pressed',WXV[k]?'true':'false')});
   let ex=$('#wxExit');if(WXV.focus&&page==='write'){if(!ex){ex=document.createElement('button');ex.id='wxExit';ex.className='btn sm wx-exit';ex.textContent='Exit focus';ex.onclick=()=>{WXV.focus=false;wxSaveView();wxApplyView()};document.body.appendChild(ex)}}else if(ex)ex.remove()}

@@ -4120,7 +4120,7 @@ async function ttsLoad(){if(TTS.eng)return TTS.eng;if(TTS.loading)return TTS.loa
       try{eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:gpu?'fp32':'q8',device:gpu?'webgpu':'wasm',progress_callback:prog})}
       catch(e){if(!gpu)throw e;eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:'q8',device:'wasm',progress_callback:prog})}
       TTS.eng=eng;TTS.state='ready';TTS.pct=100;ttsStatusShow();return eng}
-    catch(e){TTS.state='error';TTS.raw=String(e&&e.message||e).slice(0,140);TTS.err=/fetch|network|load/i.test(TTS.raw)?'the model could not be downloaded. This page may block it, or you are offline; the installed app and the web app can download it':TTS.raw;TTS.loading=null;ttsStatusShow();throw e}})();
+    catch(e){TTS.state='error';TTS.raw=String(e&&e.message||e).slice(0,140);TTS.err=/fetch|network|load/i.test(TTS.raw)?'the model could not be downloaded. This page may block it, or you are offline; the installed app and the web app can download it':TTS.raw;TTS.loading=null;ttsStatusShow();if(document.getElementById('vpBody'))voiceModal();throw e}})();
   return TTS.loading}
 function ttsAudioCtx(){if(!TTS.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;TTS.ctx=new C()}if(TTS.ctx.state==='suspended')TTS.ctx.resume().catch(()=>{});return TTS.ctx}
 async function ttsSynth(text,voice,speed){const eng=await ttsLoad();const a=await eng.generate(text,{voice,speed:Math.max(.6,Math.min(1.4,speed||1))});
@@ -4131,11 +4131,11 @@ function ttsStop(){try{if(TTS.src){const s=TTS.src;TTS.src=null;s.onended=null;s
 /* device voices, best first: natural/neural/online and premium voices before the robotic ones */
 const VOICE_BAD=/espeak|compact|albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|organ|trinoids|whisper|zarvox|fred|junior|ralph|kathy|princess|superstar|wobble|jester/i;
 function chVoiceScore(v){const n=(v.name||'')+' '+(v.voiceURI||'');let sc=0;if(/natural|neural|online/i.test(n))sc+=5;if(/premium|enhanced|siri/i.test(n))sc+=4;if(/google/i.test(n))sc+=3;if(/microsoft/i.test(n))sc+=1;if(!v.localService)sc+=1;if(VOICE_BAD.test(n))sc-=6;return sc}
-const LANG_OF={telugu:'te',tamil:'ta',hindi:'hi',malayalam:'ml',kannada:'kn'};
+const LANG_OF={tel:'te',tam:'ta',hin:'hi',mal:'ml',kan:'kn'};
 function chVoices(lang){if(!('speechSynthesis' in window))return [];const v=speechSynthesis.getVoices()||[];const pre=new RegExp('^'+(lang||'en'),'i');let pool=v.filter(x=>pre.test(x.lang));if(!pool.length&&!lang)pool=v.slice();
   return pool.map((x,i)=>[x,chVoiceScore(x),i]).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).map(x=>x[0])}
 function VO(){if(!P.voices||typeof P.voices!=='object')P.voices={narrator:'',rate:1,map:{},pitch:{}};P.voices.map=P.voices.map||{};P.voices.pitch=P.voices.pitch||{};if(!P.voices.engine)P.voices.engine='system';if(!P.voices.style)P.voices.style='cinematic';return P.voices}
-function chVoiceFor(name,lang){const V=VO(),vs=chVoices(lang);if(!vs.length)return {voice:null,pitch:1};const pick=uri=>vs.find(v=>v.voiceURI===uri);
+function chVoiceFor(name,lang){const V=VO(),vs=chVoices(lang);if(!vs.length&&!(V.narrator||V.map[name]))return {voice:null,pitch:1};const all=('speechSynthesis' in window)?(speechSynthesis.getVoices()||[]):[];const pick=uri=>uri&&!/^k:/.test(uri)?(vs.find(v=>v.voiceURI===uri)||all.find(v=>v.voiceURI===uri)):null;
   if(!name){return {voice:pick(V.narrator)||vs[0],pitch:1}}let v=pick(V.map[name]);let pitch=V.pitch[name];
   if(!v){const L=chData().list.map(c=>c.name);const k=Math.max(0,L.indexOf(name));const good=vs.filter(x=>chVoiceScore(x)>=2);const pool=good.length>=3?good:vs;v=pool[(k+1)%pool.length];if(pitch==null)pitch=pool.length<4?[1,0.8,1.25,0.9,1.15][k%5]:1}return {voice:v,pitch:pitch==null?1:pitch}}
 function kVoiceFor(who){const V=VO();if(!who)return /^k:/.test(V.narrator)?V.narrator.slice(2):K_NARR;
@@ -4175,7 +4175,7 @@ function raStart(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtte
     else if(t==='a'||t==='s'){raBuild('a',x,'').forEach(it=>{it.el=el;q.push(it)});lastWho=null}
     else if(t==='t'){raBuild('t',x,'').forEach(it=>{it.el=el;q.push(it)});lastWho=null}}
   raRun(q,d.textContent)}
-function raRun(q,sample){if(!q.length){toast('Nothing to read from here.');return}RA.lang='';const sc=typeof scriptsOf==='function'?scriptsOf(sample||''):[];if(sc&&sc.length){const k=sc.find(x=>LANG_OF[String(x).toLowerCase()]);if(k)RA.lang=LANG_OF[String(k).toLowerCase()]}
+function raRun(q,sample){if(!q.length){toast('Nothing to read from here.');return}RA.lang='';const sc=typeof scriptsOf==='function'?scriptsOf(sample||''):[];if(sc&&sc.length){const k=sc.find(x=>LANG_OF[x]);if(k)RA.lang=LANG_OF[k]}
   RA.on=true;RA.q=q;RA.i=0;RA.cache=null;RA.kmap=null;try{speechSynthesis.cancel()}catch(e){}ttsStop();
   if(VO().engine==='natural'&&!RA.lang&&TTS.state==='idle'){toast('Loading the natural voices first. This can take a minute the first time.',6000);ttsLoad().then(()=>{if(RA.on&&RA.i===0&&!RA.started)raNext()}).catch(()=>{if(RA.on&&!RA.started)raNext()});RA.started=false;raSync();return}
   RA.started=false;raNext();raSync()}
@@ -4200,7 +4200,8 @@ function chRename(from){const to=prompt(`Rename ${from} to:`,from);if(!to||!to.t
   D.els.forEach(e=>{if(e.t==='c'&&chNorm(e.x)===from){e.x=String(e.x).replace(new RegExp(from.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i'),nn);n++}else if(e.t==='a'||e.t==='h'){const y=String(e.x).replace(re,(m,a)=>{n++;return a+nn});e.x=y}});
   const V=VO();if(V.map[from]){V.map[nn]=V.map[from];delete V.map[from]}const H=chHl();if(H[from]){H[nn]=H[from];delete H[from];wxSaveView()}
   D.at=Date.now();dirty.draft=true;logChange(`Character ${from} renamed to ${nn} in the script (${n} places)`,'script',true);touch([]);render(true);toast(`${n} places changed. Press "Update breakdown" in the writer to update the reports.`,6000)}
-function voiceSelHtml(name){const V=VO(),nat=V.engine==='natural',vs=chVoices(),cur=name?V.map[name]:V.narrator;
+function natActive(){return VO().engine==='natural'&&TTS.state!=='error'}
+function voiceSelHtml(name){const V=VO(),nat=natActive(),vs=chVoices(),cur=name?V.map[name]:V.narrator;
   return `<select class="mini" data-chv="${esc(name)}" aria-label="Voice for ${esc(name||'narrator')}"><option value="">Automatic</option>${nat?K_VOICES.map(v=>`<option value="k:${v[0]}"${cur==='k:'+v[0]?' selected':''}>${esc(v[1])} · ${esc(v[2])}</option>`).join(''):vs.map(v=>`<option value="${esc(v.voiceURI)}"${cur===v.voiceURI?' selected':''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select>`}
 function voicePanelHtml(){const V=VO(),nat=V.engine==='natural';
   return `<p class="small muted" style="margin:4px 0 10px">Used by "Read aloud" in the writer and in Full script. Natural voices are open source (Kokoro), run on this device and sound like a person; the narrator reads headings and action slowly, with pauses, like a film narration.</p>
@@ -4216,7 +4217,7 @@ function voicePanelMount(c,again){const V=VO();
   const ld=c.querySelector('[data-ttsload]');if(ld)ld.addEventListener('click',()=>{if(TTS.state==='error'){TTS.state='idle';TTS.loading=null}ttsLoad().catch(()=>{})});ttsStatusShow();
   c.querySelectorAll('[data-chtest]').forEach(b=>b.addEventListener('click',async()=>{const n=b.dataset.chtest;const line=n?`Hello. I am ${n.split(' ').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join(' ')}. Listen carefully.`:'The night is quiet. Somewhere, a door creaks open.';
     try{speechSynthesis.cancel()}catch(e){}ttsStop();RA.kmap=RA.kmap||{};
-    if(V.engine==='natural'){try{ttsPlay(await ttsSynth(line,kVoiceFor(n),+V.rate||1))}catch(e){toast('Natural voices are not available yet. Use "Load natural voices" first.',5000)}return}
+    if(natActive()||(V.engine==='natural'&&TTS.state==='idle')){try{ttsPlay(await ttsSynth(line,kVoiceFor(n),+V.rate||1));return}catch(e){toast('Natural voices are not available, so this device voice is used.',4000)}}
     if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(line);const vp=chVoiceFor(n);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+V.rate||1;speechSynthesis.speak(u)}))}
 function voiceCharsHtml(){const L=(typeof chData==='function'?chData().list:[]).slice(0,30);if(!L.length)return '';return `<h3 style="margin:16px 0 6px;font-size:14px">Voice for each character</h3><p class="small muted" style="margin:0 0 8px">Automatic gives every character a different voice.</p><div style="display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;max-height:240px;overflow:auto">${L.map(c=>`<b class="small">${esc(c.name)}</b><span>${voiceSelHtml(c.name)} <button class="btn sm ghost" data-chtest="${esc(c.name)}">Test</button></span>`).join('')}</div>`}
 function voiceModal(){openModal(`<div class="modal-h"><h2>Read-aloud voices</h2></div><div class="modal-b" id="vpBody">${voicePanelHtml()}${voiceCharsHtml()}</div><div class="modal-f"><button class="btn pri" data-vpclose>Done</button></div>`);

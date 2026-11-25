@@ -2096,6 +2096,80 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 .navgo{display:flex!important;align-items:center;justify-content:space-between;width:100%;margin:0 0 8px;padding:9px 12px;border:1px solid var(--line,rgba(128,128,128,.3));border-radius:12px;background:transparent;color:var(--muted);font:inherit;cursor:pointer}
 .navgo:hover{color:var(--fg)}
 .navgo kbd{font:600 11px/1 inherit;padding:3px 6px;border:1px solid var(--line,rgba(128,128,128,.3));border-radius:6px;color:var(--muted)}
+/* compact header: tabs and "Last change" share one row; less space above every page */
+.top{row-gap:4px}
+.top-r2{flex:1 1 100%;display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;min-width:0;order:9;position:relative}
+.top-r2:not(:has(.mtabs,.lastnote:not([hidden]),#pageActs>*)){display:none}
+.stabs{padding:0!important;margin:0;flex:0 1 auto;min-width:0;background:none!important}
+.stabs[hidden]{display:none}
+.mtabs{padding:2px;margin:0;border-radius:10px}
+.mtabs button{padding:6px 12px;font-size:12.5px}
+#lnSlot{margin-left:auto;min-width:0}
+#lnSlot:empty{display:none}
+#lnSlot .lastnote{padding:0!important;margin:0!important;background:none!important;box-shadow:none!important;font-size:12px}
+.content{padding-top:14px!important}
+.ph{margin-bottom:14px}
+@media (min-width:1321px){:root:root .top .top-r2{flex:1 1 auto;order:1;margin-left:8px}
+  :root:root .top:has(#pageActs>*){flex-wrap:wrap!important}
+  :root:root .top:has(#pageActs>*) .top-r2{flex:1 1 100%;order:9;margin-left:0}}
+#lnSlot .lastnote.open{position:absolute;right:0;top:100%;margin-top:6px!important;z-index:60;background:var(--bg-2,var(--bg))!important;border:1px solid var(--line,rgba(128,128,128,.3))!important;border-radius:12px;padding:10px 14px!important;box-shadow:0 14px 34px rgba(0,0,0,.4)!important;width:min(640px,92%);flex-wrap:wrap}
+#pageActs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#pageActs:empty{display:none}
+#pageActs .acts{display:flex;gap:8px;flex-wrap:wrap}
+@media (min-width:821px){
+  body[data-page="write"] .wx-tools{margin-bottom:0;padding:4px 6px;flex-wrap:wrap;overflow:visible}
+  .wx-viewrow{flex:1 1 100%;display:flex;gap:2px;margin-top:2px;padding-top:4px;border-top:1px solid var(--line,rgba(128,128,128,.25))}
+  .wx-viewrow[hidden]{display:none}
+  body[data-page="write"] .wr-bar{padding-top:6px;padding-bottom:6px}
+  .wr-stat br{display:none}
+  .wr-stat #wrSaved::before{content:" · "}
+  .wr-bar .wr-stat{flex:1 1 auto;white-space:nowrap;margin-top:-6px;line-height:1.2}
+  body[data-page="write"] .wr-bar{gap:6px 8px}
+  body[data-page="write"] .wr-bar select{width:auto;max-width:122px}
+  :root:root body[data-page="write"] .wx-tools{border:1px solid var(--line,rgba(128,128,128,.28))!important;border-bottom:0!important;border-radius:12px 12px 0 0!important;background:var(--bg-2,var(--bg))!important;padding:4px 8px}
+  :root:root body[data-page="write"] .wr-bar{border:1px solid var(--line,rgba(128,128,128,.28))!important;border-radius:0 0 12px 12px!important;background:var(--bg-2,var(--bg))!important;box-shadow:none!important;padding:6px 10px 8px!important;margin-top:0}
+}
+/* Home dashboard */
+.hx{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.hx-h{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.hx-eye{margin:0 0 4px;font:600 12px/1 inherit;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.hx h1{margin:0;font:800 34px/1.1 var(--f-display);letter-spacing:-.03em}
+.hx-sub{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.hx-top{display:flex;gap:8px;flex-wrap:wrap}
+.hx-goto{display:inline-flex;align-items:center;gap:14px;min-width:260px;justify-content:space-between;color:var(--muted)}
+.hx-goto kbd,.navgo kbd{font:600 11px/1 inherit}
+.hx-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.hx-stat{padding:14px 16px;border:1px solid var(--line,rgba(128,128,128,.25));border-radius:14px;background:var(--bg-2,var(--bg))}
+.hx-stat b{display:block;font:800 26px/1.1 var(--f-display);letter-spacing:-.02em}
+.hx-stat span{font-size:12px;color:var(--muted)}
+.hx-cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+.hx-card{padding:16px 18px;border:1px solid var(--line,rgba(128,128,128,.25));border-radius:16px;background:var(--bg-2,var(--bg));display:flex;flex-direction:column;gap:10px}
+.hx-ch{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.hx-card h2,.hx-h2{margin:0;font:700 15px/1.2 var(--f-display)}
+.hx-h2{margin-top:4px}
+.hx-prog{font-size:12px;color:var(--muted)}
+.hx-bar{height:5px;border-radius:5px;background:var(--line,rgba(128,128,128,.25));overflow:hidden}
+.hx-bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.hx-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.hx-steps li{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line,rgba(128,128,128,.2))}
+.hx-steps li:first-child{border-top:0}
+.hx-tick{flex:0 0 22px;height:22px;border-radius:50%;border:1.5px solid var(--line,rgba(128,128,128,.5));display:grid;place-items:center;font-size:12px;color:#1a1612}
+.hx-steps li.ok .hx-tick{background:var(--accent);border-color:var(--accent)}
+.hx-st{flex:1;min-width:0;display:flex;flex-direction:column}
+.hx-st b{font-size:13.5px}.hx-st small,.hx-resume small{color:var(--muted);font-size:12px}
+.hx-steps li.ok .hx-st b{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(128,128,128,.5)}
+.hx-resume{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:12px 14px;border:1px solid var(--line,rgba(128,128,128,.3));border-radius:12px;background:transparent;color:var(--fg);font:inherit;cursor:pointer}
+.hx-resume:hover{border-color:var(--accent)}
+.hx-resume span:first-child{display:flex;flex-direction:column}
+.hx-chg{margin:0;font-size:12.5px;color:var(--muted)}.hx-chg b{color:var(--fg)}.hx-chg .when{color:var(--accent);font-weight:600}
+.hx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.hx-tile{padding:14px;border:1px solid var(--line,rgba(128,128,128,.25));border-radius:16px;background:var(--bg-2,var(--bg));display:flex;flex-direction:column;gap:10px}
+.hx-th{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--fg);font:inherit;cursor:pointer;padding:0}
+.hx-th span{display:flex;flex-direction:column;gap:2px}.hx-th b{font-size:15px}.hx-th small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.hx-chips{display:flex;gap:6px;flex-wrap:wrap}
+.hx-chips button{border:1px solid var(--line,rgba(128,128,128,.3));background:transparent;color:var(--muted);padding:5px 10px;border-radius:999px;font:600 12px/1 inherit;font-family:inherit;cursor:pointer}
+.hx-chips button:hover{color:var(--fg);border-color:var(--accent)}
+@media (max-width:820px){.hx h1{font-size:26px}.hx-cols{grid-template-columns:1fr}.hx-goto{min-width:0;flex:1}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -2127,8 +2201,8 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
         <button class="btn sm i-excel mob-only" data-ic id="bMx" aria-label="Export Excel" title="Export Excel">Excel</button><button class="btn sm i-pdf mob-only" data-ic id="bMp" aria-label="Export PDF" title="Export PDF">PDF</button><button class="btn sm i-mail" data-ic id="bMail" aria-label="Email a report" title="Email a report">Email</button><button class="btn sm i-download" data-ic id="bAll" aria-label="Download all" title="Download all">Download all</button>
         <button class="btn sm pri i-run" data-ic id="bRun">Run AI breakdown</button>
       </div>
+      <div class="top-r2" id="topR2"><div class="stabs" id="stabs" hidden></div><div id="lnSlot"></div><div id="pageActs"></div></div>
     </header>
-    <div class="stabs" id="stabs" hidden></div>
     <main class="content" id="content"></main>
   </div>
 </div>
@@ -3030,6 +3104,8 @@ function showSaved(pages){const el=$('#savedPill');const names=pages.map(id=>PG[
   el.hidden=false;const br=document.querySelector('.brand');if(br){br.classList.remove('clap');void br.offsetWidth;br.classList.add('clap')}clearTimeout(showSaved.t);showSaved.t=setTimeout(()=>{el.hidden=true},4200)}
 function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];const o=!!VIEW.lnOpen;return `<div class="lastnote${o?' open':''}" id="lastNote"${c?'':' hidden'}>${c?`<button class="ln-t" data-lnt aria-expanded="${o}" title="${o?'Hide':'Show'} the last change"><i class="ln-clap" aria-hidden="true"></i><span class="ln-lab">Last change</span><span class="ln-chev" aria-hidden="true">${o?'\u2039':'\u203a'}</span></button><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ln-h" data-act="history" title="See every change">History<em>${P.changes.length}</em></button>`:''}</div>`}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-lnt]'))return;VIEW.lnOpen=!VIEW.lnOpen;renderLastNote()});
+function syncLn(){const sl=document.getElementById('lnSlot');if(sl)sl.innerHTML=(P&&page!=='home'&&page!=='projects')?lastNoteHtml():'';const pa=document.getElementById('pageActs');if(pa)pa.innerHTML=''}
+function liftActs(c){if(page!=='write'||!window.matchMedia('(min-width:821px)').matches)return;const pa=document.getElementById('pageActs'),ph=c.querySelector('.ph');if(!pa||!ph)return;const a=ph.querySelector('.acts');if(a)pa.appendChild(a);ph.remove()}
 function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml()}
 function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b">${(P.lessons||[]).length?`<details class="sset"><summary>Learned from your edits (${P.lessons.length})</summary><p class="small muted" style="margin:6px 0">The AI follows these in every scene it reads for this film.</p><ul class="small" style="margin:0 0 8px;padding-left:18px">${P.lessons.map(l=>`<li>${esc(LISTS[l.k])}: ${l.to?`"${esc(l.from)}" is written as "${esc(l.to)}"`:`"${esc(l.from)}" is never listed`}</li>`).join('')}</ul><button class="btn sm" data-act="forgetLessons">Forget all of these</button></details>`:''}<p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
@@ -3633,9 +3709,10 @@ R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
      ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
      <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}${/[\u0600-\u06FF\u0900-\u0DFF]/.test(JSON.stringify(draft().els.slice(0,120)))?' ind':''}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-sheets" id="wrSheets" aria-hidden="true"></div><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
      <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div>${wrAIHtml()}</div>`,exp:null}};
+function wxViewRestore(){try{if(localStorage.getItem('scriptdesk.wxView')==='1'){const b=document.querySelector('[data-wxview]');if(b)b.click()}}catch(e){}}
 function wxSetH(){const t=document.querySelector('.wr-main .wx-tools');if(t)document.documentElement.style.setProperty('--wxh',t.offsetHeight+'px')}
 window.addEventListener('resize',()=>{if(typeof page!=='undefined'&&page==='write')wxSetH()});
-function wrMount(){const d=wrDoc();if(!d)return;wxSetH();setTimeout(wxSetH,300);const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
+function wrMount(){const d=wrDoc();if(!d)return;wxViewRestore();wxSetH();setTimeout(wxSetH,300);const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
   d.addEventListener('keydown',wrKey);d.addEventListener('input',wrInput);d.addEventListener('paste',wrPaste);
   d.addEventListener('blur',()=>{setTimeout(hideAC,120);clearTimeout(WR.saveT);wrSave()});
@@ -4045,7 +4122,9 @@ function wxNotesList(){const d=wrDoc();const box=$('#wrNotes');if(!d||!box)retur
 function wxTool(k){if(k==='book'){wrSave();return bookOpen()}if(k==='hl')return chHlModal();if(k==='rev')return revModal();if(k==='omit')return wxOmit();if(k==='note')return wxNote();if(k==='alt')return wxAlt();if(k==='dual')return wxDual();if(k==='find')return wxFind(true);if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
   if(['tw','focus','mid','spell','chk','aichk'].includes(k)){WXV[k]=!WXV[k];wxSaveView();wxApplyView();if(k==='tw'&&WXV.tw)setTimeout(wxTypewriter,50);if(k==='chk')wcRender();if(k==='focus'&&WXV.focus)toast('Focus mode. Press Esc or "Exit focus" to leave.');const d=wrDoc();d&&d.focus({preventScroll:true})}}
 const WX_TOOLS=[['note','Note','Add a note to this line (Ctrl+Shift+N)'],['alt','Alternates','Keep other versions of this line'],['dual','Dual','Two characters speak at the same time'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark this scene OMITTED or restore it'],['hl','Highlight','Colour a character\'s dialogue'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find and replace (Ctrl+F)'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint'],['tw','Typewriter','Keep the line you type at the same height'],['focus','Focus','Hide everything but the page'],['mid','Midnight','Dark page for night writing'],['spell','Spelling','Underline spelling mistakes'],['aichk','AI check as I type','Ask your AI to check each line after you pause (uses your AI credit). Off: use the Check with AI button'],['chk','Suggestions','Writing suggestions after a pause: spacing, punctuation, capitals, grammar and sentences']];
-function wxToolsHtml(){return `<div class="wx-tools" role="toolbar" aria-label="Writing tools"><span class="wx-revchip" id="wxRev" hidden></span>${WX_TOOLS.map(([k,l,t],i)=>`${k==='tw'?'<span class="wx-sep" aria-hidden="true"></span>':''}<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell','chk'].includes(k)?' aria-pressed="false"':''}>${l}</button>`).join('')}</div>`}
+function wxToolsHtml(){const TOG=['tw','focus','mid','spell','aichk','chk'];const btn=([k,l,t])=>`<button type="button" class="wx-b" data-wrx="${k}" title="${esc(t)}"${['tw','focus','mid','spell','chk'].includes(k)?' aria-pressed="false"':''}>${l}</button>`;
+  return `<div class="wx-tools" role="toolbar" aria-label="Writing tools"><span class="wx-revchip" id="wxRev" hidden></span>${WX_TOOLS.filter(t=>!TOG.includes(t[0])).map(btn).join('')}<span class="wx-sep" aria-hidden="true"></span><button type="button" class="wx-b wx-viewb" data-wxview aria-expanded="false" title="Typewriter, focus, midnight, spelling and suggestion options">View ▾</button><div class="wx-viewrow" hidden>${WX_TOOLS.filter(t=>TOG.includes(t[0])).map(btn).join('')}</div></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-wxview]');if(!b)return;const row=b.parentNode.querySelector('.wx-viewrow');if(!row)return;row.hidden=!row.hidden;b.setAttribute('aria-expanded',String(!row.hidden));try{localStorage.setItem('scriptdesk.wxView',row.hidden?'0':'1')}catch(x){}wxSetH()});
 
 
 /* ================= Production revisions (v2.2): revision sets, marks, locked pages, A-pages, omitted scenes ================= */
@@ -6002,7 +6081,7 @@ const SECTIONS=[
 const sectionOf=id=>SECTIONS.find(m=>m.tabs.some(t=>t[0]===id)||(m.extra||[]).includes(id));
 const secTabs=m=>m.tabs.filter(t=>{const g=PG[t[0]];return g&&!(g.hide&&g.hide())});
 function lastTabs(){try{return JSON.parse(localStorage.getItem('scriptdesk.lastTab')||'{}')||{}}catch(e){return {}}}
-function rememberTab(){const m=sectionOf(page);if(!m)return;const o=lastTabs();if(o[m.id]===page)return;o[m.id]=page;try{localStorage.setItem('scriptdesk.lastTab',JSON.stringify(o))}catch(e){}}
+function rememberTab(){const m=sectionOf(page);if(!m)return;if(P&&page!=='home'&&page!=='tasks'){try{localStorage.setItem('scriptdesk.lastPage',page)}catch(e){}}const o=lastTabs();if(o[m.id]===page)return;o[m.id]=page;try{localStorage.setItem('scriptdesk.lastTab',JSON.stringify(o))}catch(e){}}
 function secTarget(sid){const m=SECTIONS.find(x=>x.id===sid);if(!m)return sid;const tabs=secTabs(m);if(sectionOf(page)===m)return page;const last=lastTabs()[m.id];return tabs.some(t=>t[0]===last)?last:(tabs[0]||m.tabs[0])[0]}
 function syncStabs(){const el=document.getElementById('stabs');if(!el)return;const m=P?sectionOf(page):null;const tabs=m?secTabs(m):[];
   if(!m||tabs.length<2){el.hidden=true;el.innerHTML='';return}
@@ -6442,20 +6521,43 @@ const HOME_ITEMS=[
  {k:'sloLoc',go:'sloLoc',t:'Location-wise order',s:'The same scenes grouped by location, so one place is shot in one go.',d:['Scenes for each location sit together in script order.','Merge locations that are spelled differently.','Exterior and interior, day and night, at a glance.']},
  {k:'profiles',go:'profiles',t:'Character profiles',s:'Who each character is and how they change through the film.',d:['AI reads the whole script and writes a description for every artist.','Each profile shows where the character starts, the turning points and where they end.','Everything stays editable.']},
  {k:'structure',go:'structure',t:'Story structure',s:'See the shape of the story and where each scene sits in it.',d:['Three-act structure with a story arc showing how tension rises to the climax.','Acts and beats laid out in order.','Click a stage to edit it.']}];
-R.home=()=>({html:`<section class="hm"><header class="hm-h"><svg class="hm-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></svg><h1>Script<span>Desk</span></h1><button class="btn pri" data-page="projects">Open my projects</button></header>`+
-  HOME_ITEMS.map(f=>`<article class="hm-f"><figure class="hm-pic"><div class="hm-bar" aria-hidden="true"><i></i><i></i><i></i></div><img src="${HOME_IMG[f.k]||''}" width="900" height="531" loading="lazy" alt="${esc(f.t)} in ScriptDesk, shown with a sample film"></figure><div class="hm-t"><h2>${esc(f.t)}</h2><p class="hm-s">${esc(f.s)}</p><ul>${f.d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button class="btn sm" data-page="${f.go}">Open ${esc(f.t)}</button></div></article>`).join('')+`</section>`,exp:null});
+function homeWelcome(){return ({html:`<section class="hm"><header class="hm-h"><svg class="hm-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></svg><h1>Script<span>Desk</span></h1><button class="btn pri" data-page="projects">Open my projects</button></header>`+
+  HOME_ITEMS.map(f=>`<article class="hm-f"><figure class="hm-pic"><div class="hm-bar" aria-hidden="true"><i></i><i></i><i></i></div><img src="${HOME_IMG[f.k]||''}" width="900" height="531" loading="lazy" alt="${esc(f.t)} in ScriptDesk, shown with a sample film"></figure><div class="hm-t"><h2>${esc(f.t)}</h2><p class="hm-s">${esc(f.s)}</p><ul>${f.d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button class="btn sm" data-page="${f.go}">Open ${esc(f.t)}</button></div></article>`).join('')+`</section>`,exp:null})}
+const HOME_DESC={write:'Write and revise the script. Read it as a book or in full.',story:'Beat board, outline and story structure.',cast:'Characters, artists and casting.',breakdown:'Scene-wise cast, costumes, props, art and continuity.',locations:'Every location and the scenes in it.',slo:'Every scene on one line, in the order you shoot.',plan:'Shots, storyboard, schedule and stripboard.',shoot:'Call sheets, day readiness and actor sides.',budget:'Union rates and the film budget.'};
+function homeData(){const n=P.scenes.length;let pg=0;try{pg=P.scenes.reduce((a,x)=>a+pgE(x),0)}catch(e){}
+  const hasBd=P.scenes.some(x=>['props','costumes','art','makeup','vehicles','animals','vfx','sfx'].some(k=>(x[k]||[]).length));
+  let locked=0,roles=0;try{roles=chData().list.length;locked=Object.values(P.casting||{}).filter(c=>c&&/lock|confirm/i.test(c.status||'')).length}catch(e){}
+  let days=0;try{days=(SCH().days||[]).length}catch(e){}
+  return {n,pg,hasBd,locked,roles,days,arts:(P.artists||[]).length,locs:new Set(P.scenes.map(x=>x.loc).filter(Boolean)).size}}
+function homeDash(){const d=homeData();const last=(()=>{try{return localStorage.getItem('scriptdesk.lastPage')}catch(e){return null}})();const ch=P.changes&&P.changes[0];
+  const steps=[
+   {ok:d.n>0,t:'Write or import your script',s:d.n?d.n+' scenes':'Start in the writer or import a script file',b:d.n?'Open writer':'Open writer',go:'write'},
+   {ok:d.hasBd,t:'Run the AI breakdown',s:'Cast, props, costumes and locations for every scene',b:'Run breakdown',run:1,off:!d.n},
+   {ok:d.roles>0&&d.locked===d.roles,t:'Cast your roles',s:d.roles?d.locked+' of '+d.roles+' roles locked':'Roles appear once the script has dialogue',b:'Open casting',go:'casting',off:!d.n},
+   {ok:d.days>0,t:'Plan the shooting schedule',s:d.days?d.days+' shoot days planned':'Place scenes on shoot days',b:'Open schedule',go:'sched',off:!d.n}];
+  const done=steps.filter(x=>x.ok).length;
+  const stat=(k,v)=>`<div class="hx-stat"><b>${esc(String(v))}</b><span>${esc(k)}</span></div>`;
+  const tile=m=>{const tabs=secTabs(m);if(!tabs.length)return '';const head=tabs[0][0];return `<article class="hx-tile"><button type="button" class="hx-th" data-page="${esc(head)}" data-sec="${m.id}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span><b>${esc(m.label)}</b><small>${esc(HOME_DESC[m.id]||'')}</small></span></button>${tabs.length>1?`<div class="hx-chips">${tabs.map(t=>`<button type="button" data-mtab="${t[0]}">${esc(t[1])}</button>`).join('')}</div>`:''}</article>`};
+  return {html:`<section class="hx"><header class="hx-h"><div><p class="hx-eye">${esc(P.production||'Your film')}</p><h1>${(h=>h<12?'Good morning':h<17?'Good afternoon':'Good evening')(new Date().getHours())}</h1><p class="hx-sub">Here is where <b>${esc(P.title||'your film')}</b> stands.</p></div><div class="hx-top"><button type="button" class="btn hx-goto" data-goto><span>Go to any page…</span><kbd>Ctrl K</kbd></button><button class="btn" data-page="projects">My projects</button></div></header>
+   <div class="hx-stats">${stat('Scenes',d.n)}${stat('Pages',(Math.round(d.pg/8*10)/10).toString())}${stat('Artists',d.arts)}${stat('Locations',d.locs)}${stat('Shoot days',d.days)}</div>
+   <div class="hx-cols"><div class="hx-card"><div class="hx-ch"><h2>Next steps</h2><span class="hx-prog">${done} of ${steps.length} done</span></div><div class="hx-bar" aria-hidden="true"><i style="width:${Math.round(done/steps.length*100)}%"></i></div>
+     <ul class="hx-steps">${steps.map(x=>`<li class="${x.ok?'ok':''}"><span class="hx-tick" aria-hidden="true">${x.ok?'✓':''}</span><span class="hx-st"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span>${x.ok?'':`<button class="btn sm${x.run?' pri':''}"${x.off?' disabled':''} ${x.run?'data-hx="run"':`data-page="${x.go}"`}>${esc(x.b)}</button>`}</li>`).join('')}</ul></div>
+    <div class="hx-card"><div class="hx-ch"><h2>Pick up where you left off</h2></div>${last&&PG[last]&&last!=='home'?`<button type="button" class="hx-resume" data-mtab="${esc(last)}"><span><b>${esc(PG[last].t)}</b><small>${esc((sectionOf(last)||{}).label||'')}</small></span><span aria-hidden="true">›</span></button>`:`<p class="hx-sub">Open any stage below to begin.</p>`}
+     ${ch?`<p class="hx-chg"><span class="when">${esc(fmtWhen(ch.at))}</span> <b>${esc(ch.sheet)}</b> ${esc(ch.what)}</p><button class="btn sm ghost" data-act="history">All changes</button>`:''}</div></div>
+   <h2 class="hx-h2">Your workspace</h2><div class="hx-grid">${SECTIONS.filter(m=>m.id!=='home').map(tile).join('')}</div></section>`,exp:null}}
+R.home=()=>P?homeDash():homeWelcome();
 function sampleHidden(){if(VIEW.hideSample)return true;try{return localStorage.getItem('scriptdesk.hideSample')==='1'}catch(e){return false}}
 function tidyHeads(root){root.querySelectorAll('.ph .grow>p').forEach(p=>{if(p.querySelector('button,a,input,select,textarea')||/^Sign in/.test(p.textContent.trim()))return;const h=p.parentNode.querySelector('h1');const t=p.textContent.replace(/\s+/g,' ').trim();if(h&&t)h.title=t;p.remove()})}
 function render(keepScroll){applySbColors();const c=$('#content');const ae=document.activeElement;if(ae&&c.contains(ae)&&(ae.isContentEditable||ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&ae.id!=='q'))){needsRender=true;return}const st=keepScroll?c.scrollTop:0;
-  $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();rememberTab();syncStabs();wxApplyView();
+  $('#nav').innerHTML=navHtml();$('#nav2').innerHTML=navHtml();rememberTab();syncStabs();syncLn();wxApplyView();
   if(page==='home'){c.innerHTML=R.home().html;lastExp=null;$('#bCur').textContent='Home';syncTabs();syncTop();document.body.dataset.page=page;c.scrollTop=0;return}
   if(!P||page==='projects'){const r=R.projects();c.innerHTML=r.html;lastExp=null;fillProjects();$('#bCur').textContent='Projects';syncTabs();syncTop();return}
   syncTop();
   if(!P.scenes.length&&page!=='artists'&&page!=='notes'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
-  c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
+  c.innerHTML=(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  hlInit();hlSchedule();hlPanelRender();if(page==='script')fsMount();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  hlInit();hlSchedule();hlPanelRender();if(page==='script')fsMount();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';liftActs(c);tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 
 /* ===== colour highlights: whole type (all characters, all props...) or one item, in every view ===== */
 const HL_COLS=[['Yellow','#ffe14d'],['Orange','#ffab5e'],['Pink','#ff8fb8'],['Red','#ff7a7a'],['Purple','#c59bff'],['Blue','#7cc0ff'],['Teal','#5fe0d2'],['Green','#8fe07a']];
@@ -6568,6 +6670,7 @@ async function fillProjects(){const box=$('#plist');if(!box)return;const list=aw
 
 /* ================= Actions ================= */
 document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-open]');if(!t)return;
+  if(t.dataset.hx==='run'){const r=document.getElementById('bRun');if(r&&!r.disabled)r.click();return}
   if(t.hasAttribute('data-goto')){gotoOpen();return}
   if(t.dataset.page){go(t.dataset.sec?secTarget(t.dataset.sec):t.dataset.page);return}
   if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}

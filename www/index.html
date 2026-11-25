@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-80mvWIFbUsIGUAfsEGAfZ4dLulehgf2yQmYHfXThIDk=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-SmoT0gVQ82Y8mq2vdxCDDcwNo+Vgzm3ZhzXsfrqnp24=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2689,7 +2689,7 @@ ${wins[k].join('\n')}`,{modelTier:'default'});
 function outline(){return P.scenes.map(s=>`Sc ${s.no} | ${eff(s)} | ${s.loc}${s.timeline?' | '+s.timeline:''} | ${s.artists.map(aName).join(', ')} | ${s.desc}`).join('\n')}
 async function aiProfiles(onlyId){const prim=P.artists.filter(a=>a.tier==='Primary'&&(!onlyId||a.id===onlyId));if(!prim.length)throw new Error('Mark at least one artist as Primary in No. of artists first.');
   const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(150000,aiBudget()*0.6));
-  const r=await ask(`You are a script consultant. Read this whole screenplay (it may be in Telugu, Tinglish, English or another language) and write CHARACTER PROFILES in clear English for these primary characters: ${prim.map(a=>a.name+(a.designation?' ('+a.designation+')':'')).join(', ')}.
+  const r=await ask(`You are a script consultant. Read this whole screenplay (it may be in Telugu, Tinglish, English or another language) and write CHARACTER PROFILES in clear English, in the style of a working screenwriter's character notes (lead with age and one visible detail; show what the character wants versus what they need, their flaw, and how they speak; only things the camera or microphone could show, no vague adjectives; third person, present tense) for these primary characters: ${prim.map(a=>a.name+(a.designation?' ('+a.designation+')':'')).join(', ')}.
 For each character:
 - description: 3-5 sentences — age, look, background, personality, as the script shows them.
 - arc_start: where they begin (1-2 sentences). arc_turns: 3-5 turning points in story order, each one sentence, with NO scene numbers. arc_end: where they end up (1-2 sentences). If the script seems incomplete, say where they stand at the last scene.
@@ -2786,7 +2786,7 @@ function devicesExp(){const D=P.devices;if(!D)return [];return [{group:'Story de
   ...(D.checks.length?[{group:'Craft notes'},...D.checks.map(c=>[(KB_BY[c.id]||{name:'Note'}).name,c.scenes,c.note+(c.fix?' Try: '+c.fix:'')])]:[]),
   ...(D.items.length?[{group:'Story-critical items'},...D.items.map(i=>[i.item,i.scenes,i.why])]:[])]}
 async function aiStructure(){const scr=cutBytes(P.scenes.map(s=>'SCENE '+s.no+' '+eff(s)+' '+s.loc+'\n'+s.text).join('\n\n'),Math.min(120000,aiBudget()*0.6));
-  const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), the Indian two-half structure built around an interval block, Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several.
+  const r=await ask(`You are a story analyst. Identify the NARRATIVE STRUCTURE of this screenplay (it may be in Telugu, Tinglish, English or another language). Consider: Three-Act, Five-Act (Freytag), Hero's Journey, Save the Cat (15 beats), the Indian two-half structure built around an interval block, Kishotenketsu, Real-Time, Non-Linear, Reverse Chronological, Rashomon / multiple viewpoint, Hyperlink / ensemble, Circular. Scripts can combine several. Judge it the way readers of produced screenplays do: find the inciting incident, the end of the first act, the midpoint or interval, the lowest point and the climax, and say which scenes they are.
 Return in clear English:
 - main: the main structure. also: other structures it uses (may be empty). why: 2-4 sentences explaining the choice in simple words.
 - parts: the acts or beats of the MAIN structure in order, each {"name":"Act I – Setup","summary":"what happens, 1-3 sentences","scenes":"e.g. Sc 2–14"}. Use scene numbers from the outline.
@@ -3353,8 +3353,23 @@ function wrKey(e){const b=wrCur();if(!b)return;const mod=e.ctrlKey||e.metaKey;
 
 /* ---------- Writing suggestions: spacing, punctuation, capitals, grammar, sentences. Appear after a pause, never as a popup while typing ---------- */
 const WC={t:0,ta:0,el:null,rule:{},ai:{},aiTxt:{},busy:false,ign:new Set(),open:false,items:[]};
-function wcRules(text,action){
+/* Screenplay house style. Numbers come from reading 12 produced and draft scripts (English, Telugu, Hindi): action paragraphs have a median of 7 to 19 words and a 90th percentile of 15 to 34; speeches a median of 5 to 11 words and a 90th percentile of 16 to 36; parentheticals 1 to 4 words; present tense throughout. "We see" does appear (Goodfellas uses it in about 30% of action paragraphs, most scripts in under 2%), so it is not flagged. 1% of paragraphs run past 60 words and 1% of speeches past 80. */
+const STYLE_GUIDE=`House style of professional screenplays: present tense. Action paragraphs are one to three short sentences, usually 10 to 25 words and never more than about 40; one picture per line; show what we see and hear (behaviour, sound, objects), not thoughts or feelings the camera cannot film; prefer describing the picture directly over "we see" and "we hear"; camera directions only when needed. Dialogue speeches are usually 5 to 15 words, people interrupt each other, say less than they mean, and sound like real speech. Parentheticals are rare and 1 to 4 words. Character names in capitals above their lines, with extensions V.O., O.S. or CONT'D. Transitions only when needed (CUT TO:, DISSOLVE TO:, FADE IN:, FADE OUT.). Scene headings: INT. or EXT., place, then time (DAY, NIGHT, MORNING, EVENING, CONTINUOUS).`;
+const WC_ACT_MAX=60,WC_DLG_MAX=80,WC_PAR_MAX=6;
+const WC_PAST=/\b(walked|looked|opened|turned|stood|sat|said|went|came|took|smiled|nodded|ran|moved|stared|was|were|had)\b/gi,WC_PRES=/\b(walks|looks|opens|turns|stands|sits|says|goes|comes|takes|smiles|nods|runs|moves|stares|is|are|has)\b/gi;
+const WC_TIME=/\b(DAY|NIGHT|MORNING|EVENING|DAWN|DUSK|AFTERNOON|CONTINUOUS|LATER|SUNSET|SUNRISE|MIDNIGHT|NOON|MOMENTS|SAME|CONT'D|CONTD)\b/i;
+const WC_EXT={"CONTD":"CONT'D","CONT":"CONT'D","CONT’D":"CONT'D","CONT'D":"CONT'D","OS":"O.S.","O.S":"O.S.","O.S.":"O.S.","VO":"V.O.","V.O":"V.O.","V.O.":"V.O."};
+function wcStyle(text,type){const out=[],note=why=>out.push({kind:'note',from:'',to:'',why}),w=text.trim().split(/\s+/).filter(Boolean).length;
+  if(type==='a'){
+    if(w>WC_ACT_MAX)note('Long action paragraph ('+w+' words). Nine in ten action paragraphs in produced scripts stay under about 35 words. Try splitting it into shorter lines.');
+    const pa=(text.match(WC_PAST)||[]).length,pr=(text.match(WC_PRES)||[]).length;if(pa>=2&&pa>pr*1.5)note('This reads in past tense. Screenplay action is written in present tense (“walks”, not “walked”).');
+  }else if(type==='d'){if(w>WC_DLG_MAX)note('Long speech ('+w+' words). Real speech is broken up. Consider a beat of action or a reaction in the middle.')}
+  else if(type==='p'){if(w>WC_PAR_MAX)note('Parentheticals are best kept to 1 to 4 words. Move longer business into an action line.')}
+  else if(type==='h'){if(/^\s*(INT|EXT|I\/E)\b/i.test(text)&&!WC_TIME.test(text))note('No time of day in this heading. ScriptDesk needs DAY or NIGHT to plan the shoot.')}
+  return out}
+function wcRules(text,action,type){
   const out=[],seen=new Set(),push=(from,to,why)=>{const k=from+'|'+to;if(!seen.has(k)){seen.add(k);out.push({kind:'rule',from,to,why})}};
+  if(type==='c'){const m=text.match(/\(\s*([A-Za-z.'’]+)\s*\)/);if(m){const k=m[1].toUpperCase().replace('’',"'"),c=WC_EXT[k];if(c&&'('+c+')'!==m[0])push(m[0],'('+c+')','Standard form: '+c)}}
   for(const m of text.matchAll(/(\S) {2,}(?=\S)/g))push(m[0],m[1]+' ','Use one space');
   for(const m of text.matchAll(/(\S)\s+([.,!?;:])/g))push(m[0],m[1]+m[2],'No space before “'+m[2]+'”');
   for(const m of text.matchAll(/([a-z]{2,}[.!?])([A-Z][a-z])/g))push(m[0],m[1]+' '+m[2],'Add a space after “'+m[1].slice(-1)+'”');
@@ -3363,17 +3378,17 @@ function wcRules(text,action){
   for(const m of text.matchAll(/\b([A-Za-z]{2,}) \1\b/gi))if(!/^(that|had)$/i.test(m[1]))push(m[0],m[1],'Repeated word');
   return out;
 }
-function wcKey(id,x){return id+'|'+x.kind+'|'+x.from+'|'+x.to}
+function wcKey(id,x){return id+'|'+x.kind+'|'+x.from+'|'+x.to+(x.kind==='note'?'|'+x.why:'')}
 function wcSchedule(el){if(!WXV.chk)return;WC.el=el;clearTimeout(WC.t);clearTimeout(WC.ta);WC.t=setTimeout(()=>wcRun(false),900);WC.ta=setTimeout(()=>wcRun(true),2400)}
 function wcId(el){return el.dataset.id||(el.dataset.id='w'+Math.random().toString(36).slice(2,9))}
 async function wcRun(ai){
   const el=WC.el;if(!el||!el.isConnected||!WXV.chk)return;
   const id=wcId(el),text=el.textContent,act=el.dataset.t==='a';
-  if(!ai){WC.rule[id]=wcRules(text,act);WC.ai[id]=(WC.ai[id]||[]).filter(x=>text.includes(x.from));wcRender();return}
+  if(!ai){WC.rule[id]=wcRules(text,act,el.dataset.t).concat(wcStyle(text,el.dataset.t));WC.ai[id]=(WC.ai[id]||[]).filter(x=>text.includes(x.from));wcRender();return}
   if(!AI.sample||WC.busy||text.trim().split(/\s+/).length<5||WC.aiTxt[id]===text)return;
   WC.busy=true;
   try{
-    const r=await ask('You are a careful copy editor for film screenplays. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Check the line below for spelling, grammar, punctuation and sentence-structure mistakes only. Keep the writer\'s language, meaning, names, places, tone and dialogue style. Do not translate. Return JSON: {"fixes":[{"from":"exact text copied from the line","to":"corrected text","why":"short reason in English"}]}. Return an empty list if nothing needs fixing. Line:\n'+text,{});
+    const r=await ask('You are a careful copy editor for film screenplays. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Check the line below for spelling, grammar, punctuation and sentence-structure mistakes only (do not restyle it). Keep the writer\'s language, meaning, names, places, tone and dialogue style. Do not translate. Return JSON: {"fixes":[{"from":"exact text copied from the line","to":"corrected text","why":"short reason in English"}]}. Return an empty list if nothing needs fixing. Line:\n'+text,{});
     const fixes=(r&&Array.isArray(r.fixes)?r.fixes:[]).filter(f=>f&&typeof f.from==='string'&&typeof f.to==='string'&&f.from&&f.from!==f.to&&text.includes(f.from)).slice(0,5).map(f=>({kind:'ai',from:f.from,to:f.to,why:String(f.why||'Grammar or sentence fix').slice(0,120)}));
     if(el.isConnected&&el.textContent===text){WC.ai[id]=fixes;WC.aiTxt[id]=text}
   }catch(e){}
@@ -3383,18 +3398,19 @@ async function wcRun(ai){
 
 /* ---------- Writing assistant (desktop, right of the paper): suggestions for the page + AI rewrite options for the line you are on ---------- */
 const WRW={sel:null,opts:null,busy:false};
-const RW_MODES=[['fix','Fix grammar'],['short','Shorter'],['vivid','More visual'],['punch','Punchier'],['emo','More emotion']];
-const RW_ASK={fix:'Fix spelling, grammar and punctuation only. Change nothing else.',short:'Make it shorter and tighter.',vivid:'Make it more visual and cinematic: what we see and hear.',punch:'Make it punchier and more natural to say aloud.',emo:'Make the emotion stronger without adding new events.'};
+const RW_MODES=[['fix','Fix grammar'],['pro','Screenplay style'],['short','Shorter'],['vivid','More visual'],['punch','Punchier'],['emo','More emotion']];
+const RW_ASK={pro:'Rewrite it in the house style below: present tense, short, visual, filmable.',fix:'Fix spelling, grammar and punctuation only. Change nothing else.',short:'Make it shorter and tighter.',vivid:'Make it more visual and cinematic: what we see and hear.',punch:'Make it punchier and more natural to say aloud.',emo:'Make the emotion stronger without adding new events.'};
 function wrAIHtml(){return `<aside class="wr-ai" id="wrAI" aria-label="Writing assistant"><h3>Writing assistant</h3><div class="wa-cur" id="wrAIcur">Click a line to work on it.</div><div class="wa-sec"><b>REWRITE THIS LINE</b><div class="wa-btns">${RW_MODES.map(m=>`<button type="button" data-rw="${m[0]}">${m[1]}</button>`).join('')}</div><div id="wrAIout"><div class="wa-empty">Select words to rewrite only those, or leave the cursor in a line to rewrite all of it.</div></div></div><div class="wa-sec"><b>SUGGESTIONS</b><div id="wrAIlist"><div class="wa-empty">Nothing to fix right now.</div></div></div></aside>`}
 function wrAIdesk(){return page==='write'&&matchMedia('(min-width:821px)').matches&&!!$('#wrAI')}
 function wrAIcur(){const el=$('#wrAIcur');if(!el)return;const b=wrCur();if(!b){return}
   const sel=getSelection();WRW.sel={el:b,text:(!sel.isCollapsed&&b.contains(sel.anchorNode)&&b.contains(sel.focusNode))?String(sel).trim():''};
   const t=b.textContent.trim();el.textContent=(WT[b.dataset.t]||'Line')+': '+(WRW.sel.text?'“'+WRW.sel.text.slice(0,80)+'” selected':t.slice(0,90)||'(empty)')}
 document.addEventListener('selectionchange',()=>{if(wrAIdesk())wrAIcur()});
+function wcItemHtml(x,i){const note=x.kind==='note';return `<div class="wc-item"><div class="wc-txt">${note?esc(x.why):esc(x.from.replace(/ /g,'·'))+' → '+esc(x.to.replace(/ /g,'·'))}</div>${note?'':`<div class="wc-why">${esc(x.why)}</div>`}<div class="wc-btns">${note?'':`<button type="button" class="wc-ok" data-wc="acc" data-i="${i}">Accept</button>`}<button type="button" data-wc="ign" data-i="${i}">${note?'Got it':'Ignore'}</button></div></div>`}
 function wrAIlistRender(items){const box=$('#wrAIlist');if(!box)return;
   if(!WXV.chk){box.innerHTML='<div class="wa-empty">Suggestions are off (Tools → Suggestions).</div>';return}
   if(!items.length){box.innerHTML='<div class="wa-empty">Nothing to fix right now.</div>';return}
-  box.innerHTML=items.slice(0,30).map((x,i)=>`<div class="wc-item"><div class="wc-txt">${esc(x.from.replace(/ /g,'·'))} → ${esc(x.to.replace(/ /g,'·'))}</div><div class="wc-why">${esc(x.why)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-wc="acc" data-i="${i}">Accept</button><button type="button" data-wc="ign" data-i="${i}">Ignore</button></div></div>`).join('')}
+  box.innerHTML=items.slice(0,30).map(wcItemHtml).join('')}
 async function wrRewrite(mode){
   const out=$('#wrAIout');if(!out||WRW.busy)return;
   const cur=WRW.sel&&WRW.sel.el&&WRW.sel.el.isConnected?WRW.sel:null;
@@ -3405,7 +3421,7 @@ async function wrRewrite(mode){
   WRW.busy=true;out.innerHTML='<div class="wa-empty">Thinking…</div>';
   const kind={a:'action line',d:'dialogue',c:'character name',p:'parenthetical',h:'scene heading',t:'transition',s:'shot'}[el.dataset.t]||'line';
   try{
-    const r=await ask('You are a film screenplay editor. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Rewrite the '+kind+' below in 3 different ways. '+RW_ASK[mode]+' Keep the writer\'s language, names, places and meaning. Do not translate. Do not add new characters or events. Return JSON: {"options":["...","...","..."]}.\nText:\n'+part,{});
+    const r=await ask('You are a film screenplay editor. The writer may write in English, Tinglish (Telugu or Hindi words in English letters) or any Indian language. Rewrite the '+kind+' below in 3 different ways. '+RW_ASK[mode]+' Keep the writer\'s language, names, places and meaning. Do not translate. Do not add new characters or events. '+STYLE_GUIDE+' Return JSON: {"options":["...","...","..."]}.\nText:\n'+part,{});
     const list=(r&&Array.isArray(r.options)?r.options:[]).map(x=>String(x||'').trim()).filter(x=>x&&x!==part.trim()).slice(0,3);
     WRW.opts={el,part,whole,list};
     out.innerHTML=list.length?list.map((x,i)=>`<div class="wa-opt"><div>${esc(x)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-rwuse="${i}">Use this</button></div></div>`).join(''):'<div class="wa-empty">No better version found.</div>';
@@ -3440,10 +3456,10 @@ function wcRender(){
   if(!WC.open){p.className='wc-pill';p.innerHTML=`<button type="button" id="wcTog" aria-expanded="false">${lbl} ▴</button>`;return}
   p.className='wc-panel';
   p.innerHTML=`<div class="wc-head"><span>${lbl}</span><button type="button" id="wcTog" aria-expanded="true" class="wc-btns" style="border:0;background:none;color:inherit;cursor:pointer" aria-label="Hide suggestions">Hide</button></div>`+
-    items.slice(0,30).map((x,i)=>`<div class="wc-item"><div class="wc-txt">${esc(x.from.trim())} → ${esc(x.to.trim())}</div><div class="wc-why">${esc(x.why)}</div><div class="wc-btns"><button type="button" class="wc-ok" data-wc="acc" data-i="${i}">Accept</button><button type="button" data-wc="ign" data-i="${i}">Ignore</button></div></div>`).join('');
+    items.slice(0,30).map(wcItemHtml).join('');
 }
 function wcAccept(x){
-  const el=x.el;if(!el.isConnected)return;
+  const el=x.el;if(!el.isConnected||x.kind==='note')return;
   const text=el.textContent,i=text.indexOf(x.from);if(i<0)return;
   wrPush();
   const nx=text.slice(0,i)+x.to+text.slice(i+x.from.length);

@@ -2084,6 +2084,11 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 /* sticky tool strips: solid, above the pages, clickable */
 .wx-tools,.wx-tools.fs-tools{background:var(--bg-2,var(--bg))!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important;border:0!important;border-bottom:1px solid var(--line,rgba(128,128,128,.28))!important;box-shadow:0 10px 12px -10px rgba(0,0,0,.4)!important;z-index:60!important;position:sticky;pointer-events:auto}
 .fs-main .scr,.wr-doc,.wr-paper{position:relative;z-index:0}
+.mtabs{display:inline-flex;gap:2px;padding:3px;margin:0 0 14px;border:1px solid var(--line,rgba(128,128,128,.28));border-radius:12px;background:var(--bg-2,var(--bg));max-width:100%;overflow-x:auto;scrollbar-width:none}
+.mtabs button{flex:0 0 auto;border:0;background:transparent;color:var(--muted);padding:7px 14px;border-radius:9px;font:600 13px/1 inherit;font-family:inherit;cursor:pointer}
+.mtabs button:hover{color:var(--fg)}
+.mtabs button.on{background:var(--accent,#e8b04a);color:#1a1612}
+.mtabs button:focus-visible{outline:2px solid var(--accent,#e8b04a);outline-offset:1px}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -5974,9 +5979,16 @@ document.addEventListener('drop',e=>{if(!DRAG||!P)return;const z=e.target.closes
 /* The menu folds: Main is always shown, the group you are working in is open, the rest are one line each. Your choice is remembered. */
 function navState(){try{const o=JSON.parse(localStorage.getItem('scriptdesk.navOpen')||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
 function navIsOpen(g,cur,st){if(g==='Main')return true;if(st[g]===0)return false;return st[g]===1||g===cur}
-function navHtml(){const vis=PAGES.filter(p=>!(p.hide&&p.hide())),cur=(PAGES.find(p=>p.id===page)||{}).g,st=navState(),n={};vis.forEach(p=>n[p.g]=(n[p.g]||0)+1);let h='',g='';
+/* Pages that share one menu item: the menu shows the first page; the others are tabs at the top of the page */
+const MERGES=[{label:'Locations',ids:['locations','locScenes','sloLoc'],tabs:['Count','Scenes','Single line order']},
+  {label:'Artists',ids:['artists','artScenes','sloArt','casting'],tabs:['Count','Scenes','Single line order','Casting']},
+  {label:'Characters',ids:['characters','profiles'],tabs:['Stats','Profiles']}];
+const mergeOf=id=>MERGES.find(m=>m.ids.includes(id));
+function mergeTabsHtml(id){const m=mergeOf(id);if(!m)return '';return `<div class="mtabs seg" role="tablist" aria-label="${esc(m.label)}">${m.ids.map((x,i)=>`<button type="button" role="tab" data-mtab="${x}" aria-selected="${x===id}" class="${x===id?'on':''}">${esc(m.tabs[i])}</button>`).join('')}</div>`}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-mtab]');if(b&&P)go(b.dataset.mtab)});
+function navHtml(){const vis=PAGES.filter(p=>!(p.hide&&p.hide())&&!(mergeOf(p.id)&&mergeOf(p.id).ids[0]!==p.id)),cur=(PAGES.find(p=>p.id===(mergeOf(page)?mergeOf(page).ids[0]:page))||{}).g,st=navState(),n={};vis.forEach(p=>n[p.g]=(n[p.g]||0)+1);let h='',g='';
   vis.forEach(p=>{if(p.g!==g){if(g)h+='</div>';g=p.g;const open=navIsOpen(g,cur,st);h+=(g==='Main'?`<h6>${esc(g)}</h6>`:`<h6 class="ngt"><button type="button" class="ngh" data-ng="${esc(g)}" aria-expanded="${open}">${esc(g)}<span class="ngn">${n[g]}</span></button></h6>`)+`<div class="ng${open?'':' shut'}" data-g="${esc(g)}">`}
-    h+=`<button data-page="${esc(p.id)}" aria-current="${page===p.id?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(p.nav)}</span></button>`});return h+'</div>'}
+    h+=`<button data-page="${esc(p.id)}" aria-current="${(page===p.id||(mergeOf(p.id)&&mergeOf(p.id).ids.includes(page)))?'page':'false'}"><i class="ic-b" aria-hidden="true"><i class="ic i-${p.id}"></i></i><span>${esc(mergeOf(p.id)?mergeOf(p.id).label:p.nav)}</span></button>`});return h+'</div>'}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.ngh');if(!b)return;const g=b.dataset.ng,open=b.getAttribute('aria-expanded')!=='true',st=navState();st[g]=open?1:0;try{localStorage.setItem('scriptdesk.navOpen',JSON.stringify(st))}catch(x){}
   document.querySelectorAll('.ngh').forEach(x=>{if(x.dataset.ng===g)x.setAttribute('aria-expanded',open)});document.querySelectorAll('.ng').forEach(x=>{if(x.dataset.g===g)x.classList.toggle('shut',!open)})});
 /* ---------- Budget: Telugu union rate card and rules (read page by page from the Telugu Film Chamber + Employees Federation agreement PDF, dated 01-07-2022) ---------- */
@@ -6409,7 +6421,7 @@ function render(keepScroll){applySbColors();const c=$('#content');const ae=docum
   syncTop();
   if(!P.scenes.length&&page!=='artists'&&page!=='notes'&&page!=='write'&&page!=='budget'&&page!=='beats'&&page!=='outline'&&page!=='catalog'&&page!=='tasks'&&page!=='av'&&!(page==='characters'&&P.draft&&P.draft.els&&P.draft.els.length)){c.innerHTML=pageHead(PG[page]?PG[page].t:'','')+emptyState();lastExp=null;return}
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
-  c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
+  c.innerHTML=mergeTabsHtml(page)+lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
   hlInit();hlSchedule();hlPanelRender();if(page==='script')fsMount();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 

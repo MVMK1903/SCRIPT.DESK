@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-NMoClaukm0X3UK8C6g4J4Us41oKNjQNZs47PdsDvyqQ=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-Ptq01L/tpn+4WsmmP8Ga/qBgsXgrSJa/X0O101IGuag=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2060,6 +2060,22 @@ body.wr-focus .wr-ai{display:none!important}
 .np-opts{display:grid;gap:10px;margin-top:10px}
 .np-opts .btn{display:grid;gap:3px;text-align:left;height:auto;padding:12px 14px;white-space:normal}
 .np-opts .btn span{font-weight:400;font-size:12.5px;opacity:.85}
+
+.fs-wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;align-items:start}
+.fs-side{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--bg-2,transparent)}
+.fs-side .fs-sh{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:4px 8px 6px}
+.fs-side button{display:flex;gap:8px;width:100%;text-align:left;border:0;background:transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font:11.5px/1.35 var(--f-script);color:var(--fg)}
+.fs-side button b{min-width:2.6em;color:var(--accent);font-weight:700}
+.fs-side button span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-side button:hover{background:var(--fill)}
+.fs-side button[aria-current="true"]{background:var(--accent-soft);color:var(--accent)}
+.fs-side .wr-scm{width:28px;justify-content:center;padding:6px 0;opacity:.55;font-size:16px;line-height:1;flex:none}
+.fs-side .wr-scr:hover .wr-scm{opacity:1}
+.fs-side .fs-om{opacity:.6}.fs-side .fs-om button:first-child{text-decoration:line-through}
+.fs-side .wr-scadd{margin-top:8px;border:1px dashed var(--line);justify-content:center;font:600 12px var(--f-ui,inherit);color:var(--accent)}
+.fs-tools{margin:0 0 12px}
+.ln.reading{background:rgba(10,132,255,.18);box-shadow:inset 3px 0 0 #0a84ff}
+@media (max-width:900px){.fs-wrap{grid-template-columns:minmax(0,1fr)}.fs-side{position:static;max-height:220px}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -3242,11 +3258,11 @@ function saMount(){const c=$('#content');if(!c.querySelector('.sa-arc'))return;c
   c.querySelectorAll('[data-sai]').forEach(x=>{x.addEventListener('mouseenter',()=>hi(x.dataset.sai));x.addEventListener('mouseleave',()=>hi(null));x.addEventListener('focusin',()=>hi(x.dataset.sai))});
   c.querySelectorAll('.sa-pt').forEach(g=>g.addEventListener('click',()=>{const card=c.querySelector(`.sa-card[data-sai="${g.dataset.sai}"]`);if(card){card.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});card.classList.remove('ping');void card.offsetWidth;card.classList.add('ping')}}))}
 R.script=()=>{const editing=VIEW.editScene;
-  return {html:pageHead('Full script','Edit a scene to change its text or heading. Its reports update straight away, and the AI re-reads it.',`<button class="btn sm" data-act="checkScenes">Scene list check</button>`+searchBox('Find text'))+fsBookHero()+
-  (P.front?`<div class="front" style="margin-bottom:14px;max-width:880px">${esc(P.front)}</div>`:'')+
-  `<div class="scr">${P.scenes.map((s,idx)=>`<section class="sc" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase().slice(0,4000))}"><div class="sc-h"><span class="no">${esc(s.no)}</span><span class="hd">${effHtml(s)} · ${esc(s.loc)}${s.timeline?` <span class="tag acc">${esc(s.timeline)}</span>`:''}</span>${s.status==='stale'?'<span class="tag warn">Edited</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':''}${editing===s.id?'':`<button class="btn sm" data-edit="${esc(s.id)}">Edit</button><button class="btn sm" data-addbelow="${esc(s.id)}" title="Add a new scene right after this one">+ Scene below</button>`}</div>
+  return {html:pageHead('Full script','Edit a scene to change its text or heading. Its reports update straight away, and the AI re-reads it.',`<button class="btn sm" data-act="checkScenes">Scene list check</button>`+searchBox('Find text'))+fsBookHero()+fsToolsHtml()+
+  `<div class="fs-wrap">${fsSideHtml()}<div class="fs-main">`+(P.front?`<div class="front" style="margin-bottom:14px;max-width:880px">${esc(P.front)}</div>`:'')+
+  `<div class="scr">${P.scenes.map((s,idx)=>`<section class="sc" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase().slice(0,4000))}"><div class="sc-h"><span class="no">${esc(s.no)}</span><span class="hd">${effHtml(s)} · ${esc(s.loc)}${s.timeline?` <span class="tag acc">${esc(s.timeline)}</span>`:''}${s.note?` <span class="tag" title="Scene note">Note: ${esc(String(s.note).slice(0,60))}</span>`:''}</span>${s.status==='stale'?'<span class="tag warn">Edited</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':''}${editing===s.id?'':`<button class="btn sm" data-edit="${esc(s.id)}">Edit</button><button class="btn sm" data-addbelow="${esc(s.id)}" title="Add a new scene right after this one">+ Scene below</button>`}</div>
   <div class="page">${editing===s.id?`<label class="faint small" for="ed-${s.id}">First line is the scene heading. Add another heading line to split the scene.</label><textarea id="ed-${s.id}">${esc(headingLine(s)+'\n\n'+s.text)}</textarea><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn pri sm" data-save="${esc(s.id)}">Save scene</button><button class="btn sm" data-cancel>Cancel</button><span style="flex:1"></span>${idx<P.scenes.length-1?`<button class="btn sm" data-mergeNext="${esc(s.id)}">Merge with next scene</button>`:''}<button class="btn sm danger" data-delscene="${esc(s.id)}">Delete scene</button></div>`:
-  classify(s.text.split('\n')).map(([k,t])=>`<div class="ln ${k}">${esc(t)}</div>`).join('')}</div></section>`).join('')}</div>`,
+  classify(s.text.split('\n')).map(([k,t])=>`<div class="ln ${k}">${esc(t)}</div>`).join('')}</div></section>`).join('')}</div></div></div>`,
   exp:{orient:'portrait',script:true,sheets:[{name:'Full script',cols:[{h:'Sc No',w:8},{h:'Heading',w:40},{h:'Text',w:100}],rows:P.scenes.map(s=>[s.no,headingLine(s),s.text])}]}}};
 function fsBookHero(){if(!P||!P.scenes||!P.scenes.length)return '';const c=bkCoverInfo();
   return `<div class="fs-book"><button type="button" class="fs-cover" data-act="book" aria-label="Open the script book"><span class="fs-pages" aria-hidden="true"></span><span class="bk-page bk-cover ck-${c.style} wr-paper" style="--u:23px">${bkCoverInner(c).replace(/<div/g,'<span').replace(/<\/div>/g,'</span>')}</span></button>
@@ -3652,6 +3668,7 @@ async function wrApply(quiet){wrSave();const els=draft().els;if(!els.some(e=>e.t
       return o}
     n.status='new';n.artists=byAppearance(n,namesToIds(sceneSpeakers(n),'Added from script'));added.push(n.id);return n});
   const removed=P.scenes.filter(s=>!keep.has(s.id));removed.forEach(s=>dirty.deleted.add(s.id));P.scenes=next;
+  {const E=draft().els,nm=wrNumbers(E);E.forEach((e,i)=>{if(e.t==='h'&&e.note&&!e.om){const sc=P.scenes.find(x=>U(x.no)===U(nm[i]));if(sc)sc.note=e.note}})}
   const D=draft();const nums=wrNumbers(D.els);D.els.forEach((e,i)=>{if(e.t==='h')e.n=nums[i]});D.syncedAt=Date.now();D.at=D.syncedAt;dirty.draft=true;
   if(!P.title||P.title==='Untitled script')P.title=D.tp.title||P.title;
   logChange(`Breakdown updated from the writer: ${changed.length} changed, ${added.length} new, ${removed.length} removed scene${removed.length===1?'':'s'}`,'script');touch([...changed,...added]);
@@ -3742,6 +3759,77 @@ function wrScMenu(btn){const old=document.getElementById('wrScMenu');if(old){con
   document.body.appendChild(m);const r=btn.getBoundingClientRect();m.style.top=Math.min(r.bottom+4,innerHeight-m.offsetHeight-8)+'px';m.style.left=Math.max(8,Math.min(r.left,innerWidth-m.offsetWidth-8))+'px';
   m.addEventListener('click',e=>{const b=e.target.closest('[data-op]');if(!b)return;if(b.dataset.op==='del'&&!b.dataset.armed){b.dataset.armed=1;b.textContent='Delete? Tap again';return}m.remove();if(b.dataset.op==='no')wrChangeNo(hi);else wrSceneOp(b.dataset.op,hi)});
   setTimeout(()=>{const off=e=>{if(!m.contains(e.target)){m.remove();document.removeEventListener('mousedown',off,true)}};document.addEventListener('mousedown',off,true);document.addEventListener('keydown',function k(e){if(e.key==='Escape'){m.remove();document.removeEventListener('keydown',k)}})},0)}
+
+/* ===== Full script: the same scene list and writing tools as the writer ===== */
+function fsRows(){const rows=[];
+  if(P.draft&&P.draft.els&&draftReal()){const els=P.draft.els,nums=wrNumbers(els);const seen=new Set();
+    els.forEach((e,i)=>{if(e.t!=='h')return;const no=nums[i];if(e.om){rows.push({om:1,no,loc:U(String(e.x||'')).slice(0,40)||'OMITTED',hi:i});return}
+      const sc=P.scenes.find(x=>U(x.no)===U(no)&&!seen.has(x.id));if(sc){seen.add(sc.id);rows.push({id:sc.id,no:sc.no,loc:sc.loc,hi:i})}});
+    P.scenes.forEach(sc=>{if(!seen.has(sc.id))rows.push({id:sc.id,no:sc.no,loc:sc.loc})});return rows}
+  return P.scenes.map(sc=>({id:sc.id,no:sc.no,loc:sc.loc}))}
+function fsCurId(){if(VIEW.fsCur&&P.scenes.some(x=>x.id===VIEW.fsCur))return VIEW.fsCur;return P.scenes[0]&&P.scenes[0].id}
+function fsSideHtml(){const cur=fsCurId();const rows=fsRows();
+  return `<aside class="fs-side" aria-label="Scenes"><div class="fs-sh">Scenes</div>${rows.map(r=>r.om?`<div class="wr-scr fs-om"><button type="button" disabled title="Omitted scene"><b>${esc(r.no)}</b><span>OMITTED</span></button><button type="button" class="wr-scm" data-fsm="om:${r.hi}" aria-haspopup="menu" aria-label="Omitted scene ${esc(r.no)} actions">⋯</button></div>`:
+    `<div class="wr-scr"><button type="button" data-fsgo="${esc(r.id)}" aria-current="${r.id===cur}"><b>${esc(r.no)}</b><span>${esc(U(r.loc)||'(no location)')}</span></button><button type="button" class="wr-scm" data-fsm="${esc(r.id)}" aria-haspopup="menu" aria-label="Scene ${esc(r.no)} actions" title="Add, copy, move, omit or delete this scene">⋯</button></div>`).join('')}
+    <button type="button" class="wr-scadd" data-fsm="end">+ Add scene at the end</button></aside>`}
+const FS_TOOLS=[['note','Note','Add a note to the current scene'],['alt','Alternates','Keep other versions of a line (works in Write)'],['dual','Dual','Two characters speak at the same time (works in Write)'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark the current scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the current scene, a voice per character'],['hl','Highlight','Colour characters, locations, costumes and props'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find text in the script'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint']];
+function fsToolsHtml(){return `<div class="wx-tools fs-tools" role="toolbar" aria-label="Writing tools">${FS_TOOLS.map(([k,l,t])=>`<button type="button" class="wx-b" data-fsx="${k}" title="${esc(t)}">${l}</button>`).join('')}</div>`}
+function fsWriterAt(sc,toastMsg){const D=draft();const nums=wrNumbers(D.els);const hi=D.els.findIndex((e,i)=>e.t==='h'&&sc&&U(nums[i])===U(sc.no));go('write');setTimeout(()=>{const d=wrDoc();const el=d&&d.children[hi>=0?hi:0];if(el){el.scrollIntoView({block:'center'});placeCaret(el)}if(toastMsg)toast(toastMsg,6000)},120)}
+function fsNote(){const sc=P.scenes.find(x=>x.id===fsCurId());if(!sc)return;
+  openModal(`<div class="modal-h"><h2>Note for scene ${esc(sc.no)}</h2></div><div class="modal-b"><textarea id="fsNote" rows="5" style="width:100%" placeholder="A note for yourself or the director">${esc(sc.note||'')}</textarea></div><div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="fsNoteGo">Save note</button></div>`);
+  $('#fsNote').focus();$('#fsNoteGo').onclick=()=>{const v=$('#fsNote').value.trim();snapshot();sc.note=v;
+    if(draftReal()){const D=draft(),nums=wrNumbers(D.els);const hi=D.els.findIndex((e,i)=>e.t==='h'&&U(nums[i])===U(sc.no));if(hi>=0){if(v)D.els[hi].note=v;else delete D.els[hi].note;D.at=D.syncedAt=Date.now();dirty.draft=true}}
+    touch([sc.id]);closeModal();render(true)}}
+function fsRead(){if(RA.on)return raStop();if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){toast('Read-aloud is not available in this browser.');return}
+  const secs=[...document.querySelectorAll('.scr section.sc')];const cur=fsCurId();let start=Math.max(0,secs.findIndex(x=>x.id==='c-'+cur));const q=[];
+  secs.slice(start).forEach(sec=>{const sc=P.scenes.find(x=>'c-'+x.id===sec.id);const hd=sec.querySelector('.hd');q.push({el:sec,text:`Scene ${sc?sc.no:''}. ${raHead(hd?hd.textContent.replace(/·/g,','):'')}.`,who:''});let spk=null;
+    sec.querySelectorAll('.page .ln').forEach(ln=>{const x=ln.textContent.trim();if(!x)return;if(ln.classList.contains('chr'))spk=chNorm(x);else if(ln.classList.contains('dia'))q.push({el:ln,text:x,who:spk});else if(ln.classList.contains('act')){spk=null;q.push({el:ln,text:x,who:''})}else if(ln.classList.contains('trn')){spk=null;q.push({el:ln,text:x.toLowerCase(),who:''})}})});
+  if(!q.length){toast('Nothing to read.');return}RA.on=true;RA.q=q;RA.i=0;speechSynthesis.cancel();raNext();raSync()}
+function fsTool(k){const sc=P.scenes.find(x=>x.id===fsCurId());
+  if(k==='note')return fsNote();if(k==='rev')return revModal();if(k==='omit')return sc?fsOp('omit',sc.id):toast('Pick a scene first.');
+  if(k==='read')return fsRead();if(k==='hl')return hlToggle(true);if(k==='book'){return bookOpen()}
+  if(k==='find'){const q=$('#q');if(q){q.focus();q.select()}return}if(k==='stats')return wxStatsOpen();if(k==='sprint')return WR.sprint?wxSprintEnd(true):wxSprintAsk();
+  if(k==='alt')return fsWriterAt(sc,'Select the line, then press Alternates.');if(k==='dual')return fsWriterAt(sc,'Put the cursor on the character, then press Dual.')}
+function fsDelete(id){const i=P.scenes.findIndex(s=>s.id===id);if(i<0)return;snapshot();const no=P.scenes[i].no;dirty.deleted.add(P.scenes[i].id);P.scenes.splice(i,1);const ch=chainNos(P.scenes,i-1)||[];
+  logChange(`Scene ${no} deleted`+(ch.length?`; ${ch.length} scene${ch.length===1?'':'s'} after it renumbered`:''),'scenes');wrMirror();touch(ch.map(x=>x[0].id));VIEW.editScene=null;render(true);toast(`Scene ${no} deleted.${ch.length?` ${ch.length} scene${ch.length===1?'':'s'} after it renumbered.`:''} Undo is at the top.`,5000)}
+function fsOp(op,id,mode){const i=P.scenes.findIndex(s=>s.id===id);if(i<0)return;const a=P.scenes[i];
+  if(op==='add')return addSceneBelow(id);
+  if(op==='del')return fsDelete(id);
+  if(op==='no'){openModal(`<div class="modal-h"><h2>Change scene number</h2></div><div class="modal-b"><p>Scene ${esc(a.no)} is now numbered:</p><input id="npNo" value="${esc(a.no)}" maxlength="8" style="width:100%"><p class="small muted" id="npMsg">The scenes after it are renumbered in order. For example, change 3 to 2A and the next scene becomes 3.</p></div><div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="npGo">Change number</button></div>`);
+    const inp=$('#npNo');inp.focus();inp.select();const go=()=>{const v=U(inp.value).trim();if(!noParts(v)){$('#npMsg').textContent='Use a number such as 12 or 12A.';return}if(v===U(a.no)){closeModal();return}
+      if(P.scenes.some(x=>x!==a&&U(x.no)===v)&&!chainNos(P.scenes.map((x,k)=>k===i?{no:v}:x),i)){$('#npMsg').textContent=`Scene ${v} already exists.`;return}
+      closeModal();snapshot();const old=a.no;a.no=v;const b=bumpSceneNos(a,old);wrMirror();logChange(`Scene ${old} renumbered ${v}`,'scenes');touch([a.id,...b.ids]);render(true);toast(`Scene ${old} is now ${v}.${b.ids.length?` ${b.ids.length} scene${b.ids.length===1?'':'s'} after it renumbered.`:''}`,5000)};
+    $('#npGo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};return}
+  if(op==='omit'){if(!draftReal()){toast('Open the script in the writer first (Write script, then "Open the script in the writer"). Omitting needs it.',7000);return}
+    const D=draft(),nums=wrNumbers(D.els);const hi=D.els.findIndex((e,k)=>e.t==='h'&&U(nums[k])===U(a.no));if(hi<0)return;snapshot();D.els.forEach((e,k)=>{if(e.t==='h')e.n=nums[k]});D.els[hi].om=1;D.at=Date.now();dirty.draft=true;wrApply(true);render(true);toast(`Scene ${a.no} omitted. Its number stays reserved and the writer prints it as OMITTED. Restore it from the scene list.`,7000);return}
+  if(op==='dup'||op==='up'||op==='down'){
+    if(op!=='dup'){const j=op==='up'?i-1:i+1;if(j<0||j>=P.scenes.length){toast(op==='up'?'This is already the first scene.':'This is already the last scene.');return}}
+    if(!mode){const list=P.scenes;let prev=a.no,after=list.length-1-i,title='Copy this scene';
+      if(op==='up'){title='Move this scene up';prev=i>=2?list[i-2].no:null;after=list.length-(i-1)}
+      if(op==='down'){title='Move this scene down';prev=list[i+1].no;after=list.length-2-i}
+      numPick(prev,new Set(list.map(x=>U(x.no))),after,title,m=>fsOp(op,id,m));return}
+    snapshot();let t=a,from;
+    if(op==='dup'){t=JSON.parse(JSON.stringify(a));t.id=uid();t.no='';t.status='stale';P.scenes.splice(i+1,0,t);from=i+1}
+    else{const j=op==='up'?i-1:i+1;P.scenes.splice(i,1);P.scenes.splice(j,0,a);from=Math.min(i,j)}
+    const list=P.scenes,ti=list.indexOf(t);
+    if(mode==='insert'){const taken=new Set(list.filter(x=>x!==t).map(x=>U(x.no)));t.no=insertNoAfter(ti>0?list[ti-1].no:null,taken)||nextSceneNo(ti>0?list[ti-1].no:'')}
+    else chainNos(list,from-1);
+    wrMirror();logChange(`Scene ${a.no} ${({dup:'copied',up:'moved up',down:'moved down'})[op]}`,'scenes');touch(P.scenes.map(x=>x.id));VIEW.fsCur=t.id;render(true);toast(`Scene ${op==='dup'?'copied':op==='up'?'moved up':'moved down'}.`,4000)}}
+function fsMenu(btn){const old=document.getElementById('wrScMenu');const key=btn.dataset.fsm;if(old){const same=old._for===key;old.remove();if(same)return}
+  if(key==='end'){const last=P.scenes[P.scenes.length-1];if(last)addSceneBelow(last.id);else toast('Import or write a script first.');return}
+  const m=document.createElement('div');m.id='wrScMenu';m._for=key;m.setAttribute('role','menu');m.setAttribute('data-nohl','');
+  if(key.startsWith('om:'))m.innerHTML='<button type="button" role="menuitem" data-op="restore">Restore this scene</button>';
+  else m.innerHTML=[['add','Add a scene below'],['dup','Copy this scene'],['up','Move up'],['down','Move down'],['no','Change scene number'],['omit','Omit this scene'],['del','Delete this scene']].map(([k,l])=>`<button type="button" role="menuitem" data-op="${k}"${k==='del'?' class="danger"':''}>${l}</button>`).join('');
+  document.body.appendChild(m);const r=btn.getBoundingClientRect();m.style.top=Math.min(r.bottom+4,innerHeight-m.offsetHeight-8)+'px';m.style.left=Math.max(8,Math.min(r.left,innerWidth-m.offsetWidth-8))+'px';
+  m.addEventListener('click',e=>{const b=e.target.closest('[data-op]');if(!b)return;if(b.dataset.op==='del'&&!b.dataset.armed){b.dataset.armed=1;b.textContent='Delete? Tap again';return}m.remove();
+    if(b.dataset.op==='restore'){const D=draft(),hi=+key.slice(3);if(D.els[hi]){snapshot();delete D.els[hi].om;D.at=Date.now();dirty.draft=true;wrApply(true);render(true);toast('Scene restored. It comes back as a new scene; run the AI to fill its breakdown.',6000)}return}
+    fsOp(b.dataset.op,key,undefined)});
+  setTimeout(()=>{const off=e=>{if(!m.contains(e.target)){m.remove();document.removeEventListener('mousedown',off,true)}};document.addEventListener('mousedown',off,true);document.addEventListener('keydown',function k(e){if(e.key==='Escape'){m.remove();document.removeEventListener('keydown',k)}})},0)}
+function fsMount(){const secs=[...document.querySelectorAll('.scr section.sc')];if(!secs.length||typeof IntersectionObserver==='undefined')return;
+  const io=new IntersectionObserver(es=>{const v=es.filter(x=>x.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];if(v){const id=v.target.id.slice(2);if(VIEW.fsCur!==id){VIEW.fsCur=id;document.querySelectorAll('.fs-side [data-fsgo]').forEach(b=>b.setAttribute('aria-current',b.dataset.fsgo===id?'true':'false'))}}},{rootMargin:'-10% 0px -75% 0px'});
+  secs.forEach(x=>io.observe(x))}
+document.addEventListener('click',e=>{if(page!=='script')return;const g=e.target.closest('[data-fsgo]');if(g){const el=document.getElementById('c-'+g.dataset.fsgo);VIEW.fsCur=g.dataset.fsgo;if(el)el.scrollIntoView({block:'start',behavior:'smooth'});document.querySelectorAll('.fs-side [data-fsgo]').forEach(b=>b.setAttribute('aria-current',b===g?'true':'false'));return}
+  const m=e.target.closest('[data-fsm]');if(m){fsMenu(m);return}const t=e.target.closest('[data-fsx]');if(t)fsTool(t.dataset.fsx)});
 function wrRenumber(){if(!confirm('Renumber every scene 1, 2, 3…? Scene numbers in the reports change after "Update breakdown", so breakdown details follow the new numbers.'))return;snapshot();draft().els.forEach(e=>{delete e.n});draft().at=Date.now();dirty.draft=true;touch([]);render()}
 
 /* ---- Exports ---- */
@@ -4000,11 +4088,11 @@ function raStart(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtte
     if(t==='h')q.push({el,text:(el.dataset.om?`Scene ${el.dataset.n||''} omitted.`:`Scene ${el.dataset.n||''}. ${raHead(x)}.`),who:''});
     else if(t==='d')q.push({el,text:x,who:spk});else if(t==='a'||t==='s')q.push({el,text:x,who:''});else if(t==='t')q.push({el,text:x.toLowerCase(),who:''})}
   if(!q.length){toast('Nothing to read from here.');return}RA.on=true;RA.q=q;RA.i=0;speechSynthesis.cancel();raNext();raSync()}
-function raNext(){if(!RA.on)return;document.querySelectorAll('#wrDoc .el.reading').forEach(x=>x.classList.remove('reading'));const it=RA.q[RA.i];if(!it){raStop();toast('Finished reading.');return}
+function raNext(){if(!RA.on)return;document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));const it=RA.q[RA.i];if(!it){raStop();toast('Finished reading.');return}
   it.el.classList.add('reading');it.el.scrollIntoView({block:'center',behavior:'smooth'});const u=new SpeechSynthesisUtterance(it.text);const vp=chVoiceFor(it.who);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+VO().rate||1;
   u.onend=()=>{if(!RA.on)return;RA.i++;raNext()};u.onerror=()=>{if(!RA.on)return;RA.i++;raNext()};speechSynthesis.speak(u)}
-function raStop(){RA.on=false;try{speechSynthesis.cancel()}catch(e){}document.querySelectorAll('#wrDoc .el.reading').forEach(x=>x.classList.remove('reading'));raSync()}
-function raSync(){const b=document.querySelector('[data-wrx="read"]');if(b){b.textContent=RA.on?'Stop reading':'Read aloud';b.setAttribute('aria-pressed',RA.on?'true':'false')}}
+function raStop(){RA.on=false;try{speechSynthesis.cancel()}catch(e){}document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));raSync()}
+function raSync(){document.querySelectorAll('[data-wrx="read"],[data-fsx="read"]').forEach(b=>{b.textContent=RA.on?'Stop reading':'Read aloud';b.setAttribute('aria-pressed',RA.on?'true':'false')})}
 /* dialogue highlighting in the writer */
 const HL_COL=['#ffd60a','#64d2ff','#30d158','#ff9f0a','#bf5af2','#ff375f'];
 function chHl(){WXV.hl=WXV.hl&&typeof WXV.hl==='object'?WXV.hl:{};return WXV.hl}
@@ -6216,7 +6304,7 @@ function render(keepScroll){applySbColors();const c=$('#content');const ae=docum
   autoFill(page);const r=(R[page]||R.slo)();lastExp=r.exp;
   c.innerHTML=lastNoteHtml()+(P.sample&&!sampleHidden()?`<div class="banner bn-sample"><span><b>Sample project.</b><span class="bn-more"> An example script so you can see every report.</span></span><button class="btn sm pri" data-act="import">Import script</button><button class="bn-x" data-act="hideSample" aria-label="Hide this notice" title="Hide this notice">&times;</button></div>`:'')+r.html;
   $('#bCur').textContent=PG[page]?PG[page].t:'';syncTabs();
-  hlInit();hlSchedule();hlPanelRender();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
+  hlInit();hlSchedule();hlPanelRender();if(page==='script')fsMount();if(page==='write')wrMount();if(page==='beats')bbMount();if(page==='outline')olMount();if(page==='characters')chMount();if(page==='structure')saMount();if(page==='gear')gxMount();document.body.dataset.page=page;if(page==='storyboard')sbMount();if(page==='costume')wdMount();if(page==='artprops')adMount();if(page==='sides')sidesMount();if(page==='tasks')tkMount();if(DD_PAGES.includes(page))ddMount();if(page==='av')avMount();$('#bMx').hidden=page==='write';$('#bMp').textContent=page==='write'?'Download':'PDF';tidyHeads(c);sheetify(c);decorateTables();lastExp=ttExport(lastExp);applySearch();if(keepScroll)c.scrollTop=st;else{c.scrollTop=0;c.classList.remove('swap');void c.offsetWidth;c.classList.add('swap');riseIn(c)}renderChecksBtn()}
 
 /* ===== colour highlights: whole type (all characters, all props...) or one item, in every view ===== */
 const HL_COLS=[['Yellow','#ffe14d'],['Orange','#ffab5e'],['Pink','#ff8fb8'],['Red','#ff7a7a'],['Purple','#c59bff'],['Blue','#7cc0ff'],['Teal','#5fe0d2'],['Green','#8fe07a']];

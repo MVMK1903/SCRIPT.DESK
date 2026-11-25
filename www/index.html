@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-Aj9aED0vchqCko2RbAHARdGqs5VE/zQcYr+zB27Clxo=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-JQfiwQFQSAyYRfTKtRBPhL+I6jSDIusS1Sivz6BqZV4=' 'sha256-I7gT7J8+hrMQhJtD4wOox5RXZ+rwJ0YKWpUlxWf4VJg=' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://accounts.google.com https://www.gstatic.com https://apis.google.com https://www.google.com https://www.recaptcha.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; worker-src 'self' blob: https://cdnjs.cloudflare.com; frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="sd-firebase" content="{&quot;apiKey&quot;:&quot;AIzaSyBith21aiHZmoljuHHTYNvjsu3WW996BYI&quot;,&quot;authDomain&quot;:&quot;scriptdesk-3bed2.firebaseapp.com&quot;,&quot;projectId&quot;:&quot;scriptdesk-3bed2&quot;,&quot;appId&quot;:&quot;1:92605570010:web:af45a40ce5169c5a65bee3&quot;,&quot;storageBucket&quot;:&quot;scriptdesk-3bed2.firebasestorage.app&quot;,&quot;messagingSenderId&quot;:&quot;92605570010&quot;}">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e4e7ec">
@@ -2043,7 +2043,10 @@ const CDN={
   autotable:'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js',
   mammoth:'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
   pdfjs:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
-  pdfworker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'};
+  pdfworker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  tess:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js'};
+/* Free on-device reading of scanned pages (Tesseract, Apache-2.0). Language files: tessdata_fast, downloaded once and kept by the browser. */
+const TESS_DATA='https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_fast@4.1.0';
 if(document.querySelector('meta[name="sd-vendor"]')){for(const k in CDN)CDN[k]='./vendor/'+CDN[k].split('/').pop()}
 const STANDALONE=!(window.claude&&window.claude.use);
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
@@ -2457,7 +2460,29 @@ async function pdfToText(buf,onStatus){await ensurePdfjs();const doc=await windo
 /* old Hindi or Telugu fonts that store letters as ordinary Latin symbols ("gSYyks gk¡A"): many lowercase words with no vowel in them. English scripts have almost none. */
 function legacyFont(t){let w=0,n=0;for(const x of String(t||'').match(/[A-Za-z]{3,}/g)||[]){if(x===x.toUpperCase())continue;w++;if(!/[aeiouyAEIOUY]/.test(x))n++}return n>=150&&n/w>=0.02}
 function garbledRatio(t){const s=String(t||'').replace(/\s/g,'');if(!s)return 0;let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0xE000&&c<=0xF8FF)n++}return n/s.length}
-async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Choose an AI service in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
+/* Indian scripts: Tesseract language code, name, Unicode range */
+const OCR_SCRIPTS=[['tel','Telugu',/[ఀ-౿]/g],['tam','Tamil',/[஀-௿]/g],['hin','Hindi',/[ऀ-ॿ]/g],['mal','Malayalam',/[ഀ-ൿ]/g],['kan','Kannada',/[ಀ-೿]/g]];
+/* which Indian script(s) a text is written in: the ones with at least 15% of the Indian letters */
+function scriptsOf(text){const c=OCR_SCRIPTS.map(x=>[x[0],(String(text||'').match(x[2])||[]).length]);const tot=c.reduce((a,x)=>a+x[1],0);if(tot<20)return [];return c.filter(x=>x[1]>=tot*.15).sort((a,b)=>b[1]-a[1]).map(x=>x[0])}
+async function ocrLocal(doc,onStatus,pref){
+  if(!window.Tesseract)await loadScript(CDN.tess);
+  const T=window.Tesseract,mk=async langs=>{const w=await T.createWorker(langs,1,{langPath:TESS_DATA,gzip:false,logger:m=>{if(m.status==='loading language traineddata'&&onStatus)onStatus('Downloading language data (first time only) '+Math.round((m.progress||0)*100)+'%')}});await w.setParameters({tessedit_pageseg_mode:'6',preserve_interword_spaces:'1'});return w};
+  const png=async n=>{const pg=await doc.getPage(n);const vp=pg.getViewport({scale:2.2});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:g,viewport:vp}).promise;return c};
+  let langs=pref&&pref!=='auto'?pref.split('+'):null,w=null;const out=[];
+  try{
+    if(!langs){onStatus&&onStatus('Finding the script language…');w=await mk('tel+tam+hin+mal+kan+eng');const probe=Math.min(2,doc.numPages);let t='';for(let q=1;q<=probe;q++){const r=await w.recognize(await png(q));t+='\n'+r.data.text;if(q===1)out[0]=r.data.text}
+      langs=scriptsOf(t).slice(0,2);if(!langs.length)langs=['eng'];else langs=langs.concat('eng');await w.terminate();w=null;
+      if(probe>=1&&doc.numPages>=1&&langs.length===1){/* English only: keep the first pages already read */}}
+    w=await mk(langs.join('+'));
+    for(let p=1;p<=doc.numPages;p++){onStatus&&onStatus('Reading page '+p+' of '+doc.numPages+' on this device ('+langs.map(l=>(OCR_SCRIPTS.find(x=>x[0]===l)||[0,'English'])[1]).join(' + ')+')');const r=await w.recognize(await png(p));out[p-1]=r.data.text}
+  }finally{if(w)try{await w.terminate()}catch(e){}}
+  return out.join('\n\n')}
+async function ocrPdf(doc,onStatus,pref){
+  /* free on-device reading first; Claude / AI is the fallback when that cannot load */
+  let localErr=null;try{const t=await ocrLocal(doc,onStatus,pref);if(t&&t.replace(/\s/g,'').length>=40)return t;localErr=new Error('No text was found on the pages.')}catch(e){localErr=e}
+  if(!AI.sample||!(AI.limits&&AI.limits.images))throw new Error('Could not read the scanned pages on this device ('+((localErr&&localErr.message)||'unknown problem')+'). Check your internet connection once so the free language files can download, then try again.');
+  onStatus&&onStatus('Reading on this device did not work, so AI is reading the pages…');return ocrAI(doc,onStatus)}
+async function ocrAI(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Choose an AI service in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
   const lim=AI.limits&&AI.limits.images;if(!lim)throw new Error('This view cannot send page images to Claude. Use a text PDF or Word file.');
   const per=Math.max(1,Math.min(lim.maxCount||1,4));const out=[];
   for(let p=1;p<=doc.numPages;p+=per){const blobs=[];for(let q=p;q<p+per&&q<=doc.numPages;q++){const pg=await doc.getPage(q);const vp=pg.getViewport({scale:1.6});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.85)))}
@@ -6056,6 +6081,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>${GA.fb&&GA.user?`<div class="fieldbox"><label for="iSpace">Where should this live?</label><select id="iSpace"><option value="o"${FB_SERVER?'':' disabled'}>Locked with OTP · ${FB_SERVER?'a code each time it opens':'needs the ScriptDesk server (not set up yet)'}</option><option value="v"${FB_SERVER?'':' selected'}>Just me · vault passphrase</option>${TEAMS.list.filter(t=>t.mine).map(t=>`<option value="t:${esc(t.id)}">Team · ${esc(t.name)} · encrypted</option>`).join('')}<option value="me">My account · not encrypted</option></select></div>`:''}
   <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json or encrypted .scriptdesk). Any language or format.</span></label>
   <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json,.scriptdesk" hidden>
+  <div class="fieldbox"><label for="iLang">Language of scanned pages</label><select id="iLang"><option value="auto">Auto-detect</option><option value="tel">Telugu</option><option value="tam">Tamil</option><option value="hin">Hindi</option><option value="mal">Malayalam</option><option value="kan">Kannada</option><option value="eng">English</option></select><div class="small faint">Used only for scanned or old-font PDFs. Read free on this device; nothing is uploaded.</div></div>
   <div class="fieldbox"><label for="iText">Or paste the script</label><textarea id="iText" placeholder="SCENE NO 1  EXT. VILLAGE - DAY&#10;&#10;..."></textarea></div>
   <p class="small muted" id="iInfo">After import you'll check the scene list before the AI breakdown starts.</p>
  </div>
@@ -6065,7 +6091,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
     try{const r=await fileToText(f,m=>info.textContent=m);
       if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
       if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
-      if(r&&r.scanned){scanned=r.scanned;info.textContent=r.garbled?`${f.name} uses an old font, so its text cannot be read directly (${r.scanned.numPages} pages). Press "Find scenes" and AI will read the page pictures instead.`:`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
+      if(r&&r.scanned){scanned=r.scanned;info.textContent=r.garbled?`${f.name} uses an old font, so its text cannot be read directly (${r.scanned.numPages} pages). Press "Find scenes" and the page pictures are read free on this device (first time downloads the language files, about 5 MB per language).`:`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and the pages are read free on this device (first time downloads the language files).`}
       else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}${legacyFont(r)?' Some lines use an old Hindi or Telugu font and read as junk letters. The English lines are fine. For clean text, export the PDF again with a standard font, or paste the script.':''}`}
       if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/^[0-9a-f]{8}\s/,'')}
     catch(e){info.textContent=(e&&e.message)||'That file could not be read. Try pasting the text.'}};
@@ -6074,7 +6100,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   $('#iSample').onclick=()=>{P=sampleProject();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render()};
   $('#iGo').onclick=async()=>{const btn=$('#iGo');btn.disabled=true;
     try{let text=$('#iText').value;
-      if(scanned){text=await ocrPdf(scanned,m=>info.textContent=m);$('#iText').value=text}
+      if(scanned){text=await ocrPdf(scanned,m=>say(m),$('#iLang')?$('#iLang').value:'auto');$('#iText').value=text}
       if(!text.trim()){say('Choose a file or paste the script first.');btn.disabled=false;return}
       const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       const _am=stripAppMarks(text);text=_am.text;

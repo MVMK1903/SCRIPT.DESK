@@ -2317,7 +2317,7 @@ function detectScenes(text){
   {let last=0;text=text.replace(/^([ ]*)(\d+)([A-Z]?)([ ]+(?:INT|EXT|I\/E|E\/I|EST)\b)/gim,(x,sp,n,sfx,rest)=>{let v=parseInt(n,10);
     if(/^([1-9])\1$/.test(n)&&last<10&&parseInt(n[0],10)>last&&parseInt(n[0],10)<=last+3&&!sfx){v=parseInt(n[0],10);n=n[0]}
     last=v;return sp+n+sfx+rest})}
-  const L=text.split('\n');const scenes=[];let cur=null;const front=[];
+  const L=text.split('\n');mineCues(L);const scenes=[];let cur=null;const front=[];
   const nextNon=(i)=>{for(let j=i+1;j<L.length&&j<i+5;j++){if(L[j].trim())return j}return -1};
   for(let i=0;i<L.length;i++){let line=L[i];
     /* scene numbers printed on both sides ("1 1 EXT. ..." or "1 EXT. ... 1") are read as one number */
@@ -2359,13 +2359,32 @@ function detectScenes(text){
 const NOT_CUE_W=/(^|[\s'-])(CALLING|CALLS|SCREEN|CUTS?|IMPACT|STOP|SOUNDS?|SFX|NOISE|MUSIC|BGM|TITLES?|CARD|TEXT|INSERT|ANGLE|POV|CLOSE ?UP|SHOTS?|MONTAGE|VFX|SLOW MOTION|FREEZE|BLACKOUT|SILENCE|PAUSE|BEAT|BANG|BOOM|CRASH|THUD|BEEP|KNOCK|HONK|SCREAMS?|RINGING|RINGS|LATER|CONTINUOUS|FLASHBACK|FLASH|MY|ME|YOU|YOUR|WE|US|OUR|IS|ARE|WAS|WERE|AM|DON'?T|CAN'?T|WON'?T|I'?M|IT'?S|THIS|THAT|WHAT|WHY|HOW|HERE|THERE|PLEASE|HELP|KILLED|KILL)(?=$|[\s'-])/;
 const OBJ_W=/(^|[\s'-])(MOBILE|PHONE|CELLPHONE|SIGN|SIGNS|SIGNBOARD|SIGN BOARD|NOTICE BOARD|DISPLAY BOARD|NAME BOARD|NAMEPLATE|POSTER|DISPLAY|CAPTION|SUBTITLES?|MESSAGES?|SMS|WHATSAPP|NOTIFICATION|INCOMING|MISSED CALL|VIDEO CALL|BANNER|HOARDING|HEADLINES?|NEWSPAPER|ALARM|SIREN|HORN|EMAIL|SCREENSHOT|LOGO|LABEL|TICKER|BREAKING|RINGTONE|VOICEMAIL|CALLER ID|SUPERIMPOSED?)(?=$|[\s'-])/;
 const PERSON_W=/(^|[\s'-])(BOY|BOYS|GIRL|GIRLS|MAN|MEN|WOMAN|WOMEN|LADY|GUY|OWNER|SELLER|VENDOR|KEEPER|GUARD|DRIVER|WALA|WALLAH|BOSS|AGENT|OFFICER|ANCHOR|READER|REPORTER|OPERATOR|MECHANIC|UNCLE|AUNTY|AUNTIE|FRIEND|FATHER|MOTHER|BROTHER|SISTER|SON|DAUGHTER|WIFE|HUSBAND|INSPECTOR|CONSTABLE|DOCTOR|NURSE|TEACHER|STUDENT|MANAGER|CLERK|PEON|WORKER|HAWKER|SALESMAN|SALESGIRL|CUSTOMER)(?=$|[\s'-])/;
-function looksLikeName(b){b=String(b||'').trim();if(!b)return false;if(/[.!?,…:]$/.test(b)&&!/(^|\s)(MR|MRS|MS|DR|SR|JR|ST)\.$/.test(b))return false;if(/([A-Z])\1\1/.test(b))return false;if(NOT_CUE_W.test(b)||NOT_CHAR.test(b))return false;if(OBJ_W.test(b)&&!PERSON_W.test(b))return false;return true}
-function cueOf(t){const s=t.trim();if(!s||s.length>34)return null;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
-  if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;if(!looksLikeName(b))return null;return b.replace(/\s+/g,' ')}
+/* More lines in capitals that are not people: places and objects named alone, shot notes, time-of-day tags, scene headings and addresses */
+const NOT_CUE_X=/^(?:WINDOW|TABLE|DOORWAY|BAR|BACKROOM|KITCHEN TABLE|CHAMPAGNE|POLICE CAR|CORRIDOR|DELETED|WHEN|VARIATION|TIME LAPSE|POST CREDITS?(?: SCENE)?|SUB COUNT'?D \d+|[A-Z])$|^(?:CLOSE ON|LARGE ?CLOSE ?UP|INSIDE|OUTSIDE|ENTRANCE OF|QUICK CUTAWAY|NEXT (?:MORNING|AFTERNOON|DAY|NIGHT)|SAME TIME)\b|(?:^|\s)-\s*$|^-|--|\b(?:INT|EXT)\.|\b(?:CONTINUOUS|CONTINOUS|MOMENTS? LATER|DAY|NIGHT|MORNING|AFTERNOON|EVENING|DAWN|DUSK)\s*$|\d{4,}/;
+function looksLikeName(b){b=String(b||'').trim();if(!b)return false;if(NOT_CUE_X.test(b))return false;if(/[.!?,…:]$/.test(b)&&!/(^|\s)(MR|MRS|MS|DR|SR|JR|ST)\.$/.test(b))return false;if(/([A-Z])\1\1/.test(b))return false;if(NOT_CUE_W.test(b)||NOT_CHAR.test(b))return false;if(OBJ_W.test(b)&&!PERSON_W.test(b))return false;return true}
+/* Character names that the capital-letters rule cannot see: scripts in Telugu, Hindi and other languages without capitals, and scripts that write "Akash: text" on one line.
+   A name is learned from the script itself: a short line that keeps coming back and is followed by dialogue, or a name that keeps coming back before a colon. */
+let CUE_X=new Set(),CUE_IN=new Set();
+const INLINE_RE=/^([^\s:：()\d][^:：()\d]{0,22}?)\s*(\([^)]{0,30}\))?\s*[:：]\s+(\S.*)$/;
+function mineCues(L){
+  const solo={},soloNext={},inl={};let inlTotal=0;
+  for(let i=0;i<L.length;i++){const t=L[i].trim();if(!t||t.length>400)continue;
+    if(SCN_RE.test(t)||SCN_IN_RE.test(t)||parseIE(t))continue;
+    const m=t.match(INLINE_RE);
+    if(m){const nm=m[1].trim();if(nm.split(/\s+/).length<=3&&!/[.!?,;…"“”]$/.test(nm)&&!/^(NOTE|INT|EXT|SCENE|TITLE|SUPER|SUBTITLE|CUT TO|FADE IN|FADE OUT)$/i.test(nm)){inl[nm]=(inl[nm]||0)+1;inlTotal++}continue}
+    if(t.length<=26&&t.split(/\s+/).length<=3&&!/[.!?,;:…\d"“”(]/.test(t)){solo[t]=(solo[t]||0)+1;let j=i+1;if(j<L.length&&L[j].trim()&&L[j].trim()!==t)soloNext[t]=(soloNext[t]||0)+1}}
+  CUE_X=new Set();CUE_IN=new Set();
+  const need=Math.max(5,Math.round(L.length/1500));
+  Object.keys(solo).forEach(n=>{if(solo[n]>=need&&soloNext[n]>=solo[n]*0.6&&(/[^\x00-\x7F]/.test(n)||(n!==n.toUpperCase()&&solo[n]>=need*2)))CUE_X.add(n)});
+  if(inlTotal>=15)Object.keys(inl).forEach(n=>{if(inl[n]>=3)CUE_IN.add(n)});
+}
+function cueOf(t){const s=t.trim();if(!s||s.length>34)return null;if(CUE_X.has(s))return s;const b=s.replace(/\(.*?\)/g,'').replace(/[:^]$/,'').trim();
+  if(!b||b!==b.toUpperCase()||!/[A-Z]/.test(b)||!/^[A-Z0-9 .'’\-&]+$/.test(b))return null;if(b.split(/\s+/).length>4)return null;if(NOT_CHAR.test(b))return null;if(!looksLikeName(b))return null;return b.replace(/\s+/g,' ')}
 function classify(lines){const out=[];let mode='a',justCue=false;
   const nextNon=i=>{for(let j=i+1;j<lines.length&&j<i+4;j++){const x=lines[j].trim();if(x)return x}return ''};
   for(let i=0;i<lines.length;i++){const t=lines[i].trim();
     if(!t){out.push(['b','']);if(mode==='d'&&!justCue)mode='a';continue}
+    if(CUE_IN.size){const mm=t.match(INLINE_RE);if(mm&&CUE_IN.has(mm[1].trim())){out.push(['chr',U(mm[1])]);if(mm[2])out.push(['par',mm[2]]);out.push(['dia',mm[3]]);mode='d';justCue=false;continue}}
     if(mode==='d'){if(/^\(.*\)$/.test(t)){out.push(['par',t]);justCue=true;continue}if(cueOf(t)&&nextNon(i)&&!justCue){out.push(['chr',t]);justCue=true;continue}out.push(['dia',t]);justCue=false;continue}
     if(/^[A-Z .]+TO:$|^(FADE (IN|OUT)|CUT TO BLACK|INTERCUT|INTER CUT)\b.*$/.test(t)&&t===t.toUpperCase()){out.push(['trn',t]);continue}
     const nx=nextNon(i);
@@ -2396,7 +2415,11 @@ async function pdfToText(buf,onStatus){await ensurePdfjs();const doc=await windo
     rows.forEach(r=>{r.its.sort((a,b)=>a.x-b.x);let l='';r.its.forEach(it=>{l+=(l&&!/\s$/.test(l)&&!/^\s/.test(it.s)?' ':'')+it.s});if(prev!==null&&prev-r.y>20)lines.push('');lines.push(l.replace(/\s+/g,' ').trim());prev=r.y});
     const txt=lines.filter(l=>!/^\d+\.?$/.test(l)&&!/^\(?(MORE|CONTINUED)\)?:?$/i.test(l)).join('\n');chars+=txt.replace(/\s/g,'').length;pages.push(txt)}
   if(chars<doc.numPages*40)return {scanned:doc};
-  return pages.join('\n\n')}
+  const all=pages.join('\n\n');
+  /* old Telugu, Hindi and similar fonts store letters in a private range: the text looks like boxes or symbols. Read the page pictures instead. */
+  if(garbledRatio(all)>=0.15)return {scanned:doc,garbled:true};
+  return all}
+function garbledRatio(t){const s=String(t||'').replace(/\s/g,'');if(!s)return 0;let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0xE000&&c<=0xF8FF)n++}return n/s.length}
 async function ocrPdf(doc,onStatus){if(!AI.sample)throw new Error(STANDALONE?'Reading scanned pages needs AI. Choose an AI service in Settings first.':'Reading scanned pages needs Claude. Open ScriptDesk inside Claude.');
   const lim=AI.limits&&AI.limits.images;if(!lim)throw new Error('This view cannot send page images to Claude. Use a text PDF or Word file.');
   const per=Math.max(1,Math.min(lim.maxCount||1,4));const out=[];
@@ -6005,7 +6028,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
     try{const r=await fileToText(f,m=>info.textContent=m);
       if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
       if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
-      if(r&&r.scanned){scanned=r.scanned;info.textContent=`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
+      if(r&&r.scanned){scanned=r.scanned;info.textContent=r.garbled?`${f.name} uses an old font, so its text cannot be read directly (${r.scanned.numPages} pages). Press "Find scenes" and AI will read the page pictures instead.`:`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and Claude will read the pages first.`}
       else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}`}
       if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/^[0-9a-f]{8}\s/,'')}
     catch(e){info.textContent=(e&&e.message)||'That file could not be read. Try pasting the text.'}};

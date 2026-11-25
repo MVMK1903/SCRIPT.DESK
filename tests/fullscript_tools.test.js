@@ -62,6 +62,6 @@ const { chromium } = require('playwright');
     return out;
   });
   console.log(JSON.stringify(r, null, 1)); if (errs.length) console.log('ERRORS', errs);
-  const ok = r.tools === 'note,alt,dual,rev,omit,read,voice,hl,book,find,stats,sprint' && r.rows === 5 && r.hasAddEnd && r.afterAdd === '1,2,3,4,5,6' && r.afterCopy === '1,1A,2,3,4,5,6' && r.omitted && r.omRow === 1 && r.restored && r.afterNo === '1,2,2A,3,4' && r.afterDel === '1,2,3,4' && r.writerScenes === 4 && r.note === 'check continuity' && r.noteShown && r.notesTab && r.pinMoved && r.edited === 'edited idea' && r.deleted && r.idea === 1 && r.fsSticky && r.wrSticky && r.hlOpen && r.altPage === 'write' && !errs.length;
+  const ok = r.tools === 'note,alt,dual,rev,omit,read,voice,hl,book,translate,find,stats,sprint' && r.rows === 5 && r.hasAddEnd && r.afterAdd === '1,2,3,4,5,6' && r.afterCopy === '1,1A,2,3,4,5,6' && r.omitted && r.omRow === 1 && r.restored && r.afterNo === '1,2,2A,3,4' && r.afterDel === '1,2,3,4' && r.writerScenes === 4 && r.note === 'check continuity' && r.noteShown && r.notesTab && r.pinMoved && r.edited === 'edited idea' && r.deleted && r.idea === 1 && r.fsSticky && r.wrSticky && r.hlOpen && r.altPage === 'write' && !errs.length;
   console.log(ok ? 'PASS' : 'FAIL'); await b.close(); process.exit(ok ? 0 : 1);
 })();

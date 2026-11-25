@@ -2057,6 +2057,30 @@ body.wr-focus .wr-ai{display:none!important}
 .fs-tools{margin:0 0 12px}
 .ln.reading{background:rgba(10,132,255,.18);box-shadow:inset 3px 0 0 #0a84ff}
 @media (max-width:900px){.fs-wrap{grid-template-columns:minmax(0,1fr)}.fs-side{position:static;max-height:220px}}
+
+.pins{display:flex;flex-direction:column;gap:6px;padding:8px 14px 0;background:var(--sc-pin-bg,transparent)}
+.sc .pins{padding:10px 18px 0}
+.pin{display:flex;gap:10px;align-items:flex-start;background:var(--pin,#ffe14d);color:#1c1405;border-radius:6px;padding:8px 10px;font:13px/1.4 var(--f-ui,inherit);box-shadow:0 1px 0 rgba(0,0,0,.18),0 6px 14px rgba(0,0,0,.12);transform:rotate(-.25deg)}
+.pin .pin-t{flex:1;white-space:pre-wrap;overflow-wrap:anywhere}
+.pin .pin-a{display:flex;gap:2px;flex:none}
+.pin .pin-a button{border:0;background:rgba(0,0,0,.1);color:#1c1405;border-radius:50%;width:22px;height:22px;cursor:pointer;line-height:1;padding:0}
+.pin .pin-a small{opacity:.7;font-size:11px}
+.fs-tabs{margin:2px 0 8px}
+.fs-tabs button{justify-content:center}
+.fs-ng{margin-top:8px}
+.fs-ngh{opacity:.9}
+.fs-np{display:flex;gap:6px;align-items:flex-start;margin:4px 0 0 8px;padding:6px 8px;border-radius:6px;background:var(--pin);color:#1c1405;font:12px/1.35 var(--f-ui,inherit)}
+.fs-np span{flex:1;white-space:pre-wrap;overflow-wrap:anywhere}
+.fs-side .fs-np button{width:22px;flex:none;justify-content:center;padding:2px 0;color:#1c1405;font-size:12px}
+.pn-row{display:flex;gap:10px;align-items:center;margin-top:12px}.pn-row select{flex:1;min-width:0}
+/* tool strips stay in view while scrolling */
+.wx-tools{position:sticky;top:0;z-index:31;background:var(--bg);padding:6px 0 4px;margin-bottom:6px}
+.fs-tools{border-bottom:1px solid var(--line);margin-bottom:12px}
+@media (min-width:821px){body.wr-write .wr-main .wr-bar,body.wr-write .wr .wr-bar{top:var(--wxh,38px)!important}}
+.fs-side{top:56px;max-height:calc(100vh - 72px)}
+
+body[data-page="script"] .content{padding-top:0!important}
+body[data-page="script"] #content>:first-child{margin-top:18px}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -3241,7 +3265,7 @@ function saMount(){const c=$('#content');if(!c.querySelector('.sa-arc'))return;c
 R.script=()=>{const editing=VIEW.editScene;
   return {html:pageHead('Full script','Edit a scene to change its text or heading. Its reports update straight away, and the AI re-reads it.',`<button class="btn sm" data-act="checkScenes">Scene list check</button>`+searchBox('Find text'))+fsBookHero()+fsToolsHtml()+
   `<div class="fs-wrap">${fsSideHtml()}<div class="fs-main">`+(P.front?`<div class="front" style="margin-bottom:14px;max-width:880px">${esc(P.front)}</div>`:'')+
-  `<div class="scr">${P.scenes.map((s,idx)=>`<section class="sc" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase().slice(0,4000))}"><div class="sc-h"><span class="no">${esc(s.no)}</span><span class="hd">${effHtml(s)} · ${esc(s.loc)}${s.timeline?` <span class="tag acc">${esc(s.timeline)}</span>`:''}${s.note?` <span class="tag" title="Scene note">Note: ${esc(String(s.note).slice(0,60))}</span>`:''}</span>${s.status==='stale'?'<span class="tag warn">Edited</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':''}${editing===s.id?'':`<button class="btn sm" data-edit="${esc(s.id)}">Edit</button><button class="btn sm" data-addbelow="${esc(s.id)}" title="Add a new scene right after this one">+ Scene below</button>`}</div>
+  `<div class="scr">${P.scenes.map((s,idx)=>`<section class="sc" id="c-${s.id}" data-q="${esc((s.no+' '+s.loc+' '+s.text).toLowerCase().slice(0,4000))}"><div class="sc-h"><span class="no">${esc(s.no)}</span><span class="hd">${effHtml(s)} · ${esc(s.loc)}${s.timeline?` <span class="tag acc">${esc(s.timeline)}</span>`:''}</span>${s.status==='stale'?'<span class="tag warn">Edited</span>':s.status==='err'?'<span class="tag bad">AI failed</span>':''}${editing===s.id?'':`<button class="btn sm" data-edit="${esc(s.id)}">Edit</button><button class="btn sm" data-addbelow="${esc(s.id)}" title="Add a new scene right after this one">+ Scene below</button>`}<button class="btn sm" data-pinadd="${esc(s.id)}" title="Pin a note or idea to this scene">+ Note</button></div>${pinsHtml(s)}
   <div class="page">${editing===s.id?`<label class="faint small" for="ed-${s.id}">First line is the scene heading. Add another heading line to split the scene.</label><textarea id="ed-${s.id}">${esc(headingLine(s)+'\n\n'+s.text)}</textarea><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn pri sm" data-save="${esc(s.id)}">Save scene</button><button class="btn sm" data-cancel>Cancel</button><span style="flex:1"></span>${idx<P.scenes.length-1?`<button class="btn sm" data-mergeNext="${esc(s.id)}">Merge with next scene</button>`:''}<button class="btn sm danger" data-delscene="${esc(s.id)}">Delete scene</button></div>`:
   classify(s.text.split('\n')).map(([k,t])=>`<div class="ln ${k}">${esc(t)}</div>`).join('')}</div></section>`).join('')}</div></div></div>`,
   exp:{orient:'portrait',script:true,sheets:[{name:'Full script',cols:[{h:'Sc No',w:8},{h:'Heading',w:40},{h:'Text',w:100}],rows:P.scenes.map(s=>[s.no,headingLine(s),s.text])}]}}};
@@ -3593,7 +3617,9 @@ R.write=()=>{fmtApply();const D=draft();const hasScript=P.scenes.length>0;
      ${fmtSel()}<span class="wr-stat"><span id="wrCount"></span><br><span id="wrSaved"></span></span></div>
      <div class="wr-paper fmt-${fmtOf()} tpl-${tplEff()}${/[\u0600-\u06FF\u0900-\u0DFF]/.test(JSON.stringify(draft().els.slice(0,120)))?' ind':''}" id="wrPaper" style="${tplVars(tplEff())}"><div class="wr-sheets" id="wrSheets" aria-hidden="true"></div><div class="wr-marks" id="wrMarks" aria-hidden="true"></div><div class="wr-doc" id="wrDoc" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Screenplay"></div></div>
      <p class="wr-hint"><span id="wrHint">Scene heading · Enter → Action · Tab → Action</span><br>Ctrl+1…7 element · Shift+Enter new line · Ctrl+F find · Ctrl+Shift+N note · Ctrl+Z undo · Ctrl+S save</p></div>${wrAIHtml()}</div>`,exp:null}};
-function wrMount(){const d=wrDoc();if(!d)return;const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
+function wxSetH(){const t=document.querySelector('.wr-main .wx-tools');if(t)document.documentElement.style.setProperty('--wxh',t.offsetHeight+'px')}
+window.addEventListener('resize',()=>{if(typeof page!=='undefined'&&page==='write')wxSetH()});
+function wrMount(){const d=wrDoc();if(!d)return;wxSetH();setTimeout(wxSetH,300);const D=draft();if(!D.tpl&&!D.tplAsked&&['screen','tv'].includes(fmtOf())&&!D.els.some(e=>String(e.x||'').trim()))setTimeout(()=>{if(!$('#ov')&&page==='write')tplPick({start:true})},120);WR.hist=[];WR.redo=[];
   d.innerHTML=(D.els.length?D.els:[{t:'h',x:''}]).map(wrBlockHtml).join('');
   d.addEventListener('keydown',wrKey);d.addEventListener('input',wrInput);d.addEventListener('paste',wrPaste);
   d.addEventListener('blur',()=>{setTimeout(hideAC,120);clearTimeout(WR.saveT);wrSave()});
@@ -3749,23 +3775,41 @@ function fsRows(){const rows=[];
     P.scenes.forEach(sc=>{if(!seen.has(sc.id))rows.push({id:sc.id,no:sc.no,loc:sc.loc})});return rows}
   return P.scenes.map(sc=>({id:sc.id,no:sc.no,loc:sc.loc}))}
 function fsCurId(){if(VIEW.fsCur&&P.scenes.some(x=>x.id===VIEW.fsCur))return VIEW.fsCur;return P.scenes[0]&&P.scenes[0].id}
-function fsSideHtml(){const cur=fsCurId();const rows=fsRows();
-  return `<aside class="fs-side" aria-label="Scenes"><div class="fs-sh">Scenes</div>${rows.map(r=>r.om?`<div class="wr-scr fs-om"><button type="button" disabled title="Omitted scene"><b>${esc(r.no)}</b><span>OMITTED</span></button><button type="button" class="wr-scm" data-fsm="om:${r.hi}" aria-haspopup="menu" aria-label="Omitted scene ${esc(r.no)} actions">⋯</button></div>`:
+const PIN_COLS=['#ffe14d','#ff9fc2','#8fe07a','#7cc0ff','#c59bff'];
+function pinsOf(sc){return Array.isArray(sc.pins)?sc.pins:[]}
+function pinsHtml(sc){const cards=pinsOf(sc).map(p=>`<div class="pin" style="--pin:${PIN_COLS[p.col|0]||PIN_COLS[0]}" data-nohl><span class="pin-t">${esc(p.t)}</span><span class="pin-a"><button type="button" data-pinedit="${esc(sc.id)}|${esc(p.id)}" aria-label="Edit note" title="Edit">✎</button><button type="button" data-pindel="${esc(sc.id)}|${esc(p.id)}" aria-label="Delete note" title="Delete">×</button></span></div>`);
+  if(sc.note)cards.push(`<div class="pin" style="--pin:#d9d9de" data-nohl><span class="pin-t">${esc(sc.note)}</span><span class="pin-a"><small>from the writer</small></span></div>`);
+  return cards.length?`<div class="pins">${cards.join('')}</div>`:''}
+function fsSideHtml(){const cur=fsCurId();const rows=fsRows();const tab=VIEW.fsTab==='notes'?'notes':'scenes';
+  const nPins=P.scenes.reduce((a,x)=>a+pinsOf(x).length,0)+(Array.isArray(P.ideas)?P.ideas.length:0);
+  const tabs=`<div class="seg wx-side-tabs fs-tabs" role="tablist"><button type="button" data-fstab="scenes" aria-pressed="${tab==='scenes'}">Scenes</button><button type="button" data-fstab="notes" aria-pressed="${tab==='notes'}">Notes${nPins?` <small>${nPins}</small>`:''}</button></div>`;
+  if(tab==='notes'){const groups=P.scenes.filter(x=>pinsOf(x).length).map(x=>`<div class="fs-ng"><button type="button" class="fs-ngh" data-fsgo="${esc(x.id)}"><b>${esc(x.no)}</b><span>${esc(U(x.loc)||'(no location)')}</span></button>${pinsOf(x).map(p=>`<div class="fs-np" style="--pin:${PIN_COLS[p.col|0]||PIN_COLS[0]}"><span>${esc(p.t)}</span><button type="button" data-pinedit="${esc(x.id)}|${esc(p.id)}" aria-label="Edit note">✎</button></div>`).join('')}</div>`).join('');
+    const ideas=(Array.isArray(P.ideas)?P.ideas:[]).map(p=>`<div class="fs-np" style="--pin:${PIN_COLS[p.col|0]||PIN_COLS[0]}"><span>${esc(p.t)}</span><button type="button" data-pinedit="|${esc(p.id)}" aria-label="Edit idea">✎</button></div>`).join('');
+    return `<aside class="fs-side" aria-label="Notes">${tabs}<button type="button" class="wr-scadd fs-newnote" data-pinadd="${esc(cur||'')}">+ New note</button>${groups||''}${ideas?`<div class="fs-sh">Ideas, not pinned</div>${ideas}`:''}${!groups&&!ideas?'<p class="small muted" style="margin:10px 6px;line-height:1.5">Write down an idea and pin it to a scene. It stays with that scene when scenes move or renumber.</p>':''}</aside>`}
+  return `<aside class="fs-side" aria-label="Scenes">${tabs}${rows.map(r=>r.om?`<div class="wr-scr fs-om"><button type="button" disabled title="Omitted scene"><b>${esc(r.no)}</b><span>OMITTED</span></button><button type="button" class="wr-scm" data-fsm="om:${r.hi}" aria-haspopup="menu" aria-label="Omitted scene ${esc(r.no)} actions">⋯</button></div>`:
     `<div class="wr-scr"><button type="button" data-fsgo="${esc(r.id)}" aria-current="${r.id===cur}"><b>${esc(r.no)}</b><span>${esc(U(r.loc)||'(no location)')}</span></button><button type="button" class="wr-scm" data-fsm="${esc(r.id)}" aria-haspopup="menu" aria-label="Scene ${esc(r.no)} actions" title="Add, copy, move, omit or delete this scene">⋯</button></div>`).join('')}
     <button type="button" class="wr-scadd" data-fsm="end">+ Add scene at the end</button></aside>`}
-const FS_TOOLS=[['note','Note','Add a note to the current scene'],['alt','Alternates','Keep other versions of a line (works in Write)'],['dual','Dual','Two characters speak at the same time (works in Write)'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark the current scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the current scene, a voice per character'],['hl','Highlight','Colour characters, locations, costumes and props'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find text in the script'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint']];
+const FS_TOOLS=[['note','Note','Write a note or idea and pin it to the current scene'],['alt','Alternates','Keep other versions of a line (works in Write)'],['dual','Dual','Two characters speak at the same time (works in Write)'],['rev','Revisions','Revision mode, colours, locked pages'],['omit','Omit scene','Mark the current scene OMITTED or restore it'],['read','Read aloud','Read the script aloud from the current scene, a voice per character'],['hl','Highlight','Colour characters, locations, costumes and props'],['book','Read as book','Read the finished script as a bound book'],['find','Find','Find text in the script'],['stats','Stats','Words, pages, goal and streak'],['sprint','Sprint','Timed writing sprint']];
 function fsToolsHtml(){return `<div class="wx-tools fs-tools" role="toolbar" aria-label="Writing tools">${FS_TOOLS.map(([k,l,t])=>`<button type="button" class="wx-b" data-fsx="${k}" title="${esc(t)}">${l}</button>`).join('')}</div>`}
 function fsWriterAt(sc,toastMsg){const D=draft();const nums=wrNumbers(D.els);const hi=D.els.findIndex((e,i)=>e.t==='h'&&sc&&U(nums[i])===U(sc.no));go('write');setTimeout(()=>{const d=wrDoc();const el=d&&d.children[hi>=0?hi:0];if(el){el.scrollIntoView({block:'center'});placeCaret(el)}if(toastMsg)toast(toastMsg,6000)},120)}
-function fsNote(){const sc=P.scenes.find(x=>x.id===fsCurId());if(!sc)return;
-  openModal(`<div class="modal-h"><h2>Note for scene ${esc(sc.no)}</h2></div><div class="modal-b"><textarea id="fsNote" rows="5" style="width:100%" placeholder="A note for yourself or the director">${esc(sc.note||'')}</textarea></div><div class="modal-f"><button class="btn" data-close>Cancel</button><button class="btn pri" id="fsNoteGo">Save note</button></div>`);
-  $('#fsNote').focus();$('#fsNoteGo').onclick=()=>{const v=$('#fsNote').value.trim();snapshot();sc.note=v;
-    if(draftReal()){const D=draft(),nums=wrNumbers(D.els);const hi=D.els.findIndex((e,i)=>e.t==='h'&&U(nums[i])===U(sc.no));if(hi>=0){if(v)D.els[hi].note=v;else delete D.els[hi].note;D.at=D.syncedAt=Date.now();dirty.draft=true}}
-    touch([sc.id]);closeModal();render(true)}}
-function fsRead(){if(RA.on)return raStop();if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){toast('Read-aloud is not available in this browser.');return}
-  const secs=[...document.querySelectorAll('.scr section.sc')];const cur=fsCurId();let start=Math.max(0,secs.findIndex(x=>x.id==='c-'+cur));const q=[];
-  secs.slice(start).forEach(sec=>{const sc=P.scenes.find(x=>'c-'+x.id===sec.id);const hd=sec.querySelector('.hd');q.push({el:sec,text:`Scene ${sc?sc.no:''}. ${raHead(hd?hd.textContent.replace(/·/g,','):'')}.`,who:''});let spk=null;
-    sec.querySelectorAll('.page .ln').forEach(ln=>{const x=ln.textContent.trim();if(!x)return;if(ln.classList.contains('chr'))spk=chNorm(x);else if(ln.classList.contains('dia'))q.push({el:ln,text:x,who:spk});else if(ln.classList.contains('act')){spk=null;q.push({el:ln,text:x,who:''})}else if(ln.classList.contains('trn')){spk=null;q.push({el:ln,text:x.toLowerCase(),who:''})}})});
-  if(!q.length){toast('Nothing to read.');return}RA.on=true;RA.q=q;RA.i=0;speechSynthesis.cancel();raNext();raSync()}
+function fsNote(){pinModal(fsCurId(),null)}
+function pinModal(sid,pid){const sc=P.scenes.find(x=>x.id===sid);const list=sc?pinsOf(sc):(Array.isArray(P.ideas)?P.ideas:[]);const cur=pid?list.find(p=>p.id===pid):null;let col=cur?cur.col|0:0;
+  openModal(`<div class="modal-h"><h2>${cur?'Edit note':'New note'}</h2></div><div class="modal-b"><textarea id="pnT" rows="5" style="width:100%" placeholder="An idea, a reminder, something to fix or try">${esc(cur?cur.t:'')}</textarea>
+  <div class="pn-row"><label class="small muted" for="pnS">Pin to</label><select id="pnS"><option value="">No scene (general idea)</option>${P.scenes.map(x=>`<option value="${esc(x.id)}" ${sc&&x.id===sc.id?'selected':''}>Scene ${esc(x.no)} · ${esc(U(x.loc)||'no location')}</option>`).join('')}</select></div>
+  <div class="pn-row"><span class="small muted">Colour</span><span class="hl-dots" id="pnC">${PIN_COLS.map((c,i)=>`<button type="button" class="hl-dot" data-c="${i}" style="background:${c}" aria-pressed="${i===col}" aria-label="Colour ${i+1}"></button>`).join('')}</span></div></div>
+  <div class="modal-f">${cur?'<button class="btn danger" id="pnDel" style="margin-right:auto">Delete</button>':''}<button class="btn" data-close>Cancel</button><button class="btn pri" id="pnGo">${cur?'Save note':'Pin note'}</button></div>`);
+  const T=$('#pnT');T.focus();$('#pnC').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;col=+b.dataset.c;document.querySelectorAll('#pnC .hl-dot').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))};
+  const take=()=>{if(cur){const l=sc?pinsOf(sc):P.ideas;const k=l.indexOf(cur);if(k>=0)l.splice(k,1)}};
+  if(cur)$('#pnDel').onclick=()=>{snapshot();take();touch(sc?[sc.id]:[]);logChange('Note deleted','scenes');closeModal();render(true)};
+  $('#pnGo').onclick=()=>{const t=T.value.trim();if(!t){toast('Write the note first.');return}snapshot();take();const to=$('#pnS').value;const pin={id:cur?cur.id:uid(),t,col,at:cur?cur.at:Date.now()};
+    const dst=to?P.scenes.find(x=>x.id===to):null;if(dst){dst.pins=pinsOf(dst).concat(pin);touch([dst.id])}else{P.ideas=(Array.isArray(P.ideas)?P.ideas:[]).concat(pin);touch([])}
+    logChange(`Note ${cur?'edited':'pinned'}${dst?' to scene '+dst.no:''}`,'scenes');closeModal();render(true);toast(dst?`Pinned to scene ${dst.no}.`:'Saved as a general idea.',3500)}}
+function fsRead(){if(RA.on)return raStop();if(VO().engine!=='natural'&&(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined')){toast('Read-aloud is not available in this browser.');return}
+  const secs=[...document.querySelectorAll('.scr section.sc')];const cur=fsCurId();let start=Math.max(0,secs.findIndex(x=>x.id==='c-'+cur));const q=[];let all='';
+  secs.slice(start).forEach(sec=>{const sc=P.scenes.find(x=>'c-'+x.id===sec.id);const hd=sec.querySelector('.hd');
+    raBuild('h',hd?hd.textContent:'','',{heading:`Scene ${sc?sc.no:''}. ${raHead(hd?hd.textContent.replace(/·/g,','):'')}.`}).forEach(it=>{it.el=sec;q.push(it)});let spk=null,hint='',last=null;
+    sec.querySelectorAll('.page .ln').forEach(ln=>{const x=ln.textContent.trim();if(!x)return;all+=' '+x;if(ln.classList.contains('chr')){spk=chNorm(x);hint=''}else if(ln.classList.contains('par')){hint=x}else if(ln.classList.contains('dia')){raBuild('d',x,spk,{hint,change:last!==spk}).forEach(it=>{it.el=ln;q.push(it)});last=spk;hint=''}else if(ln.classList.contains('act')){spk=null;last=null;raBuild('a',x,'').forEach(it=>{it.el=ln;q.push(it)})}else if(ln.classList.contains('trn')){spk=null;last=null;raBuild('t',x,'').forEach(it=>{it.el=ln;q.push(it)})}})});
+  raRun(q,all)}
 function fsTool(k){const sc=P.scenes.find(x=>x.id===fsCurId());
   if(k==='note')return fsNote();if(k==='rev')return revModal();if(k==='omit')return sc?fsOp('omit',sc.id):toast('Pick a scene first.');
   if(k==='read')return fsRead();if(k==='hl')return hlToggle(true);if(k==='book'){return bookOpen()}
@@ -3790,7 +3834,7 @@ function fsOp(op,id,mode){const i=P.scenes.findIndex(s=>s.id===id);if(i<0)return
       if(op==='down'){title='Move this scene down';prev=list[i+1].no;after=list.length-2-i}
       numPick(prev,new Set(list.map(x=>U(x.no))),after,title,m=>fsOp(op,id,m));return}
     snapshot();let t=a,from;
-    if(op==='dup'){t=JSON.parse(JSON.stringify(a));t.id=uid();t.no='';t.status='stale';P.scenes.splice(i+1,0,t);from=i+1}
+    if(op==='dup'){t=JSON.parse(JSON.stringify(a));t.id=uid();t.no='';t.status='stale';if(Array.isArray(t.pins))t.pins=t.pins.map(p=>Object.assign({},p,{id:uid()}));P.scenes.splice(i+1,0,t);from=i+1}
     else{const j=op==='up'?i-1:i+1;P.scenes.splice(i,1);P.scenes.splice(j,0,a);from=Math.min(i,j)}
     const list=P.scenes,ti=list.indexOf(t);
     if(mode==='insert'){const taken=new Set(list.filter(x=>x!==t).map(x=>U(x.no)));t.no=insertNoAfter(ti>0?list[ti-1].no:null,taken)||nextSceneNo(ti>0?list[ti-1].no:'')}
@@ -3810,6 +3854,10 @@ function fsMount(){const secs=[...document.querySelectorAll('.scr section.sc')];
   const io=new IntersectionObserver(es=>{const v=es.filter(x=>x.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];if(v){const id=v.target.id.slice(2);if(VIEW.fsCur!==id){VIEW.fsCur=id;document.querySelectorAll('.fs-side [data-fsgo]').forEach(b=>b.setAttribute('aria-current',b.dataset.fsgo===id?'true':'false'))}}},{rootMargin:'-10% 0px -75% 0px'});
   secs.forEach(x=>io.observe(x))}
 document.addEventListener('click',e=>{if(page!=='script')return;const g=e.target.closest('[data-fsgo]');if(g){const el=document.getElementById('c-'+g.dataset.fsgo);VIEW.fsCur=g.dataset.fsgo;if(el)el.scrollIntoView({block:'start',behavior:'smooth'});document.querySelectorAll('.fs-side [data-fsgo]').forEach(b=>b.setAttribute('aria-current',b===g?'true':'false'));return}
+  const pa=e.target.closest('[data-pinadd]');if(pa){pinModal(pa.dataset.pinadd||fsCurId(),null);return}
+  const pe=e.target.closest('[data-pinedit]');if(pe){const [a,b]=pe.dataset.pinedit.split('|');pinModal(a||null,b);return}
+  const pd=e.target.closest('[data-pindel]');if(pd){const [a,b]=pd.dataset.pindel.split('|');const sc=P.scenes.find(x=>x.id===a);if(sc){snapshot();sc.pins=pinsOf(sc).filter(p=>p.id!==b);touch([sc.id]);render(true)}return}
+  const ft=e.target.closest('[data-fstab]');if(ft){VIEW.fsTab=ft.dataset.fstab;render(true);return}
   const m=e.target.closest('[data-fsm]');if(m){fsMenu(m);return}const t=e.target.closest('[data-fsx]');if(t)fsTool(t.dataset.fsx)});
 function wrRenumber(){if(!confirm('Renumber every scene 1, 2, 3…? Scene numbers in the reports change after "Update breakdown", so breakdown details follow the new numbers.'))return;snapshot();draft().els.forEach(e=>{delete e.n});draft().at=Date.now();dirty.draft=true;touch([]);render()}
 
@@ -4055,24 +4103,83 @@ function chData(){const D=P.draft;const useDraft=draftReal();const by={},scenes=
   const totW=names.reduce((a,n)=>a+by[n].words,0)||1;const list=names.map(n=>by[n]).sort((a,b)=>b.speeches-a.speeches||b.scenes.size-a.scenes.size);list.forEach(c=>c.share=c.words/totW);
   return {list,scenes,src:useDraft?'draft':'scenes'}}
 /* voices */
-function chVoices(){if(!('speechSynthesis' in window))return [];const v=speechSynthesis.getVoices()||[];const en=v.filter(x=>/^en/i.test(x.lang));return (en.length?en:v)}
-function VO(){if(!P.voices||typeof P.voices!=='object')P.voices={narrator:'',rate:1,map:{},pitch:{}};P.voices.map=P.voices.map||{};P.voices.pitch=P.voices.pitch||{};return P.voices}
-function chVoiceFor(name){const V=VO(),vs=chVoices();if(!vs.length)return {voice:null,pitch:1};const pick=uri=>vs.find(v=>v.voiceURI===uri);
+/* ===== Read aloud: natural open-source voices (Kokoro, Apache-2.0, runs on this device) or the device's own voices, delivered like a narrated film ===== */
+const KOKORO_URL='https://cdn.jsdelivr.net/npm/kokoro-js@1.2.0/+esm',KOKORO_MODEL='onnx-community/Kokoro-82M-v1.0-ONNX';
+const K_VOICES=[['bm_george','George','British man, deep'],['bm_lewis','Lewis','British man, warm'],['bm_daniel','Daniel','British man, clear'],['bm_fable','Fable','British man, storyteller'],['am_michael','Michael','American man, steady'],['am_fenrir','Fenrir','American man, strong'],['am_adam','Adam','American man, deep'],['am_eric','Eric','American man, friendly'],['am_liam','Liam','American man, young'],['am_onyx','Onyx','American man, low'],['am_puck','Puck','American man, light'],['am_echo','Echo','American man, calm'],['af_heart','Heart','American woman, warm'],['af_bella','Bella','American woman, expressive'],['af_nicole','Nicole','American woman, soft'],['af_sarah','Sarah','American woman, natural'],['af_sky','Sky','American woman, bright'],['af_nova','Nova','American woman, clear'],['af_kore','Kore','American woman, calm'],['af_river','River','American woman, gentle'],['af_aoede','Aoede','American woman, musical'],['af_jessica','Jessica','American woman, lively'],['af_alloy','Alloy','American woman, even'],['bf_emma','Emma','British woman, refined'],['bf_isabella','Isabella','British woman, warm'],['bf_alice','Alice','British woman, bright'],['bf_lily','Lily','British woman, gentle']];
+const K_NARR='bm_george',K_POOL=['af_heart','am_michael','bf_emma','am_fenrir','af_nicole','bm_lewis','af_sky','am_puck','bf_isabella','am_adam','af_bella','bm_daniel'];
+const TTS={eng:null,loading:null,state:'idle',pct:0,err:'',ctx:null,src:null};
+function kLabel(id){const v=K_VOICES.find(x=>x[0]===id);return v?`${v[1]} (${v[2]})`:id}
+function ttsStatusText(){return TTS.state==='ready'?'Natural voices are ready.':TTS.state==='loading'?`Loading the natural voices… ${TTS.pct}%`:TTS.state==='error'?`Could not load the natural voices (${TTS.err}). Device voices are used instead.`:'Natural voices are not loaded yet.'}
+function ttsStatusShow(){const el=document.getElementById('ttsSt');if(el)el.textContent=ttsStatusText();const b=document.querySelector('[data-ttsload]');if(b){b.disabled=TTS.state==='loading';b.textContent=TTS.state==='ready'?'Natural voices ready':TTS.state==='loading'?'Loading…':'Load natural voices (about 90 MB, once)'}}
+async function ttsLoad(){if(TTS.eng)return TTS.eng;if(TTS.loading)return TTS.loading;TTS.state='loading';TTS.pct=0;TTS.err='';ttsStatusShow();
+  TTS.loading=(async()=>{try{const mod=window.SD_TTS_MODULE||await import(KOKORO_URL);const prog=p=>{if(p&&typeof p.progress==='number'){TTS.pct=Math.max(TTS.pct,Math.min(99,Math.round(p.progress)));ttsStatusShow()}};
+      let eng;const gpu=!!(navigator.gpu);
+      try{eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:gpu?'fp32':'q8',device:gpu?'webgpu':'wasm',progress_callback:prog})}
+      catch(e){if(!gpu)throw e;eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:'q8',device:'wasm',progress_callback:prog})}
+      TTS.eng=eng;TTS.state='ready';TTS.pct=100;ttsStatusShow();return eng}
+    catch(e){TTS.state='error';TTS.err=String(e&&e.message||e).slice(0,80);TTS.loading=null;ttsStatusShow();throw e}})();
+  return TTS.loading}
+function ttsAudioCtx(){if(!TTS.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;TTS.ctx=new C()}if(TTS.ctx.state==='suspended')TTS.ctx.resume().catch(()=>{});return TTS.ctx}
+async function ttsSynth(text,voice,speed){const eng=await ttsLoad();const a=await eng.generate(text,{voice,speed:Math.max(.6,Math.min(1.4,speed||1))});
+  const data=a.audio||a.data||a;const sr=a.sampling_rate||a.sampleRate||24000;if(!data||!data.length)throw new Error('no audio');return {data,sr}}
+function ttsPlay(buf){return new Promise(res=>{const ctx=ttsAudioCtx();if(!ctx){res();return}const ab=ctx.createBuffer(1,buf.data.length,buf.sr);ab.copyToChannel(buf.data instanceof Float32Array?buf.data:Float32Array.from(buf.data),0);
+  const src=ctx.createBufferSource();src.buffer=ab;src.connect(ctx.destination);TTS.src=src;src.onended=()=>{if(TTS.src===src)TTS.src=null;res()};src.start()})}
+function ttsStop(){try{if(TTS.src){const s=TTS.src;TTS.src=null;s.onended=null;s.stop()}}catch(e){}}
+/* device voices, best first: natural/neural/online and premium voices before the robotic ones */
+const VOICE_BAD=/espeak|compact|albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|organ|trinoids|whisper|zarvox|fred|junior|ralph|kathy|princess|superstar|wobble|jester/i;
+function chVoiceScore(v){const n=(v.name||'')+' '+(v.voiceURI||'');let sc=0;if(/natural|neural|online/i.test(n))sc+=5;if(/premium|enhanced|siri/i.test(n))sc+=4;if(/google/i.test(n))sc+=3;if(/microsoft/i.test(n))sc+=1;if(!v.localService)sc+=1;if(VOICE_BAD.test(n))sc-=6;return sc}
+const LANG_OF={telugu:'te',tamil:'ta',hindi:'hi',malayalam:'ml',kannada:'kn'};
+function chVoices(lang){if(!('speechSynthesis' in window))return [];const v=speechSynthesis.getVoices()||[];const pre=new RegExp('^'+(lang||'en'),'i');let pool=v.filter(x=>pre.test(x.lang));if(!pool.length&&!lang)pool=v.slice();
+  return pool.map((x,i)=>[x,chVoiceScore(x),i]).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).map(x=>x[0])}
+function VO(){if(!P.voices||typeof P.voices!=='object')P.voices={narrator:'',rate:1,map:{},pitch:{}};P.voices.map=P.voices.map||{};P.voices.pitch=P.voices.pitch||{};if(!P.voices.engine)P.voices.engine='system';if(!P.voices.style)P.voices.style='cinematic';return P.voices}
+function chVoiceFor(name,lang){const V=VO(),vs=chVoices(lang);if(!vs.length)return {voice:null,pitch:1};const pick=uri=>vs.find(v=>v.voiceURI===uri);
   if(!name){return {voice:pick(V.narrator)||vs[0],pitch:1}}let v=pick(V.map[name]);let pitch=V.pitch[name];
-  if(!v){const L=chData().list.map(c=>c.name);const k=Math.max(0,L.indexOf(name));v=vs[(k+1)%vs.length];if(pitch==null)pitch=vs.length<4?[1,0.8,1.25,0.9,1.15][k%5]:1}return {voice:v,pitch:pitch==null?1:pitch}}
-const RA={on:false,q:[],i:0};
+  if(!v){const L=chData().list.map(c=>c.name);const k=Math.max(0,L.indexOf(name));const good=vs.filter(x=>chVoiceScore(x)>=2);const pool=good.length>=3?good:vs;v=pool[(k+1)%pool.length];if(pitch==null)pitch=pool.length<4?[1,0.8,1.25,0.9,1.15][k%5]:1}return {voice:v,pitch:pitch==null?1:pitch}}
+function kVoiceFor(who){const V=VO();if(!who)return /^k:/.test(V.narrator)?V.narrator.slice(2):K_NARR;
+  if(/^k:/.test(V.map[who]||''))return V.map[who].slice(2);RA.kmap=RA.kmap||{};if(RA.kmap[who])return RA.kmap[who];const used=new Set(Object.values(RA.kmap));const id=K_POOL.find(x=>!used.has(x))||K_POOL[Object.keys(RA.kmap).length%K_POOL.length];RA.kmap[who]=id;return id}
+const RA={on:false,q:[],i:0,tok:0,kmap:null,lang:''};
 function raHead(x){return U(x).replace(/^INT\.?\s*\/\s*EXT\.?/,'Interior, exterior,').replace(/^EXT\.?\s*\/\s*INT\.?/,'Exterior, interior,').replace(/^INT\.?\s*/,'Interior. ').replace(/^EXT\.?\s*/,'Exterior. ').replace(/^EST\.?\s*/,'Establishing. ').replace(/\s+-\s+/g,'. ').toLowerCase()}
-function raStart(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){toast('Read-aloud is not available in this browser.');return}
+/* how screenplay text is said: names in capitals read as names, ages as decades, abbreviations in full */
+const RA_ACR=new Set(['FBI','CIA','TV','DJ','OK','USA','UK','ID','DNA','UFO','SUV','ATM','CCTV','GPS','AI','PC','HQ','ER','ICU','CPR','DVD','SOS','NYPD','LAPD','CEO','VIP','MRI','EMT','IRS','NASA','UN','EU','BBC','CNN','IPS','CBI','RAW','NSA']);
+const RA_DEC={2:'twenties',3:'thirties',4:'forties',5:'fifties',6:'sixties',7:'seventies',8:'eighties',9:'nineties'};
+function raSpeakable(x){x=String(x||'');
+  x=x.replace(/\b(\d)0s\b/g,(m,d)=>RA_DEC[d]||m).replace(/\bV\.?\s?O\.?(?=[\s,)]|$)/g,'voice over').replace(/\bO\.?\s?S\.?\b(?=[\s,.)]|$)/g,'off screen').replace(/\bCONT'?D\.?/gi,'')
+   .replace(/\bMr\./g,'Mister').replace(/\bMrs\./g,'Missus').replace(/\bDr\./g,'Doctor').replace(/\bSt\./g,'Saint').replace(/\bvs\.?\b/gi,'versus')
+   .replace(/[\^*_#]+/g,'').replace(/\s+[-–—]+\s+|--+|—/g,', ').replace(/\s*\(\s*/g,', ').replace(/\s*\)\s*/g,', ').replace(/\.{3,}|…/g,'… ');
+  x=x.replace(/\b[A-Z][A-Z'’]{1,}\b/g,w=>RA_ACR.has(w)?w.split('').join(' '):w.charAt(0)+w.slice(1).toLowerCase());
+  return x.replace(/,\s*,/g,',').replace(/,\s*([.!?])/g,'$1').replace(/\s{2,}/g,' ').trim()}
+function raSentences(t){return String(t).split(/(?<=[.!?…])\s+(?=["“'‘(]?[A-Z0-9])/).map(x=>x.trim()).filter(Boolean)}
+/* turn one script line into the beats a narrator would give it */
+function raBuild(kind,text,who,o){o=o||{};const V=VO(),cin=V.style!=='plain';const P_=(pb,pa)=>cin?[pb,pa]:[0,0];const out=[];const clean=raSpeakable(text);if(!clean)return out;
+  if(kind==='h'){const [pb,pa]=P_(650,750);out.push({text:o.heading||clean,who:'',kind:'h',pb,pa,rm:.88});return out}
+  if(kind==='a'){const ss=raSentences(clean);ss.forEach((t,k)=>{const last=k===ss.length-1;const [pb,pa]=P_(k===0?220:0,last?520:260);out.push({text:t,who:'',kind:'a',pb,pa:/…$/.test(t)?pa+300:pa,rm:.93})});return out}
+  if(kind==='d'){let rm=1;const h=o.hint||'';if(/whisper|quiet|soft|low|hush|gentl|tired|sad/i.test(h))rm=.86;else if(/shout|yell|scream|loud|angry|furious|rush|fast|panic/i.test(h))rm=1.1;
+    const ss=raSentences(clean);const mid=ss.length>1;ss.forEach((t,k)=>{const [pb,pa]=P_(k===0?(o.change?420:220):0,k===ss.length-1?(/…$/.test(t)?650:340):200);out.push({text:t,who:who||'',kind:'d',pb,pa,rm:/[!]$/.test(t)&&rm<1.05?rm+.04:rm})});return out}
+  if(kind==='t'){const [pb,pa]=P_(300,600);out.push({text:clean.toLowerCase(),who:'',kind:'t',pb,pa,rm:.9});return out}
+  return out}
+const raWait=ms=>new Promise(r=>ms>0?setTimeout(r,ms):r());
+async function raSay(it){const V=VO();const rate=(+V.rate||1)*(it.rm||1);
+  if(V.engine==='natural'&&!RA.lang&&TTS.state!=='error'){try{const voice=kVoiceFor(it.who);const buf=await (RA.cache&&RA.cache.get(it)||ttsSynth(it.text,voice,rate));if(RA.cache)RA.cache.delete(it);if(!RA.on)return;await ttsPlay(buf);return}catch(e){if(!RA.on)return;if(TTS.state!=='error'){TTS.state='error';TTS.err='playing failed';console.warn('tts play',e);ttsStatusShow()}toast('Natural voices stopped working, so the device voices take over.',5000)}}
+  return new Promise(res=>{const u=new SpeechSynthesisUtterance(it.text);const vp=chVoiceFor(it.who,RA.lang);if(vp.voice){u.voice=vp.voice;u.lang=vp.voice.lang}u.pitch=Math.max(.5,Math.min(1.6,vp.pitch+(it.kind==='a'?-.06:0)));u.rate=Math.max(.5,Math.min(1.8,rate));u.onend=res;u.onerror=res;speechSynthesis.speak(u)})}
+function raPrefetch(){const V=VO();if(V.engine!=='natural'||RA.lang||TTS.state!=='ready')return;RA.cache=RA.cache||new Map();for(let k=RA.i+1;k<=RA.i+2;k++){const it=RA.q[k];if(it&&!RA.cache.has(it)){const p=ttsSynth(it.text,kVoiceFor(it.who),(+V.rate||1)*(it.rm||1));p.catch(()=>{});RA.cache.set(it,p)}}}
+function raStart(){if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){if(VO().engine!=='natural'){toast('Read-aloud is not available in this browser.');return}}
   const d=wrDoc();if(!d)return;wrSave();const kids=[...d.children];let start=Math.max(0,kids.indexOf(wrCur()));while(start>0&&(kids[start].dataset.t==='d'||kids[start].dataset.t==='p'))start--;
-  const q=[];let spk=null,om=false;for(let i=0;i<kids.length;i++){const el=kids[i],t=el.dataset.t,x=el.textContent.trim();if(t==='h'){om=!!el.dataset.om}
-    if(t==='c'&&!om)spk=chNorm(x);if(i<start||om&&t!=='h'||!x)continue;
-    if(t==='h')q.push({el,text:(el.dataset.om?`Scene ${el.dataset.n||''} omitted.`:`Scene ${el.dataset.n||''}. ${raHead(x)}.`),who:''});
-    else if(t==='d')q.push({el,text:x,who:spk});else if(t==='a'||t==='s')q.push({el,text:x,who:''});else if(t==='t')q.push({el,text:x.toLowerCase(),who:''})}
-  if(!q.length){toast('Nothing to read from here.');return}RA.on=true;RA.q=q;RA.i=0;speechSynthesis.cancel();raNext();raSync()}
-function raNext(){if(!RA.on)return;document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));const it=RA.q[RA.i];if(!it){raStop();toast('Finished reading.');return}
-  it.el.classList.add('reading');it.el.scrollIntoView({block:'center',behavior:'smooth'});const u=new SpeechSynthesisUtterance(it.text);const vp=chVoiceFor(it.who);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+VO().rate||1;
-  u.onend=()=>{if(!RA.on)return;RA.i++;raNext()};u.onerror=()=>{if(!RA.on)return;RA.i++;raNext()};speechSynthesis.speak(u)}
-function raStop(){RA.on=false;try{speechSynthesis.cancel()}catch(e){}document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));raSync()}
+  const q=[];let spk=null,om=false,hint='',lastWho=null;for(let i=0;i<kids.length;i++){const el=kids[i],t=el.dataset.t,x=el.textContent.trim();if(t==='h'){om=!!el.dataset.om}
+    if(t==='c'&&!om){spk=chNorm(x);hint=''}if(i<start||om&&t!=='h'||!x)continue;
+    if(t==='h'){const b=raBuild('h',x,'',{heading:el.dataset.om?`Scene ${el.dataset.n||''} omitted.`:`Scene ${el.dataset.n||''}. ${raHead(x)}.`});b.forEach(it=>{it.el=el;q.push(it)});lastWho=null}
+    else if(t==='p'){hint=x}
+    else if(t==='d'){raBuild('d',x,spk,{hint,change:lastWho!==spk}).forEach(it=>{it.el=el;q.push(it)});lastWho=spk;hint=''}
+    else if(t==='a'||t==='s'){raBuild('a',x,'').forEach(it=>{it.el=el;q.push(it)});lastWho=null}
+    else if(t==='t'){raBuild('t',x,'').forEach(it=>{it.el=el;q.push(it)});lastWho=null}}
+  raRun(q,d.textContent)}
+function raRun(q,sample){if(!q.length){toast('Nothing to read from here.');return}RA.lang='';const sc=typeof scriptsOf==='function'?scriptsOf(sample||''):[];if(sc&&sc.length){const k=sc.find(x=>LANG_OF[String(x).toLowerCase()]);if(k)RA.lang=LANG_OF[String(k).toLowerCase()]}
+  RA.on=true;RA.q=q;RA.i=0;RA.cache=null;RA.kmap=null;try{speechSynthesis.cancel()}catch(e){}ttsStop();
+  if(VO().engine==='natural'&&!RA.lang&&TTS.state==='idle'){toast('Loading the natural voices first. This can take a minute the first time.',6000);ttsLoad().then(()=>{if(RA.on&&RA.i===0&&!RA.started)raNext()}).catch(()=>{if(RA.on&&!RA.started)raNext()});RA.started=false;raSync();return}
+  RA.started=false;raNext();raSync()}
+async function raNext(){if(!RA.on)return;RA.started=true;document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));const it=RA.q[RA.i];if(!it){raStop();toast('Finished reading.');return}
+  const my=++RA.tok;it.el.classList.add('reading');if(!RA.last||RA.last!==it.el){it.el.scrollIntoView({block:'center',behavior:'smooth'});RA.last=it.el}
+  raPrefetch();await raWait(it.pb);if(!RA.on||my!==RA.tok)return;await raSay(it);if(!RA.on||my!==RA.tok)return;await raWait(it.pa);if(!RA.on||my!==RA.tok)return;RA.i++;raNext()}
+function raStop(){RA.on=false;RA.tok++;RA.last=null;try{speechSynthesis.cancel()}catch(e){}ttsStop();RA.cache=null;document.querySelectorAll('.el.reading,.ln.reading,section.sc.reading').forEach(x=>x.classList.remove('reading'));raSync()}
 function raSync(){document.querySelectorAll('[data-wrx="read"],[data-fsx="read"]').forEach(b=>{b.textContent=RA.on?'Stop reading':'Read aloud';b.setAttribute('aria-pressed',RA.on?'true':'false')})}
 /* dialogue highlighting in the writer */
 const HL_COL=['#ffd60a','#64d2ff','#30d158','#ff9f0a','#bf5af2','#ff375f'];
@@ -4094,20 +4201,30 @@ R.characters=()=>{const {list,scenes,src}=chData();const vs=chVoices();const V=V
   const head=`<div class="ph"><div class="grow"><h1>Characters</h1><p>Who speaks, how much and with whom. Screen time is estimated from the pages of the scenes each character is in (about one minute a page). ${src==='draft'?'From the script in the writer.':'From the imported script.'}</p></div><div class="acts"><button class="btn sm" data-x="xlsx">Excel</button><button class="btn sm" data-x="pdf">PDF</button></div></div>`;
   if(!list.length)return {html:head+`<div class="empty"><b>No characters yet</b>Write or import a script with dialogue.</div>`,exp:null};
   const top=list.slice(0,10);const mx=Math.max(1,...top.flatMap(a=>top.map(b=>a===b?0:(a.partners[b.name]||0))));
-  const voiceSel=(name)=>`<select class="mini" data-chv="${esc(name)}" aria-label="Voice for ${esc(name||'narrator')}"><option value="">Automatic</option>${vs.map(v=>`<option value="${esc(v.voiceURI)}"${(name?V.map[name]:V.narrator)===v.voiceURI?' selected':''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select>`;
+  const nat=V.engine==='natural';const cur=n=>n?V.map[n]:V.narrator;
+  const voiceSel=(name)=>`<select class="mini" data-chv="${esc(name)}" aria-label="Voice for ${esc(name||'narrator')}"><option value="">Automatic</option>${nat?K_VOICES.map(v=>`<option value="k:${v[0]}"${cur(name)==='k:'+v[0]?' selected':''}>${esc(v[1])} · ${esc(v[2])}</option>`).join(''):vs.map(v=>`<option value="${esc(v.voiceURI)}"${cur(name)===v.voiceURI?' selected':''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select>`;
   const cards=`<div class="ch-cards">${list.slice(0,6).map(c=>`<article class="ch-card"><h3>${esc(c.name)}</h3><div class="ch-kpi"><div><b>${c.speeches}</b><span>speeches</span></div><div><b>${c.scenes.size}</b><span>scenes</span></div><div><b>${c.e8<8?'&lt;1':Math.round(c.e8/8)}</b><span>min on screen</span></div></div>
     <div class="wx-bar" title="Share of all dialogue"><i style="width:${(c.share*100).toFixed(1)}%"></i></div><small class="muted">${Math.round(c.share*100)}% of the dialogue · scene${c.first===c.last?'':'s'} ${esc(chRange(c))}</small>
     <small class="muted">Mostly with ${Object.entries(c.partners).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([n,k])=>esc(n)+' ('+k+')').join(', ')||'nobody'}</small></article>`).join('')}</div>`;
-  const rows=list.map(c=>`<tr><td class="left"><b>${esc(c.name)}</b></td><td class="num">${c.speeches}</td><td class="num">${c.words}</td><td class="num">${Math.round(c.share*100)}%</td><td class="num">${c.scenes.size}</td><td class="num">${c.spoke.size}</td><td>${esc(chRange(c))}</td><td class="num">${fmtPg(c.e8)}</td><td class="num">${chMin(c.e8)}</td><td class="left">${Object.entries(c.partners).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([n,k])=>esc(n)+' ('+k+')').join(', ')}</td><td>${vs.length?voiceSel(c.name)+` <button class="btn sm ghost" data-chtest="${esc(c.name)}">Test</button>`:'—'}</td><td>${src==='draft'?`<button class="btn sm ghost" data-chren="${esc(c.name)}">Rename</button>`:''}</td></tr>`).join('');
+  const rows=list.map(c=>`<tr><td class="left"><b>${esc(c.name)}</b></td><td class="num">${c.speeches}</td><td class="num">${c.words}</td><td class="num">${Math.round(c.share*100)}%</td><td class="num">${c.scenes.size}</td><td class="num">${c.spoke.size}</td><td>${esc(chRange(c))}</td><td class="num">${fmtPg(c.e8)}</td><td class="num">${chMin(c.e8)}</td><td class="left">${Object.entries(c.partners).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([n,k])=>esc(n)+' ('+k+')').join(', ')}</td><td>${vs.length||nat?voiceSel(c.name)+` <button class="btn sm ghost" data-chtest="${esc(c.name)}">Test</button>`:'—'}</td><td>${src==='draft'?`<button class="btn sm ghost" data-chren="${esc(c.name)}">Rename</button>`:''}</td></tr>`).join('');
   const matrix=top.length>1?`<h3 class="nd-k">Who shares scenes with whom</h3><div class="ch-mx" style="--n:${top.length}"><span></span>${top.map(c=>`<span class="ch-mh"><em>${esc(c.name)}</em></span>`).join('')}${top.map(a=>`<span class="ch-mr">${esc(a.name)}</span>${top.map(b=>{const k=a===b?null:(a.partners[b.name]||0);return `<i title="${esc(a.name)} + ${esc(b.name)}: ${k??'—'} scenes" style="--k:${k==null?0:(k/mx).toFixed(2)}" class="${k==null?'self':''}">${k||''}</i>`}).join('')}`).join('')}</div>`:'';
-  const ra=`<div class="sset" style="margin-top:18px"><b>Read-aloud voices</b><p class="small muted" style="margin:4px 0 10px">Used by "Read aloud" in the script writer. ${vs.length?'Each character can have its own voice; the narrator reads headings and action.':'This browser has no voices installed, so read-aloud may not work here.'}</p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center"><label class="small">Narrator ${vs.length?voiceSel(''):''}</label><label class="small">Speed <input type="range" min="0.6" max="1.6" step="0.1" value="${V.rate||1}" data-chrate style="vertical-align:middle"> <span id="chRateV">${(+V.rate||1).toFixed(1)}×</span></label></div></div>`;
+  const ra=`<div class="sset" style="margin-top:18px"><b>Read-aloud voices</b><p class="small muted" style="margin:4px 0 10px">Used by "Read aloud" in the writer and in Full script. Natural voices are open source (Kokoro), run on this device and sound like a person; the narrator reads headings and action slowly, with pauses, like a film narration.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center"><label class="small">Voices <select class="mini" data-chengine><option value="system"${nat?'':' selected'}>This device's voices</option><option value="natural"${nat?' selected':''}>Natural voices (recommended)</option></select></label>
+    <label class="small">Style <select class="mini" data-chstyle><option value="cinematic"${V.style==='plain'?'':' selected'}>Cinematic narration</option><option value="plain"${V.style==='plain'?' selected':''}>Plain reading</option></select></label>
+    <label class="small">Narrator ${vs.length||nat?voiceSel('')+' <button class="btn sm ghost" data-chtest="">Test</button>':''}</label><label class="small">Speed <input type="range" min="0.6" max="1.6" step="0.1" value="${V.rate||1}" data-chrate style="vertical-align:middle"> <span id="chRateV">${(+V.rate||1).toFixed(1)}×</span></label></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px"><button class="btn sm" data-ttsload>Load natural voices (about 90 MB, once)</button><span class="small muted" id="ttsSt">${esc(ttsStatusText())}</span></div></div>`;
   return {html:head+cards+`<div class="tw"><table class="t"><thead><tr><th>Character</th><th>Speeches</th><th>Words</th><th>Dialogue share</th><th>Scenes</th><th>Speaks in</th><th>First–last</th><th>Pages</th><th>Screen time</th><th>Mostly with</th><th>Voice</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`+matrix+ra,
     exp:{orient:'landscape',sheets:[{name:'Characters',cols:[{h:'Character',w:22},{h:'Speeches',w:10},{h:'Words',w:9},{h:'Dialogue %',w:10},{h:'Scenes',w:8},{h:'Speaks in',w:9},{h:'First–last',w:12},{h:'Pages',w:9},{h:'Screen time (min)',w:12},{h:'Mostly with',w:40}],rows:list.map(c=>[c.name,c.speeches,c.words,Math.round(c.share*100)+'%',c.scenes.size,c.spoke.size,(c.first||'')+'–'+(c.last||''),fmtPg(c.e8),Math.round(c.e8/8),Object.entries(c.partners).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([n,k])=>n+' ('+k+')').join(', ')])}]}}};
 function chMount(){const c=$('#content');if(!c.querySelector('[data-chrate]')&&!c.querySelector('[data-chren]'))return;const V=VO();
   c.querySelectorAll('[data-chv]').forEach(s=>s.addEventListener('change',()=>{const n=s.dataset.chv;if(n){if(s.value)V.map[n]=s.value;else delete V.map[n]}else V.narrator=s.value;touch([])}));
   const r=c.querySelector('[data-chrate]');if(r)r.addEventListener('input',()=>{V.rate=+r.value;$('#chRateV').textContent=(+r.value).toFixed(1)+'×';touch([])});
-  c.querySelectorAll('[data-chtest]').forEach(b=>b.addEventListener('click',()=>{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const n=b.dataset.chtest;const u=new SpeechSynthesisUtterance(`Hello, I am ${n.toLowerCase()}.`);const vp=chVoiceFor(n);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+V.rate||1;speechSynthesis.speak(u)}));
+  const eg=c.querySelector('[data-chengine]');if(eg)eg.addEventListener('change',()=>{V.engine=eg.value;touch([]);if(V.engine==='natural')ttsLoad().catch(()=>{});render(true)});
+  const st=c.querySelector('[data-chstyle]');if(st)st.addEventListener('change',()=>{V.style=st.value;touch([])});
+  const ld=c.querySelector('[data-ttsload]');if(ld)ld.addEventListener('click',()=>ttsLoad().catch(()=>{}));ttsStatusShow();
+  c.querySelectorAll('[data-chtest]').forEach(b=>b.addEventListener('click',async()=>{const n=b.dataset.chtest;const line=n?`Hello. I am ${n.split(' ').map(w=>w.charAt(0)+w.slice(1).toLowerCase()).join(' ')}. Listen carefully.`:'The night is quiet. Somewhere, a door creaks open.';
+    try{speechSynthesis.cancel()}catch(e){}ttsStop();RA.kmap=RA.kmap||{};
+    if(V.engine==='natural'){try{ttsPlay(await ttsSynth(line,kVoiceFor(n),+V.rate||1))}catch(e){toast('Natural voices are not available yet. Use "Load natural voices" first.',5000)}return}
+    if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(line);const vp=chVoiceFor(n);if(vp.voice)u.voice=vp.voice;u.pitch=vp.pitch;u.rate=+V.rate||1;speechSynthesis.speak(u)}));
   c.querySelectorAll('[data-chren]').forEach(b=>b.addEventListener('click',()=>chRename(b.dataset.chren)))}
 if('speechSynthesis' in window){try{speechSynthesis.onvoiceschanged=()=>{if(page==='characters'&&P&&!document.activeElement.closest('#content select'))render(true)}}catch(e){}}
 

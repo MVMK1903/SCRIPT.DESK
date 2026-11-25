@@ -4112,7 +4112,7 @@ const K_VOICES=[['bm_george','George','British man, deep'],['bm_lewis','Lewis','
 const K_NARR='bm_george',K_POOL=['af_heart','am_michael','bf_emma','am_fenrir','af_nicole','bm_lewis','af_sky','am_puck','bf_isabella','am_adam','af_bella','bm_daniel'];
 const TTS={eng:null,loading:null,state:'idle',pct:0,err:'',ctx:null,src:null};
 function kLabel(id){const v=K_VOICES.find(x=>x[0]===id);return v?`${v[1]} (${v[2]})`:id}
-function ttsStatusText(){return TTS.state==='ready'?'Natural voices are ready.':TTS.state==='loading'?`Loading the natural voices… ${TTS.pct}%`:TTS.state==='error'?`Could not load the natural voices (${TTS.err}). Device voices are used instead.`:'Natural voices are not loaded yet.'}
+function ttsStatusText(){return TTS.state==='ready'?'Natural voices are ready.':TTS.state==='loading'?`Loading the natural voices… ${TTS.pct}%`:TTS.state==='error'?`Could not load the natural voices (${TTS.err}). Device voices are used instead.${TTS.raw?' Technical detail: '+TTS.raw:''}`:'Natural voices are not loaded yet.'}
 function ttsStatusShow(){const el=document.getElementById('ttsSt');if(el)el.textContent=ttsStatusText();const b=document.querySelector('[data-ttsload]');if(b){b.disabled=TTS.state==='loading';b.textContent=TTS.state==='ready'?'Natural voices ready':TTS.state==='loading'?'Loading…':'Load natural voices (about 90 MB, once)'}}
 async function ttsLoad(){if(TTS.eng)return TTS.eng;if(TTS.loading)return TTS.loading;TTS.state='loading';TTS.pct=0;TTS.err='';ttsStatusShow();
   TTS.loading=(async()=>{try{const mod=window.SD_TTS_MODULE||await import(KOKORO_URL);const prog=p=>{if(p&&typeof p.progress==='number'){TTS.pct=Math.max(TTS.pct,Math.min(99,Math.round(p.progress)));ttsStatusShow()}};
@@ -4120,7 +4120,7 @@ async function ttsLoad(){if(TTS.eng)return TTS.eng;if(TTS.loading)return TTS.loa
       try{eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:gpu?'fp32':'q8',device:gpu?'webgpu':'wasm',progress_callback:prog})}
       catch(e){if(!gpu)throw e;eng=await mod.KokoroTTS.from_pretrained(KOKORO_MODEL,{dtype:'q8',device:'wasm',progress_callback:prog})}
       TTS.eng=eng;TTS.state='ready';TTS.pct=100;ttsStatusShow();return eng}
-    catch(e){TTS.state='error';TTS.err=/fetch|network|load/i.test(String(e&&e.message||e))?'the model could not be downloaded. This page may block it, or you are offline; the installed app and the web app can download it':String(e&&e.message||e).slice(0,80);TTS.loading=null;ttsStatusShow();throw e}})();
+    catch(e){TTS.state='error';TTS.raw=String(e&&e.message||e).slice(0,140);TTS.err=/fetch|network|load/i.test(TTS.raw)?'the model could not be downloaded. This page may block it, or you are offline; the installed app and the web app can download it':TTS.raw;TTS.loading=null;ttsStatusShow();throw e}})();
   return TTS.loading}
 function ttsAudioCtx(){if(!TTS.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;TTS.ctx=new C()}if(TTS.ctx.state==='suspended')TTS.ctx.resume().catch(()=>{});return TTS.ctx}
 async function ttsSynth(text,voice,speed){const eng=await ttsLoad();const a=await eng.generate(text,{voice,speed:Math.max(.6,Math.min(1.4,speed||1))});

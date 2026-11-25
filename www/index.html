@@ -1852,6 +1852,7 @@ select option:checked,select option:hover{background-color:#ffd36e;color:#1f1b16
   .ph .acts{gap:8px!important;align-items:center}
   .ph .acts .btn.sm{background:transparent!important;border:1px solid var(--line)!important;box-shadow:none!important;font-weight:600}
   .ph .acts .btn.sm:hover{background:var(--fill,rgba(255,255,255,.06))!important}
+  .ph .acts .btn.sm.pri,.ph .acts .btn.sm.pri:hover{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--accent-ink)!important}
   .ph .acts input[type=search],.ph .acts input[type=text],.ph .acts .inp{max-width:170px}
 }
 @media (min-width:821px) and (max-width:1320px){:root:root .top{flex-wrap:wrap!important;row-gap:4px!important}:root:root .top .film{flex:1 1 100%}:root:root .top .tops{margin-left:0;width:100%;justify-content:flex-end}}
@@ -2022,6 +2023,8 @@ table.t{border-radius:10px!important;box-shadow:0 0 0 1px var(--hair,#ffffff1f)!
 .wa-empty{font-size:12.5px;color:var(--muted)}
 .wa-dir{display:flex;gap:6px;align-items:center}.wa-dir input{flex:1;min-width:0;border:1px solid rgba(127,127,127,.3);background:transparent;color:inherit;border-radius:10px;padding:7px 9px;font:12.5px var(--f-ui)}
 body.wr-focus .wr-ai{display:none!important}
+/* disabled buttons stay readable: no half-transparent text on a tinted fill */
+:root .btn:disabled,:root[data-look] .btn.pri:disabled,:root[data-look] .btn:disabled,.btn:disabled,.btn.pri:disabled{opacity:1!important;cursor:not-allowed;background:var(--fill-2,rgba(128,128,128,.18))!important;color:var(--muted)!important;border:1px solid var(--line,rgba(128,128,128,.35))!important;box-shadow:none!important;font-weight:600}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 

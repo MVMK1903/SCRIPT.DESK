@@ -7,12 +7,14 @@
 // the script is closed, so every opening needs a new code.
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
-const admin = require('firebase-admin');
+const { initializeApp } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
-admin.initializeApp();
-const db = admin.firestore();
+initializeApp();
+const db = getFirestore();
 const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
 const { otpInput } = require('./validate');
 Object.assign(exports, require('./auth')); // sign-in gate, safe sign-up, account triggers
@@ -117,7 +119,7 @@ exports.otpVerify = onCall(OPTS, async (req) => {
 // mobile). The fresh sign-in token proves it; then the key is handed over.
 exports.otpSms = onCall(OPTS, async (req) => {
   const { uid, pid, tok } = need(req);
-  const user = await admin.auth().getUser(uid);
+  const user = await getAuth().getUser(uid);
   const fresh = Date.now() / 1000 - Number(tok.auth_time || 0) <= SMS_FRESH_SECONDS;
   if (!user.phoneNumber || tok.phone_number !== user.phoneNumber || tok.firebase.sign_in_provider !== 'phone' || !fresh) {
     await log(uid, 'otpfail', 'sms');

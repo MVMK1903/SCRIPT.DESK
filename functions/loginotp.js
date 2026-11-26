@@ -4,7 +4,7 @@
 // the answer is only "yes, this person holds the mailbox / phone", which the app needs before it opens.
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
-const admin = require('firebase-admin');
+const { getAuth } = require('firebase-admin/auth');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
@@ -62,7 +62,7 @@ exports.loginOtpVerify = onCall(OPTS, async (req) => {
 
 exports.loginOtpSms = onCall(OPTS, async (req) => {
   const tok = signedIn(req); const uid = tok.uid;
-  const user = await admin.auth().getUser(uid);
+  const user = await getAuth().getUser(uid);
   const fresh = Date.now() / 1000 - Number(tok.token.auth_time || 0) <= SMS_FRESH_SECONDS;
   if (!user.phoneNumber || tok.token.phone_number !== user.phoneNumber || tok.token.firebase.sign_in_provider !== 'phone' || !fresh) {
     await log(uid, 'loginfail', 'sms');

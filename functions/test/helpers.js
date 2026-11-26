@@ -63,6 +63,16 @@ const adminStub = {
 const text = (a) => { try { return JSON.stringify(a); } catch (e) { return String(a); } };
 const stubs = {
   'firebase-admin': adminStub,
+  'firebase-admin/app': {
+    initializeApp: (...args) => adminStub.initializeApp(...args)
+  },
+  'firebase-admin/firestore': {
+    getFirestore: (...args) => adminStub.firestore(...args),
+    FieldPath: adminStub.firestore.FieldPath
+  },
+  'firebase-admin/auth': {
+    getAuth: (...args) => adminStub.auth(...args)
+  },
   'firebase-functions/v2/https': { HttpsError, onCall: (opts, fn) => fn },
   'firebase-functions/v1': { region: () => ({ auth: { user: () => ({ onCreate: (fn) => fn, onDelete: (fn) => fn }) } }) },
   'firebase-functions/params': { defineSecret: (n) => ({ value: () => 'secret-' + n }) },

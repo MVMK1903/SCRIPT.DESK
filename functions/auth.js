@@ -12,7 +12,8 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const v1 = require('firebase-functions/v1');
 const logger = require('firebase-functions/logger');
-const admin = require('firebase-admin');
+const { getFirestore, FieldPath } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { OPTS, GMAIL_USER, GMAIL_APP_PASSWORD } = require('./config');
@@ -30,7 +31,7 @@ const SIGNUP_MIN_MS = 3000;                     // sign-up always takes at least
 const MAIL_GAP_MS = 10 * 60000;                 // at most one sign-up email per address in this time
 const keepUntil = (ms) => new Date(Date.now() + ms); // for the Firestore TTL policy on authLimits.expireAt
 
-const db = () => admin.firestore();
+const db = () => getFirestore();
 const sha = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const ipHash = (req) => sha((req.rawRequest && req.rawRequest.ip) || 'unknown').slice(0, 32);
@@ -99,7 +100,7 @@ async function passwordIsRight(email, password) {
 /** the lockout notice with a reset link; goes only to an address that has an account, and says nothing otherwise */
 async function sendLockNotice(email) {
   try {
-    const link = await admin.auth().generatePasswordResetLink(email);
+    const link = await getAuth().generatePasswordResetLink(email);
     await mail(
       email,
       'ScriptDesk: wrong passwords were entered on your account',
@@ -163,14 +164,14 @@ exports.signupGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD]
   const mayMail = await hit(`mail_${sha(email)}`, 1, MAIL_GAP_MS); // no mail floods to someone else's address
   let existing = null;
   try {
-    existing = await admin.auth().getUserByEmail(email);
+    existing = await getAuth().getUserByEmail(email);
   } catch (e) {
     if (!e || e.code !== 'auth/user-not-found') throw new HttpsError('internal', 'Could not create the account. Try again.');
   }
   try {
     if (existing) {
       if (mayMail) {
-        const link = await admin.auth().generatePasswordResetLink(email);
+        const link = await getAuth().generatePasswordResetLink(email);
         await mail(
         email,
         'ScriptDesk: you already have an account',
@@ -179,8 +180,8 @@ exports.signupGate = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD]
         );
       }
     } else {
-      await admin.auth().createUser({ email, password, emailVerified: false, ...(name ? { displayName: name } : {}) });
-      const link = await admin.auth().generateEmailVerificationLink(email);
+      await getAuth().createUser({ email, password, emailVerified: false, ...(name ? { displayName: name } : {}) });
+      const link = await getAuth().generateEmailVerificationLink(email);
       await mail(email, 'Confirm your ScriptDesk account', `Welcome to ScriptDesk.\n\nConfirm your email to finish setting up:\n${link}\n\nIf this was not you, ignore this email.`);
     }
   } catch (e) {
@@ -204,7 +205,7 @@ exports.onUserDelete = v1.region(REGION).auth.user().onDelete(async (user) => {
   await Promise.all([d.doc(`profiles/${uid}`).delete(), d.doc(`publicKeys/${uid}`).delete()]);
   const keys = await d.collection('otpKeys').where('owner', '==', uid).get();
   await Promise.all(keys.docs.map((k) => k.ref.delete()));
-  const FP = admin.firestore.FieldPath;
+  const FP = FieldPath;
   const codes = await d.collection('otpCodes').where(FP.documentId(), '>=', `${uid}_`).where(FP.documentId(), '<', `${uid}_`).get();
   await Promise.all(codes.docs.map((c) => c.ref.delete()));
   logger.info('account data removed', { uid });

@@ -1,0 +1,26 @@
+const {chromium}=require('playwright');const F=process.env.F||process.cwd()+'/www/index.html';
+let bad=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);if(!c)bad++};
+(async()=>{const b=await chromium.launch();const pg=await b.newPage();const errs=[];pg.on('console',m=>{if(/tts play/.test(m.text()))console.log(m.text())});pg.on('pageerror',e=>errs.push(e.message));
+await pg.addInitScript(()=>{window.__gen=[];window.SD_TTS_MODULE={KokoroTTS:{from_pretrained:async(m,o)=>{o.progress_callback&&o.progress_callback({progress:50});return {generate:async(t,o)=>{window.__gen.push({t,v:o.voice,s:o.speed});return {audio:new Float32Array(2400),sampling_rate:24000}}}}}};
+ window.AudioContext=function(){return {state:'running',resume(){},destination:{},createBuffer:(c,n,r)=>({copyToChannel(){}}),createBufferSource(){return {connect(){},start(){setTimeout(()=>this.onended&&this.onended(),5)},stop(){}}}}}});
+await pg.goto('file://'+F);await pg.waitForTimeout(600);
+const r=await pg.evaluate(()=>{P=sampleProject();const o={};o.a=raSpeakable("JOHN (V.O.) meets Dr. SMITH, 40s, at the FBI.");o.h=raHead('INT. HOUSE - NIGHT');
+ const d=raBuild('d','I will find you. Wait for me!','RAVI',{hint:'whispering',change:true});o.d=d.map(x=>[x.text,x.pb,x.pa,x.rm]);
+ const a=raBuild('a','Rain falls. A door slams.','');o.a2=a.map(x=>[x.text,x.rm]);
+ o.sc=[{name:'Microsoft Zira Desktop',voiceURI:'z',localService:true},{name:'Microsoft Aria Online (Natural)',voiceURI:'a',localService:false},{name:'eSpeak X',voiceURI:'e',localService:true}].map(chVoiceScore);return o});
+console.log(JSON.stringify(r));
+ok(/forties/.test(r.a)&&/Mister|Doctor/.test(r.a)&&/voice over/.test(r.a)&&/F B I/.test(r.a)&&!/JOHN/.test(r.a),'text cleanup');
+ok(/^interior\./.test(r.h),'heading spoken');
+ok(r.d.length===2&&r.d[0][3]<1&&r.d[0][1]>0,'dialogue split, whisper slower, pauses');
+ok(r.a2[0][1]===0||r.a2.length===2,'action sentences split');
+ok(r.sc[1]>r.sc[0]&&r.sc[0]>r.sc[2],'voice ranking');
+// engine flow
+await pg.evaluate(()=>{P=P||{};VO().engine='natural';VO().style='cinematic'});
+const f=await pg.evaluate(async()=>{const q=[...raBuild('h','x','',{heading:'Scene 1. Interior. house.'}),...raBuild('d','Hello there. Come in.','RAVI',{}),...raBuild('d','Thanks.','MEERA',{change:true})];const el=document.body;q.forEach(i=>i.el=el);q.forEach(i=>{i.pb=0;i.pa=0});RA.lang='';RA.on=true;RA.q=q;RA.i=0;RA.kmap=null;await ttsLoad();raNext();await new Promise(r=>setTimeout(r,800));return {gen:window.__gen,i:RA.i,on:RA.on,st:TTS.state}});
+console.log(JSON.stringify(f));
+ok(f.st==='ready'&&f.gen.length>=4,'mock engine generates every beat');
+ok(f.gen.find(x=>/Scene 1/.test(x.t)).v==='bm_george','narrator voice');
+const vs=[...new Set(f.gen.map(x=>x.v))];ok(vs.length>=3,'each character gets own voice: '+vs);
+ok(!f.on,'finishes and stops');
+ok(errs.length===0,'no page errors '+errs.join('|'));
+await b.close();process.exit(bad?1:0)})();

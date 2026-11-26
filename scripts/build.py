@@ -141,7 +141,7 @@ def csp_policy(page):
            "font-src 'self' data: https://fonts.gstatic.com; "
            "img-src 'self' data: blob: https:; "
            "connect-src 'self' https: http: ws://localhost:* ws://127.0.0.1:*; "
-           "worker-src 'self' blob: https://cdnjs.cloudflare.com; "
+           "worker-src 'self' blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
            "frame-src https://accounts.google.com https://*.firebaseapp.com https://*.web.app https://www.google.com https://recaptcha.google.com https://www.recaptcha.net; "
            "media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'")
     return pol

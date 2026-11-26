@@ -14,7 +14,7 @@ const path = require('path'); const { chromium } = require('playwright');
       o.sideHidden = !R('.side'); o.scenesHidden = !R('.wr-side'); o.ai = !!R('#wrAI'); o.aiRight = R('#wrAI') && R('#wrAI').l > paper.r;
       o.barAbovePaper = R('.wr-bar').b <= paper.t + 2; o.barW = Math.round(R('.wr-bar').w); o.paperW = Math.round(paper.w);
       const sc = document.querySelector('.content'); sc.scrollTop = 900; await wait(200);
-      const bar = R('.wr-bar'); o.barStuck = bar && bar.t - document.querySelector('.content').getBoundingClientRect().top < 4; o.barBg = getComputedStyle(document.querySelector('.wr-bar')).backgroundColor;
+      const bar = R('.wr-bar'); const tl = document.querySelector('.wx-tools'); const th = tl ? tl.getBoundingClientRect().height : 0; o.barStuck = bar && Math.abs(bar.t - document.querySelector('.content').getBoundingClientRect().top - th) < 6; o.barBg = getComputedStyle(document.querySelector('.wr-bar')).backgroundColor;
       document.getElementById('wrMenuBtn').click(); await wait(100); o.menuOpens = !!R('.side');
       document.getElementById('wrDoc').dispatchEvent(new MouseEvent('click', { bubbles: true })); document.body.click(); await wait(100); o.menuCloses = !R('.side');
       document.getElementById('wrScBtn').click(); await wait(100); o.scenesOpen = !!R('.wr-side');

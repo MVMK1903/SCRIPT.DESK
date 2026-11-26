@@ -2205,6 +2205,12 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 @media (max-width:820px){.sbar-r{display:flex!important;padding:0 0 6px;width:100%}#pageActs{display:none}#lnSlot{margin-left:0;min-width:0;flex:1 1 auto}#lnSlot .lastnote.open{position:static;width:100%;margin-top:0!important}}
 #lnSlot .lastnote .ln-lab{white-space:nowrap}
 #lnSlot .lastnote.open{align-items:center}
+/* last-change panel grows leftwards from the chip's right edge */
+@media (min-width:821px){#lnSlot{position:relative;min-width:135px;height:32px}
+#lnSlot .lastnote.open{top:0!important;right:0!important;left:auto;margin-top:0!important;width:max-content;max-width:min(640px,calc(100vw - 48px));flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:10px;padding:0 10px 0 14px!important;height:32px;border-radius:10px;overflow:hidden}
+#lnSlot .lastnote.open .ln-t{order:9;flex:none}
+#lnSlot .lastnote.open .what{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lnSlot .lastnote.open .ln-h,#lnSlot .lastnote.open .when,#lnSlot .lastnote.open b{flex:none}}
 </style>
 <script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
 
@@ -3139,9 +3145,10 @@ function showSaved(pages){const el=$('#savedPill');const names=pages.map(id=>PG[
   el.hidden=false;const br=document.querySelector('.brand');if(br){br.classList.remove('clap');void br.offsetWidth;br.classList.add('clap')}clearTimeout(showSaved.t);showSaved.t=setTimeout(()=>{el.hidden=true},4200)}
 function lastNoteHtml(){const c=P&&P.changes&&P.changes[0];const o=!!VIEW.lnOpen;return `<div class="lastnote${o?' open':''}" id="lastNote"${c?'':' hidden'}>${c?`<button class="ln-t" data-lnt aria-expanded="${o}" title="${o?'Hide':'Show'} the last change"><i class="ln-clap" aria-hidden="true"></i><span class="ln-lab">Last change</span><span class="ln-chev" aria-hidden="true">${o?'\u2039':'\u203a'}</span></button><span class="when">${esc(fmtWhen(c.at))}</span><b>${esc(c.sheet)}</b><span class="what">${esc(c.what)}</span><button class="btn sm ln-h" data-act="history" title="See every change">History<em>${P.changes.length}</em></button>`:''}</div>`}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-lnt]'))return;VIEW.lnOpen=!VIEW.lnOpen;renderLastNote()});
-function syncLn(){const sl=document.getElementById('lnSlot');if(sl)sl.innerHTML=(P&&page!=='home'&&page!=='projects')?lastNoteHtml():'';const pa=document.getElementById('pageActs');if(pa)pa.innerHTML=''}
+function syncLn(){const sl=document.getElementById('lnSlot');if(sl)sl.innerHTML=(P&&page!=='home'&&page!=='projects')?lastNoteHtml():'';fitLn();const pa=document.getElementById('pageActs');if(pa)pa.innerHTML=''}
 function liftActs(c){if(page!=='write'||!window.matchMedia('(min-width:821px)').matches)return;const pa=document.getElementById('pageActs'),ph=c.querySelector('.ph');if(!pa||!ph)return;const a=ph.querySelector('.acts');if(a)pa.appendChild(a);ph.remove()}
-function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml()}
+function fitLn(){const sl=document.getElementById('lnSlot'),n=sl&&sl.querySelector('.lastnote.open');if(!n)return;n.style.maxWidth='';if(innerWidth>820){const r=sl.getBoundingClientRect();n.style.maxWidth=Math.max(200,Math.min(640,r.right-16))+'px'}}
+function renderLastNote(){const el=$('#lastNote');if(el)el.outerHTML=lastNoteHtml();fitLn()}
 function openHistory(){const ch=P.changes||[];openModal(`<div class="modal-h"><h2>Change history</h2><button class="btn ghost" data-close>Close</button></div>
   <div class="modal-b">${(P.lessons||[]).length?`<details class="sset"><summary>Learned from your edits (${P.lessons.length})</summary><p class="small muted" style="margin:6px 0">The AI follows these in every scene it reads for this film.</p><ul class="small" style="margin:0 0 8px;padding-left:18px">${P.lessons.map(l=>`<li>${esc(LISTS[l.k])}: ${l.to?`"${esc(l.from)}" is written as "${esc(l.to)}"`:`"${esc(l.from)}" is never listed`}</li>`).join('')}</ul><button class="btn sm" data-act="forgetLessons">Forget all of these</button></details>`:''}<p class="small muted">Newest first. Included in "Download all" as its own sheet.</p><div class="tw" style="max-height:60vh;overflow:auto"><table class="t" style="min-width:560px"><thead><tr><th>Date &amp; time</th><th>Sheet</th><th>Change</th></tr></thead><tbody>${ch.map(c=>`<tr><td class="num">${esc(fmtWhen(c.at))}</td><td>${esc(c.sheet)}</td><td class="left">${esc(c.what)}</td></tr>`).join('')||'<tr><td colspan="3">No changes yet.</td></tr>'}</tbody></table></div></div>`)}
 function describeEdit(el,oldV,newV,sids){

@@ -71,13 +71,31 @@ exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] },
   const email = tok.email;
   if (!email) throw new HttpsError('failed-precondition', 'This account has no email address.');
   const ref = codeRef(uid, pid);
-  const prev = (await ref.get()).data() || {};
-  const now = Date.now();
-  const sends = (prev.sends || []).filter((t) => now - t < 15 * 60000);
-  if (sends.length >= MAX_SENDS) throw new HttpsError('resource-exhausted', 'Too many codes asked for. Wait 15 minutes.');
   const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
   const salt = crypto.randomBytes(16).toString('hex');
-  await ref.set({ h: hash(salt, code).toString('hex'), salt, exp: now + CODE_MINUTES * 60000, tries: 0, sends: [...sends, now] });
+
+  await db.runTransaction(async (tx) => {
+    const prev = (await tx.get(ref)).data() || {};
+    const now = Date.now();
+    const sends = (prev.sends || []).filter(
+      (t) => now - t < 15 * 60000
+    );
+
+    if (sends.length >= MAX_SENDS) {
+      throw new HttpsError(
+        'resource-exhausted',
+        'Too many codes asked for. Wait 15 minutes.'
+      );
+    }
+
+    tx.set(ref, {
+      h: hash(salt, code).toString('hex'),
+      salt,
+      exp: now + CODE_MINUTES * 60000,
+      tries: 0,
+      sends: [...sends, now]
+    });
+  });
   const mail = nodemailer.createTransport({ service: 'gmail', auth: { user: GMAIL_USER.value(), pass: GMAIL_APP_PASSWORD.value() } });
   await mail.sendMail({
     from: `ScriptDesk <${GMAIL_USER.value()}>`,
@@ -100,7 +118,12 @@ exports.otpVerify = onCall(OPTS, async (req) => {
     if (!d || Date.now() > d.exp) return 'expired';
     if ((d.tries || 0) >= MAX_TRIES) return 'tries';
     const ok = code.length === 6 && crypto.timingSafeEqual(hash(d.salt, code), Buffer.from(d.h, 'hex'));
-    if (ok) tx.delete(ref);
+    if (ok) tx.update(ref, {
+      h: '',
+      salt: '',
+      exp: 0,
+      tries: 0
+    });
     else tx.update(ref, { tries: (d.tries || 0) + 1 });
     return ok ? 'ok' : 'wrong';
   });

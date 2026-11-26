@@ -192,3 +192,124 @@ test('attempt counters carry an expiry date for the Firestore TTL policy', async
   assert.ok(docs.length >= 2);
   for (const [, v] of docs) assert.ok(v.expireAt instanceof Date && v.expireAt.getTime() > Date.now());
 });
+
+test('OTP: concurrent send requests cannot bypass rate limits', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+
+  const results = await Promise.allSettled(
+    Array.from({ length: 12 }, () =>
+      otpSend({ data: { pid: 'p1' }, auth })
+    )
+  );
+
+  assert.equal(
+    results.filter(r => r.status === 'fulfilled').length, 5
+  );
+
+  assert.equal(
+    results.filter(r =>
+      r.status === 'rejected' &&
+      r.reason.code === 'resource-exhausted'
+    ).length, 7
+  );
+
+  assert.equal(h.mails.length, 5);
+});
+
+test('OTP: successful verification does not reset send limits', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+
+  for (let i = 0; i < 5; i++) {
+    await otpSend({ data: { pid: 'p1' }, auth });
+
+    const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+
+    await otpVerify({
+      data: { pid: 'p1', code },
+      auth
+    });
+  }
+
+  const error = await fails(
+    otpSend({ data: { pid: 'p1' }, auth })
+  );
+
+  assert.equal(error.code, 'resource-exhausted');
+  assert.equal(h.mails.length, 5);
+});
+
+test('OTP: a code cannot unlock another screenplay', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+  await otpCreate({ data: { pid: 'p2' }, auth });
+
+  await otpSend({ data: { pid: 'p1' }, auth });
+
+  const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+
+  const error = await fails(
+    otpVerify({ data: { pid: 'p2', code }, auth })
+  );
+
+  assert.equal(error.code, 'deadline-exceeded');
+});
+
+test('OTP: expired screenplay code cannot unlock a script', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+  await otpSend({ data: { pid: 'p1' }, auth });
+
+  const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+
+  h.state.now += 6 * 60000;
+
+  const error = await fails(
+    otpVerify({ data: { pid: 'p1', code }, auth })
+  );
+
+  assert.equal(error.code, 'deadline-exceeded');
+});
+
+test('OTP: screenplay send limit resets after fifteen minutes', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+
+  for (let i = 0; i < 5; i++) {
+    await otpSend({ data: { pid: 'p1' }, auth });
+  }
+
+  const error = await fails(
+    otpSend({ data: { pid: 'p1' }, auth })
+  );
+
+  assert.equal(error.code, 'resource-exhausted');
+
+  h.state.now += 16 * 60000;
+
+  await otpSend({ data: { pid: 'p1' }, auth });
+
+  assert.equal(h.mails.length, 6);
+});
+

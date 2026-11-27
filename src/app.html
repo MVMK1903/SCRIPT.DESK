@@ -2211,12 +2211,141 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 #lnSlot .lastnote.open .ln-t{order:9;flex:none}
 #lnSlot .lastnote.open .what{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #lnSlot .lastnote.open .ln-h,#lnSlot .lastnote.open .when,#lnSlot .lastnote.open b{flex:none}}
+/* ===== Five bright looks (override layer): light, fresh, no blue. Each look = tinted page + white cards + one bright accent with dark ink. Layout untouched. ===== */
+/* savera */
+:root[data-look="savera"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;--f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --canvas:transparent;--bg:#f3f4f6;--bg-2:#ffffff;--panel:#f3f4f6;--panel-2:#ffffff;--raise:#ffffff;
+  --fg:#1c1917;--muted:#57534e;--faint:#6f6a64;
+  --accent:#ff8a3d;--accent-hi:#ff9d5e;--accent-ink:#2a1100;--accent-soft:rgba(255,138,61,.22);--accent-line:rgba(255,138,61,.6);--accent-text:#b0440a;
+  --line:rgba(28,25,23,.12);--line-2:rgba(28,25,23,.07);--hair:rgba(28,25,23,.16);--fill:rgba(28,25,23,.05);--fill-2:rgba(28,25,23,.09);
+  --glass:#ffffff;--glass-hi:#ffffff;--glass-line:rgba(28,25,23,.1);--glass-sh:0 6px 20px rgba(28,25,23,.07),0 1px 2px rgba(28,25,23,.05);
+  --pill-on:rgba(255,138,61,.25);--pill-on-ink:#1c1917;--pill-glow:inset 0 0 0 1px rgba(255,138,61,.5);--backdrop:none;
+  --sd-coral:#be185d;--sd-teal:#0f766e;--sd-sky:#4d7c0f;--sd-sun:#a16207;--sd-violet:#be185d;--sd-peach:#c2410c;--sd-lilac:#b0440a;
+  background:#f3f4f6}
+:root[data-look="savera"] body{background-color:#f3f4f6;background-image:none}
+:root[data-look="savera"] #galock{background:#f3f4f6}
+:root[data-look="savera"] .appbar{background:#ffffff!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
+:root[data-look="savera"] .side{background:#ffffff!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+:root[data-look="savera"] .t th{background:#f3f4f6!important}
+:root[data-look="savera"] .wr-bar{background:#ffffff!important}
+:root[data-look="savera"] .nav button[aria-current="page"]{background:rgba(255,138,61,.28)!important}
+@media (max-width:820px){:root[data-look="savera"]{--strip:#f3f4f6}:root[data-look="savera"] .bbar{background:#ffffff!important}:root[data-look="savera"] .msheet .nav{background:#ffffff!important}}
+/* sandhya */
+:root[data-look="sandhya"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;--f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --canvas:transparent;--bg:#fff4d6;--bg-2:#fffdf5;--panel:#fff4d6;--panel-2:#fffdf5;--raise:#ffffff;
+  --fg:#1c1917;--muted:#57534e;--faint:#6f6a64;
+  --accent:#ffc21a;--accent-hi:#ffcf4d;--accent-ink:#2b1d00;--accent-soft:rgba(255,194,26,.22);--accent-line:rgba(255,194,26,.6);--accent-text:#845400;
+  --line:rgba(28,25,23,.12);--line-2:rgba(28,25,23,.07);--hair:rgba(28,25,23,.16);--fill:rgba(28,25,23,.05);--fill-2:rgba(28,25,23,.09);
+  --glass:#fffdf5;--glass-hi:#ffffff;--glass-line:rgba(28,25,23,.1);--glass-sh:0 6px 20px rgba(28,25,23,.07),0 1px 2px rgba(28,25,23,.05);
+  --pill-on:rgba(255,194,26,.25);--pill-on-ink:#1c1917;--pill-glow:inset 0 0 0 1px rgba(255,194,26,.5);--backdrop:none;
+  --sd-coral:#be185d;--sd-teal:#0f766e;--sd-sky:#4d7c0f;--sd-sun:#a16207;--sd-violet:#be185d;--sd-peach:#c2410c;--sd-lilac:#845400;
+  background:#fff4d6}
+:root[data-look="sandhya"] body{background-color:#fff4d6;background-image:none}
+:root[data-look="sandhya"] #galock{background:#fff4d6}
+:root[data-look="sandhya"] .appbar{background:#fffdf5!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
+:root[data-look="sandhya"] .side{background:#fffdf5!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+:root[data-look="sandhya"] .t th{background:#fff4d6!important}
+:root[data-look="sandhya"] .wr-bar{background:#fffdf5!important}
+:root[data-look="sandhya"] .nav button[aria-current="page"]{background:rgba(255,194,26,.28)!important}
+@media (max-width:820px){:root[data-look="sandhya"]{--strip:#fff4d6}:root[data-look="sandhya"] .bbar{background:#fffdf5!important}:root[data-look="sandhya"] .msheet .nav{background:#fffdf5!important}}
+/* night */
+:root[data-look="night"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;--f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --canvas:transparent;--bg:#e4f7ec;--bg-2:#fbfffc;--panel:#e4f7ec;--panel-2:#fbfffc;--raise:#ffffff;
+  --fg:#1c1917;--muted:#57534e;--faint:#6f6a64;
+  --accent:#2fd08a;--accent-hi:#54dba0;--accent-ink:#032816;--accent-soft:rgba(47,208,138,.22);--accent-line:rgba(47,208,138,.6);--accent-text:#0a7347;
+  --line:rgba(28,25,23,.12);--line-2:rgba(28,25,23,.07);--hair:rgba(28,25,23,.16);--fill:rgba(28,25,23,.05);--fill-2:rgba(28,25,23,.09);
+  --glass:#fbfffc;--glass-hi:#ffffff;--glass-line:rgba(28,25,23,.1);--glass-sh:0 6px 20px rgba(28,25,23,.07),0 1px 2px rgba(28,25,23,.05);
+  --pill-on:rgba(47,208,138,.25);--pill-on-ink:#1c1917;--pill-glow:inset 0 0 0 1px rgba(47,208,138,.5);--backdrop:none;
+  --sd-coral:#be185d;--sd-teal:#0f766e;--sd-sky:#4d7c0f;--sd-sun:#a16207;--sd-violet:#be185d;--sd-peach:#c2410c;--sd-lilac:#0a7347;
+  background:#e4f7ec}
+:root[data-look="night"] body{background-color:#e4f7ec;background-image:none}
+:root[data-look="night"] #galock{background:#e4f7ec}
+:root[data-look="night"] .appbar{background:#fbfffc!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
+:root[data-look="night"] .side{background:#fbfffc!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+:root[data-look="night"] .t th{background:#e4f7ec!important}
+:root[data-look="night"] .wr-bar{background:#fbfffc!important}
+:root[data-look="night"] .nav button[aria-current="page"]{background:rgba(47,208,138,.28)!important}
+@media (max-width:820px){:root[data-look="night"]{--strip:#e4f7ec}:root[data-look="night"] .bbar{background:#fbfffc!important}:root[data-look="night"] .msheet .nav{background:#fbfffc!important}}
+/* blossom */
+:root[data-look="blossom"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;--f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --canvas:transparent;--bg:#ffe6ee;--bg-2:#fffafb;--panel:#ffe6ee;--panel-2:#fffafb;--raise:#ffffff;
+  --fg:#1c1917;--muted:#57534e;--faint:#6f6a64;
+  --accent:#ff5c8a;--accent-hi:#ff7ea0;--accent-ink:#2d0010;--accent-soft:rgba(255,92,138,.22);--accent-line:rgba(255,92,138,.6);--accent-text:#b0174b;
+  --line:rgba(28,25,23,.12);--line-2:rgba(28,25,23,.07);--hair:rgba(28,25,23,.16);--fill:rgba(28,25,23,.05);--fill-2:rgba(28,25,23,.09);
+  --glass:#fffafb;--glass-hi:#ffffff;--glass-line:rgba(28,25,23,.1);--glass-sh:0 6px 20px rgba(28,25,23,.07),0 1px 2px rgba(28,25,23,.05);
+  --pill-on:rgba(255,92,138,.25);--pill-on-ink:#1c1917;--pill-glow:inset 0 0 0 1px rgba(255,92,138,.5);--backdrop:none;
+  --sd-coral:#be185d;--sd-teal:#0f766e;--sd-sky:#4d7c0f;--sd-sun:#a16207;--sd-violet:#be185d;--sd-peach:#c2410c;--sd-lilac:#b0174b;
+  background:#ffe6ee}
+:root[data-look="blossom"] body{background-color:#ffe6ee;background-image:none}
+:root[data-look="blossom"] #galock{background:#ffe6ee}
+:root[data-look="blossom"] .appbar{background:#fffafb!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
+:root[data-look="blossom"] .side{background:#fffafb!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+:root[data-look="blossom"] .t th{background:#ffe6ee!important}
+:root[data-look="blossom"] .wr-bar{background:#fffafb!important}
+:root[data-look="blossom"] .nav button[aria-current="page"]{background:rgba(255,92,138,.28)!important}
+@media (max-width:820px){:root[data-look="blossom"]{--strip:#ffe6ee}:root[data-look="blossom"] .bbar{background:#fffafb!important}:root[data-look="blossom"] .msheet .nav{background:#fffafb!important}}
+/* citrus */
+:root[data-look="citrus"]{
+  --f-display:"Bricolage Grotesque","Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;--f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --canvas:transparent;--bg:#f0f8d0;--bg-2:#fcfff0;--panel:#f0f8d0;--panel-2:#fcfff0;--raise:#ffffff;
+  --fg:#1c1917;--muted:#57534e;--faint:#6f6a64;
+  --accent:#b6e32b;--accent-hi:#c5ec55;--accent-ink:#1c2600;--accent-soft:rgba(182,227,43,.22);--accent-line:rgba(182,227,43,.6);--accent-text:#486e00;
+  --line:rgba(28,25,23,.12);--line-2:rgba(28,25,23,.07);--hair:rgba(28,25,23,.16);--fill:rgba(28,25,23,.05);--fill-2:rgba(28,25,23,.09);
+  --glass:#fcfff0;--glass-hi:#ffffff;--glass-line:rgba(28,25,23,.1);--glass-sh:0 6px 20px rgba(28,25,23,.07),0 1px 2px rgba(28,25,23,.05);
+  --pill-on:rgba(182,227,43,.25);--pill-on-ink:#1c1917;--pill-glow:inset 0 0 0 1px rgba(182,227,43,.5);--backdrop:none;
+  --sd-coral:#be185d;--sd-teal:#0f766e;--sd-sky:#4d7c0f;--sd-sun:#a16207;--sd-violet:#be185d;--sd-peach:#c2410c;--sd-lilac:#486e00;
+  background:#f0f8d0}
+:root[data-look="citrus"] body{background-color:#f0f8d0;background-image:none}
+:root[data-look="citrus"] #galock{background:#f0f8d0}
+:root[data-look="citrus"] .appbar{background:#fcfff0!important;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
+:root[data-look="citrus"] .side{background:#fcfff0!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+:root[data-look="citrus"] .t th{background:#f0f8d0!important}
+:root[data-look="citrus"] .wr-bar{background:#fcfff0!important}
+:root[data-look="citrus"] .nav button[aria-current="page"]{background:rgba(182,227,43,.28)!important}
+@media (max-width:820px){:root[data-look="citrus"]{--strip:#f0f8d0}:root[data-look="citrus"] .bbar{background:#fcfff0!important}:root[data-look="citrus"] .msheet .nav{background:#fcfff0!important}}
+/* shared by all five */
+:root[data-look] .btn{border-radius:999px!important}
+:root[data-look] .btn.pri{background:var(--accent)!important;color:var(--accent-ink)!important;border-color:transparent!important;box-shadow:0 4px 14px -4px var(--accent-line)!important}
+:root[data-look] .btn.pri:hover{background:var(--accent-hi)!important}
+:root[data-look] .btn:not(.pri){background:var(--bg-2);border-color:var(--hair);color:var(--fg)}
+:root[data-look] .card,:root[data-look] .tw,:root[data-look] .banner,:root[data-look] .empty{border-radius:22px!important}
+:root[data-look] a,:root[data-look] .hx-eye,:root[data-look] .hx-chg .when{color:var(--accent-text)}
+:root[data-look] .hx-card,:root[data-look] .hx-tile,:root[data-look] .hx-stat{background:var(--bg-2)!important;border:1px solid var(--line)!important;box-shadow:var(--glass-sh);backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--fg)}
+:root[data-look] .hx-stat{border-top:4px solid var(--accent)!important}
+:root[data-look] .hx-stat:nth-child(1){border-top-color:#0f766e!important}
+:root[data-look] .hx-stat:nth-child(2){border-top-color:#a16207!important}
+:root[data-look] .hx-stat:nth-child(3){border-top-color:#be185d!important}
+:root[data-look] .hx-stat:nth-child(4){border-top-color:#4d7c0f!important}
+:root[data-look] .hx-stat:nth-child(5){border-top-color:#b91c1c!important}
+:root[data-look] .hx-stat b{color:var(--fg)!important;-webkit-text-fill-color:var(--fg);background:none}
+:root[data-look] .hx-stat span{color:var(--muted)!important;-webkit-text-fill-color:var(--muted)}
+:root[data-look] .hx h1{color:var(--fg);-webkit-text-fill-color:var(--fg);background:none}
+:root[data-look] .hx-bar{background:var(--fill-2)}
+:root[data-look] .hx-bar i{background:var(--accent)}
+:root[data-look] .hx-steps li.ok .hx-tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:root[data-look] #nav button[data-sec][aria-current=page] .ic-b,:root[data-look] #nav2 button[data-sec][aria-current=page] .ic-b{background:var(--sc)!important;color:#ffffff!important}
+:root[data-look] #nav button[data-sec][aria-current=page] .ic-b .ic,:root[data-look] .nav button[aria-current="page"] .ic-b .ic{color:#ffffff!important}
+:root[data-look] .nav button[aria-current="page"] .ic-b{background:var(--sc,var(--accent))}
+:root[data-look] .brand .logo .stick{color:var(--fg)}
+@media (prefers-reduced-motion:reduce){:root[data-look] body{background-attachment:scroll}}
+#wrMenuTop{display:none;margin-right:10px;flex:none}@media (min-width:821px){body.wr-write #wrMenuTop{display:inline-flex}}
+/* de-slop: no stripes, no glow, no blur, no hazard icon */
+*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.lastnote .ln-clap{width:8px!important;height:8px!important;align-self:center!important;border-radius:50%!important;background:var(--accent)!important;margin:0 2px 0 12px}
+:root[data-look] .hx-stat,:root[data-look] .hx-stat:nth-child(n),:root[data-look] .hx-tile{border:1px solid var(--line)!important}
+:root[data-look] .btn.pri,:root[data-look] .hx-card,:root[data-look] .hx-tile,:root[data-look] .hx-stat{box-shadow:none!important}
+:root[data-look] #nav button[data-sec] .ic-b,:root[data-look] #nav2 button[data-sec] .ic-b,:root[data-look] #nav button[data-sec][aria-current=page] .ic-b,:root[data-look] #nav2 button[data-sec][aria-current=page] .ic-b,:root[data-look] .nav button[aria-current="page"] .ic-b{background:none!important;color:var(--sc)!important;border-radius:0!important}
+:root[data-look] #nav button[data-sec] .ic-b .ic,:root[data-look] #nav2 button[data-sec] .ic-b .ic,:root[data-look] .nav button[aria-current="page"] .ic-b .ic{color:var(--sc)!important}
 </style>
-<script>try{var t=localStorage.getItem("scriptdesk.theme"),k=localStorage.getItem("scriptdesk.look")||"sandhya";if(k!=="classic"){document.documentElement.dataset.look=k;t=k==="savera"?"light":"dark"}document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.look="sandhya";document.documentElement.dataset.theme="dark"}</script>
+<script>try{var k=localStorage.getItem("scriptdesk.look")||"savera";if(["savera","sandhya","night","blossom","citrus"].indexOf(k)<0)k="savera";document.documentElement.dataset.look=k;document.documentElement.dataset.theme="light"}catch(e){document.documentElement.dataset.look="savera";document.documentElement.dataset.theme="light"}</script>
 
 <div class="shell">
   <header class="appbar">
-    <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><g class="stick"><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></g></svg><b>Script<span>Desk</span></b></div>
+    <div style="display:flex;align-items:center;min-width:0"><button type="button" class="btn sm" id="wrMenuTop" aria-expanded="false" aria-label="Open menu">☰ Menu</button><div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="14" width="24" height="15" rx="3" fill="var(--accent)"/><path d="M8.5 19.500h3.500M8.500 24h9" stroke="#fff" stroke-width="1.800" stroke-linecap="round" opacity=".92"/><g class="stick"><rect x="4" y="5" width="24" height="7" rx="2" fill="currentColor"/><path d="M10 5 7 12h4l3-7zM18 5l-3 7h4l3-7zM26 5l-3 7h3.500l.5-1.200V7z" fill="var(--bg)"/></g></svg><b>Script<span>Desk</span></b></div></div>
     <button class="btn sm ghost icon i-sun" data-ic id="bTheme" title="Choose your look" aria-label="Choose your look"></button>
   </header>
   <aside class="side">
@@ -3686,7 +3815,7 @@ document.addEventListener('click',e=>{const t=e.target.closest?e.target:null;if(
   const as=t.closest('[data-as]');if(as){const k=as.dataset.as;if(k==='custom'){const v=($('#wrAIdir')||{}).value||'';if(!v.trim()){toast('Type how you want it changed first.');return}wrAssist('rewrite','custom',v)}else wrAssist(k);return}
   if(t.closest('[data-aichk]')){const b=wrCur()||(WRW.sel&&WRW.sel.el);if(b&&b.isConnected){WC.el=b;wcRun(false);wcRun(true,true)}else toast('Click inside a line first.');return}
   const us=t.closest('[data-rwuse]');if(us){wrRewriteUse(+us.dataset.rwuse);return}
-  if(t.closest('#wrMenuBtn')){const o=document.body.classList.toggle('wr-menuopen');t.closest('#wrMenuBtn').setAttribute('aria-expanded',o);return}
+  if(t.closest('#wrMenuBtn,#wrMenuTop')){const o=document.body.classList.toggle('wr-menuopen');document.querySelectorAll('#wrMenuBtn,#wrMenuTop').forEach(b=>b.setAttribute('aria-expanded',o));return}
   if(t.closest('#wrScBtn')){const o=document.body.classList.toggle('wr-scenes');t.closest('#wrScBtn').setAttribute('aria-expanded',o);return}
   if(document.body.classList.contains('wr-menuopen')&&!t.closest('.side'))document.body.classList.remove('wr-menuopen')});
 
@@ -6110,16 +6239,16 @@ function navState(){try{const o=JSON.parse(localStorage.getItem('scriptdesk.navO
 function navIsOpen(g,cur,st){if(g==='Main')return true;if(st[g]===0)return false;return st[g]===1||g===cur}
 /* The menu: 10 stages. Every old page is a tab inside its stage; "Go to" (Ctrl+K) reaches any page by name. */
 const SECTIONS=[
- {id:'home',c:'#e8b04a',label:'Home',tabs:[['home','Overview'],['tasks','Tasks']]},
- {id:'write',c:'#e8b04a',label:'Write',tabs:[['write','Write'],['script','Full script'],['notes','Notepad'],['av','AV format']],extra:['translate']},
- {id:'story',c:'#c59bff',label:'Story',tabs:[['beats','Beat board'],['outline','Outline'],['structure','Structure'],['dirdesk',"Director's desk"]]},
- {id:'cast',c:'#ff8fb8',label:'Cast & characters',tabs:[['characters','Characters'],['profiles','Profiles'],['artists','Artists'],['artScenes','Artist scenes'],['casting','Casting']]},
- {id:'breakdown',c:'#5fe0d2',label:'Breakdown',tabs:[['breakdown','Script breakdown'],['special','Special'],['costume','Costume'],['artprops','Art / props'],['catalog','Catalog']]},
- {id:'locations',c:'#7cc0ff',label:'Locations',tabs:[['locations','Count'],['locScenes','Scenes']]},
- {id:'slo',c:'#8fe07a',label:'Single line order',tabs:[['slo','By scene'],['scenic','By scenic'],['sloLoc','By location'],['sloArt','By artist'],['sloFight','Stunt / fight']]},
- {id:'plan',c:'#ffab5e',label:'Plan',tabs:[['shots','Shot division'],['storyboard','Storyboard'],['sched','Schedule'],['order','Shoot order'],['stripboard','Stripboard'],['dood','Day out of days']]},
- {id:'shoot',c:'#ff7a7a',label:'Shoot day',tabs:[['callsheet','Call sheet'],['ready','Day readiness'],['sides','Actor sides'],['gear','Equipment']]},
- {id:'budget',c:'#aab6c6',label:'Budget',tabs:[['budget','Budget & rates']]}];
+ {id:'home',c:'var(--accent-text)',label:'Home',tabs:[['home','Overview'],['tasks','Tasks']]},
+ {id:'write',c:'#047857',label:'Write',tabs:[['write','Write'],['script','Full script'],['notes','Notepad'],['av','AV format']],extra:['translate']},
+ {id:'story',c:'#a16207',label:'Story',tabs:[['beats','Beat board'],['outline','Outline'],['structure','Structure'],['dirdesk',"Director's desk"]]},
+ {id:'cast',c:'#be185d',label:'Cast & characters',tabs:[['characters','Characters'],['profiles','Profiles'],['artists','Artists'],['artScenes','Artist scenes'],['casting','Casting']]},
+ {id:'breakdown',c:'#0f766e',label:'Breakdown',tabs:[['breakdown','Script breakdown'],['special','Special'],['costume','Costume'],['artprops','Art / props'],['catalog','Catalog']]},
+ {id:'locations',c:'#4d7c0f',label:'Locations',tabs:[['locations','Count'],['locScenes','Scenes']]},
+ {id:'slo',c:'#b45309',label:'Single line order',tabs:[['slo','By scene'],['scenic','By scenic'],['sloLoc','By location'],['sloArt','By artist'],['sloFight','Stunt / fight']]},
+ {id:'plan',c:'#c2410c',label:'Plan',tabs:[['shots','Shot division'],['storyboard','Storyboard'],['sched','Schedule'],['order','Shoot order'],['stripboard','Stripboard'],['dood','Day out of days']]},
+ {id:'shoot',c:'#b91c1c',label:'Shoot day',tabs:[['callsheet','Call sheet'],['ready','Day readiness'],['sides','Actor sides'],['gear','Equipment']]},
+ {id:'budget',c:'#57534e',label:'Budget',tabs:[['budget','Budget & rates']]}];
 const sectionOf=id=>SECTIONS.find(m=>m.tabs.some(t=>t[0]===id)||(m.extra||[]).includes(id));
 const secTabs=m=>m.tabs.filter(t=>{const g=PG[t[0]];return g&&!(g.hide&&g.hide())});
 function lastTabs(){try{return JSON.parse(localStorage.getItem('scriptdesk.lastTab')||'{}')||{}}catch(e){return {}}}
@@ -6581,11 +6710,11 @@ function homeDash(){const d=homeData();const last=(()=>{try{return localStorage.
   const done=steps.filter(x=>x.ok).length;
   const stat=(k,v)=>`<div class="hx-stat"><b>${esc(String(v))}</b><span>${esc(k)}</span></div>`;
   const tile=m=>{const tabs=secTabs(m);if(!tabs.length)return '';const head=tabs[0][0];return `<article class="hx-tile" style="--sc:${m.c}"><button type="button" class="hx-th" data-page="${esc(head)}" data-sec="${m.id}"><i class="ic-b" aria-hidden="true"><i class="ic i-${esc(head)}"></i></i><span><b>${esc(m.label)}</b><small>${esc(HOME_DESC[m.id]||'')}</small></span></button>${tabs.length>1?`<div class="hx-chips">${tabs.map(t=>`<button type="button" data-mtab="${t[0]}">${esc(t[1])}</button>`).join('')}</div>`:''}</article>`};
-  return {html:`<section class="hx"><header class="hx-h"><div><p class="hx-eye">${esc(P.production||'Your film')}</p><h1>${(h=>h<12?'Good morning':h<17?'Good afternoon':'Good evening')(new Date().getHours())}</h1><p class="hx-sub">Here is where <b>${esc(P.title||'your film')}</b> stands.</p></div><div class="hx-top"><button type="button" class="btn hx-goto" data-goto><span>Go to any page…</span><kbd>Ctrl K</kbd></button><button class="btn" data-page="projects">My projects</button></div></header>
+  return {html:`<section class="hx"><header class="hx-h"><div><p class="hx-eye">${esc(P.production||'Your film')}</p><h1>Overview</h1></div><div class="hx-top"><button type="button" class="btn hx-goto" data-goto><span>Go to any page…</span><kbd>Ctrl K</kbd></button><button class="btn" data-page="projects">My projects</button></div></header>
    <div class="hx-stats">${stat('Scenes',d.n)}${stat('Pages',(Math.round(d.pg/8*10)/10).toString())}${stat('Artists',d.arts)}${stat('Locations',d.locs)}${stat('Shoot days',d.days)}</div>
    <div class="hx-cols"><div class="hx-card"><div class="hx-ch"><h2>Next steps</h2><span class="hx-prog">${done} of ${steps.length} done</span></div><div class="hx-bar" aria-hidden="true"><i style="width:${Math.round(done/steps.length*100)}%"></i></div>
      <ul class="hx-steps">${steps.map(x=>`<li class="${x.ok?'ok':''}"><span class="hx-tick" aria-hidden="true">${x.ok?'✓':''}</span><span class="hx-st"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span>${x.ok?'':`<button class="btn sm${x.run?' pri':''}"${x.off?' disabled':''} ${x.run?'data-hx="run"':`data-page="${x.go}"`}>${esc(x.b)}</button>`}</li>`).join('')}</ul></div>
-    <div class="hx-card"><div class="hx-ch"><h2>Pick up where you left off</h2></div>${last&&PG[last]&&last!=='home'?`<button type="button" class="hx-resume" data-mtab="${esc(last)}"><span><b>${esc(PG[last].t)}</b><small>${esc((sectionOf(last)||{}).label||'')}</small></span><span aria-hidden="true">›</span></button>`:`<p class="hx-sub">Open any stage below to begin.</p>`}
+    <div class="hx-card"><div class="hx-ch"><h2>Pick up where you left off</h2></div>${last&&PG[last]&&last!=='home'?`<button type="button" class="hx-resume" data-mtab="${esc(last)}"><span><b>${esc(PG[last].t)}</b>${(sectionOf(last)||{}).label&&(sectionOf(last)||{}).label!==PG[last].t?`<small>${esc((sectionOf(last)||{}).label)}</small>`:''}</span><span aria-hidden="true">›</span></button>`:`<p class="hx-sub">Nothing opened yet. Pick a stage below.</p>`}
      ${ch?`<p class="hx-chg"><span class="when">${esc(fmtWhen(ch.at))}</span> <b>${esc(ch.sheet)}</b> ${esc(ch.what)}</p><button class="btn sm ghost" data-act="history">All changes</button>`:''}</div></div>
    <h2 class="hx-h2">Your workspace</h2><div class="hx-grid">${SECTIONS.filter(m=>m.id!=='home').map(tile).join('')}</div></section>`,exp:null}}
 R.home=()=>P?homeDash():homeWelcome();
@@ -6758,12 +6887,12 @@ $('#bRun').onclick=()=>runAll();
 (function a2hs(){try{if(!STANDALONE||NATIVE||!/iPhone|iPad|iPod/.test(navigator.userAgent)||navigator.standalone||localStorage.getItem('scriptdesk.a2hs'))return;
   const d=document.createElement('div');d.className='a2hs';d.innerHTML='<span>Add ScriptDesk to your iPhone: tap Share, then Add to Home Screen. It then works offline.</span><button class="btn sm ghost" aria-label="Dismiss">Got it</button>';
   d.querySelector('button').onclick=()=>{d.remove();try{localStorage.setItem('scriptdesk.a2hs','1')}catch(e){}};document.body.appendChild(d)}catch(e){}})();
-function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('scriptdesk.theme',t)}catch(e){}const b=$('#bTheme');b.classList.toggle('i-sun',t==='dark');b.classList.toggle('i-moon',t==='light');const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=LOOK_BAR[curLook()]||(t==='dark'?'#1c1f26':'#e4e7ec')}
+function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('scriptdesk.theme',t)}catch(e){}const b=$('#bTheme');b.classList.toggle('i-sun',t==='dark');b.classList.toggle('i-moon',t==='light');const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=LOOK_BAR[curLook()]||'#f3f4f6'}
 /* Looks: Sandhya (default), Savera, Night Set, Classic light, Classic dark */
-const LOOKS=[['sandhya','Sandhya','Warm graphite with one amber accent. The default.','linear-gradient(135deg,#1c1a18,#161513 60%,#e8b45a)'],['savera','Savera','Light. Warm paper with the same amber.','linear-gradient(135deg,#f7f3ea,#fffaf5 60%,#9a5b08)'],['night','Night Set','Extra dark and dim, for shooting in dark locations.','linear-gradient(135deg,#0c1114,#16242b)'],['classic-light','Classic light','The earlier blue glass look.','linear-gradient(135deg,#edf2fb,#b9d1fb 60%,#fbd9c6)'],['classic-dark','Classic dark','The earlier look, dark.','linear-gradient(135deg,#0b1020,#2e54be 60%,#190f16)']];
-const LOOK_BAR={sandhya:'#1b1a3a',night:'#0c1114',savera:'#fff4e6'};
-function curLook(){const k=document.documentElement.dataset.look;return k||('classic-'+(document.documentElement.dataset.theme==='dark'?'dark':'light'))}
-function setLook(k){if(!LOOKS.some(x=>x[0]===k))k='sandhya';const cl=k.startsWith('classic-');if(cl)delete document.documentElement.dataset.look;else document.documentElement.dataset.look=k;try{localStorage.setItem('scriptdesk.look',cl?'classic':k)}catch(e){}setTheme(cl?k.slice(8):(k==='savera'?'light':'dark'))}
+const LOOKS=[['savera','Daylight','Bright white with a tangerine accent. The default.','linear-gradient(135deg,#f3f4f6,#ffffff 55%,#ff8a3d)'],['sandhya','Sunrise','Warm cream with a sunflower accent.','linear-gradient(135deg,#fff4d6,#fffdf5 55%,#ffc21a)'],['night','Mint','Fresh pale green with an emerald accent.','linear-gradient(135deg,#e4f7ec,#fbfffc 55%,#2fd08a)'],['blossom','Blossom','Soft pink with a raspberry accent.','linear-gradient(135deg,#ffe6ee,#fffafb 55%,#ff5c8a)'],['citrus','Citrus','Light lime with a zesty green accent.','linear-gradient(135deg,#f0f8d0,#fcfff0 55%,#b6e32b)']];
+const LOOK_BAR={savera:'#f3f4f6',sandhya:'#fff4d6',night:'#e4f7ec',blossom:'#ffe6ee',citrus:'#f0f8d0'};
+function curLook(){return document.documentElement.dataset.look||'savera'}
+function setLook(k){if(!LOOKS.some(x=>x[0]===k))k='savera';document.documentElement.dataset.look=k;try{localStorage.setItem('scriptdesk.look',k)}catch(e){}setTheme('light')}
 function lookPicker(){const cur=curLook();openModal(`<div class="modal-h"><h2>Choose your look</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b"><div class="lk-g" role="radiogroup" aria-label="App look">${LOOKS.map(([k,n,d,g])=>`<button class="lk-c" role="radio" data-look="${k}" aria-checked="${cur===k}"><i style="background:${g}"></i><b>${esc(n)}</b><span>${esc(d)}</span></button>`).join('')}</div><p class="small muted" style="margin-top:12px">Script pages and A4 downloads always stay on white paper.</p></div>`);
   document.querySelectorAll('.lk-c').forEach(b=>b.onclick=()=>{setLook(b.dataset.look);document.querySelectorAll('.lk-c').forEach(x=>x.setAttribute('aria-checked',x===b?'true':'false'))})}
 $('#bTheme').onclick=lookPicker;$('#bTheme').title='Choose your look';$('#bTheme').setAttribute('aria-label','Choose your look');

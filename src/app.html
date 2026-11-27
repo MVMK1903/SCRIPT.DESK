@@ -2583,8 +2583,96 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-sec]
   if(a==='dtog'){DISK.on=!DISK.on;lsSet('disk',{on:DISK.on});if(DISK.on)DISK.sched(true);openSecurity();return}
   if(a==='dnow'){t.disabled=true;const ok=await DISK.saveProject();t.disabled=false;toast(ok?'Saved to the folder.':(DISK.msg||'Could not save.'));renderDiskNote();return}
   if(a==='dopen'){window.sdDisk.open()}});
+
+async function restoreProtectedBackup(data){
+  if(!(GA.fb && GA.user && FB_SERVER)){
+    toast('Sign in and connect to the ScriptDesk server to restore a screenplay.',7000);
+    return false;
+  }
+
+  if(!data || !Array.isArray(data.scenes)){
+    toast('Invalid ScriptDesk backup.');
+    return false;
+  }
+
+  if(JOB || otpOpening || otpClosing || flushing || CS.busy || cloudOK){
+    toast('Finish the current operation before restoring a backup.');
+    return false;
+  }
+
+  const owner=GA.user.sub;
+  const p=upgrade(JSON.parse(JSON.stringify(data)));
+
+  p.id=uid();
+  p.space='o';
+  p.sample=false;
+  p.updated=Date.now();
+  delete p.pk;
+
+  otpOpening=true;
+
+  try{
+    if(P && P.space==='o'){
+      if(!(await otpCloseProject()))return false;
+    }else{
+      await flushNow();
+    }
+
+    const previous=P;
+
+    if(!(await otpPrepare(p)))return false;
+
+    if(!GA.user || GA.user.sub!==owner || P!==previous){
+      throw new Error('Account or project changed');
+    }
+
+    if(!(await secureLocalSave(p))){
+      throw new Error('Encrypted save failed');
+    }
+
+    const box=await IDB.get('p.'+p.id);
+
+    if(!box || !box.__sd || box.space!=='o'){
+      throw new Error('Encrypted backup copy missing');
+    }
+
+    const saved=await secureLocalOpen(box);
+
+    if(!saved || JSON.stringify(saved)!==JSON.stringify(p)){
+      throw new Error('Backup verification failed');
+    }
+
+    if(!GA.user || GA.user.sub!==owner || P!==previous){
+      throw new Error('Account or project changed');
+    }
+
+    otpForget(p.id);
+    P=p;
+    undoStack.length=0;
+    $('#bUndo').disabled=true;
+
+    updateIndexLocal();
+    lsSet('last',p.id);
+
+    closeModal();
+    page='slo';
+    render();
+
+    toast('Backup restored with OTP protection.');
+    return true;
+
+  }catch(e){
+    if(P!==p)delete OTPK[p.id];
+
+    toast('Backup restoration could not be confirmed. Keep the original backup file.',7000);
+    return false;
+  }finally{
+    otpOpening=false;
+  }
+}
+
 async function openEncBackup(env){if(!env||env.scriptdesk!=='enc1')throw new Error('This is not an encrypted ScriptDesk file.');
-  askPass('Open encrypted backup','Passphrase for this file',async pass=>{try{const j=JSON.parse(await envOpen(env,pass));const p=upgrade(j);if(!Array.isArray(p.scenes))throw 0;p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.')}catch(e){toast('Wrong passphrase, or the file is damaged.')}})}
+  askPass('Open encrypted backup','Passphrase for this file',async pass=>{try{const j=JSON.parse(await envOpen(env,pass));await restoreProtectedBackup(j);}catch(e){toast('Wrong passphrase, or the file is damaged.')}})}
 
 function toast(m,ms){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},ms||3800)}
 function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector('script[src="'+src+'"]')&&loadScript.done[src])return res();const s=document.createElement('script');s.src=src;s.onload=()=>{loadScript.done[src]=1;res()};s.onerror=()=>rej(new Error('Could not load a required component. Check your connection and try again.'));document.head.appendChild(s)})}
@@ -7108,7 +7196,7 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
   const handle=async f=>{if(!f)return;info.textContent='Reading '+f.name+'…';scanned=null;
     try{const r=await fileToText(f,m=>info.textContent=m);
       if(r&&r.enc){closeModal();await openEncBackup(r.enc);return}
-      if(r&&r.json){const p=upgrade(r.json);if(!Array.isArray(p.scenes))throw new Error('This is not a ScriptDesk backup.');p.id=uid();P=p;P.updated=Date.now();touch(P.scenes.map(s=>s.id));closeModal();page='slo';render();toast('Backup opened as a new project.');return}
+      if(r&&r.json){await restoreProtectedBackup(r.json);return}
       if(r&&r.scanned){scanned=r.scanned;info.textContent=r.garbled?`${f.name} uses an old font, so its text cannot be read directly (${r.scanned.numPages} pages). Press "Find scenes" and the page pictures are read free on this device (first time downloads the language files, about 5 MB per language).`:`${f.name} looks like scanned pages (${r.scanned.numPages}). Press "Find scenes" and the pages are read free on this device (first time downloads the language files).`}
       else{$('#iText').value=r;const n=detectScenes(r).scenes.length;info.textContent=`${f.name}: ${n} scene heading${n===1?'':'s'} found by quick scan.${n<3&&AI.sample?' Claude will look more closely when you continue.':''}${legacyFont(r)?' Some lines use an old Hindi or Telugu font and read as junk letters. The English lines are fine. For clean text, export the PDF again with a standard font, or paste the script.':''}`}
       if(!$('#iTitle').value)$('#iTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/^[0-9a-f]{8}\s/,'')}

@@ -1,0 +1,89 @@
+name: Verify Windows Installer
+
+on:
+  push:
+    branches: [dev/windows-artifact-verification]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Retrieve and verify original artifact
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $expected = "a8bf6a531cf7050343cafb5990299da5eabf781ae635951125d4136a3b8f147d"
+
+          $url = "https://api.github.com/repos/MVMK1903/SCRIPT.DESK/actions/artifacts/15170909994/zip"
+
+          curl.exe --fail --silent --show-error --location `
+            -H "Authorization: Bearer $env:GH_TOKEN" `
+            -H "Accept: application/vnd.github+json" `
+            --output ScriptDesk-Windows.zip $url
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Artifact download failed."
+          }
+
+          $actual = (Get-FileHash `
+            ScriptDesk-Windows.zip -Algorithm SHA256).Hash.ToLower()
+
+          if ($actual -ne $expected) {
+            throw "SHA256 mismatch."
+          }
+
+          Write-Host "PASS: Original artifact checksum matches."
+
+      - name: Scan original installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $status = Get-MpComputerStatus
+
+          if (-not $status.AntivirusEnabled) {
+            throw "Microsoft Defender is unavailable."
+          }
+
+          Update-MpSignature
+
+          Expand-Archive ScriptDesk-Windows.zip `
+            -DestinationPath installer
+
+          $exe = Get-ChildItem installer -Recurse `
+            -Filter "ScriptDesk-Setup-2.12.58.exe"
+
+          if (@($exe).Count -ne 1) {
+            throw "Expected installer not found."
+          }
+
+          Get-AuthenticodeSignature $exe.FullName |
+            Select-Object Status, StatusMessage
+
+          $scanner = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+
+          if (-not (Test-Path $scanner)) {
+            throw "Defender scanner not found."
+          }
+
+          $zip = (Resolve-Path ScriptDesk-Windows.zip).Path
+
+          foreach ($file in @($zip, $exe.FullName)) {
+            & $scanner -Scan -ScanType 3 `
+              -File $file -DisableRemediation
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scan failed or a threat was detected."
+            }
+          }
+
+          Write-Host "PASS: Scan completed without reported threats."

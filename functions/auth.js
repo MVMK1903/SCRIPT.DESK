@@ -208,5 +208,6 @@ exports.onUserDelete = v1.region(REGION).auth.user().onDelete(async (user) => {
   const FP = FieldPath;
   const codes = await d.collection('otpCodes').where(FP.documentId(), '>=', `${uid}_`).where(FP.documentId(), '<', `${uid}_`).get();
   await Promise.all(codes.docs.map((c) => c.ref.delete()));
+  await d.doc(`otpSendLimits/${uid}`).delete();
   logger.info('account data removed', { uid });
 });

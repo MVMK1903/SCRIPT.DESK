@@ -8655,21 +8655,164 @@ function otpAsk(pid,title){return new Promise(res=>{const u=GA.user;let via='',d
       <p class="small muted" id="otpTo"></p><div class="bacts"><button class="btn ghost" id="otpRe">Send again</button><button class="btn pri" id="otpGo">Open script</button></div></div>
     <p class="ga-msg" id="otpM" role="alert"></p><div id="fbRecap"></div></div>`);
   const ob=otpBoxes('otpC',()=>go());
-  const ov=$('#ov'),m=(t,info)=>{const e=$('#otpM');if(!e)return;e.textContent=t;e.classList.toggle('info',!!info)};
-  const tick=()=>{const b=$('#otpRe');if(!b)return;const s=Math.ceil((cool-Date.now())/1000);if(s>0){b.disabled=true;b.textContent=`Send again (${s})`;ct=setTimeout(tick,1000)}else{b.disabled=false;b.textContent='Send again'}};
-  const send=async(kind)=>{via=kind;m(kind==='sms'?'Sending SMS…':'Sending email…',1);document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=true);
-    try{const fx=await fbInit();
-      if(kind==='email'){const r=await fx.call('otpSend',{pid});$('#otpTo').textContent=`Sent to ${r.to}. It works for ${r.minutes||5} minutes. Check spam if it is not there.`}
-      else{await fx.call('otpSendSms',{pid});$('#otpTo').textContent=`SMS sent to ${mphone}.`}
-      $('#otpIn').hidden=false;m('');cool=Date.now()+30000;tick();ob.clear()}
-    catch(e){m(otpErr(e))}finally{document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=false)}};
-  const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=$('#otpGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
-    try{const fx=await fbInit();let r;r=await fx.call('otpVerify',{pid,code});
-      OTPK[pid]=await otpKeyFromB64(r.key);done=true;clearTimeout(ct);closeModal();res(true)}
-    catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
-  document.querySelectorAll('[data-otp]').forEach(b=>b.onclick=()=>send(b.dataset.otp));
-  $('#otpRe').onclick=()=>send(via);$('#otpGo').onclick=go;
-  new MutationObserver((r,o)=>{if(!ov.isConnected){o.disconnect();clearTimeout(ct);if(!done)res(false)}}).observe(document.body,{childList:true,subtree:true})})}
+  const marker=$('#otpCh');
+  const overlay=marker.closest('#ov');
+  const panel=$('#otpIn');
+  const message=$('#otpM');
+  const recipient=$('#otpTo');
+  const resend=$('#otpRe');
+  const submit=$('#otpGo');
+  const channels=[...marker.querySelectorAll('button')];
+  const inputs=[...$('#otpC').querySelectorAll('input')];
+
+  let busy=false;
+
+  const active=()=>!done&&marker.isConnected
+    &&$('#ov')===overlay
+    &&$('#otpCh')===marker&&GA.user===u;
+
+  const finish=ok=>{
+    if(done)return;
+    done=true;
+    clearTimeout(ct);
+    observer.disconnect();
+    res(ok);
+  };
+
+  const m=(text,info=false)=>{
+    if(!active())return;
+    message.textContent=text;
+    message.classList.toggle('info',!!info);
+  };
+
+  const sync=()=>{
+    clearTimeout(ct);
+    if(!active()){finish(false);return}
+
+    const left=Math.max(0,Math.ceil((cool-Date.now())/1000));
+
+    channels.forEach(b=>b.disabled=busy||left>0);
+
+    resend.disabled=busy||!via||left>0;
+    resend.textContent=left>0
+      ?`Send again (${left})`:'Send again';
+
+    submit.disabled=busy||!via;
+
+    inputs.forEach(x=>x.disabled=busy||!via);
+
+    if(left>0)ct=setTimeout(sync,1000);
+  };
+
+  const send=async kind=>{
+    if(!active()||busy||Date.now()<cool)return;
+    if(kind!=='email'&&kind!=='sms')return;
+    if(kind==='sms'&&(!smsReady||!phone))return;
+
+    busy=true;
+    via='';
+    sync();
+    ob.clear();
+
+    m(kind==='sms'?'Sending SMS…':'Sending email…',true);
+
+    let sent=false;
+
+    try{
+      const fx=await fbInit();
+
+      if(!active()){finish(false);return}
+
+      const r=await fx.call(
+        kind==='email'?'otpSend':'otpSendSms',{pid}
+      );
+
+      if(!active()){finish(false);return}
+
+      recipient.textContent=kind==='email'
+        ?`Sent to ${r.to}. It works for ${r.minutes||5} minutes. Check spam if it is not there.`
+        :`SMS sent to ${mphone}.`;
+
+      via=kind;
+      panel.hidden=false;
+      cool=Date.now()+30000;
+      sent=true;
+      m('');
+
+    }catch(e){
+      if(active())m(otpErr(e));
+    }finally{
+      busy=false;
+      if(active()){
+        sync();
+        if(sent)ob.clear();
+      }else finish(false);
+    }
+  };
+
+  const go=async()=>{
+    if(!active()||busy||!via)return;
+
+    const code=ob.val();
+
+    if(!/^\d{6}$/.test(code)){
+      m('Enter the 6 digits.');
+      return;
+    }
+
+    busy=true;
+    sync();
+    m('Checking…',true);
+
+    let failed=false;
+
+    try{
+      const fx=await fbInit();
+
+      if(!active()){finish(false);return}
+
+      const r=await fx.call('otpVerify',{pid,code});
+
+      if(!active()){finish(false);return}
+
+      const key=await otpKeyFromB64(r.key);
+
+      if(!active()){finish(false);return}
+
+      OTPK[pid]=key;
+      finish(true);
+      closeModal();
+
+    }catch(e){
+      if(active()){
+        failed=true;
+        m(otpErr(e));
+        ob.shake();
+      }
+    }finally{
+      busy=false;
+
+      if(active()){
+        sync();
+        if(failed)ob.clear();
+      }else finish(false);
+    }
+  };
+
+  const observer=new MutationObserver(()=>{
+    if(!active())finish(false);
+  });
+
+  observer.observe(document.body,{
+    childList:true,
+    subtree:true
+  });
+
+  channels.forEach(b=>b.onclick=()=>send(b.dataset.otp));
+  resend.onclick=()=>send(via);
+  submit.onclick=go;
+  sync();
+})}
 /* register a mobile number for SMS codes (web app) */
 function otpPhoneAsk(){openModal(`<div class="modal-h"><h2>Mobile number for codes</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b otp-m">
   <p class="small muted">Codes to open locked scripts can come by SMS to this number. Include the country code.</p>

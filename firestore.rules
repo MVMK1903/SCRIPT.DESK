@@ -76,6 +76,7 @@ service cloud.firestore {
     // OTP lock keys and codes, and the sign-in try counters: only the ScriptDesk server functions may touch these.
     match /otpKeys/{id} { allow read, write: if false; }
     match /otpCodes/{id} { allow read, write: if false; }
+    match /otpSendLimits/{id} { allow read, write: if false; }
     match /loginCodes/{id} { allow read, write: if false; }
     match /totp/{id} { allow read, write: if false; }
     match /totpPending/{id} { allow read, write: if false; }

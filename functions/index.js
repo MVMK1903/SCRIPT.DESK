@@ -23,6 +23,7 @@ Object.assign(exports, require('./totp')); // authenticator app + backup codes f
 
 const CODE_MINUTES = 5;
 const MAX_TRIES = 5;
+const MAX_ACCOUNT_SENDS = 60;
 const MAX_SENDS = 5;            // codes per script per 15 minutes
 
 // verified: making a lock or asking for a code needs a verified email (a password account must confirm its address)
@@ -65,15 +66,30 @@ exports.otpCreate = onCall(OPTS, async (req) => {
 
 async function issueScriptCode(uid, pid, channel = 'email') {
   const ref = codeRef(uid, pid);
+  const accountRef = db.doc(`otpSendLimits/${uid}`);
   const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
   const salt = crypto.randomBytes(16).toString('hex');
 
   await db.runTransaction(async (tx) => {
     const prev = (await tx.get(ref)).data() || {};
+    const account = (await tx.get(accountRef)).data() || {};
     const now = Date.now();
-    const sends = (prev.sends || []).filter(
+
+    const sends = (prev.exp === 0 && prev.h === ''
+      ? [] : (prev.sends || [])).filter(
       (t) => now - t < 15 * 60000
     );
+
+    const accountSends = (account.sends || []).filter(
+      (t) => now - t < 60 * 60000
+    );
+
+    if (accountSends.length >= MAX_ACCOUNT_SENDS) {
+      throw new HttpsError(
+        'resource-exhausted',
+        'Account security limit reached. Please try again later.'
+      );
+    }
 
     if (sends.length >= MAX_SENDS) {
       throw new HttpsError(
@@ -89,6 +105,10 @@ async function issueScriptCode(uid, pid, channel = 'email') {
       tries: 0,
       channel,
       sends: [...sends, now]
+    });
+
+    tx.set(accountRef, {
+      sends: [...accountSends, now]
     });
   });
   return code;
@@ -148,7 +168,8 @@ exports.otpVerify = onCall(OPTS, async (req) => {
       h: '',
       salt: '',
       exp: 0,
-      tries: 0
+      tries: 0,
+      sends: []
     });
     else tx.update(ref, { tries: (d.tries || 0) + 1 });
     return (ok ? 'ok' : 'wrong') +

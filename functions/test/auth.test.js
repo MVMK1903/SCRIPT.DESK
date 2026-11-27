@@ -221,7 +221,7 @@ test('OTP: concurrent send requests cannot bypass rate limits', async () => {
   assert.equal(h.mails.length, 5);
 });
 
-test('OTP: successful verification does not reset send limits', async () => {
+test('OTP: repeated successful screenplay openings are allowed', async () => {
   const auth = {
     uid: 'u1',
     token: { email: 'a@b.com', email_verified: true }
@@ -229,7 +229,30 @@ test('OTP: successful verification does not reset send limits', async () => {
 
   await otpCreate({ data: { pid: 'p1' }, auth });
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
+    await otpSend({ data: { pid: 'p1' }, auth });
+
+    const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+
+    await otpVerify({
+      data: { pid: 'p1', code },
+      auth
+    });
+  }
+
+  assert.equal(h.mails.length, 10);
+});
+
+test('OTP: account delivery limit survives successful verification', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+  await otpCreate({ data: { pid: 'p2' }, auth });
+
+  for (let i = 0; i < 60; i++) {
     await otpSend({ data: { pid: 'p1' }, auth });
 
     const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
@@ -241,11 +264,11 @@ test('OTP: successful verification does not reset send limits', async () => {
   }
 
   const error = await fails(
-    otpSend({ data: { pid: 'p1' }, auth })
+    otpSend({ data: { pid: 'p2' }, auth })
   );
 
   assert.equal(error.code, 'resource-exhausted');
-  assert.equal(h.mails.length, 5);
+  assert.equal(h.mails.length, 60);
 });
 
 test('OTP: a code cannot unlock another screenplay', async () => {

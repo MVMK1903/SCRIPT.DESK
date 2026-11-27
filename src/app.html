@@ -2340,6 +2340,34 @@ body[data-page="script"] #content>:first-child{margin-top:18px}
 :root[data-look] .btn.pri,:root[data-look] .hx-card,:root[data-look] .hx-tile,:root[data-look] .hx-stat{box-shadow:none!important}
 :root[data-look] #nav button[data-sec] .ic-b,:root[data-look] #nav2 button[data-sec] .ic-b,:root[data-look] #nav button[data-sec][aria-current=page] .ic-b,:root[data-look] #nav2 button[data-sec][aria-current=page] .ic-b,:root[data-look] .nav button[aria-current="page"] .ic-b{background:none!important;color:var(--sc)!important;border-radius:0!important}
 :root[data-look] #nav button[data-sec] .ic-b .ic,:root[data-look] #nav2 button[data-sec] .ic-b .ic,:root[data-look] .nav button[aria-current="page"] .ic-b .ic{color:var(--sc)!important}
+
+/* Writing assistant: prevent preview text overlap */
+.wr-ai > h3,
+.wr-ai > .wa-cur,
+.wr-ai > .wa-sec {
+    flex-shrink: 0;
+}
+
+.wr-ai .wa-cur {
+    display: block;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    max-height: 144px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    overflow-y: auto;
+    overflow-x: hidden;
+    line-height: 1.45;
+}
+
+.wr-ai .wa-sec {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
 </style>
 <script>try{var k=localStorage.getItem("scriptdesk.look")||"savera";if(["savera","sandhya","night","blossom","citrus"].indexOf(k)<0)k="savera";document.documentElement.dataset.look=k;document.documentElement.dataset.theme="light"}catch(e){document.documentElement.dataset.look="savera";document.documentElement.dataset.theme="light"}</script>
 

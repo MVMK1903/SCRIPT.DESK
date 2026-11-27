@@ -187,6 +187,62 @@ test('OTP: unverified email cannot unlock a screenplay', async () => {
   assert.equal(typeof result.key, 'string');
 });
 
+
+test('OTP: independent accounts receive their own codes and screenplay keys', async () => {
+  const a = {
+    uid: 'u1',
+    token: {
+      email: 'director@example.com',
+      email_verified: true
+    }
+  };
+
+  const b = {
+    uid: 'u2',
+    token: {
+      email: 'writer@example.com',
+      email_verified: true
+    }
+  };
+
+  const pid = 'shared-test-id';
+
+  const lockA = await otpCreate({
+    data: { pid }, auth: a
+  });
+
+  const lockB = await otpCreate({
+    data: { pid }, auth: b
+  });
+
+  assert.notEqual(lockA.key, lockB.key);
+
+  await otpSend({ data: { pid }, auth: a });
+
+  const mailA = h.mails.at(-1);
+  assert.equal(mailA.to, a.token.email);
+  const codeA = mailA.text.match(/\b(\d{6})\b/)[1];
+
+  const resultA = await otpVerify({
+    data: { pid, code: codeA }, auth: a
+  });
+
+  assert.equal(resultA.key, lockA.key);
+
+  await otpSend({ data: { pid }, auth: b });
+
+  const mailB = h.mails.at(-1);
+  assert.equal(mailB.to, b.token.email);
+  const codeB = mailB.text.match(/\b(\d{6})\b/)[1];
+
+  const resultB = await otpVerify({
+    data: { pid, code: codeB }, auth: b
+  });
+
+  assert.equal(resultB.key, lockB.key);
+  assert.notEqual(resultA.key, resultB.key);
+});
+
 test('OTP: the right code works once', async () => {
   const auth = { uid: 'u1', token: { email: 'a@b.com', email_verified: true } };
   await otpCreate({ data: { pid: 'p2' }, auth });

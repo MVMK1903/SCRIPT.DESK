@@ -155,6 +155,38 @@ test('OTP: many wrong codes sent at once still only use five tries, then even th
   assert.equal((await fails(otpVerify({ data: { pid: 'p1', code }, auth }))).code, 'resource-exhausted');
 });
 
+
+test('OTP: unverified email cannot unlock a screenplay', async () => {
+  const auth = {
+    uid: 'u1',
+    token: { email: 'a@b.com', email_verified: true }
+  };
+
+  await otpCreate({ data: { pid: 'p1' }, auth });
+  await otpSend({ data: { pid: 'p1' }, auth });
+
+  const code = h.mails.at(-1).text.match(/\b(\d{6})\b/)[1];
+
+  const unverified = {
+    ...auth,
+    token: { ...auth.token, email_verified: false }
+  };
+
+  const err = await fails(otpVerify({
+    data: { pid: 'p1', code },
+    auth: unverified
+  }));
+
+  assert.equal(err.code, 'failed-precondition');
+
+  const result = await otpVerify({
+    data: { pid: 'p1', code },
+    auth
+  });
+
+  assert.equal(typeof result.key, 'string');
+});
+
 test('OTP: the right code works once', async () => {
   const auth = { uid: 'u1', token: { email: 'a@b.com', email_verified: true } };
   await otpCreate({ data: { pid: 'p2' }, auth });

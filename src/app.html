@@ -8426,7 +8426,7 @@ async function secureLocalSaveNow(o){let k;
 async function secureLocalOpen(box){if(!box||!box.__sd)return box;const k=await boxKey(box.space,box.id,box.pk);if(!k)return null;
   try{return await openJson(k,box)}catch(e){}
   /* a half-finished change of key: the older key still opens it */
-  if(box.pk&&SV.vk){try{return await openJson(SV.vk,box)}catch(e){}}
+  if(box.space!=='o'&&box.pk&&SV.vk){try{return await openJson(SV.vk,box)}catch(e){}}
   return null}
 
 /* ---------- cloud sync through Firestore ---------- */

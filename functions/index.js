@@ -155,7 +155,7 @@ exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] },
 
 // Email: check the code and hand over the key. Five wrong tries end the code.
 exports.otpVerify = onCall(OPTS, async (req) => {
-  const { uid, pid, code: raw } = need(req);
+  const { uid, pid, code: raw } = need(req, { verified: true });
   const code = raw.replace(/\D/g, '');
   const ref = codeRef(uid, pid);
   // The try is counted and the code checked in one transaction, so many requests at once still only get MAX_TRIES.

@@ -2560,7 +2560,14 @@ const DISK={mode:null,on:false,handle:null,msg:'',t:0,safe:s=>String(s||'film').
       const parts=rel.split('/').filter(Boolean),file=parts.pop();let d=this.handle;if(!d)return;
       for(const q of parts)d=await d.getDirectoryHandle(q,{create:false});await d.removeEntry(file)}catch(e){}},
   sched(now){if(!this.on||!P||!this.mode)return;if(P.space&&P.space!=='me')return; /* private and team scripts are never written to disk as readable files */clearTimeout(this.t);this.t=setTimeout(()=>this.saveProject(),now?50:2000)},
-  async saveProject(){if(!this.on||!P||P.sample)return false;const dir='Projects/'+this.safe(P.title)+'__'+P.id.slice(0,6)+'/';const json=JSON.stringify(P);
+  async saveProject(){
+    if(!this.on||!P||P.sample)return false;
+
+    if(P.space&&P.space!=='me'){
+      this.msg='Protected screenplays cannot be saved as readable project files.';
+      return false;
+    }
+const dir='Projects/'+this.safe(P.title)+'__'+P.id.slice(0,6)+'/';const json=JSON.stringify(P);
     let body=json,txt=P.scenes.map(s=>headingLine(s)+'\n\n'+s.text).join('\n\n');let name='project.scriptdesk.json',tn='script.txt';
     if(SEC.on&&SEC.dek){body=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,json)});txt=JSON.stringify({scriptdesk:'enc1',cfg:SEC.cfg,data:await aesEnc(SEC.dek,txt)});name='project.scriptdesk';tn='script.scriptdesk'}
     const a=await this.write(dir+name,body),b=await this.write(dir+tn,txt);if(a&&b)lsSet('disklast',{at:Date.now(),dir});renderDiskNote();return a&&b},

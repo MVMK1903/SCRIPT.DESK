@@ -3899,7 +3899,14 @@ document.addEventListener('selectionchange',()=>{if(page==='write'&&wrDoc()){cle
 /* ---- Actions ---- */
 function wrFromProject(){snapshot();const D=draft();D.els=scenesToEls(P.scenes,true);if(P.front&&!D.tp.title)D.tp.title=P.title;D.at=Date.now();D.syncedAt=D.at;dirty.draft=true;logChange(`Script opened in the writer (${P.scenes.length} scenes)`,'script',true);touch([]);render()}
 function wrBlank(){snapshot();const D=draft();D.els=[{t:'h',x:''}];D.at=Date.now();dirty.draft=true;touch([]);render();setTimeout(()=>tplPick({start:true}),60)}
-async function wrNewProject(){let sp='me';if(GA.fb){sp=await askSpace();if(!sp)return}await flushNow();otpForget();P=newProject({title:'Untitled script'});if(sp!=='me')P.space=sp;if(sp==='o')await otpPrepare(P);P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render();setTimeout(()=>tplPick({start:true}),60)}
+async function wrNewProject(){const sp=await askSpace();
+    if(!sp)return;
+    await flushNow();
+    const next=newProject({title:'Untitled script'});
+    next.space=sp;
+    if(sp==='o'&&!(await otpPrepare(next)))return;
+    otpForget(next.id);
+    P=next;P.draft={els:[{t:'h',x:''}],tp:{title:'Untitled script'},at:Date.now(),syncedAt:0};undoStack.length=0;$('#bUndo').disabled=true;logChange('New script started','script',true);dirty.draft=true;touch([]);lsSet('last',P.id);page='write';lsSet('page','write');render();setTimeout(()=>tplPick({start:true}),60)}
 function wrTitle(){const tp=draft().tp;const f=(id,l,v,ph)=>`<div class="fieldbox"><label for="${id}">${l}</label><input type="text" id="${id}" value="${esc(v||'')}" placeholder="${esc(ph||'')}"></div>`;
   openModal(`<div class="modal-h"><h2>Title page</h2><button class="btn ghost" data-close>Close</button></div><div class="modal-b">
   ${f('tpT','Title',tp.title||P.title,'RAAHU KAALAM')}<div class="two">${f('tpC','Credit',tp.credit||'Written by','Written by')}${f('tpA','Author(s)',tp.author,'Your name')}</div>
@@ -5401,7 +5408,7 @@ async function trNewProject(){const S=P.scenes.filter(s=>trText(s)!=null);if(!S.
   await flushNow();const np=JSON.parse(JSON.stringify(P));const src=trSrc(),tgt=trTgt();
   np.scenes.forEach(s=>{const o=P.scenes.find(x=>x.id===s.id);const t=o&&trText(o);if(t!=null)s.text=t;delete s.tr});
   Object.assign(np,{id:uid(),title:`${P.title} (${TR_NAME[tgt]})`,sample:false,created:Date.now(),updated:Date.now(),changes:[{at:Date.now(),sheet:'Translator',what:`Made from "${P.title}", translated ${TR_NAME[src]} → ${TR_NAME[tgt]}`}]});
-  np.draft={els:trEls(P.scenes,false),tp:{title:np.title},at:Date.now(),syncedAt:Date.now(),tpl:tplOf(),tplAsked:true};delete np.trans;if(np.space==='o'){otpForget(P.id);await otpPrepare(np)}P=np;undoStack.length=0;$('#bUndo').disabled=true;touch(np.scenes.map(s=>s.id));saveLocal();lsSet('last',np.id);page='script';render();
+  np.draft={els:trEls(P.scenes,false),tp:{title:np.title},at:Date.now(),syncedAt:Date.now(),tpl:tplOf(),tplAsked:true};delete np.trans;if(np.space==='o'){otpForget(P.id);if(!(await otpPrepare(np)))return}P=np;undoStack.length=0;$('#bUndo').disabled=true;touch(np.scenes.map(s=>s.id));saveLocal();lsSet('last',np.id);page='script';render();
   toast(`Opened "${np.title}". Your original project is unchanged; find both under Projects.`,6000)}
 /* the translation read as a screenplay page, in the same template as the PDF */
 function trPlay(list){const tgt=trTgt();const done=list.filter(s=>trText(s)!=null);
@@ -6836,7 +6843,10 @@ function syncTop(){$('#fTitle').value=P?P.title:'';$('#fProd').value=P?P.product
   $('#sideFoot').textContent=P?`${P.scenes.length} scenes · ${P.artists.length} artists · ${locGroups().length} locations`:'';
   if(!AI.sample&&AI.checked){$('#bRun').title=STANDALONE?(advAI()?'Choose an AI service in Settings (free options available)':'AI is not available right now'):'AI needs ScriptDesk opened inside Claude'}renderChecksBtn()}
 function applySearch(){const q=(VIEW.q||'').toLowerCase().trim();document.querySelectorAll('#content [data-q]').forEach(el=>{el.hidden=!!q&&!el.dataset.q.includes(q)})}
-function go(id){if(typeof RA!=='undefined'&&RA.on)raStop();if(page==='write'&&wrDoc()){clearTimeout(WR.saveT);wrSave();if(id!=='write'&&P&&P.scenes.length&&draftReal()&&P.draft.at>(P.draft.syncedAt||0))wrApply(true)}{const ae=document.activeElement;if(ae&&(ae.isContentEditable||ae.tagName==='TEXTAREA')&&ae.blur)ae.blur()}page=id;lsSet('page',id);VIEW.q='';VIEW.tedit=false;VIEW.editScene=null;sheetClose();render()}
+function go(id){if(otpClosing)return;if(typeof RA!=='undefined'&&RA.on)raStop();if(page==='write'&&wrDoc()){clearTimeout(WR.saveT);wrSave();if(id!=='write'&&P&&P.scenes.length&&draftReal()&&P.draft.at>(P.draft.syncedAt||0))wrApply(true)}{const ae=document.activeElement;if(ae&&(ae.isContentEditable||ae.tagName==='TEXTAREA')&&ae.blur)ae.blur()}if(id==='projects'&&P&&P.space==='o'){
+          return otpCloseProject();
+        }
+        page=id;lsSet('page',id);VIEW.q='';VIEW.tedit=false;VIEW.editScene=null;sheetClose();render()}
 async function fillProjects(){const box=$('#plist');if(!box)return;const list=await listProjects();
   box.innerHTML=list.length?list.map(p=>`<div class="pcard" role="button" tabindex="0" data-open="${esc(p.id)}"><b>${esc(p.title)}</b><span class="muted small">${esc(p.production||'')}</span><span class="small faint">${p.scenes} scenes · updated ${new Date(p.updated).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}${p.sample?' · sample':''}</span>${GA.fb&&!p.sample?`<span class="sp-b${spSecure(p.space||'me')?' sec':''}"><i class="ic ${(p.space||'me')==='me'?'i-cloud':String(p.space).startsWith('t:')?'i-team':'i-lock'}" aria-hidden="true"></i>${esc(spLabel(p.space||'me'))}</span>`:''}<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="btn sm" data-open="${esc(p.id)}">Open</button>${GA.fb&&!p.sample?`<button class="btn sm" data-move="${esc(p.id)}">Move</button>`:''}<button class="btn sm" data-backup="${esc(p.id)}">Backup</button><button class="btn sm ghost danger" data-delp="${esc(p.id)}">Delete</button></div></div>`).join(''):`<div class="empty"><b>No projects yet</b>Start by importing a script.</div>`}
 
@@ -6848,7 +6858,29 @@ document.addEventListener('click',async e=>{const t=e.target.closest('button,[da
   if(t.dataset.seg){VIEW[t.dataset.seg]=t.dataset.v;lsSet('views',{fmode:VIEW.fmode,spmode:VIEW.spmode,cmode:VIEW.cmode,apmode:VIEW.apmode});render();return}
   if(t.dataset.x){exportPage(t.dataset.x);return}
   if(t.dataset.delp){e.stopPropagation();if(t.dataset.armed){const id=t.dataset.delp;t.textContent='Deleting…';await deleteProject(id);if(P&&P.id===id)P=null;toast('Project deleted');render();return}t.dataset.armed=1;t.textContent='Confirm delete';setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}
-  if(t.dataset.backup){e.stopPropagation();const bp=await loadProject(t.dataset.backup);if(bp&&(SEC.on||(bp.space&&bp.space!=='me'))){await saveFile(DISK.safe(bp.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',await envMake(JSON.stringify(bp)));return}
+  if(t.dataset.backup){
+    e.stopPropagation();
+
+    const pid=t.dataset.backup;
+    const entry=(lsGet('index')||[]).find(x=>x.id===pid);
+    const local=lsGet('p.'+pid);
+    const stored=await IDB.get('p.'+pid);
+
+    if((entry&&entry.space==='o')||
+       (local&&local.space==='o')||
+       (stored&&stored.space==='o')||
+       (P&&P.id===pid&&P.space==='o')){
+      toast('Secure OTP screenplay backup is not available yet. Your saved screenplay is unchanged.',7000);
+      return;
+    }
+
+    const bp=await loadProject(pid);
+
+    if(bp&&bp.space==='o'){
+      toast('Secure OTP screenplay backup is not available yet.',7000);
+      return;
+    }
+if(bp&&(SEC.on||(bp.space&&bp.space!=='me'))){await saveFile(DISK.safe(bp.title)+'_backup_'+new Date().toISOString().slice(0,10)+'.scriptdesk',await envMake(JSON.stringify(bp)));return}
   if(bp)await saveFile(`${(bp.title||'film').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_')}_backup_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(bp));return}
   if(t.dataset.move){e.stopPropagation();moveAsk(t.dataset.move);return}
   if(t.dataset.open){await openProject(t.dataset.open);return}
@@ -6912,7 +6944,104 @@ $('#bMail').onclick=()=>openMail();$('#bMx').onclick=()=>exportPage('xlsx');$('#
 $('#fTitle').addEventListener('change',e=>{if(!P)return;P.title=e.target.value.trim()||'Untitled film';logChange(`Film title set to ${P.title}`,'x',true);touch([])});
 $('#fProd').addEventListener('change',e=>{if(!P)return;P.production=e.target.value.trim();logChange(`Production house set to ${P.production||'—'}`,'x',true);touch([])});
 
-async function openProject(id){const ie=(lsGet('index')||[]).find(x=>x.id===id);if(ie&&ie.space==='o'){otpForget();if(!GA.user){toast('Sign in to open this locked script.');return}if(!(await otpAsk(id,ie.title)))return}else otpForget();if(ie&&GA.fb&&spSecure(ie.space||'me')&&ie.space!=='o'&&!SV.vk){if(!(await svUnlockAsk({why:'This screenplay is end-to-end encrypted. Unlock your vault to open it.'})))return}const p=await loadProject(id);if(!p){toast('That project could not be opened.');return}await flushNow();P=p;undoStack.length=0;$('#bUndo').disabled=true;lsSet('last',id);if(page==='projects')page=lsGet('page')&&lsGet('page')!=='projects'?lsGet('page'):'slo';render()}
+let otpClosing=false;
+let otpOpening=false;
+
+async function otpCloseProject(){
+  if(!P||P.space!=='o')return true;
+
+  if(otpClosing||JOB||flushing||CS.busy||cloudOK){
+    toast('Finish the current operation before locking.');
+    return false;
+  }
+
+  otpClosing=true;
+  const current=P;
+
+  try{
+    if(page==='write'&&wrDoc()){
+      clearTimeout(WR.saveT);
+      wrSave();
+    }
+
+    const ae=document.activeElement;
+    if(ae&&ae.blur)ae.blur();
+
+    const snap=JSON.parse(JSON.stringify(current));
+
+    if(!(await secureLocalSave(snap))){
+      throw new Error('Save failed');
+    }
+
+    const box=await IDB.get('p.'+snap.id);
+
+    if(!box||!box.__sd||box.space!=='o'){
+      throw new Error('Encrypted copy missing');
+    }
+
+    const saved=await secureLocalOpen(box);
+
+    if(!saved||JSON.stringify(saved)!==JSON.stringify(snap)){
+      throw new Error('Save verification failed');
+    }
+
+    if(P!==current||JSON.stringify(P)!==JSON.stringify(snap)
+       ||JOB||flushing||CS.busy){
+      throw new Error('Project changed during save');
+    }
+
+    clearTimeout(flushT);
+
+    dirty.meta=false;
+    dirty.draft=false;
+    dirty.scenes.clear();
+    dirty.deleted.clear();
+
+    otpForget();
+    P=null;
+    undoStack.length=0;
+    lastExp=null;
+    hlCache=null;
+
+    $('#bUndo').disabled=true;
+
+    lsDel('last');
+    page='projects';
+    lsSet('page','projects');
+
+    VIEW.q='';
+    VIEW.tedit=false;
+    VIEW.editScene=null;
+
+    sheetClose();
+    render();
+    csSoon(500);
+
+    toast('Screenplay locked. OTP required to reopen.');
+    return true;
+
+  }catch(e){
+    toast('Could not confirm safe saving. Screenplay remains open. Try again.',7000);
+    return false;
+  }finally{
+    otpClosing=false;
+  }
+}
+
+async function openProject(id){
+  if(otpOpening||otpClosing)return;
+  otpOpening=true;
+  try{
+    if(P&&P.space==='o'){
+      if(!(await otpCloseProject()))return;
+    }else{
+      await flushNow();
+    }
+const ie=(lsGet('index')||[]).find(x=>x.id===id);if(ie&&ie.space==='o'){otpForget();if(!GA.user){toast('Sign in to open this locked script.');return}if(!(await otpAsk(id,ie.title)))return}else otpForget();if(ie&&GA.fb&&spSecure(ie.space||'me')&&ie.space!=='o'&&!SV.vk){if(!(await svUnlockAsk({why:'This screenplay is end-to-end encrypted. Unlock your vault to open it.'})))return}const p=await loadProject(id);if(!p){toast('That project could not be opened.');return}P=p;undoStack.length=0;$('#bUndo').disabled=true;lsSet('last',id);if(page==='projects')page=lsGet('page')&&lsGet('page')!=='projects'?lsGet('page'):'slo';render()
+  }finally{
+    otpOpening=false;
+  }
+}
 async function flushNow(){if(P&&(dirty.meta||dirty.draft||dirty.scenes.size)){clearTimeout(flushT);await flush()}}
 async function profileJob(id){if(JOB)return;if(!AI.sample){noAI('AI needs ScriptDesk opened inside Claude. You can type profiles by hand.');return}snapshot();startJob(id?'Writing profile':'Writing character profiles',0);
   try{await aiProfiles(id);logChange(id?`${aName(id)} profile rewritten by AI`:'Character profiles written by AI','profile',true);touch([]);toast('Profiles written. Edit anything you like.')}catch(e){toast(e&&e.code==='cancelled'?'Stopped.':errMsg(e),5000)}finally{endJob();render(true)}}
@@ -6939,7 +7068,7 @@ function openModal(html){$('#modalRoot').innerHTML=`<div class="ov" id="ov"><div
 function closeModal(){const ov=$('#ov');if(ov&&typeof MOTION_OK!=='undefined'&&MOTION_OK){ov.removeAttribute('id');ov.classList.add('closing');setTimeout(()=>ov.remove(),180)}else $('#modalRoot').innerHTML='';if(pendingRename){const f=pendingRename.only;pendingRename=null;f()}}
 function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><button class="btn ghost" data-close>Close</button></div>
  <div class="modal-b">
-  <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>${GA.fb&&GA.user?`<div class="fieldbox"><label for="iSpace">Where should this live?</label><select id="iSpace"><option value="o"${FB_SERVER?'':' disabled'}>Locked with OTP · ${FB_SERVER?'a code each time it opens':'needs the ScriptDesk server (not set up yet)'}</option><option value="v"${FB_SERVER?'':' selected'}>Just me · vault passphrase</option>${TEAMS.list.filter(t=>t.mine).map(t=>`<option value="t:${esc(t.id)}">Team · ${esc(t.name)} · encrypted</option>`).join('')}<option value="me">My account · not encrypted</option></select></div>`:''}
+  <div class="two"><div class="fieldbox"><label for="iTitle">Film title</label><input type="text" id="iTitle" placeholder="From the file name if blank"></div><div class="fieldbox"><label for="iProd">Production house</label><input type="text" id="iProd" placeholder="e.g. Primeshow Entertainments" value="${esc(P&&!P.sample?P.production:'')}"></div></div>${GA.fb&&GA.user?`<div class="fieldbox"><label for="iSpace">Where should this live?</label><select id="iSpace"><option value="o"${FB_SERVER?'':' disabled'}>Locked with OTP · ${FB_SERVER?'a code each time it opens':'needs the ScriptDesk server (not set up yet)'}</option>${TEAMS.list.filter(t=>t.mine).map(t=>`<option value="t:${esc(t.id)}">Team · ${esc(t.name)} · encrypted</option>`).join('')}</select></div>`:''}
   <label class="drop" id="drop" for="iFile">Drop a script here or <u>choose a file</u><br><span class="small faint">Word (.docx), PDF (text or scanned), Final Draft, Fountain, text, or a ScriptDesk backup (.json or encrypted .scriptdesk). Any language or format.</span></label>
   <input type="file" id="iFile" accept=".docx,.pdf,.fdx,.fountain,.txt,.text,.json,.scriptdesk" hidden>
   <div class="fieldbox"><label for="iLang">Language of scanned pages</label><select id="iLang"><option value="auto">Auto-detect</option><option value="tel">Telugu</option><option value="tam">Tamil</option><option value="hin">Hindi</option><option value="mal">Malayalam</option><option value="kan">Kannada</option><option value="eng">English</option></select><div class="small faint">Used only for scanned or old-font PDFs. Read free on this device; nothing is uploaded.</div></div>
@@ -6963,7 +7092,22 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
     try{let text=$('#iText').value;
       if(scanned){text=await ocrPdf(scanned,m=>say(m),$('#iLang')?$('#iLang').value:'auto');$('#iText').value=text}
       if(!text.trim()){say('Choose a file or paste the script first.');btn.disabled=false;return}
-      const isp=$('#iSpace')?$('#iSpace').value:'me';if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
+      const isp=$('#iSpace')?$('#iSpace').value:'me';
+      if(!(GA.fb&&GA.user)){
+        say('Sign in to import a protected screenplay.');
+        btn.disabled=false;
+        return;
+      }
+      if(isp!=='o'&&!String(isp).startsWith('t:')){
+        say('Select Locked with OTP to import this screenplay.');
+        btn.disabled=false;
+        return;
+      }
+      if(isp==='o'&&!FB_SERVER){
+        say('The OTP server is unavailable.');
+        btn.disabled=false;
+        return;
+      }if(spSecure(isp)&&isp!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to import into an encrypted screenplay.'}))){btn.disabled=false;return}
       const _am=stripAppMarks(text);text=_am.text;
       let r=detectScenes(text);r.removed=(r.removed||0)+_am.n;
       const weak=r.scenes.length<3||r.scenes.filter(s=>!s.loc).length>r.scenes.length/2;
@@ -6972,7 +7116,15 @@ function openImport(){openModal(`<div class="modal-h"><h2>Import script</h2><but
       if(r.back)toast('Left out '+r.back.split('\n').filter(x=>x.trim()).length+' lines after "THE END" (notes or credits), so they are not read as part of the last scene.',6000);
       if(r.removed)toast('Removed '+r.removed+' line'+(r.removed===1?'':'s')+' left by the writing app (like "Created using Celtx" or page labels).',5000);
       await flushNow();
-      P=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});otpForget();if(isp!=='me')P.space=isp;if(isp==='o')await otpPrepare(P);
+      const next=newProject({title:$('#iTitle').value.trim()||'Untitled film',production:$('#iProd').value.trim(),front:r.front.slice(0,3000),scenes:r.scenes});
+      next.space=isp;
+      if(isp==='o'&&!(await otpPrepare(next))){
+        say('OTP protection failed. Screenplay was not imported.');
+        btn.disabled=false;
+        return;
+      }
+      otpForget(next.id);
+      P=next;
       undoStack.length=0;$('#bUndo').disabled=true;logChange(`Script imported: ${P.scenes.length} scenes found`,'scenes',true);touch(P.scenes.map(s=>s.id));lsSet('last',P.id);closeModal();page='slo';render();openSceneCheck(true)}
     catch(e){say(errMsg(e));btn.disabled=false}}}
 function openSceneCheck(fresh){const sc=P.scenes;const warn=s=>[!s.loc&&'no location',(!s.ie||!s.time)&&'effect incomplete',sc.filter(x=>U(x.no)===U(s.no)).length>1&&'duplicate number'].filter(Boolean);
@@ -8190,13 +8342,13 @@ const spSecure=s=>s&&s!=='me';
 const TEAMS={list:[],keys:{},kv:{}};
 function spLabel(s){if(s==='o')return 'Locked with OTP';if(s==='v')return 'Just me · private & encrypted';if(String(s).startsWith('t:')){const t=TEAMS.list.find(x=>x.id===s.slice(2));return 'Team · '+(t?t.name:'team')}return 'My account · not encrypted'}
 /* "Where should this live?" for a new screenplay */
-function askSpace(){return new Promise(res=>{if(!(GA.fb&&GA.user))return res('me');let pick=FB_SERVER?'o':'v',done=false;const teams=TEAMS.list.filter(t=>t.mine);
+function askSpace(){return new Promise(res=>{if(!(GA.fb&&GA.user)){toast('Sign in to create a protected screenplay.');return res(null)}let pick='o',done=false;const teams=TEAMS.list.filter(t=>t.mine);
   const card=(v,icon,t,sub,dis)=>`<button type="button" class="sp-c${pick===v?' on':''}" data-sp="${esc(v)}"${dis?' disabled':''} aria-pressed="${pick===v}"><i class="ic ${icon}" aria-hidden="true"></i><b>${esc(t)}</b><span>${esc(sub)}</span></button>`;
-  const body=()=>`<div class="sp-g">${card('o','i-lock','Locked with OTP',FB_SERVER?'A code by email or SMS every time it opens':'Needs the ScriptDesk server, which is not set up yet',!FB_SERVER)}${card('v','i-lock','Just me · vault','Private & encrypted with your vault passphrase')}${teams.length?teams.map(t=>card('t:'+t.id,'i-team',t.name,'Shared with '+t.members+' member'+(t.members===1?'':'s')+' · encrypted')).join(''):card('_','i-team','No teams joined','Join a team to enable sharing',1)}${card('me','i-cloud','My account','Not encrypted · works everywhere')}</div>`;
+  const body=()=>`<div class="sp-g">${card('o','i-lock','Locked with OTP',FB_SERVER?'A code by email or SMS every time it opens':'Needs the ScriptDesk server, which is not set up yet',!FB_SERVER)}${teams.length?teams.map(t=>card('t:'+t.id,'i-team',t.name,'Shared with '+t.members+' member'+(t.members===1?'':'s')+' · encrypted')).join(''):card('_','i-team','No teams joined','Join a team to enable sharing',1)}</div>`;
   openModal(`<div class="modal-h"><h2>New screenplay</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b"><h3 class="sp-h">Where should this live?</h3><div id="spBox">${body()}</div>
     <p class="small muted" id="spNote">${FB_SERVER?'Encrypted on this device. Opening it needs a one-time code each time, and the internet.':SV.cfg?'':'You will set up your vault passphrase next.'}</p><div class="bacts"><button class="btn" data-close>Cancel</button><button class="btn pri" id="spGo">Create</button></div></div>`);
   const ov=$('#ov');$('#spBox').onclick=e=>{const b=e.target.closest('[data-sp]');if(!b||b.disabled)return;pick=b.dataset.sp;$('#spBox').innerHTML=body();$('#spNote').textContent=pick==='o'?'Encrypted on this device. Opening it needs a one-time code each time, and the internet.':pick==='v'&&!SV.cfg?'You will set up your vault passphrase next.':''};
-  $('#spGo').onclick=async()=>{done=true;closeModal();if(pick==='o')return res('o');if(spSecure(pick)&&!(await svUnlockAsk({why:'Unlock your vault to create an encrypted screenplay.'})))return res(null);if(pick.startsWith('t:')&&!TEAMS.keys[pick.slice(2)])await csTeams();res(pick)};
+  $('#spGo').onclick=async()=>{if(pick==='o'&&!FB_SERVER){toast('The OTP server is unavailable. Screenplay creation stopped.');return}done=true;closeModal();if(pick==='o')return res('o');if(spSecure(pick)&&!(await svUnlockAsk({why:'Unlock your vault to create an encrypted screenplay.'})))return res(null);if(pick.startsWith('t:')&&!TEAMS.keys[pick.slice(2)])await csTeams();res(pick)};
   new MutationObserver((r,o)=>{if(!ov.isConnected){o.disconnect();if(!done)res(null)}}).observe(document.body,{childList:true,subtree:true})})}
 
 /* ---------- encrypted copies on this device ---------- */
@@ -8215,7 +8367,30 @@ async function pkMake(o){if(o.pk)return pkOpen(o.id,o.pk);if(!SV.pub||!SV.vk)ret
 async function boxKey(space,id,w){if(space==='o')return OTPK[id]||null;
   if(String(space).startsWith('t:'))return TEAMS.keys[space.slice(2)]||null;
   return (w?await pkOpen(id,w):null)||SV.vk}
-async function secureLocalSave(o){let k;
+const otpLocalWrites=new Map();
+
+function secureLocalSave(o){
+  if(o.space!=='o')return secureLocalSaveNow(o);
+
+  const prev=otpLocalWrites.get(o.id)||Promise.resolve();
+
+  const pending=prev.catch(()=>{}).then(
+    ()=>secureLocalSaveNow(o)
+  );
+
+  otpLocalWrites.set(o.id,pending);
+
+  const clean=()=>{
+    if(otpLocalWrites.get(o.id)===pending){
+      otpLocalWrites.delete(o.id);
+    }
+  };
+
+  pending.then(clean,clean);
+  return pending;
+}
+
+async function secureLocalSaveNow(o){let k;
   if(o.space==='v')k=await pkMake(o);
   if(!k)k=await boxKey(o.space,o.id,o.pk);
   if(!k)return false;const box=Object.assign({__sd:1,id:o.id,space:o.space,updated:o.updated,title:o.title,pk:o.pk||null},await sealJson(k,o));
@@ -8280,8 +8455,20 @@ async function csSync(reason){if(!(GA.fb&&GA.user)||GA.mode==='offline'&&navigat
   finally{CS.busy=false;if(CS.again)csSoon(1500);gaAcctBtn()}}
 function csForget(pid,space){if(!(GA.fb&&GA.user))return;const st=lsGet('csync')||{};st.del=st.del||[];st.del.push([csCol(space||'me'),pid]);lsSet('csync',st);csSoon(1500)}
 /* move a screenplay to another space: encrypt it for the vault or a team, or make it plain again */
-async function csMove(pid,to){const ie=(lsGet('index')||[]).find(x=>x.id===pid);if(ie&&ie.space==='o'&&!OTPK[pid]&&!(await otpAsk(pid,ie.title)))return false;
-  const o=P&&P.id===pid?P:await loadProject(pid);if(!o)return false;const from=spOf(o);if(from===to)return true;
+async function csMove(pid,to){
+  const entry=(lsGet('index')||[]).find(x=>x.id===pid);
+
+  if(entry&&entry.space==='o'&&to!=='o'){
+    toast('OTP protection cannot be removed.');
+    return false;
+  }
+const ie=(lsGet('index')||[]).find(x=>x.id===pid);if(ie&&ie.space==='o'&&!OTPK[pid]&&!(await otpAsk(pid,ie.title)))return false;
+  const o=P&&P.id===pid?P:await loadProject(pid);if(!o)return false;const from=spOf(o);
+  if(from==='o'&&to!=='o'){
+    toast('OTP protection cannot be removed.');
+    return false;
+  }
+  if(from===to)return true;
   if(to==='o'){o.space='o';if(!(await otpPrepare(o))){o.space=from;return false}}
   if(spSecure(to)&&to!=='o'&&!(await svUnlockAsk({why:'Unlock your vault to encrypt this screenplay.'})))return false;
   o.space=to;o.updated=Date.now();if(P&&P.id===pid)P=o;await csStoreLocal(o);if(P&&P.id===pid){try{DISK.sched()}catch(e){}}
@@ -8399,7 +8586,14 @@ function svChangeAsk(){openModal(`<div class="modal-h"><h2>Change vault passphra
   $('#svCgo').onclick=async()=>{const m=t=>$('#svCm').textContent=t;const a=$('#svC1').value;{const w=passWeak(a);if(w)return m(w)}if(a!==$('#svC2').value)return m('The new passphrases are different.');
     try{await svChange($('#svC0').value,a);closeModal();toast('Vault passphrase changed.')}catch(e){m('The current passphrase is not right, or you are offline.')}}}
 
-function moveAsk(pid){const ie=(lsGet('index')||[]).find(x=>x.id===pid);const cur=ie&&ie.space||'me';const opts=[['o','Locked with OTP · a code each time it opens'],['v','Just me · vault passphrase'],...TEAMS.list.filter(t=>t.mine&&TEAMS.keys[t.id]).map(t=>['t:'+t.id,'Team · '+t.name+' · encrypted']),['me','My account · not encrypted']];
+function moveAsk(pid){const ie=(lsGet('index')||[]).find(x=>x.id===pid);const cur=ie&&ie.space||'me';
+
+  if(cur==='o'||(P&&P.id===pid&&P.space==='o')){
+    toast('This screenplay is protected with mandatory OTP. Moving it is unavailable for now.',7000);
+    return;
+  }
+
+  const opts=[['o','Locked with OTP · a code each time it opens'],['v','Just me · vault passphrase'],...TEAMS.list.filter(t=>t.mine&&TEAMS.keys[t.id]).map(t=>['t:'+t.id,'Team · '+t.name+' · encrypted']),['me','My account · not encrypted']];
   openModal(`<div class="modal-h"><h2>Move screenplay</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b"><p class="small muted">Now: ${esc(spLabel(cur))}</p><div class="sp-g">${opts.map(([v,l])=>`<button type="button" class="sp-c${v===cur?' on':''}" data-mv="${esc(v)}"${v===cur?' disabled':''}><b>${esc(l)}</b></button>`).join('')}</div>
   <p class="small muted">Moving to a team shares it with every member. Moving out of encryption makes the stored copy readable by the database.</p></div>`);
   document.querySelectorAll('[data-mv]').forEach(b=>b.onclick=async()=>{closeModal();if(await csMove(pid,b.dataset.mv))render(true)})}
@@ -8422,17 +8616,41 @@ const otpSmsOk=()=>!GA.desk; /* Firebase SMS codes need a web address for their 
 function otpForget(except){Object.keys(OTPK).forEach(k=>{if(k!==except)delete OTPK[k]})}
 async function otpKeyFromB64(s){return aesKey(unb64(s))}
 /* a new OTP lock for this script: the server makes the key */
-async function otpPrepare(p){if(!p||p.space!=='o'||OTPK[p.id])return true;try{const fx=await fbInit();const r=await fx.call('otpCreate',{pid:p.id});OTPK[p.id]=await otpKeyFromB64(r.key);return true}
-  catch(e){if(e&&e.code==='functions/already-exists')return otpAsk(p.id,p.title);p.space='v';if(!(await svUnlockAsk({why:'The OTP lock is not available right now. Unlock your vault so this script is still saved encrypted.'})))p.space='me';toast(e&&e.code==='functions/failed-precondition'?'Verify your email first (check your inbox), so this script is saved without the OTP lock for now. Move it to "Locked with OTP" later from Projects.':'The OTP lock needs the ScriptDesk server, which is not available yet. This script is saved encrypted with your vault instead. Move it to "Locked with OTP" later from Projects.',7000);return false}}
+async function otpPrepare(p){
+  if(!p || p.space!=='o')return false;
+  if(OTPK[p.id])return true;
+
+  if(!(GA.fb && GA.user && FB_SERVER)){
+    toast('Connect to the ScriptDesk server to protect this screenplay.',7000);
+    return false;
+  }
+
+  try{
+    const fx=await fbInit();
+    const r=await fx.call('otpCreate',{pid:p.id});
+    OTPK[p.id]=await otpKeyFromB64(r.key);
+    return true;
+  }catch(e){
+    if(e && e.code==='functions/already-exists'){
+      return otpAsk(p.id,p.title);
+    }
+
+    toast('OTP protection could not be created. Screenplay creation stopped.',7000);
+    return false;
+  }
+}
 /* the code screen: email or SMS, then the 6-digit code */
 function otpAsk(pid,title){return new Promise(res=>{const u=GA.user;let via='',done=false,cool=0,ct=0;
-  const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';
+  const smsReady=FB_SERVER&&!!(FB_CFG&&
+            FB_CFG.projectId==='demo-scriptdesk')&&
+            location.origin==='http://127.0.0.1:8765';
+            const phone=u.phone||'';const mphone=phone?phone.slice(0,3)+' ••••• '+phone.slice(-4):'';
   const memail=u.email.replace(/^(.)[^@]*(@.*)$/,'$1•••$2');
   openModal(`<div class="modal-h"><h2>Enter the code to open</h2><button class="btn ghost" data-close>Cancel</button></div><div class="modal-b otp-m">
     <p><i class="ic i-lock" aria-hidden="true"></i> <b>${esc(title||'This script')}</b> is locked. Get a one-time code to open it.</p>
     <div class="otp-ch" id="otpCh"><button type="button" class="ga-btn" data-otp="email"><span><b>Email a code</b><small>to ${esc(memail)}</small></span></button>
-      ${phone&&otpSmsOk()?`<button type="button" class="ga-btn" data-otp="sms"><span><b>Send an SMS code</b><small>to ${esc(mphone)}</small></span></button>`:''}</div>
-    ${!phone&&otpSmsOk()?'<p class="small muted">Add a mobile number in Account &amp; security to get codes by SMS too.</p>':''}${phone&&!otpSmsOk()?'<p class="small muted">SMS codes work in the web app. Here, use the email code.</p>':''}
+      ${phone&&smsReady?`<button type="button" class="ga-btn" data-otp="sms"><span><b>Send an SMS code</b><small>to ${esc(mphone)}</small></span></button>`:''}</div>
+    ${!phone&&smsReady?'<p class="small muted">Add a mobile number in Account &amp; security to get codes by SMS too.</p>':''}${phone&&!smsReady?'<p class="small muted">SMS delivery is not available yet. Please use the email code.</p>':''}
     <div id="otpIn" hidden><span class="fb-l">6-digit code. It opens by itself once entered.</span>${otpBoxesHtml('otpC')}
       <p class="small muted" id="otpTo"></p><div class="bacts"><button class="btn ghost" id="otpRe">Send again</button><button class="btn pri" id="otpGo">Open script</button></div></div>
     <p class="ga-msg" id="otpM" role="alert"></p><div id="fbRecap"></div></div>`);
@@ -8442,11 +8660,11 @@ function otpAsk(pid,title){return new Promise(res=>{const u=GA.user;let via='',d
   const send=async(kind)=>{via=kind;m(kind==='sms'?'Sending SMS…':'Sending email…',1);document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=true);
     try{const fx=await fbInit();
       if(kind==='email'){const r=await fx.call('otpSend',{pid});$('#otpTo').textContent=`Sent to ${r.to}. It works for ${r.minutes||5} minutes. Check spam if it is not there.`}
-      else{await fx.phoneReauth(phone,'fbRecap');$('#otpTo').textContent=`SMS sent to ${mphone}.`}
+      else{await fx.call('otpSendSms',{pid});$('#otpTo').textContent=`SMS sent to ${mphone}.`}
       $('#otpIn').hidden=false;m('');cool=Date.now()+30000;tick();ob.clear()}
     catch(e){m(otpErr(e))}finally{document.querySelectorAll('#otpCh button').forEach(b=>b.disabled=false)}};
   const go=async()=>{const code=ob.val();if(code.length!==6){m('Enter the 6 digits.');return}const g=$('#otpGo');if(g.disabled)return;g.disabled=true;m('Checking…',1);
-    try{const fx=await fbInit();let r;if(via==='sms'){await fx.phoneConfirm(code);r=await fx.call('otpSms',{pid})}else r=await fx.call('otpVerify',{pid,code});
+    try{const fx=await fbInit();let r;r=await fx.call('otpVerify',{pid,code});
       OTPK[pid]=await otpKeyFromB64(r.key);done=true;clearTimeout(ct);closeModal();res(true)}
     catch(e){g.disabled=false;m(otpErr(e));ob.shake();ob.clear()}};
   document.querySelectorAll('[data-otp]').forEach(b=>b.onclick=()=>send(b.dataset.otp));

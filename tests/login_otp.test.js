@@ -10,6 +10,14 @@ const mocks = {
   nodemailer: { createTransport: () => ({ sendMail: async (m) => { mailed = m; } }) },
   './config': { OPTS: {}, GMAIL_USER: { value: () => 'a@b.c' }, GMAIL_APP_PASSWORD: { value: () => 'x' } }
 };
+mocks['firebase-admin/firestore'] = {
+  getFirestore: mocks['firebase-admin'].firestore
+};
+
+mocks['firebase-admin/auth'] = {
+  getAuth: mocks['firebase-admin'].auth
+};
+
 const orig = Module._load; Module._load = function (r, ...a) { return mocks[r] || orig.call(this, r, ...a); };
 const m = require('../functions/loginotp.js');
 (async () => {

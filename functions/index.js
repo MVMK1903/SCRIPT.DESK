@@ -24,7 +24,6 @@ Object.assign(exports, require('./totp')); // authenticator app + backup codes f
 const CODE_MINUTES = 5;
 const MAX_TRIES = 5;
 const MAX_SENDS = 5;            // codes per script per 15 minutes
-const SMS_FRESH_SECONDS = 300;  // the SMS check must be this recent
 
 // verified: making a lock or asking for a code needs a verified email (a password account must confirm its address)
 function need(req, { verified = false } = {}) {
@@ -64,12 +63,7 @@ exports.otpCreate = onCall(OPTS, async (req) => {
   return { key };
 });
 
-// Email: a 6-digit code to the account's own email (never an address sent by the app).
-exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] }, async (req) => {
-  const { uid, pid, tok } = need(req, { verified: true });
-  await keyFor(uid, pid);
-  const email = tok.email;
-  if (!email) throw new HttpsError('failed-precondition', 'This account has no email address.');
+async function issueScriptCode(uid, pid, channel = 'email') {
   const ref = codeRef(uid, pid);
   const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
   const salt = crypto.randomBytes(16).toString('hex');
@@ -93,9 +87,40 @@ exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] },
       salt,
       exp: now + CODE_MINUTES * 60000,
       tries: 0,
+      channel,
       sends: [...sends, now]
     });
   });
+  return code;
+}
+
+// Email: a 6-digit code to the account's own email (never an address sent by the app).
+exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] }, async (req) => {
+  const { uid, pid, tok } = need(req, { verified: true });
+  await keyFor(uid, pid);
+  const email = tok.email;
+  if (!email) throw new HttpsError('failed-precondition', 'This account has no email address.');
+  const code = await issueScriptCode(uid, pid);
+  if (process.env.FUNCTIONS_EMULATOR === 'true') {
+    if (
+      process.env.GCLOUD_PROJECT !== 'demo-scriptdesk' ||
+      !email.endsWith('@example.invalid')
+    ) {
+      throw new HttpsError(
+        'failed-precondition',
+        'Only dummy accounts are allowed in this OTP test.'
+      );
+    }
+
+    const fs = require('node:fs/promises');
+    const path = require('node:path');
+
+    await fs.writeFile(
+      path.join(__dirname, '.otp-test-outbox.json'),
+      JSON.stringify({ pid, to: email, code }),
+      { mode: 0o600 }
+    );
+  } else {
   const mail = nodemailer.createTransport({ service: 'gmail', auth: { user: GMAIL_USER.value(), pass: GMAIL_APP_PASSWORD.value() } });
   await mail.sendMail({
     from: `ScriptDesk <${GMAIL_USER.value()}>`,
@@ -103,6 +128,7 @@ exports.otpSend = onCall({ ...OPTS, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] },
     subject: `ScriptDesk code: ${code}`,
     text: `Your code to open a locked ScriptDesk script is ${code}\n\nIt works for ${CODE_MINUTES} minutes and only once.\n\nIf you did not just try to open a script, someone may know your password: change it in ScriptDesk now.`
   });
+  }
   await log(uid, 'otpsend', 'email');
   return { to: mask(email), minutes: CODE_MINUTES };
 });
@@ -125,30 +151,79 @@ exports.otpVerify = onCall(OPTS, async (req) => {
       tries: 0
     });
     else tx.update(ref, { tries: (d.tries || 0) + 1 });
-    return ok ? 'ok' : 'wrong';
+    return (ok ? 'ok' : 'wrong') +
+      (d.channel === 'sms' ? '-sms' : '');
   });
   if (verdict === 'expired') throw new HttpsError('deadline-exceeded', 'The code has expired. Send a new one.');
   if (verdict === 'tries') throw new HttpsError('resource-exhausted', 'Too many wrong codes. Send a new one.');
-  if (verdict === 'wrong') {
-    await log(uid, 'otpfail', 'email');
+  if (verdict === 'wrong' || verdict === 'wrong-sms') {
+    await log(uid, 'otpfail', verdict === 'wrong-sms' ? 'sms' : 'email');
     throw new HttpsError('permission-denied', 'That code is not right.');
   }
   const key = await keyFor(uid, pid);
-  await log(uid, 'otpok', 'email');
+  await log(uid, 'otpok', verdict === 'ok-sms' ? 'sms' : 'email');
   return { key };
 });
 
-// SMS: the app has just confirmed an SMS code with Firebase phone sign-in (re-authentication with the registered
-// mobile). The fresh sign-in token proves it; then the key is handed over.
-exports.otpSms = onCall(OPTS, async (req) => {
-  const { uid, pid, tok } = need(req);
-  const user = await getAuth().getUser(uid);
-  const fresh = Date.now() / 1000 - Number(tok.auth_time || 0) <= SMS_FRESH_SECONDS;
-  if (!user.phoneNumber || tok.phone_number !== user.phoneNumber || tok.firebase.sign_in_provider !== 'phone' || !fresh) {
-    await log(uid, 'otpfail', 'sms');
-    throw new HttpsError('permission-denied', 'Confirm the SMS code first.');
+
+// SMS: generate a screenplay-specific one-time code.
+// Local simulation only until a real provider is configured.
+exports.otpSendSms = onCall(OPTS, async (req) => {
+  const { uid, pid, tok } = need(req, { verified: true });
+
+  if (
+    process.env.FUNCTIONS_EMULATOR !== 'true' ||
+    process.env.GCLOUD_PROJECT !== 'demo-scriptdesk' ||
+    !String(tok.email || '').endsWith('@example.invalid')
+  ) {
+    throw new HttpsError(
+      'failed-precondition',
+      'SMS delivery is not configured yet.'
+    );
   }
-  const key = await keyFor(uid, pid);
-  await log(uid, 'otpok', 'sms');
-  return { key };
+
+  const user = await getAuth().getUser(uid);
+  const phone = user.phoneNumber;
+
+  if (!phone || !/^\+165055501\d{2}$/.test(phone)) {
+    throw new HttpsError(
+      'failed-precondition',
+      'Register a dummy test phone number first.'
+    );
+  }
+
+  await keyFor(uid, pid);
+
+  const code = await issueScriptCode(uid, pid, 'sms');
+
+  const fs = require('node:fs/promises');
+  const path = require('node:path');
+
+  await fs.writeFile(
+    path.join(__dirname, '.otp-test-outbox.json'),
+    JSON.stringify({
+      pid,
+      to: phone,
+      channel: 'sms',
+      code
+    }),
+    { mode: 0o600 }
+  );
+
+  await log(uid, 'otpsend', 'sms');
+
+  return {
+    to: phone.slice(0, 3) + '*****' + phone.slice(-4),
+    minutes: CODE_MINUTES
+  };
+});
+
+// Disable the old reusable phone-token unlock endpoint.
+exports.otpSms = onCall(OPTS, async (req) => {
+  need(req);
+
+  throw new HttpsError(
+    'failed-precondition',
+    'Request a fresh screenplay SMS code instead.'
+  );
 });
